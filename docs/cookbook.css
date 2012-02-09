@@ -1,4 +1,7 @@
-/* @override http://127.0.0.1:58230/css/cookbook.css */
+/* @override 
+	http://127.0.0.1:58230/css/cookbook.css
+	http://127.0.0.1:61318/css/cookbook.css
+*/
 
 img {
   border: 1pt solid silver;
@@ -14,3 +17,15 @@ pre {
 	border: 1pt solid silver;
 }
 
+strong {
+	font-weight: normal;
+	font-style: italic;
+}
+
+ol.toc  {
+	list-style-type: upper-latin;
+}
+
+ol.toc li ol.toc  {
+	list-style-type: decimal;
+}
