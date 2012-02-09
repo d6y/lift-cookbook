@@ -1,4 +1,16 @@
+/* @override http://127.0.0.1:58230/css/cookbook.css */
+
 img {
-border: 1pt solid silver;
+  border: 1pt solid silver;
+}
+
+code {
+	font-size: small;
+}
+
+pre {	
+	margin-left: 1em;	
+	padding: 0.25em;
+	border: 1pt solid silver;
 }
 
