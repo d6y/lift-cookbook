@@ -6,6 +6,9 @@ Problem
 
 You want to install and run Lift on your computer.
 
+ACTUALLY, THIS IS EXAMPLE MEANS USING SBT 0.7. 
+WE SHOULD FORK THE MOST BASIC EXAMPLE AND US SBT 0.11.2
+
 Solution
 ---------
 
