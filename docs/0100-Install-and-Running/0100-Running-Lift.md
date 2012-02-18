@@ -6,21 +6,18 @@ Problem
 
 You want to install and run Lift on your computer.
 
-ACTUALLY, THIS IS EXAMPLE MEANS USING SBT 0.7. 
-WE SHOULD FORK THE MOST BASIC EXAMPLE AND US SBT 0.11.2
-
 Solution
 ---------
 
 ### for Mac and Linux ###
 
-* Visit [http://liftweb.net/getting_started](http://liftweb.net/getting_started)
-* Download the latest release in ZIP format.
+* Download: [https://github.com/d6y/lift_24_sbt/zipball/master](https://github.com/d6y/lift_24_sbt/zipball/master)
 * Unzip the file.
-* Start Terminal or your favoute shell tool.
+* Start Terminal or your favourite shell tool.
 * Naviate into the unzipped folder
-* `cd scala_29/lift_blank` 
-* `./sbt update jetty`
+* Run:`./sbt` 
+* Required libraries will be downloaded.
+* At the SBT prompt (>) type: `container:start`
 * Start your browser and go to `http://127.0.0.1:8080/`
 
 
@@ -28,21 +25,20 @@ Solution
 
 ### for Windows ###
 
-* Visit [http://liftweb.net/getting_started](http://liftweb.net/getting_started)
-* Download the latest release in ZIP format.
+* Download: [https://github.com/d6y/lift_24_sbt/zipball/master](https://github.com/d6y/lift_24_sbt/zipball/master)
 * Unzip the file.
 * ?
-* ?
+* Run:`./sbt.bat` 
+* Required libraries will be downloaded.
+* At the SBT prompt (>) type: `container:start`
+* Start your browser and go to `http://127.0.0.1:8080/`
 
 
 ### Expected result ###
 
 The result of the above commands should be a basic Lift app running on your computer.
 
-![Screenshot of Lift started in a Terminal window](../img/running_lift_blank_shell_thumb.png "Running a Lift app from the shell")
-
 ![Screenshot of the Lift basic app running](../img/running_lift_blank_browser.jpg "Lift Basic app in a browser")
-
 
 
 
@@ -50,15 +46,15 @@ The result of the above commands should be a basic Lift app running on your comp
 Discussion
 ----------
 
-Lift isn't installed in the usual sense of "installing software".  Instead, it uses standard build tools, such as SBT or Maven, to assemble your application that makes use of the Lift framework. This recipe has downloaded a handful of bare-bones Lift applications, and then started one.
+Lift isn't installed in the usual sense of "installing software".  Instead it uses standard build tools, such as SBT or Maven, to assemble your application built with the Lift framework. This recipe has downloaded a bare-bones Lift applications, and then started it using a build tool.
 
-The `sbt` command starts the Simple Build Tool, a dependency management tool used by Scala projects.  The first command, `update`, causes SBT to fetch the libraries required by this lift_blank application.  The second command, `jetty`, starts the web server that listens on a port (8080 by default) and passes requests to the Lift application.
+The `sbt` command starts the Simple Build Tool, a dependency management tool used by Scala projects.  It will check the project and download any fetch the libraries required by this Lift application.  The command `container:start` starts the web server that listens on a port (8080 by default) and passes requests to the Lift application.
 
-
+You may be wondering why this recipe doesn't use the official Lift [getting started page](http://liftweb.net/getting_started) download.  It's because that download currently uses an older version of SBT which has a different structure and different commands compared to the latest version we use in this cookbook.
 
 See also
 --------
 
 * [Simple Build Tool](https://github.com/harrah/xsbt/wiki)
-* 
+
 

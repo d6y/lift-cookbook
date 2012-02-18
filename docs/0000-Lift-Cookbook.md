@@ -11,7 +11,7 @@ The aim is to give a single, short answer to a specific question. Where there ar
 Learning about Lift
 --------------------
 
-If, instead, you want to learn Lift, take a look at:
+If you are looking to learn Lift, take a look at:
 
 * [Simply Lift](http://simply.liftweb.net/).
 * [Lift in Action](http://www.manning.com/perrett/), Manning Publications.
