@@ -9,6 +9,8 @@ You want to install and run Lift on your computer.
 Solution
 ---------
 
+The only prerequisite to installing and runing Lift is to have Java 1.5 or later installed.  Instructions for installing Java can be found at [java.com](http://java.com/en/download/manual.jsp).
+
 ### for Mac and Linux ###
 
 * Download: [https://github.com/d6y/lift_24_sbt/zipball/master](https://github.com/d6y/lift_24_sbt/zipball/master)
@@ -19,8 +21,6 @@ Solution
 * Required libraries will be downloaded.
 * At the SBT prompt (>) type: `container:start`
 * Start your browser and go to `http://127.0.0.1:8080/`
-
-
 
 
 ### for Windows ###
