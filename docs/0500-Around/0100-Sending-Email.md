@@ -28,9 +28,9 @@ Discussion
 
 By default, the SMTP server used will be `localhost`.  You can change this by setting the `mail.smtp.host` property. For example, add the line `mail.smtp.host=smtp.example.org` to `src/mail/resources/props/default.props`.  Mailer also supports JNDI as a source of email sessions.
  
-The signature of `sendMail` requires a `From`, `Subject` and then any number of `MailTypes`.  In the example we added two: `PlainMailBodyType` and `To`.  You can add others inclding `BCC`, `ReplyTo` and `MessageHeader` (name, value pair), nad you can add them multiple times.
+The signature of `sendMail` requires a `From`, `Subject` and then any number of `MailTypes`.  In the example we added two: `PlainMailBodyType` and `To`.  You can add others including `BCC`, `ReplyTo` and `MessageHeader` (a name and value pair), and you can add them multiple times.
 
-The default character set is UTF-8.  If you need to change this replace the use of `PlainMailBodyType` with `PlainPlusBodyType("Hello from Lift", "latin1")`.
+The default character set is UTF-8.  If you need to change this replace the use of `PlainMailBodyType` with `PlainPlusBodyType("Hello from Lift", "ISO8859_1")`.
 
 See Also
 --------

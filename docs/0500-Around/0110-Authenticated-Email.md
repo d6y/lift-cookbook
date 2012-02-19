@@ -9,7 +9,7 @@ You need to authenticated with an SMTP server to send email.
 Solution
 --------
 
-You need to set the `Mailer.authenticator` in `Boot` with the credentials for your SMTP server and enable the `mail.smtp.auth` flag in your Lift props file.
+Set the `Mailer.authenticator` in `Boot` with the credentials for your SMTP server and enable the `mail.smtp.auth` flag in your Lift props file.
 
 Modify `Boot.scala` to include:
 
@@ -37,7 +37,7 @@ mail.smtp.host=smtp.sendgrid.net
 Discussion
 ----------
 
-We've used Lift properties as a way to configure SMTP authentication.  This has the benefit of allow us to enable authentication for just some run modes.  For example, if our `default.props` did not contain authentication settings, but our `production.default.props` did, then no authentication would happen in developemnt mode, ensuring we can't accidentily send email outside of a production environment.
+We've used Lift properties as a way to configure SMTP authentication.  This has the benefit of allow us to enable authentication for just some run modes.  For example, if our `default.props` did not contain authentication settings, but our `production.default.props` did, then no authentication would happen in development mode, ensuring we can't accidentally send email outside of a production environment.
 
 But you don't have to use properties file for this (the Lift Mailer also supports JNDI). However, some mail services do require `mail.smtp.auth=true` to be set.
 
