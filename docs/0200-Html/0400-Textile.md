@@ -11,30 +11,32 @@ Solution
 
 Install the Lift Textile module in your `build.sbt` file by adding:
 
-    "net.liftweb" %% "lift-textile" % liftVersion % "compile->default", 
-
+```scala
+"net.liftweb" %% "lift-textile" % liftVersion % "compile->default", 
+```
 You can then render Textile using `toHtml` method:
 
-    scala> import net.liftweb.textile._                   
-    import net.liftweb.textile._
-    
-    scala> TextileParser.toHtml("""h1. Hi!              
-     | 
-     | The module in "Lift":http://www.liftweb.net for turning Textile markup 
-     | into HTML is pretty easy to use.
-     | 
-     | * As you can see
-     | * in this example
-     |""")
-    res0: scala.xml.NodeSeq = 
-    NodeSeq(<h1>Hi!</h1>, 
-    , <p>The module in <a href="http://www.liftweb.net">Lift</a> for turning 
-    Textile markup into HTML is pretty easy to use.</p>, 
-    , <ul><li> As you can see</li>
-    <li> In this example</li>
-    </ul>, 
-    , )
+```scala
+scala> import net.liftweb.textile._                   
+import net.liftweb.textile._
 
+scala> TextileParser.toHtml("""h1. Hi!              
+ | 
+ | The module in "Lift":http://www.liftweb.net for turning Textile markup 
+ | into HTML is pretty easy to use.
+ | 
+ | * As you can see
+ | * in this example
+ |""")
+res0: scala.xml.NodeSeq = 
+NodeSeq(<h1>Hi!</h1>, 
+, <p>The module in <a href="http://www.liftweb.net">Lift</a> for turning 
+Textile markup into HTML is pretty easy to use.</p>, 
+, <ul><li> As you can see</li>
+<li> In this example</li>
+</ul>, 
+, )
+```
 
 Discussion
 ----------
