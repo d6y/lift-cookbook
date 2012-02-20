@@ -41,7 +41,7 @@ Textile markup into HTML is pretty easy to use.</p>,
 Discussion
 ----------
 
-Textile is one of many [lightweight markup language](http://en.wikipedia.org/wiki/Lightweight_markup_language), but stands out for Lift users of being easy to install and use.
+Textile is one of many [lightweight markup language](http://en.wikipedia.org/wiki/Lightweight_markup_language), but stands out for Lift users as being easy to install and use.
 
 
 See Also
