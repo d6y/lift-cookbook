@@ -4,7 +4,7 @@ Sending HTML email
 Problem
 -------
 
-You want to send a HTML email from your Lift applicaton.
+You want to send an HTML email from your Lift applicaton.
 
 Solution
 --------
