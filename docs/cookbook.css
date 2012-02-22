@@ -1,3 +1,5 @@
+/* @override http://127.0.0.1:51411/css/cookbook.css */
+
 img {
   border: 1pt solid silver;
 }
@@ -22,4 +24,9 @@ ol.toc  {
 
 ol.toc li ol.toc  {
 	list-style-type: decimal;
+}
+
+p + ul { 
+	margin-top: -1.5em;
+	/*margin-bottom: 0;*/
 }

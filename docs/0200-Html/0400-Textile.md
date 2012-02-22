@@ -9,7 +9,7 @@ You want to render Textile markup in your web app.
 Solution
 --------
 
-Install the Lift Textile module in your `build.sbt` file by adding:
+Install the Lift Textile module in your `build.sbt` file by adding the following to the list of dependencies:
 
 ```scala
 "net.liftweb" %% "lift-textile" % liftVersion % "compile->default", 
