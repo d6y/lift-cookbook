@@ -18,7 +18,7 @@ Once you have Java, the following instructions will download, build and start a 
 * Download: [https://github.com/d6y/lift_24_sbt/zipball/master](https://github.com/d6y/lift_24_sbt/zipball/master)
 * Unzip the file
 * Start Terminal or your favourite shell tool
-* Naviate into the unzipped folder
+* Navigate into the unzipped folder
 * Run:`./sbt` 
 * Required libraries will be downloaded
 * At the SBT prompt (>) type: `container:start`
