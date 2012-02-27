@@ -1,4 +1,0 @@
-Developing using Eclipse
-========================
-
-
