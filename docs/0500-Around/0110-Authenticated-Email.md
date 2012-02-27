@@ -14,6 +14,7 @@ Set the `Mailer.authenticator` in `Boot` with the credentials for your SMTP serv
 Modify `Boot.scala` to include:
 
 ```scala
+import net.liftweb.util.Mailer._
 import javax.mail.{Authenticator,PasswordAuthentication}
 
 Mailer.authenticator = for { 
