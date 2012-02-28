@@ -9,7 +9,7 @@ You want to stream content back to the web client.
 Solution
 --------
 
-Use `OutputStreamResponse`, supplying it with a function that takes an `OutputStream` to write to. 
+Use `OutputStreamResponse`, passing it a function that will write to the `OutputStream` that Lift supplies. 
 
 In this example we'll stream all the integers from 1:
 
@@ -37,9 +37,9 @@ Wire this into Lift in `Boot.scala`:
 LiftRules.dispatch.append(Numbers)
 ```
 
-Visiting `http://127.0.0.1:8080/numbers` will start producing the integers from 1, with a 200 status code.
+Visiting `http://127.0.0.1:8080/numbers` will generate a 200 status code and start producing the integers from 1.
 
-For more control there are a variety of signatures for `OutputStreamResponse` including the most general:
+For more control over status codes, headers and cookies, there are a variety of signatures for the `OutputStreamResponse` object.  For the most control, create an instance of the `OutputStreamResponse` class:
 
 ```scala
 case class OutputStreamResponse(
@@ -55,13 +55,13 @@ Discussion
 
 The function you give as the first argument to `OutputStreamResponse` is called with the output stream to the client. This means that the bytes you are writing to the `out` stream are being written to the client. 
 
-Any headers you set (such as `Content-type`), or status code, may already have been set by the time your function is called.  Note that the `Content-length` header is only set if `size` is not `-1`.
+Any headers you set (such as `Content-type`), or status code, may already have been set by the time your function is called.  Note that setting `size` to `-1` causes the `Content-length` header to be skipped.
 
 There are two related types of response: `InMemoryResponse` and `StreamingResponse`
 
 ### InMemoryResponse
 
-`InMemoryResponse` is useful if you assembled the full content to send to the client.  The signature is straightforward:
+`InMemoryResponse` is useful if you have already assembled the full content to send to the client. The signature is straightforward:
 
 ```scala
 case class InMemoryResponse(
