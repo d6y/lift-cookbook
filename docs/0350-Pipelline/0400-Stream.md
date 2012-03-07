@@ -88,7 +88,7 @@ case class StreamingResponse(
   code: Int)
 ```
 
-Notice the use of a structural type for the `data` parameter.  Anything with a mathcing `read` method can be given here, including `java.io.InputStream`-like objects, meaning  `StreamingResponse` can act as a pipe from input to output. Lift pulls 8k chunks from your `StreamingResponse` to send to the client. 
+Notice the use of a structural type for the `data` parameter.  Anything with a matching `read` method can be given here, including `java.io.InputStream`-like objects, meaning  `StreamingResponse` can act as a pipe from input to output. Lift pulls 8k chunks from your `StreamingResponse` to send to the client. 
 
 Your `data` `read` function should follow the semantics of Java IO and return "the total number of bytes read into the buffer, or -1 is there is no more data because the end of the stream has been reached".
 
