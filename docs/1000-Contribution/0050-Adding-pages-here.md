@@ -19,7 +19,7 @@ The template is: [https://raw.github.com/d6y/lift-cookbook/master/template.md](h
 Discussion
 ----------
 
-The cookbook is structured using Markdown and Pamflet.  Each recipe is a file with the same structure as the template file, and gives one good solution to a problem.  Feel free to discus alternatives or related concepts in the discussion section.
+The cookbook is structured using Markdown and Pamflet.  Each recipe is a file with the same structure as the template file, and gives one good solution to a problem.  Feel free to discuss alternatives or related concepts in the discussion section.
 
 If you've forked the project from Github, you'll find all the pages in the `docs` folder, with sub-folders for each section.  The filenames are used for ordering the pages and sections.  Feel free to send pull requests.
 
