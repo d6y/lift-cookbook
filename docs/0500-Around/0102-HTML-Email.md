@@ -34,7 +34,7 @@ Mailer.sendMail(
 Discussion
 ----------
 
-An implict converts the `NodeSeq` into a `XHTMLMailBodyType`.  This ensures the mime type of the email is "text/html". Despite the name of XHTML, the message is to converted into a string for transmission using HTML5 semantics.
+An implicit converts the `NodeSeq` into a `XHTMLMailBodyType`.  This ensures the mime type of the email is "text/html". Despite the name of XHTML, the message is to converted into a string for transmission using HTML5 semantics.
 
 The character encoding for HTML email, UTF-8, can be changed by setting `mail.charset` in your Lift properties file.
 
