@@ -40,7 +40,7 @@ Once you have Java, the following instructions will download, build and start a 
 
 The result of the above commands should be a basic Lift app running on your computer.
 
-![Screenshot of the Lift basic app running](../img/running_lift_basic_browser_small.jpg "Lift Basic app in a browser")
+![Screenshot of the Lift basic app running](img/running_lift_basic_browser_small.jpg "Lift Basic app in a browser")
 
 
 
