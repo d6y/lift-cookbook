@@ -4,7 +4,7 @@ Sending plain text email
 Problem
 -------
 
-You want to send a plain email from your Lift applicaton.
+You want to send a plain email from your Lift application.
 
 Solution
 --------
