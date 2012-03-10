@@ -2,6 +2,8 @@
 
 Source for a prototype "Lift Cookbook" at http://liftcookbook.spiralarm.cloudbees.net/
 
+To contribute to this text, see [How to add a new recipe](http://liftcookbook.spiralarm.cloudbees.net/How+to+add+a+new+recipe+to+this+Cookbook.html).  New and updated pages are noted via [@LiftCookbook](https://twitter.com/#!/liftcookbook).
+
 ## How to Generate HTML
 
 We're using Pamflet to generate the HTML. There are two ways to invoke Pamflet.
@@ -18,9 +20,7 @@ Simply start SBT and run `start-pamflet` to start the server for live viewing or
 ## Todo:
 
 * decide if this is a dumb idea or not.
-* Find out how to use images with Pamflet.
 * Find out how to link between sections with Pamflet/markdown.
-* curate wiki content into this format.
 
 
 

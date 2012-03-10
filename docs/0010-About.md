@@ -24,6 +24,11 @@ Source
 The source is at [https://github.com/d6y/lift-cookbook](https://github.com/d6y/lift-cookbook)
 
 
+Updates
+-------
+
+Follow [@LiftCookbook](https://twitter.com/#!/liftcookbook).
+
 Software versions
 -----------------
 
