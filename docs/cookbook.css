@@ -30,3 +30,19 @@ p + ul {
 	margin-top: -1.5em;
 	/*margin-bottom: 0;*/
 }
+
+@media screen and (min-width: 1200px) {
+
+	.container { 
+		width: 1000px;
+	}
+
+	.prepend-1, .span-16, .append-1 {
+		width: 920px; /* 1000 - 40 - 40*/ 
+	}
+
+	p {
+		width: auto;
+	}
+
+}
