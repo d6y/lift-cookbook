@@ -8,6 +8,16 @@ code {
 	font-size: small;
 }
 
+h2 {
+	font-size: 1.5em;
+	margin-bottom: 0.2em;
+}
+
+p {
+	text-align: justify;
+	width: auto;
+}
+
 pre {	
 	padding: 0.25em;
 	border: 1pt solid silver;
