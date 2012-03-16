@@ -24,7 +24,7 @@ Assuming you have a `<title>` tag in your template, the above will result in:
 Discussion
 ----------
 
-It is also possible to set the page title from the contents of `SiteMap`:
+It is also possible to set the page title from the contents of `SiteMap, meaning the title used will be the title you've assigned to the page in the site map:
 
 ```scala
 <title class="lift:Menu.title"></title>
