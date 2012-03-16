@@ -4,15 +4,21 @@ Setting the page title
 Problem
 -------
 
-You want to set the `<title>` of the page.
+You want to set the `<title>` of the page from a Lift snippet.
 
 Solution
 --------
 
-Select all the elements of the `title` element: 
+Select all the elements of the `title` element and replace them with the text you want:
 
 ```scala
 "title *" #> "I am different"
+```
+
+Assuming you have a `<title>` tag in your template, the above will result in:
+
+```scala
+<title>I am different</title>
 ```
 
 Discussion
