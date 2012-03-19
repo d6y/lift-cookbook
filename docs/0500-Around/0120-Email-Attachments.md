@@ -44,6 +44,6 @@ Messages are sent using the "related" multi-part mime heading with "inline" disp
 See Also
 --------
 
-* Lift ticket 1197 to [improve Mailer functionality for attachments](http://www.assembla.com/spaces/liftweb/tickets/1197)
+* Lift ticket 1197 to [improve Mailer functionality for attachments](https://github.com/lift/framework/issues/1197)
 
 * Wikipedia entry on [Multipurpose Internet Mail Extensions (MIME)](http://en.wikipedia.org/wiki/MIME)
