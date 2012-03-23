@@ -50,4 +50,4 @@ See Also
 
 ----
 
-Comments? Questions? Corrections? [Discuss this recipe on the Lift Web mailing list](mailto:liftweb@googlegroups.com?subject=Cookbook+-+Access+restriction+by+HTTP+header).
+Comments? Questions? Corrections? [Discuss this recipe on the Lift Web mailing list](mailto:liftweb@googlegroups.com?subject=Cookbook%20-%20Access%20restriction%20by%20HTTP%20header).
