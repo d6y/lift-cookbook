@@ -21,6 +21,10 @@ This would cause "doing it" to be printed on the console after 30 seconds.
 Discussion
 ----------
 
+`Schedule` also includes a `schedule` method which will send a specified actor a specified message after a given delay.  
+
+The above example makes use of the Lift `TimeHelpers`, but there are variant calls that accept `Long` millisecond values. 
+
 Schedule returns a `ScheduledFuture[Unit]` from the Java concurrency library, which allows you to `cancel` the activity.
 
 See Also

@@ -50,11 +50,9 @@ LiftRules.unloadHooks.append( () => MyScheduledTask ! MyScheduledTask.Stop )
 Discussion
 ----------
 
+Without the `Stop` message your actor would continue to be rescheduled until the JVM exits. This may be acceptable, but note that during development with SBT, without the `Stop` message, you will continue to schedule tasks after issuing the `container:stop` command.
+
 Schedule return a `ScheduledFuture[Unit]` from the Java concurrency library, which allows you to `cancel` the activity.
-
-The above example makes use of the Lift `TimeHelpers`, but there are variant calls that accept `Long` millisecond values. 
-
-Without the `Stop` message your actor would continue to be rescheduled until the JVM exits. 
 
 See Also
 --------
