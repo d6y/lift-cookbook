@@ -22,13 +22,12 @@ object MyScheduledTask extends LiftActor {
   case class DoIt()
   case class Stop()
   
-  var stopped = false
-  
-  def schedule = Schedule.schedule(this, DoIt, 10 minutes)
+  private var stopped = false
   
    def messageHandler = {  
      case DoIt => 
-       if (!stopped) schedule // re-schedule in another 10 mins  
+       if (!stopped) 
+       	Schedule.schedule(this, DoIt, 10 minutes)
        // ... do useful work here
      
      case Stop =>
@@ -37,9 +36,11 @@ object MyScheduledTask extends LiftActor {
 }
 ```
 
-The example creates a `LiftActor` for the work to be done. The `schedule` method uses Lift's `Schedule.schedule` method to ensure that `this` actor is sent the `DoIt` message after 10 minutes.  On receipt of the message, the actor re-schedules itself before doing whatever useful work needs to be done.
+The example creates a `LiftActor` for the work to be done. On receipt of a `DoIt` message, the actor re-schedules itself before doing whatever useful work needs to be done.  In this way, the actor will be called every 10 minutes.
 
-To start this process off, possibly in `Boot.scala`, you could send the `DoIt` message to the actor, or more conveniently simply call `MyScheduledTask.schedule` to start the job in 10 minutes time. 
+The `Schedule.schedule` call is ensuring that `this` actor is sent the `DoIt` message after 10 minutes.  
+
+To start this process off, possibly in `Boot.scala`, just send the `DoIt` message to the actor.
 
 To ensure the process stops correctly when Lift shuts down, we register a shutdown hook in `Boot.scala` to send the `Stop` message to prevent future re-schedules:
 
