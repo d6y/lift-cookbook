@@ -39,4 +39,3 @@ See Also
 * Mailing list discussion of [lift:with-resource-id and html5](https://groups.google.com/forum/?fromgroups#!msg/liftweb/93U-7GY0FuY/Y-T7BESuOwAJ).
 * [LiftRules.scala](https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/LiftRules.scala).
 
-f
