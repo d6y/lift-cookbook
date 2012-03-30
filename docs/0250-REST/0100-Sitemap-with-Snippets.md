@@ -35,7 +35,7 @@ Make a snippet to fill the required gaps.
 
 ```scala
 class MySitemapContent {
-  lazy val entries = MyDBRecord.find(..)
+  lazy val entries = MyDBRecord.findAll(..)
 
   def base: CssSel =
     "loc *" #>      "http://%s/".format(S.hostName) &
@@ -43,7 +43,7 @@ class MySitemapContent {
 
   def list: CssSel =
     "url *" #> entries.map(post =>
-      "loc *" #>      "http://%s/".format(S.hostName, post.url) &
+      "loc *" #>      "http://%s%s".format(S.hostName, post.url) &
       "lastmod *" #>  post.date.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZZ"))
 
 }
@@ -75,8 +75,6 @@ Test this service using a tool like cURL:
 
 ```scala
 \$ curl http://127.0.0.1:8080/sitemap
-<?xml version="1.0" encoding="UTF-8"?>
-<b>got an image of 43685 bytes</b> 
 ```
 
 
