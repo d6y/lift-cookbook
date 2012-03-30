@@ -4,7 +4,7 @@ Avoiding CSS and JavaScript caching
 Problem
 -------
 
-You've modified CSS or JavaScript in your application, but web browsers have cached your resources and are using the older versions.
+You've modified CSS or JavaScript in your application, but web browsers have cached your resources and are using the older versions. You'd like to avoid this browser caching.
 
 Solution
 --------
@@ -30,7 +30,7 @@ Discussion
 
 If you need some other behaviour from `with-resource-id` you can assign a new function of type `String => String` to `LiftRules.attachResourceId`.  The default implementation, shown above, takes the resource name ("/myscript.js" in the example) and returns the resource name with an id appended.  See the `LiftRules` source for additional notes.
 
-Gotcha: Avoid wrapping `<lift:with-resource-id>...<lift:with-resource-id>` around content in the `<head>` of your page as the HTML5 parser will move it outside of the head section.
+You can also wrap a number of tags inside a `<lift:with-resource-id>...<lift:with-resource-id>` block.  However, avoid doing this in the `<head>` of your page as the HTML5 parser will move the tags to be outside of the head section.
  
 See Also
 --------
@@ -39,3 +39,4 @@ See Also
 * Mailing list discussion of [lift:with-resource-id and html5](https://groups.google.com/forum/?fromgroups#!msg/liftweb/93U-7GY0FuY/Y-T7BESuOwAJ).
 * [LiftRules.scala](https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/LiftRules.scala).
 
+f
