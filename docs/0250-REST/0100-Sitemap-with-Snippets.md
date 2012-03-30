@@ -1,15 +1,15 @@
-Sitemap with Snippets
+Google Sitemap
 ====================================
 
 Problem
 -------
 
-You want to make a Sitemap (e.g. for Google) using Lift's rendering capabilities.
+You want to make a Google Sitemap using Lift's rendering capabilities.
 
 Solution
 --------
 
-Simply create a file (e.g. sitemap.html) in your webapp/-folder with a valid XML-Sitemap markup.
+Simply create a file (e.g. `sitemap.html`) in your `webapp` folder with a valid XML-Sitemap markup:
 
 ```
 <?xml version="1.0" encoding="utf-8" ?>
@@ -31,25 +31,26 @@ Simply create a file (e.g. sitemap.html) in your webapp/-folder with a valid XML
 </urlset>
 ```
 
-Make a snippet to fill the required gaps.
+Make a snippet to fill the required gaps:
 
 ```scala
 class MySitemapContent {
+
   lazy val entries = MyDBRecord.findAll(..)
 
   def base: CssSel =
-    "loc *" #>      "http://%s/".format(S.hostName) &
-    "lastmod *" #>  someDate.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZZ")
+    "loc *" #> "http://%s/".format(S.hostName) &
+    "lastmod *" #> someDate.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZZ")
 
   def list: CssSel =
     "url *" #> entries.map(post =>
-      "loc *" #>      "http://%s%s".format(S.hostName, post.url) &
+      "loc *" #> "http://%s%s".format(S.hostName, post.url) &
       "lastmod *" #>  post.date.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZZ"))
 
 }
 ```
 
-We could run this template through Lift's default HTML render engine and simply add it to Lift's own Sitemap, but we want our valid XML to be delivered as XML rather than HTML.
+We could run this template through Lift's default HTML render engine and simply add it to Lift's own Sitemap, but we want our valid XML to be delivered as XML rather than HTML.  So instead we will use `RestHelper` to return a `XmlResponse`:
 
 ```scala
 import net.liftweb.http.rest._
@@ -58,12 +59,12 @@ import net.liftweb.http._
 object MySitemap extends RestHelper {
   serve {
     case Req("sitemap" :: Nil, _, GetRequest) =>
-      XmlResponse(S.render(<lift:embed what="sitemap" />, S.request.get.request).head)
+      XmlResponse(S.render(<lift:embed what="sitemap" />, 
+       S.request.get.request).head)
     }
   }
 }
 ```
-
 
 Wire this into your application in `Boot.scala`, for example:
 
@@ -78,4 +79,8 @@ Test this service using a tool like cURL:
 ```
 
 
+See Also
+--------
+
+* [About Google Sitemaps](http://support.google.com/webmasters/bin/answer.py?hl=en&answer=156184).
 
