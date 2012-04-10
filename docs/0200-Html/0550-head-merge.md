@@ -78,7 +78,9 @@ Discussion
 
 If you find your tags not appearing the the `<head>` section, check that the HTML in your template and page is valid HTML5. 
 
-You can also use `<lift:head>...</lift:head>` to wrap a number of expressions, and will see `<head_merge>...</head_merge>` used in code examples, as an alternative to `<lift:head>`.
+You can also use `<lift:head>...</lift:head>` to wrap a number of expressions, and will see `<head_merge>...</head_merge>` used in code example as an alternative to `<lift:head>`.
+
+You may also see `data-lift="head"` is also used as an alternative to `class="lift:head"`.
 
 
 See Also
