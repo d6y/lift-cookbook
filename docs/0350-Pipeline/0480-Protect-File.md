@@ -75,6 +75,7 @@ serve {
 }
 ```
 
+You can mix and match extractors, guards and conditions in your response to best fit the way you want the code to look and work.
 
 See Also
 --------
