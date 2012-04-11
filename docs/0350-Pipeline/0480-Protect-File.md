@@ -56,6 +56,13 @@ private def fileResponse(fileId: String): Box[LiftResponse] = for {
 
 If no permission is given, the user is redirected to `/sorry.html`.
 
+All of this is wired into Lift in `Boot.scala` with:
+
+```scala
+LiftRules.dispatch.append(DownloadService)
+```
+
+
 
 Discussion
 ----------
@@ -64,7 +71,7 @@ By turning the request into a `Box[LiftResponse]` we are able to serve up the fi
 
 If we added a test to see if the file existed on disk in `fileResponse` that would cause the method to evaluate to `Empty` for missing files, which triggers a 404.  As the code stands, if the file does not exist, the `tryo` would give us a `Failure` which would turn into a 404 error with a body of "/tmp/important (No such file or directory)".
 
-Because we are testing for known resources via the `Known` extractor as part of the pattern for `/download/`, unknown resources will not be passed through to our `File` access code.  Again, Lift will return a 404 for these.  
+Because we are testing for known resources via the `Known` extractor as part of the pattern for `/download/`, unknown resources will not be passed through to our `File` access code.  Again, Lift will return a 404 for these.
 
 Guard expressions can also be useful for these kinds of situations:
 
@@ -82,4 +89,5 @@ See Also
 
 * Mailing list thread on [PHP's readfile equivalent for Lift](https://groups.google.com/forum/?fromgroups#!topic/liftweb/7N2OUInltUE).
 * _Chatper 24: Extractors_ from [Programming in Scala](http://www.artima.com/pins1ed/extractors.html).
+* Recipe on [Streaming content](Streaming+content.html). 
 
