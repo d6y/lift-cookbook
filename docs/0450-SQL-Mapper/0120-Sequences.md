@@ -36,4 +36,4 @@ See Also
 * Mailing list discussion "[Mapper starts counting primary keys with key 1 in a non-empty table](https://groups.google.com/forum/?fromgroups#!topic/liftweb/eAelsvlFkaI)".
 * PostgreSQL [Sequence Manipulation Functions](http://www.postgresql.org/docs/9.1/static/functions-sequence.html).
 * MySQL [AUTO-INCREMENT](http://dev.mysql.com/doc/refman/5.6/en/example-auto-increment.html) describes how to use ALTER TABLE to change the sequence value.
-* [Updating ORACLE sequence](http://www.techonthenet.com/oracle/sequences.php) involves changing the incrementing step to cover the values to skip, and then setting it back to 1.
+* [Updating ORACLE sequence](http://www.techonthenet.com/oracle/sequences.php) involves changing the incrementing step to cover the values to skip.
