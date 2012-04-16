@@ -11,7 +11,7 @@ Solution
 
 Work with the native sequence facility in your database to set the starting sequence value to be the value you want Lift to use.
 
-The first step is to work out what value you want the sequence to start from.  Mostly likely this will be just after the largest primary key ID in the table you're working with.  With PostgreSQL, for example, you can check this via the `psql` command:
+The first step is to work out what value you want the sequence to start from.  Most likely this will be just after the largest primary key ID in the table you're working with.  With PostgreSQL, for example, you can check this via the `psql` command:
 
 ```sql
 SELECT MAX(id) FROM mytable;
