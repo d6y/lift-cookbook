@@ -19,6 +19,12 @@ Copyright
 
 This document is licensed Creative Commons Attribution, Non Commercial, No Derivatives.
 
+Contributors
+------------
+
+* Richard Dallaway
+
+
 Source
 ------
 
