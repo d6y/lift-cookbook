@@ -50,11 +50,15 @@ As URL fetching has latency, you will want to look at making the request from an
 
 _Dispatch_ offers a range of operators in addition to the `</>` XML one used above.  You can extract text, JSON, consume the stream, or throw away the content.  The _Periodic table_ gives a great high-level view of what's available.
 
+Related to _TagSoup_, _Dispatch_ also integrates with _JSoup_, which includes functions for manipulating the real-world HTML you fetch.
+
+
 See Also
 --------
 
 * [Dispatch](http://dispatch.databinder.net/Dispatch.html).
 * [Periodic table of Dispatch operators](http://www.flotsam.nl/dispatch-periodic-table.html).
+* [JSoup Dispatch](http://dispatch.databinder.net/JSoup.html) documentation.
 
 
 
