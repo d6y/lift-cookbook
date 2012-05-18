@@ -83,6 +83,12 @@ if (!DB.jndiJdbcConnAvailable_?) {
 
 Because the JDNI setting is only defined in `cloudbees-web.xml` it will only be available in a CloudBees environment. This means you can develop against a different database locally, and use your CloudBees database when deploying.
 
+If you are using comet, it'll work fine, but CloudBees default is to do request buffering.  This allows CloudBees to do smart things, such as try re-routing requests in a cluster if one machine does not respond, but a consequence is that long-polling comet requests will time out more often.  To turn off this feature set the following:
+
+```
+\$ bees app:update -a myaccount/myapp disableProxyBuffering=true
+```
+
 
 See Also
 --------
