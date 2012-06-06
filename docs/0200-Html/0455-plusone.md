@@ -27,7 +27,13 @@ object PlusOne {
 }
 ```
 
-Reference the snippet to make the button show:
+Reference the snippet to make the button show by including the script...
+
+```html
+<script class="lift:PlusOne"></script>
+```
+
+...and including the code Google ask you to include:
 
 ```html
 <div class="g-plusone" data-size="medium" data-annotation="bubble"
