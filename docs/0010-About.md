@@ -23,6 +23,9 @@ Contributors
 ------------
 
 * Richard Dallaway
+* Jono Ferguson
+* Franz Bettag
+* Marek Żebrowski
 
 
 Source
