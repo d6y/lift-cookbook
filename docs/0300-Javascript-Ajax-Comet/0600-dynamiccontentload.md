@@ -23,7 +23,7 @@ import js.JsCmds._
 class MySnippet {
 
   def sendContent = Templates("some" :: "page" :: Nil).
-  map(ns => SetHtml("here", ns)) openOr Noop
+    map(ns => SetHtml("here", ns)) openOr Noop
 
   def render = "name=clickme [onclick]" #> SHtml.ajaxInvoke(sendContent _)
 }
