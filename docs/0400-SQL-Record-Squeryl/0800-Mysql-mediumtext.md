@@ -1,4 +1,4 @@
-Model a column with MySQL's MEDIUMTEXT
+Model a column with MySQL MEDIUMTEXT
 ======================================
 
 Problem
