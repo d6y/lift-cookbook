@@ -13,7 +13,7 @@ Solution
 You need to make two changes to your `build.sbt` file.  First, reference the snapshot repository:
 
 ```scala
-resolvers += ScalaToolsSnapshots
+resolvers += "snapshots" at "http://oss.sonatype.org/content/repositories/snapshots"
 ```
 
 Second, change the `liftVersion` in your build to be 2.5-SNAPSHOT, rather than 2.4:
