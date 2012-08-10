@@ -49,6 +49,8 @@ class MySitemapContent {
 
 }
 ```
+Note that Google Sitemaps need dates to be in ISO 8601 format. The built-in `java.text.SimpleDateFormat` does not support this format prior to Java 7.
+If you are using Java 6 you need to use `org.joda.time.DateTime`. With Java 7 "yyyy-MM-dd'T'HH:mmXXX" can be used as the pattern for the formatting.
 
 We could run this template through Lift's default HTML render engine and simply add it to Lift's own Sitemap, but we want our valid XML to be delivered as XML rather than HTML.  So instead we will use `RestHelper` to return a `XmlResponse`:
 
