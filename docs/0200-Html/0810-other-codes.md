@@ -26,7 +26,7 @@ The file `src/main/webapp/403.html` will now be served for requests that generat
 Discussion
 ----------
 
-`LiftRules.responseTransformers` allows you to supply `LiftResponse => LiftResponse` functions to change a response at the end of the HTTP processing cycle.
+`LiftRules.responseTransformers` allows you to supply `LiftResponse => LiftResponse` functions to change a response at the end of the HTTP processing cycle.  This is a very general mechanism: in this example we are matching on a status code, but we could match on anything exposed by `LiftResponse`.  We've shown a `RedirectResponse` being returned but there are many different kinds of `LiftResponse` we could send to the client.
 
 One way to test the above example is to add the following to Boot to make all requests to `/secret` return a 403:
 
