@@ -33,7 +33,7 @@ import JsCmds._
 
 import scala.xml.Text
 
-object AjaxExample {
+class AjaxExample {
   
   var inputVal = "default"
 
