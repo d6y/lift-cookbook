@@ -28,7 +28,7 @@ Using the connection information given here and in the links below, you should b
 
 See also
 --------
-
+* [H2 web console and Lift](https://fmpwizard.telegr.am/blog/lift-and-h2) from @fmpwizard.
 * [Viewing/Editing H2 database via web interface](http://sofoklis.posterous.com/viewingediting-h2-database-via-web-interface) blog post.
 * [Default username/password for lift_proto.db](https://groups.google.com/forum/?fromgroups#!topic/liftweb/Gna1OTha-MI) mailing list discussion.
 * Mailing list discussion on [Easiest way to set up H2 database with web console at localhost:8080/console](https://groups.google.com/forum/?fromgroups#!topic/liftweb/4Tvfu9859e0).
