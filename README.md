@@ -15,6 +15,8 @@ Install [_cs_ and then _pf_](http://pamflet.databinder.net/Combined+Pages.html#O
 
 ### SBT Plugin
 
+Requires SBT 0.11.0
+
 Simply start SBT and run `start-pamflet` to start the server for live viewing or `write-pamflet` to generate the HTML.
 
 ## Todo:
