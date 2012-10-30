@@ -5,7 +5,7 @@ Embedding a document inside a Mongo record
 Problem
 -------
 
-You have a Monogo record, and you want to embed another set of values inside it as a single entity.
+You have a Mongo record, and you want to embed another set of values inside it as a single entity.
 
 
 Solution
