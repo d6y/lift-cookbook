@@ -2,19 +2,20 @@ HTML
 ----
 
 Testing and debugging CSS selectors
------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You want to explore or debug CSS selectors interactively.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Use the Scala REPL to run your CSS selector:
 
-code,scala-----------------------------------------------------------------
+[source,scala]
+-----------------------------------------------------------------
 code,scala
 > console             
 [info] Starting scala interpreter...
@@ -39,7 +40,7 @@ res0: scala.xml.NodeSeq =
 -----------------------------------------------------------------
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 The CSS selector functionality in Lift gives you a `CssSel` function
 which is `NodeSeq => NodeSeq`. Knowing this, you can construct an input
@@ -47,30 +48,31 @@ which is `NodeSeq => NodeSeq`. Knowing this, you can construct an input
 then apply it to get the `NodeSeq` output (called `res0`, above).
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
 * http://simply.liftweb.net/index-7.10.html#toc-Section-7.10[CSS
 Selector Transforms] in _Simply Lift_.
 * Section 6.1.2 of _Lift in Action_.
 
 Sequencing CSS selector operations
-----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You want your CSS selector binding to apply to the results of earlier
 binding expressions.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Use `andThen` rather than `&` to compose your selector expressions. For
 example, suppose we want to replace `<div id="foo"/>` with
 `<div id="bar">bar content</div>` but for some reason we needed to
 generate the `bar` div as a separate step in the selector expression:
 
-code,scala-------------------------------------------------------------------------------
+[source,scala]
+----
 code,scala
 sbt> console
 [info] Starting scala interpreter...
@@ -87,10 +89,10 @@ render: scala.xml.NodeSeq => scala.xml.NodeSeq
 
 scala> render(<div id="foo"/>)
 res0: scala.xml.NodeSeq = NodeSeq(<div id="bar">bar content</div>)
--------------------------------------------------------------------------------
+----
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 When using `&` think of the CSS selectors as always applying to the
 original template, no matter what other expressions you are combining.
@@ -98,7 +100,8 @@ original template, no matter what other expressions you are combining.
 Compare the example above with the change of replacing `andThen` with
 `&`:
 
-code,scala--------------------------------------------------------------------------
+[source,scala]
+--------------------------------------------------------------------------
 code,scala
 scala> def render = "#foo" #> <div id="bar" /> & "#bar *" #> "bar content"
 render: net.liftweb.util.CssSel
@@ -111,7 +114,7 @@ The second expression will not match as it is applied to the original
 input of `<div id="foo"/>`.
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
 * Mailing list discussion on:
 https://groups.google.com/forum/?fromgroups#!topic/liftweb/fz3Pmlhzhfg[CSS
@@ -123,19 +126,20 @@ http://www.assembla.com/spaces/liftweb/wiki/Binding_via_CSS_Selectors[Binding
 via CSS Selectors].
 
 Setting meta tag contents
--------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You want to set the content of an HTML meta tag using Lift.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Use the `@` CSS binding name selector. For example, given:
 
-code,scala-----------------------------------------------------
+[source,scala]
+-----------------------------------------------------
 code,scala
 <meta name="keywords" content="some words go here" />
 -----------------------------------------------------
@@ -143,56 +147,60 @@ code,scala
 The following snippet code will update the value of the contents
 attribute:
 
-code,scala---------------------------------------------- code,scala
+[source,scala]
+---------------------------------------------- code,scala
 "@keywords [content]" #> "other words to use" 
 ----------------------------------------------
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 The `@` selector selects all elements with the given name. The
 `[content]` part matches on the attribute of `content`. These are
 general mechanisms, not specific to meta tags.
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
 * http://simply.liftweb.net/index-7.10.html#toc-Section-7.10[CSS
 Selector Transforms] in _Simply Lift_.
 
 Setting the page title
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You want to set the `<title>` of the page from a Lift snippet.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Select all the elements of the `title` element and replace them with the
 text you want:
 
-code,scala----------------------------- code,scala
+[source,scala]
+----------------------------- code,scala
 "title *" #> "I am different"
 -----------------------------
 
 Assuming you have a `<title>` tag in your template, the above will
 result in:
 
-code,scala----------------------------- code,scala
+[source,scala]
+----------------------------- code,scala
 <title>I am different</title>
 -----------------------------
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 It is also possible to set the page title from the contents of `SiteMap,
 meaning the title used will be the title you've assigned to the page in
 the site map:
 
-code,scala--------------------------------------- code,scala
+[source,scala]
+--------------------------------------- code,scala
 <title class="lift:Menu.title"></title>
 ---------------------------------------
 
@@ -200,7 +208,8 @@ The `lift:Menu.title` code prepends to any existing text in the title.
 This means the following will have the phrase "Site Title - " in the
 title followed by the page title:
 
-code,scala----------------------------------------------------
+[source,scala]
+----------------------------------------------------
 code,scala
 <title class="lift:Menu.title">Site Title - </title>
 ----------------------------------------------------
@@ -209,7 +218,8 @@ If you need more control, you can of course bind on title using a
 regular snippet. This example uses a custom snippet to put the site
 title after the page title:
 
-code,scala--------------------------------------------------------------
+[source,scala]
+--------------------------------------------------------------
 code,scala
 <title class="lift:MyTitle"></title>
 
@@ -219,7 +229,7 @@ object MyTitle {
 --------------------------------------------------------------
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
 * http://simply.liftweb.net/index-7.10.html#toc-Section-7.10[CSS
 Selector Transforms] in _Simply Lift_.
@@ -233,21 +243,22 @@ http://groups.google.com/group/liftweb/browse_thread/thread/e19bd2dda2b3159d[dyn
 titles on sitemap].
 
 Including HTML5 Shiv
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You want to include HTML5 Shiv (a.k.a. HTML5 Shim) so you can use HTML5
 elements with legacy IE browsers.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Put the markup in a snippet and include the snippet in your page or
 template.
 
-code,scala-------------------------------------------------------------------
+[source,scala]
+-------------------------------------------------------------------
 code,scala
 package code.snippet
 
@@ -263,12 +274,13 @@ object Html5Shiv {
 Reference the snippet in the `<head>` of your
 `templates-hidden/default.html`, e.g.,:
 
-code,html---------------------------------------- code,html
+[source,html]
+---------------------------------------- code,html
 <script class="lift:Html5Shiv"></script>
 ----------------------------------------
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 The HTML5 parser used by Lift does not carry comments from the source
 through to the rendered page. If you're looking at `Unparsed` and
@@ -276,7 +288,7 @@ worried, your instincts are correct, but in this case we do want
 unparsed XML content (the comment tag) included in the output.
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
 *
 https://groups.google.com/forum/?fromgroups#!topic/liftweb/kLzcJwfIqHQ[How
@@ -284,19 +296,20 @@ to incorporate html5shiv], from the mailing list.
 * http://code.google.com/p/html5shim/[html5shim Google code page].
 
 Adding a Google +1 button
--------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You want to include a Google +1 button on a page.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Put the markup into a snippet and invoke the snippet. For example:
 
-code,scala-------------------------------------------------------
+[source,scala]
+-------------------------------------------------------
 code,scala
 object PlusOne {
 
@@ -315,42 +328,45 @@ object PlusOne {
 
 Reference the snippet to make the button show by including the script...
 
-code,html-------------------------------------- code,html
+[source,html]
+-------------------------------------- code,html
 <script class="lift:PlusOne"></script>
 --------------------------------------
 
 ...and including the code Google ask you to include:
 
-code,html------------------------------------------------------------------
+[source,html]
+------------------------------------------------------------------
 code,html
 <div class="g-plusone" data-size="medium" data-annotation="bubble"
   data-href="http://www.example.org/"></div>
 ------------------------------------------------------------------
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
 * http://www.google.com/intl/en/webmasters/+1/button/index.html[Google
 +1 Documentation].
 
 Returning snippet markup unchanged
-----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You want a snippet to return the original markup associated with the
 snippet invocation.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Use the `PassThru` transform that does not change the nodes. For
 example, you have a snippet which performs a transforms when some
 condition is met, but if the condition is not met, you want the snippet
 return the original markup:
 
-code,scala----------------------------------------- code,scala
+[source,scala]
+----------------------------------------- code,scala
 if (somethingOK)
   ".myclass *" #> <p>Everything is OK</p>
 else
@@ -358,13 +374,13 @@ else
 -----------------------------------------
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 `PassThru` is a `NodeSeq => NodeSeq` function that returns the input it
 is given (an identity function).
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
 * Mailing list discussion:
 https://groups.google.com/forum/?fromgroups#!topic/liftweb/A69tyIBBSdg[How
@@ -375,26 +391,27 @@ source where `PassThru` is defined.
 * _Simply Lift_ section
 http://simply.liftweb.net/index-7.10.html#toc-Section-7.10[7.10 CSS
 Selector Transforms]. Snippet not found when using HTML5
-==================================
+
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You're using Lift with the HTML5 parser and one of your snippets,
 perhaps `<lift:HelloWorld.howdy />`, is rendering with a "Class Not
 Found" error.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Switch to the designer-friendly snippet invocation mechanism. E.g.,
 
-code,scala--------------------------------------------- code,scala
+[source,scala]
+--------------------------------------------- code,scala
 <div class="lift:HellowWorld.howdy">...</div>
 ---------------------------------------------
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 The HTML5 parser and the traditional Lift XHTML parser have different
 behaviours, in particular converting elements and attributes to lower
@@ -402,29 +419,29 @@ case when looking up snippets. The two links in the _See Also_ section
 gives a more complete description.
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
-*
-https://groups.google.com/forum/?fromgroups#!topic/liftweb/H-xe1uRLW1c[Html5
+* https://groups.google.com/forum/?fromgroups#!topic/liftweb/H-xe1uRLW1c[Html5
 and XHTML are different] important notes from the mailing list.
 * Wiki page on
 http://www.assembla.com/wiki/show/liftweb/HtmlProperties_XHTML_and_HTML5[HtmlProperties,
 XHTML and HTML5]. Avoiding CSS and JavaScript caching
-===================================
+
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You've modified CSS or JavaScript in your application, but web browsers
 have cached your resources and are using the older versions. You'd like
 to avoid this browser caching.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Add the `lift:with-resource-id` class attribute to script or link tags:
 
-code,html---------------------------------------------------------
+[source,html]
+---------------------------------------------------------
 code,html
 <script class="lift:with-resource-id" src="/myscript.js" 
  type="text/javascript"></script>
@@ -436,13 +453,14 @@ starts, it defeats browser caching.
 
 The resultant HTML might be:
 
-code,html------------------------------------------------- code,html
+[source,html]
+------------------------------------------------- code,html
 <script src="/myscript.js?F619732897824GUCAAN=_" 
   type="text/javascript" ></script>
 -------------------------------------------------
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 If you need some other behaviour from `with-resource-id` you can assign
 a new function of type `String => String` to
@@ -460,7 +478,7 @@ avoid doing this in the `<head>` of your page as the HTML5 parser will
 move the tags to be outside of the head section.
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
 * Chapter 6 of _Lift in Action_.
 * Mailing list discussion of
@@ -475,22 +493,23 @@ caching] notes from Google.
 example].
 
 Adding to the head of a page
-----------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You use a template for layout, but on one specific page you need to add
 something to the `<head>` section.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Use the `lift:head` snippet or CSS class so Lift knows to merge the
 contents with the `<head>` of your page. For example, suppose you have
 the following contents in `templates-hidden/default.html`:
 
-code,html-----------------------------------------------------------------
+[source,html]
+-----------------------------------------------------------------
 code,html
 <html lang="en" xmlns:lift="http://liftweb.net/"> 
   <head> 
@@ -511,7 +530,8 @@ Also suppose you have `index.html` on which you want to include `my.css`
 just for that page. Do so by including the CSS in the part of the page
 that will get processed and mark it for the head with `lift:head`:
 
-code,html---------------------------------------------------------------------------
+[source,html]
+---------------------------------------------------------------------------
 code,html
 <!DOCTYPE html>
 <html>
@@ -530,7 +550,8 @@ code,html
 Note that this `index.html` page is validated HTML5, and will produce a
 result with the custom CSS inside the `<head>` tag, something like this:
 
-code,html--------------------------------------------------------------------------
+[source,html]
+--------------------------------------------------------------------------
 code,html
 <!DOCTYPE html>
 <html lang="en">
@@ -558,7 +579,7 @@ code,html
 --------------------------------------------------------------------------
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 If you find your tags not appearing the the `<head>` section, check that
 the HTML in your template and page is valid HTML5.
@@ -571,7 +592,7 @@ You may also see `data-lift="head"` is also used as an alternative to
 `class="lift:head"`.
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
 * Wiki page on
 http://www.assembla.com/spaces/liftweb/wiki/HtmlProperties_XHTML_and_HTML5[HtmlProperties
@@ -580,19 +601,20 @@ XHTML and HTML5].
 https://groups.google.com/forum/?fromgroups#!topic/liftweb/rG_pOXdp4Ew[designer
 friendly way of head merge.].
 * http://validator.w3.org/[W3C HTML validator]. Custom 404 page
-===============
+
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You want to show a customised "404" (page not found) page.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 In `Boot.scala` add the following:
 
-code,scala-----------------------------------------------------------------
+[source,scala]
+-----------------------------------------------------------------
 code,scala
 LiftRules.uriNotFound.prepend(NamedPF("404handler"){
   case (req,failure) => 
@@ -604,7 +626,7 @@ The file `src/main/webapp/404.html` will now be served for requests to
 unknown resources.
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 The `uriNotFound` Lift rule needs to return a `NotFound` in reply to a
 `Req` (request) and optional `Failure`. This allows you to customise the
@@ -623,22 +645,21 @@ indicates the path we've given isn't absolute, and doesn't end in a
 slash.
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
-*
-http://www.assembla.com/spaces/liftweb/wiki/Custom_404_-_URI_not_found_page[Lift
+* http://www.assembla.com/spaces/liftweb/wiki/Custom_404_-_URI_not_found_page[Lift
 Wiki entry for this topic]
 
 Other custom status pages
--------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You want to show a customised page for certain HTTP status codes.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Use `LiftRules.responseTransformers` to match against the response and
 supply an alternative.
@@ -647,7 +668,8 @@ For example, suppose we want to provide a customised page for 403
 ("Forbidden") statuses created in your Lift application. In `Boot.scala`
 we could add the following:
 
-code,scala---------------------------------------------------------------------
+[source,scala]
+---------------------------------------------------------------------
 code,scala
 LiftRules.responseTransformers.append {
   case r if r.toResponse.code == 403 => RedirectResponse("/403.html")
@@ -659,7 +681,7 @@ The file `src/main/webapp/403.html` will now be served for requests that
 generate 403 status codes. Other requests are passed through.
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 `LiftRules.responseTransformers` allows you to supply
 `LiftResponse => LiftResponse` functions to change a response at the end
@@ -672,7 +694,8 @@ send to the client.
 One way to test the above example is to add the following to Boot to
 make all requests to `/secret` return a 403:
 
-code,scala------------------------------------------------------------------
+[source,scala]
+------------------------------------------------------------------
 code,scala
 val Protected = If(() => false, () => ForbiddenResponse("no way"))
 
@@ -685,7 +708,7 @@ val entries = List(
 ------------------------------------------------------------------
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
 * _The Request/Response Lifecycle_ in
 http://exploring.liftweb.net/master/index-9.html#toc-Section-9.2[Exploring
@@ -695,20 +718,21 @@ https://groups.google.com/forum/?fromgroups#!topic/liftweb/9wU0hzQ0wgs%5B1-25%5D
 error 403 page].
 
 Links in notices
-----------------
+~~~~~~~~~~~~~~~~
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You want to include a clickable link in your `S.error`, `S.notice` or
 `S.warning` messages.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Include a `NodeSeq` containing a link in your notice:
 
-code,scala------------------------------------------------------------
+[source,scala]
+------------------------------------------------------------
 code,scala
 S.error("checkPrivacyPolicy", 
   <span>See our <a href="/policy">privacy policy</a></span>)
@@ -716,15 +740,15 @@ S.error("checkPrivacyPolicy",
 
 You might pair this with the following in your template:
 
-code,html-------------------------------------------------- code,html
+[source,html]
+-------------------------------------------------- code,html
 <div class="lift:Msg?id=checkPrivacyPolicy"></div>
 --------------------------------------------------
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
-*
-http://www.assembla.com/spaces/liftweb/wiki/Lift_Notices_and_Auto_Fadeout[Lift
+* http://www.assembla.com/spaces/liftweb/wiki/Lift_Notices_and_Auto_Fadeout[Lift
 Notices and Auto Fadeout] wiki page.
 * Mailing list question:
 https://groups.google.com/forum/?fromgroups#!topic/liftweb/Q6ToHnebOB0[Is
@@ -732,15 +756,15 @@ there a way for the display of the S.errror to have a clickable URL in
 it?]
 
 Rendering Textile markup
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You want to render Textile markup in your web app.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Install the Lift Textile module in your `build.sbt` file by adding the
 following to the list of dependencies:
@@ -748,7 +772,8 @@ following to the list of dependencies:
 `scala "net.liftweb" %% "lift-textile" % liftVersion % "compile->default",`
 You can then render Textile using `toHtml` method:
 
-code,scala--------------------------------------------------------------------------
+[source,scala]
+--------------------------------------------------------------------------
 code,scala
 scala> import net.liftweb.textile._                   
 import net.liftweb.textile._
@@ -772,7 +797,7 @@ Textile markup into HTML is pretty easy to use.</p>,
 --------------------------------------------------------------------------
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 Textile is one of many
 http://en.wikipedia.org/wiki/Lightweight_markup_language[lightweight
@@ -780,7 +805,7 @@ markup language], but stands out for Lift users as being easy to install
 and use.
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
 * http://redcloth.org/hobix.com/textile/[A Textile Reference].
 * http://textile.thresholdstate.com/[An online Textile to HTML tool]
@@ -793,20 +818,21 @@ Source code for Textile].
 *
 https://github.com/lift/modules/blob/master/textile/src/test/scala/net/liftweb/textile/TextileSpec.scala[Lift
 tests for the Textile plugin]. Access restriction by HTTP header
-=================================
+
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You need to control access to a page based on the value of a HTTP
 header.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Use a custom `If` in SiteMap:
 
-code,scala-----------------------------------------------------------------------
+[source,scala]
+-----------------------------------------------------------------------
 code,scala
 val HeaderRequired = If(  
   () => S.request.map(_.header("ALLOWED") == Full("YES")) openOr false,
@@ -826,13 +852,14 @@ request for the page will be redirected with a Lift error notice of
 
 This can be tested from the command line using a tool like cURL:
 
-code,scala---------------------------------------------------------------
+[source,scala]
+---------------------------------------------------------------
 code,scala
 \$ curl  http://127.0.0.1:8080/restricted.html -H "ALLOWED:YES"
 ---------------------------------------------------------------
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 The `If` test ensures the `() => Boolean` function you supply as a first
 argument returns `true` before the page it applies to is shown. The
@@ -847,7 +874,7 @@ the user to the home page (actually
 string.
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
 * Mailing list thread on
 https://groups.google.com/forum/?fromgroups#!topic/liftweb/CtSGkPbgEVw[testing
