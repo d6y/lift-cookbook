@@ -1,0 +1,511 @@
+Pipeline
+========
+
+This chapter deals with solutions relating to the Lift processing pipeline.
+
+You can get a great overview of the pipline, including diagrams, from [9.2 The Request/Response Lifecycle](http://exploring.liftweb.net/master/index-9.html#toc-Section-9.2) in  _Exploring Lift_ and from the [HTTP Pipeline Wiki page](http://www.assembla.com/spaces/liftweb/wiki/HTTP_Pipeline).
+
+
+
+
+
+
+
+
+Streaming content
+=================
+
+Problem
+-------
+
+You want to stream content back to the web client.
+
+Solution
+--------
+
+Use `OutputStreamResponse`, passing it a function that will write to the `OutputStream` that Lift supplies. 
+
+In this example we'll stream all the integers from 1:
+
+```scala
+import net.liftweb.http.{Req,OutputStreamResponse}
+import net.liftweb.http.rest._
+
+object Numbers extends RestHelper {
+
+  // Generate numbers, converted to Array[Byte]
+  def infinite = Stream.from(1).map(num2bytes)
+
+  def num2bytes(x: Int) = (x + "\n") getBytes("utf-8")
+  
+  serve {
+    case Req("numbers" :: Nil, _, _) => 
+   	  OutputStreamResponse( (out) => infinite.foreach(out.write) ) 
+  }
+}
+```
+
+Wire this into Lift in `Boot.scala`:
+
+```scala
+LiftRules.dispatch.append(Numbers)
+```
+
+Visiting `http://127.0.0.1:8080/numbers` will generate a 200 status code and start producing the integers from 1.
+
+For more control over status codes, headers and cookies, there are a variety of signatures for the `OutputStreamResponse` object.  For the most control, create an instance of the `OutputStreamResponse` class:
+
+```scala
+case class OutputStreamResponse(
+  out: (OutputStream) => Unit,  
+  size: Long, 
+  headers: List[(String, String)], 
+  cookies: List[HTTPCookie], 
+  code: Int) 
+```
+
+Discussion
+----------
+
+The function you give as the first argument to `OutputStreamResponse` is called with the output stream to the client. This means that the bytes you are writing to the `out` stream are being written to the client. 
+
+Any headers you set (such as `Content-type`), or status code, may already have been set by the time your function is called.  Note that setting `size` to `-1` causes the `Content-length` header to be skipped.
+
+There are two related types of response: `InMemoryResponse` and `StreamingResponse`
+
+### InMemoryResponse
+
+`InMemoryResponse` is useful if you have already assembled the full content to send to the client. The signature is straightforward:
+
+```scala
+case class InMemoryResponse(
+  data: Array[Byte], 
+  headers: List[(String, String)], 
+  cookies: List[HTTPCookie], 
+  code: Int)
+```
+
+
+### StreamingResponse
+
+`StreamingResponse` pulls bytes into the output stream.  This contrasts with `OutputStreamResponse`, where you are pushing data to the client.
+
+Construct this type of response by providing a method that can be read from:
+
+```scala
+case class StreamingResponse(
+  data: {def read(buf: Array[Byte]): Int}, 
+  onEnd: () => Unit, 
+  size: Long, 
+  headers: List[(String, String)], 
+  cookies: List[HTTPCookie], 
+  code: Int)
+```
+
+Notice the use of a structural type for the `data` parameter.  Anything with a matching `read` method can be given here, including `java.io.InputStream`-like objects, meaning  `StreamingResponse` can act as a pipe from input to output. Lift pulls 8k chunks from your `StreamingResponse` to send to the client. 
+
+Your `data` `read` function should follow the semantics of Java IO and return "the total number of bytes read into the buffer, or -1 is there is no more data because the end of the stream has been reached".
+
+See Also
+--------
+
+* [LiftResponse.scala source](https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/LiftResponse.scala)
+* [java.io.InputStream contract description](http://docs.oracle.com/javase/6/docs/api/java/io/InputStream.html#read%28byte[]%29)
+
+
+
+Serving a file with access control
+=================
+
+Problem
+-------
+
+You have a file on disk, you want to allow a user to download it, but only if they are allowed to.  If they are not allowed to, explain why.
+
+
+Solution
+--------
+
+Use `RestHelper` to serve the file or an explanation page.  For example, suppose we have the file `/tmp/important` and we only want selected requests to download that file from the `/download/important` URL. The structure for that would be:
+
+```scale
+object DownloadService extends RestHelper {
+
+  // Code explained below to go here
+
+  serve {
+    case "download" :: Known(fileId) :: Nil Get req => 
+      if (permitted)
+        fileResponse(fileId)
+      else
+        Full(RedirectResponse("/sorry"))    
+  }
+}
+```
+
+We are allowing users to download "known" files.  That is, files which we approve of for access. We do this because  opening up the file system to any unfiltered end-user input pretty much means your server will be compromised.
+
+For our example, `Known` is checking a static list of names:
+ 
+```scala
+val knownFiles = List("important")
+
+object Known {
+ def unapply(fileId: String): Option[String] = knownFiles.find(_ == fileId)
+}
+```
+
+For requests to these known resources, we convert the REST request into a `Box[LiftResponse]`.  For permitted access we serve up the file:
+
+```scala
+private def permitted = scala.math.random < 0.5d
+
+private def fileResponse(fileId: String): Box[LiftResponse] = for {
+    file <- Box !! new java.io.File("/tmp/"+fileId)
+    input <- tryo(new java.io.FileInputStream(file))
+ } yield StreamingResponse(input, 
+    () => input.close,
+    file.length,
+    ("Content-Disposition" -> "attachment; filename="+fileId) :: Nil,
+    Nil, 200)
+```
+
+If no permission is given, the user is redirected to `/sorry.html`.
+
+All of this is wired into Lift in `Boot.scala` with:
+
+```scala
+LiftRules.dispatch.append(DownloadService)
+```
+
+
+
+Discussion
+----------
+
+By turning the request into a `Box[LiftResponse]` we are able to serve up the file, send the user to a different page, and also allow Lift to handle the 404 (`Empty`) cases. 
+
+If we added a test to see if the file existed on disk in `fileResponse` that would cause the method to evaluate to `Empty` for missing files, which triggers a 404.  As the code stands, if the file does not exist, the `tryo` would give us a `Failure` which would turn into a 404 error with a body of "/tmp/important (No such file or directory)".
+
+Because we are testing for known resources via the `Known` extractor as part of the pattern for `/download/`, unknown resources will not be passed through to our `File` access code.  Again, Lift will return a 404 for these.
+
+Guard expressions can also be useful for these kinds of situations:
+
+```scala
+serve {
+  case "download" :: Known(id) :: Nil Get _ if permitted => fileResponse(id)
+  case "download" :: _ Get req => RedirectResponse("/sorry")
+}
+```
+
+You can mix and match extractors, guards and conditions in your response to best fit the way you want the code to look and work.
+
+See Also
+--------
+
+* Mailing list thread on [PHP's readfile equivalent for Lift](https://groups.google.com/forum/?fromgroups#!topic/liftweb/7N2OUInltUE).
+* _Chatper 24: Extractors_ from [Programming in Scala](http://www.artima.com/pins1ed/extractors.html).
+* Recipe on [Streaming content](Streaming+content.html). 
+
+Debugging a request
+===================
+
+Problem
+-------
+
+You want to debug a request and see what's arriving to your Lift app.
+
+Solution
+--------
+
+Add an `onBeginServicing` function in `Boot.scala` to log the request.  For example:
+
+```scala
+LiftRules.onBeginServicing.append {
+  case r => println("Received: "+r)
+}
+```
+
+Discussion
+----------
+
+The `onBeginServicing` call is called early in the Lift pipeline, before `S` is set up, and before Lift has the chance to 404 your request. The function signature it expects is `Req => Unit`.
+
+If you want to select only certain paths, you can. For example, to track all requests starting `/paypal`:
+
+```scala
+LiftRules.onBeginServicing.append {
+  case r @ Req(List("paypal", _), _, _) => println(r)
+}
+```
+
+There is also an `onEndServicing` which can be given functions of type `(Req, Box[LiftResponse]) => Unit`.
+
+See Also
+--------
+
+* Source code for [LiftRules.scala](https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/LiftRules.scala).
+* [Req.scala](https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/Req.scala) source.
+* Mailing list discussion on [What's the difference between LiftRules.early and LiftRules.onBeginServicing and when does S.locale get initialized?](https://groups.google.com/forum/?fromgroups#!topic/liftweb/K0S1rU0qtX0)
+
+Running code when sessions are created (or destroyed)
+=====================================================
+
+Problem
+-------
+
+You want to carry out actions when a session is created or destroyed.
+
+Solution
+--------
+
+Make use of the hooks in `LiftSession`.  For example, in `Boot.scala`:
+
+```scala
+LiftSession.afterSessionCreate ::= 
+ ( (s:LiftSession, r:Req) => println("Session created") )
+
+LiftSession.onBeginServicing ::= 
+ ( (s:LiftSession, r:Req) => println("Processing request") )
+
+LiftSession.onShutdownSession ::= 
+ ( (s:LiftSession) => println("Session going away") )
+```
+
+Discussion
+----------
+
+The hooks in `LiftSession` allow you to insert code at various points in the session lifecycle: when the session is created, at the start of servicing the request, after servicing, when the session is about to shutdown, at shutdown... check the source code link, below and the _Exploring Lift_ session pipeline diagrams and descriptions.
+
+If the request path has been marked as being stateless via `LiftRules.statelessReqTest`, the above example would only execute the `onBeginServicing` functions.
+
+Note that the Lift session is not the same as the HTTP Session.
+
+See Also
+--------
+
+* [LiftSession source code](https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/LiftSession.scala)
+* [Example of logging a user out if the login via another browser](https://github.com/dpp/starting_point/commit/729f05f9010b80139440369c4e1d0889cac346cf)
+* Chapter 15 of _Lift in Action_ gives an example of timing requests using `LiftSession`.
+* [The request/response lifecycle](http://exploring.liftweb.net/master/index-9.html#toc-Section-9.2) in _Exploring Lift_, includes diagrams showing the steps a request passes through.
+* [Wiki page on the HTTP Pipeline](http://www.assembla.com/spaces/liftweb/wiki/HTTP_Pipeline)
+* [Session management](http://exploring.liftweb.net/master/index-9.html#toc-Section-9.5) in _Exploring Lift_.
+Run code when Lift shutsdown
+============================
+
+Problem
+-------
+
+You want to have some code executed when your Lift application is shutting down.
+
+Solution
+--------
+
+Append to `LiftRules.unloadHooks`.
+
+```scala
+LiftRules.unloadHooks.append( () => println("Shutting down") )
+```
+
+Discussion
+----------
+
+You append functions of type `() => Unit` and these functions are run right at the end of the Lift handler, after sessions have been destroyed, Lift actors have been shutdown, and requests have finished being handled.  This is triggered, in the words of the Java servlet specification, "by the web container to indicate to a filter that it is being taken out of service".
+
+See Also
+--------
+
+* The recipe showing how to [run tasks periodically](Run+tasks+periodically.html) includes an example of using a unload hook.
+Running stateless
+=================
+
+Problem
+-------
+
+You want to force you application to be stateless at the HTTP level.
+
+Solution
+--------
+
+In `Boot.scala`:
+
+```scala
+LiftRules.enableContainerSessions = false
+LiftRules.statelessReqTest.append { case _ => true }
+```
+
+All requests will now be treated as stateless. Any attempt to use state, such as via `SessionVar` for example, will trigger a warning in developer mode: Access to Lift's statefull features from Stateless mode.  The operation on state will not complete. 
+
+Discussion
+----------
+
+HTTP session creation is controlled via `enableContainerSessions`, and applies for all requests.  Leaving this value at the default (`true`) allows more fine-grained control over which requests are stateless.
+
+Using `statelessReqTest` allows you to decide based on the `StatelessReqTest` if it should be stateless (`true`) or not (`false`).  For example:
+
+```scala
+def asset(file: String) = 
+  List(".js", ".gif", ".css").exists(file.endsWith)
+
+LiftRules.statelessReqTest.append { 
+  case StatelessReqTest("index" :: Nil, httpReq) =>  true
+  case StatelessReqTest(List(_, file),  _) if asset(file) => true
+}
+```
+
+This example would only make the index page and any GIFs, JavaScript and CSS files stateless.  The `httpReq` part is a `HTTPRequest` instance, allowing you to base the decision on the content of the request (cookies, user agent, etc).
+
+Another option is `LiftRules.statelessDispatch` which allows you to register a function which returns a `LiftResponse`.  This will be executed without a session, and convenient for REST-based services.
+
+
+See Also
+--------
+
+* [Announcement of enhanced stateless support](http://groups.google.com/group/liftweb/browse_thread/thread/dab54c0a75a9a52a)
+* [Wiki page on Stateless requests](http://www.assembla.com/wiki/show/liftweb/Stateless_Requests)
+* [HTTP and REST](http://simply.liftweb.net/index-5.3.html#toc-Section-5.3) in _Simply Lift_.
+
+
+Catch any exception
+===================
+
+Problem
+-------
+
+You want a wrapper around all requests to catch exceptions and display something to the user.
+
+Solution
+--------
+
+Declare an exception handler in `Boot.scala`:
+
+```scala
+LiftRules.exceptionHandler.prepend {
+  case (runMode, request, exception) =>           
+  	logger.error("Boom! At "+request.uri)
+  	InternalServerErrorResponse()
+}
+```
+
+In the above example, all exceptions for all requests at all run modes are being matched, causing an error to be logged and a 500 (internal server error) to be returned to the browser.
+
+Discussion
+----------
+
+The partial function you define `exceptionHandler` needs to return a `LiftResponse` (i.e., something to send to the browser).  The default behaviour is to return an `XhtmlResponse`, which in `Props.RunModes.Development` gives details of the exception, and in all other run modes simply says "Something unexpected happened".
+
+You can return any kind of `LiftResponse`, including `RedirectResponse`, `JsonResponse`, `XmlResponse`, `JavaScriptResponse` and so on.
+
+This second example shows matching on Ajax requests only, and returning a JavaScript dialog to the browser:
+
+```scala
+import net.liftweb.http.js.JsCmds._
+
+val ajax = LiftRules.ajaxPath
+
+LiftRules.exceptionHandler.prepend {
+  case (mode, Req(ajax :: _, _, PostRequest), ex) => 
+    logger.error("Error handing ajax")
+    JavaScriptResponse(Alert("Boom!"))
+}
+```
+
+This Ajax example will jump in before Lift's default behaviour for Ajax errors.  The default is to retry the Ajax command three times (`LiftRules.ajaxRetryCount`), and then execute `LiftRules.ajaxDefaultFailure`, which will pop up a dialog saying: "The server cannot be contacted at this time"
+
+
+See Also
+--------
+
+* [Source for LiftRules.scala](https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/LiftRules.scala)
+* [Source for LiftResponse.scala](https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/LiftResponse.scala)
+* [Mailing list discussion on JS dialogs for exceptions](http://groups.google.com/group/liftweb/browse_thread/thread/842954ffc333b0f9)
+
+
+Accessing HttpServletRequest
+============================
+
+Problem
+-------
+
+To satisfy some API you need access to the `HttpServletRequest`.
+
+Solution
+--------
+
+Cast `S.request`:
+
+```scala
+import net.liftweb.http.S
+import net.liftweb.http.provider.servlet.HTTPRequestServlet
+import javax.servlet.http.HttpServletRequest
+
+val servletRequest: Box[HttpServletRequest] = for {
+  req <- S.request
+  inner <- Box.asA[HTTPRequestServlet](req.request)
+} yield inner.req
+```
+
+You can then make your API call:
+
+```scala
+servletRequest.foreach { r => yourApiCall(r) }
+```
+
+Discussion
+----------
+
+Note that the results is a `Box` because there might not be a request when you evaluate `servletRequest` -- or you might one day port to a different deployment environment and not be running on a standard Java servlet container.
+
+As your code will have a direct dependency on the Java Servlet API, you'll need to include this dependency in your SBT build:
+
+    "javax.servlet" % "servlet-api" % "2.5" % "provided->default"
+
+See Also
+--------
+
+* Mailing list question regarding [HttpRequest conversion](https://groups.google.com/forum/?fromgroups#!topic/liftweb/67tQXSY9XS4).
+Secure requests only 
+===================
+
+Problem
+-------
+
+You want to ensure clients are using https. 
+
+Solution
+--------
+
+Add an `earlyResponse` function in `Boot.scala` redirecting insecure requests.  For example:
+
+```scala
+LiftRules.earlyResponse.append { (req: Req) ⇒ if (req.request.scheme != "https") {
+  val uriAndQueryString = req.uri + (req.request.queryString.map(s => "?"+s) openOr "")
+  val uri = "https://%s%s".format(req.request.serverName, uriAndQueryString)
+  Full(PermRedirectResponse(uri, req, req.cookies: _*))
+} else Empty }
+```
+
+Discussion
+----------
+
+The `earlyResponse` call is called early in the Lift pipeline. It is used to excute code before a request is handled and if required exit the pipeline and return a response.  The function signature it expects is `Req ⇒ Box[LiftResponse]`.
+
+The ideal method to ensure requests are served using the correct scheme would be via web server configuration, such as Apache or Nginx. This isn't possible in some cases, such as when your application is deployed to a PaaS, for instance CloudBees.
+
+### Amazon Load Balancer
+
+For Amazon Elastic Load Balancer note that you need to use `X-Forwarded-Proto` header to detect HTTPs.  As mentioned in their _Overview of Elastic Load Balancing_ document, "Your server access logs contain only the protocol used between the server and the load balancer; they contain no information about the protocol used between the client and the load balancer."  In this situation modify the above test from `req.request.scheme != "https"` to:
+
+```scala
+req.header("X-Forwarded-Proto") != Full("https")
+```
+
+
+See Also
+--------
+
+* Source code for [LiftRules.scala](https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/LiftRules.scala).
+* [Req.scala](https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/Req.scala) source.
+* [Lift pipeline](https://www.assembla.com/spaces/liftweb/wiki/HTTP_Pipeline).
+* @fmpwizard observations and solution for [Redirect http to https behind Amazon load balancer](https://groups.google.com/d/msg/liftweb/204aAsVb_4Y/I1BiLKkrTPIJ).
+* [Overview of Elastic Load Balancing](http://docs.amazonwebservices.com/ElasticLoadBalancing/latest/DeveloperGuide/arch-loadbalancing.html) at AWS.
