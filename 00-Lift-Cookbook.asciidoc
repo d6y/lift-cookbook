@@ -1,6 +1,6 @@
 :bookseries: cookbook
-About this text
----------------
+Preface: About this text
+------------------------
 
 A collection of solutions to questions you might have while developing
 web applications with the http://www.liftweb.net[Lift web framework].
