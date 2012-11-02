@@ -372,7 +372,7 @@ object QuotationAPI extends RestHelper {
 
 Wire this into `Boot.scala`:
 
-[source,]
+[source,scala]
 ----
 LiftRules.statelessDispatch.append(code.lib.QuotationAPI)
 ----

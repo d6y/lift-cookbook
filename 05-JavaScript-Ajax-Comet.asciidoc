@@ -97,7 +97,7 @@ Bind the appropriate event hander with Javascript. Here's an example
 where we make a button slowly fade away when you press it, but notice
 that we're setting up this binding in our server-side Lift code:
 
-[source,]
+[source,scala]
 ----
 class HelloWorld {
   def buttonBind = 
