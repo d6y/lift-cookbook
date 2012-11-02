@@ -1,0 +1,68 @@
+:bookseries: cookbook
+Lift Cookbook
+-------------
+
+A collection of solutions to questions you might have while developing
+web applications with the http://www.liftweb.net[Lift web framework].
+
+About this text
+---------------
+
+The aim is to give a single, short answer to a specific question. Where
+there are different ways to achieve the same result, this cookbook just
+shows one way, but may point you at alternatives in a discussion on the
+solution.
+
+Learning about Lift
+~~~~~~~~~~~~~~~~~~~
+
+If you are looking to learn Lift, take a look at:
+
+* http://simply.liftweb.net/[Simply Lift].
+* http://www.manning.com/perrett/[Lift in Action], Manning Publications.
+* http://exploring.liftweb.net/[Exploring Lift] (also known as *The
+Definitive Guide to Lift*).
+* http://liftweb.net/getting_started[Getting Started] and
+http://www.assembla.com/spaces/liftweb/wiki/Resources[Resources] on the
+Lift web site.
+* http://seventhings.liftweb.net/[Seven things] that distinguish Lift
+from other web frameworks.
+
+Copyright
+~~~~~~~~~
+
+This document is licensed Creative Commons Attribution, Non Commercial,
+No Derivatives.
+
+Contributors
+~~~~~~~~~~~~
+
+* Richard Dallaway
+* Jono Ferguson
+* Franz Bettag
+* Marek Żebrowski
+
+Source
+~~~~~~
+
+The source is at
+https://github.com/d6y/lift-cookbook[https://github.com/d6y/lift-cookbook]
+
+Updates
+~~~~~~~
+
+Follow https://twitter.com/#!/liftcookbook[@LiftCookbook].
+
+Software versions
+~~~~~~~~~~~~~~~~~
+
+Except where otherwise indicated, the examples use Lift 2.4 with SBT
+0.11.2
+
+Conventions
+~~~~~~~~~~~
+
+* *Emphasised text* is used for filenames, commands, introducing new
+concepts.
+* `Constant width` for code and commands.
+

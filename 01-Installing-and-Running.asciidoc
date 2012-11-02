@@ -1,0 +1,378 @@
+Install and Running
+-------------------
+
+This chapter covers questions around starting development with Lift.
+You'll find hints about production deployment in later chapters.
+
+Downloading and running Lift
+----------------------------
+
+Problem
+~~~~~~~
+
+You want to install and run Lift on your computer.
+
+Solution
+~~~~~~~~
+
+The only prerequisite for installing and running Lift is to have Java
+1.5 or later installed. Instructions for installing Java can be found at
+http://java.com/en/download/manual.jsp[java.com].
+
+Once you have Java, the following instructions will download, build and
+start a basic Lift application.
+
+for Mac and Linux
+^^^^^^^^^^^^^^^^^
+
+* Download:
+https://github.com/d6y/lift_24_sbt/zipball/master[https://github.com/d6y/lift_24_sbt/zipball/master]
+* Unzip the file
+* Start Terminal or your favourite shell tool
+* Navigate into the unzipped folder
+* Run:`./sbt`
+* Required libraries will be downloaded
+* At the SBT prompt (>) type: `container:start`
+* Start your browser and go to `http://127.0.0.1:8080/`
+
+for Windows
+^^^^^^^^^^^
+
+* Download:
+https://github.com/d6y/lift_24_sbt/zipball/master[https://github.com/d6y/lift_24_sbt/zipball/master]
+* Unzip the file
+* ?
+* Run:`./sbt.bat`
+* Required libraries will be downloaded
+* At the SBT prompt (>) type: `container:start`
+* Start your browser and go to `http://127.0.0.1:8080/`
+
+Expected result
+^^^^^^^^^^^^^^^
+
+The result of the above commands should be a basic Lift app running on
+your computer.
+
+image:img/running_lift_basic_browser_small.jpg[Screenshot of the Lift
+basic app running,title="Lift Basic app in a browser"]
+
+Discussion
+~~~~~~~~~~
+
+Lift isn't installed in the usual sense of "installing software".
+Instead it uses standard build tools, such as SBT or Maven, to assemble
+your application built with the Lift framework. This recipe has
+downloaded a bare-bones Lift application, and then started it using a
+build tool.
+
+The `sbt` command starts the Simple Build Tool, a dependency management
+tool used by Scala projects. It will check the project and download any
+libraries required by this Lift application. The command
+`container:start` starts the web server on port 8080 (by default) and
+passes requests to the Lift application.
+
+You may be wondering why this recipe doesn't use the official Lift
+http://liftweb.net/getting_started[getting started page] download. It's
+because that download currently uses an older version of SBT which has a
+different structure and different commands compared to the latest
+version we use in this cookbook.
+
+See also
+~~~~~~~~
+
+* https://github.com/harrah/xsbt/wiki[Simple Build Tool]
+
+Developing using a text editor
+------------------------------
+
+Problem
+~~~~~~~
+
+You want to develop your Lift application using your favourite text
+editor, hitting reload in your browser to see changes.
+
+Solution
+~~~~~~~~
+
+Run SBT while you are editing to handle compilation of Scala files.
+
+Start `sbt` and enter the following:
+
+code,scala-------------------------------------- code,scala
+~; container:start; container:reload /
+--------------------------------------
+
+When you save a source file in your editor, SBT will detect this,
+compile the file, and reload the web container.
+
+Discussion
+~~~~~~~~~~
+
+An SBT command prefixed with `~` makes that command run when files
+change. The first semicolon introduces a sequence of commands, where if
+the first command succeeds, the second will run. The second semicolon
+means the `reload` command will run if the `start` command ran OK.
+
+The restarting of the web container isn't always as efficient as you'd
+like. This can often be avoided by using JRebel, which will be the
+subject of a future recipe.
+
+See also
+~~~~~~~~
+
+* https://github.com/harrah/xsbt/wiki/Triggered-Execution[SBT Triggered
+Execution]
+* https://github.com/harrah/xsbt/wiki/Command-Line-Reference[SBT Command
+Line Reference]
+* https://github.com/siasia/xsbt-web-plugin/wiki[SBT Web Plugin
+Commands]
+* http://zeroturnaround.com/jrebel/[JRebel] Developing using Eclipse
+========================
+
+Problem
+~~~~~~~
+
+You want to develop your Lift application using the Eclipse IDE, hitting
+reload in your browser to see changes.
+
+Solution
+~~~~~~~~
+
+You will need to have the http://scala-ide.org/[Scala IDE for Eclipse]
+installed. There is a link in the See also section with instructions how
+to accomplish this.
+
+To create the project files for Eclipse, add the following to
+`plugins.sbt`, which can be found in the `project` directory:
+
+code,scala-----------------------------------------------------------------------
+code,scala
+addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.0.0")
+-----------------------------------------------------------------------
+
+You can then create Eclipse project files within SBT by entering the
+following:
+
+code,scala------- code,scala
+eclipse
+-------
+
+In Eclipse, navigate to File -> Import.. and select "General > Existing
+Projects into Workspace". Navigate to and select your Lift project. You
+are now set up to develop you application in Eclipse.
+
+Run SBT while you are editing to handle reloads of the web container.
+Start `sbt` from a terminal window outside of Eclipse and enter the
+following:
+
+code,scala-------------------------------------- code,scala
+~; container:start; container:reload /
+--------------------------------------
+
+You can then edit in Eclipse, and in your web browser hit reload to see
+the change.
+
+Discussion
+~~~~~~~~~~
+
+You can also force the SBT `eclipse` command to download the Lift
+source. This will allow you to click through to the Lift source from
+methods and classes. To achieve this once, run
+`eclipse with-source=true`, but if you want this to be the default
+behaviour, add the following to your `build.sbt` file:
+
+code,scala------------------------------ code,scala
+EclipseKeys.withSource := true
+------------------------------
+
+If you find yourself using the plugin frequently, you may wish to set it
+in your global SBT configuration files: `~/.sbt/plugins/build.sbt` for
+the module definition and `~/.sbt/user.sbt` for any settings.
+
+The restarting of the web container isn't always as efficient as you'd
+like. This can often be avoided by using JRebel, which will be the
+subject of a future recipe.
+
+See also
+~~~~~~~~
+
+* http://scala-ide.org/download/current.html[ScalaIDE download]
+* https://github.com/typesafehub/sbteclipse/wiki/Using-sbteclipse[Using
+the sbteclipse plugin]
+* https://github.com/harrah/xsbt/wiki/Triggered-Execution[SBT Triggered
+Execution]
+* https://github.com/harrah/xsbt/wiki/Command-Line-Reference[SBT Command
+Line Reference]
+* https://github.com/siasia/xsbt-web-plugin/wiki[SBT Web Plugin
+Commands]
+* http://zeroturnaround.com/jrebel/[JRebel]
+
+Viewing the lift_proto H2 database
+----------------------------------
+
+Problem
+~~~~~~~
+
+You're developing using the default `lift_proto.db` H2 database, and
+you'd like use a tool to look at the tables.
+
+Solution
+~~~~~~~~
+
+Use the web interface included as part of H2, as documented in the first
+_See Also_ link. +
+Here are the steps:
+
+* Locate the H2 JAR file. For me, this was:
+`~/.ivy2/cache/com.h2database/h2/jars/h2-1.2.147.jar`.
+* Start the server from a terminal window using the JAR file you found:
+`java -cp /path/to/h2-version.jar org.h2.tools.Server`
+* This should launch your web browser, asking you to login.
+* Select "Generic H2 Server" in "Saved Settings".
+* Enter `jdbc:h2:/path/to/youapp/lift_proto.db;AUTO_SERVER=TRUE` for
+"JDBC URL", adjusting the path for the location of your database, and
+adjusting the name of the database ("lift_proto.db") if different in
+your `Boot.scala`.
+* Press "Connect" to view and edit your database.
+
+Discussion
+~~~~~~~~~~
+
+Using the connection information given here and in the links below, you
+should be able to configure other SQL tools to access the database.
+
+See also
+~~~~~~~~
+
+* https://fmpwizard.telegr.am/blog/lift-and-h2[H2 web console and Lift]
+from @fmpwizard.
+*
+http://sofoklis.posterous.com/viewingediting-h2-database-via-web-interface[Viewing/Editing
+H2 database via web interface] blog post.
+*
+https://groups.google.com/forum/?fromgroups#!topic/liftweb/Gna1OTha-MI[Default
+username/password for lift_proto.db] mailing list discussion.
+* Mailing list discussion on
+https://groups.google.com/forum/?fromgroups#!topic/liftweb/4Tvfu9859e0[Easiest
+way to set up H2 database with web console at localhost:8080/console].
+* H2's http://www.h2database.com/html/tutorial.html[tutorial page].
+
+Using the latest Lift build
+---------------------------
+
+Problem
+~~~~~~~
+
+You want to use the latest build ("snapshot") of Lift.
+
+Solution
+~~~~~~~~
+
+You need to make two changes to your `build.sbt` file. First, reference
+the snapshot repository:
+
+code,scala------------------------------------------------------------------------------------
+code,scala
+resolvers += "snapshots" at "http://oss.sonatype.org/content/repositories/snapshots"
+------------------------------------------------------------------------------------
+
+Second, change the `liftVersion` in your build to be 2.5-SNAPSHOT,
+rather than 2.4:
+
+code,scala-------------------------------- code,scala
+val liftVersion = "2.5-SNAPSHOT"
+--------------------------------
+
+Restarting SBT (or issuing a `reload` command) will trigger a download
+of the latest build.
+
+Discussion
+~~~~~~~~~~
+
+Production releases of Lift (e.g., "2.4"), as well as milestone releases
+(e.g., "2.4-M1") and release candidates (e.g., "2.4-RC1") are published
+into a releases repository. When SBT downloads them, they are downloaded
+once.
+
+Snapshot releases are different: they are the result of an automated
+build, and change often. You can force SBT to resolve the latest
+versions by running the command `clean` and then `update`.
+
+See also
+~~~~~~~~
+
+* https://github.com/harrah/xsbt/wiki/Resolvers[SBT Resolvers].
+* Learn about SNAPSHOT versioning in
+http://www.sonatype.com/books/mvnref-book/reference/pom-relationships-sect-pom-syntax.html[Maven:
+The Complete Reference].
+* https://github.com/harrah/xsbt/wiki/Command-Line-Reference[SBT Command
+line reference]. Using a new version of Scala
+============================
+
+Problem
+~~~~~~~
+
+A new Scala version has just been released and you want to immediately
+use it in your Lift project.
+
+Solution
+~~~~~~~~
+
+You may find that the latest SNAPSHOT of Lift is built using the latest
+Scala version. Failing that, and assuming you cannot wait for a build,
+providing that the Scala version is binary compatible with the latest
+version used by Lift, you can change your build file to force the Scala
+version.
+
+For example, assuming your `build.sbt` file is set up to use Lift 2.4
+with Scala 2.9.1:
+
+code,scala---------------------------------------------------------------------
+code,scala
+scalaVersion := "2.9.1"
+
+libraryDependencies ++= {
+  val liftVersion = "2.4" 
+  Seq(
+    "net.liftweb" %% "lift-webkit" % liftVersion % "compile->default"
+  )    
+}
+---------------------------------------------------------------------
+
+Let's assume that you now want to use Scala 2.9.2 but Lift 2.4 was only
+built against Scala 2.9.1. Replace `%%` with `%` for the `net.liftweb`
+resources and explicitly include the Scala version that Lift was built
+against for each Lift component:
+
+code,scala--------------------------------------------------------------------------
+code,scala
+scalaVersion := "2.9.2"
+
+libraryDependencies ++= {
+  val liftVersion = "2.4" 
+  Seq(
+    "net.liftweb" % "lift-webkit_2.9.1" % liftVersion % "compile->default"
+  )    
+}
+--------------------------------------------------------------------------
+
+Discussion
+~~~~~~~~~~
+
+In the example we have forced SBT to explicitly fetch the 2.9.1 version
+of the Lift resources rather than allow it to compute the URL to the
+Lift components.
+
+Please note this only works for minor releases of Scala: major releases
+break compatibility.
+
+See also
+~~~~~~~~
+
+* Mailing list discussion on
+https://groups.google.com/forum/?fromgroups#!topic/liftweb/b4cwfpr67a8[Lift
+and Scala 2.9.2].
+* SBT
+https://github.com/harrah/xsbt/wiki/Getting-Started-Library-Dependencies[Library
+Dependencies] page describes `%` and `%%`.
+
