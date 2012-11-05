@@ -5,19 +5,20 @@ This section gives examples of working with Lift and other systems, such
 as sending email or scheduling tasks.
 
 Sending plain text email
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You want to send a plain email from your Lift application.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Use the `Mailer`:
 
-code,scala---------------------------------------- code,scala
+[source,scala]
+----------------------------------------
 import net.liftweb.util.Mailer._
 Mailer.sendMail(
   From("you@example.org"),
@@ -27,7 +28,7 @@ Mailer.sendMail(
 ----------------------------------------
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 `Mailer` sends the message asynchronously, meaning `sendMail` will
 return immediately, so you don't have to worry about the time costs of
@@ -51,26 +52,26 @@ the use of `PlainMailBodyType` with
 `PlainPlusBodyType("Hello from Lift", "ISO8859_1")`.
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
-*
-http://exploring.liftweb.net/master/index-F.html#toc-Appendix-F[Exploring
+* http://exploring.liftweb.net/master/index-F.html#toc-Appendix-F[Exploring
 Lift], Appendix F.
 
 Sending HTML email
-------------------
+~~~~~~~~~~~~~~~~~~
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You want to send an HTML email from your Lift application.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Give `Mailer` a `NodeSeq` containing your HTML message:
 
-code,scala---------------------------------- code,scala
+[source,scala]
+----------------------------------
 import net.liftweb.util.Mailer._
 
 val html = <html>
@@ -90,7 +91,7 @@ Mailer.sendMail(
 ----------------------------------
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 An implicit converts the `NodeSeq` into a `XHTMLMailBodyType`. This
 ensures the mime type of the email is "text/html". Despite the name of
@@ -101,15 +102,15 @@ The character encoding for HTML email, UTF-8, can be changed by setting
 `mail.charset` in your Lift properties file.
 
 Sending authenticated email
----------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You need to authenticate with an SMTP server to send email.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Set the `Mailer.authenticator` in `Boot` with the credentials for your
 SMTP server and enable the `mail.smtp.auth` flag in your Lift props
@@ -117,8 +118,8 @@ file.
 
 Modify `Boot.scala` to include:
 
-code,scala--------------------------------------------------------
-code,scala
+[source,scala]
+--------------------------------------------------------
 import net.liftweb.util.Mailer._
 import javax.mail.{Authenticator,PasswordAuthentication}
 
@@ -135,7 +136,8 @@ In this example we expect the username and password to come from Lift
 properties, so we need to modify
 `src/main/resources/props/default.props` to include them:
 
-code,scala------------------------------------------ code,scala
+[source,scala]
+------------------------------------------
 mail.smtp.auth=true
 mail.user=me@example.org
 mail.password=correct horse battery staple
@@ -143,7 +145,7 @@ mail.smtp.host=smtp.sendgrid.net
 ------------------------------------------
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 We've used Lift properties as a way to configure SMTP authentication.
 This has the benefit of allowing us to enable authentication for just
@@ -157,27 +159,25 @@ also supports JNDI). However, some mail services do require
 `mail.smtp.auth=true` to be set.
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
-* The
-http://javamail.kenai.com/nonav/javadocs/com/sun/mail/smtp/package-summary.html[com.sun.mail.smtp
-description]
+* The http://javamail.kenai.com/nonav/javadocs/com/sun/mail/smtp/package-summary.html[com.sun.mail.smtp description]
 
 Sending email with attachments
-------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You want to send an email with one or more attachments.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Use Mailer's `XHTMLPlusImages` body types:
 
-code,scala--------------------------------------------------------------
-code,scala
+[source,scala]
+--------------------------------------------------------------
 val content = "Planet,Discoverer\r\n" + 
   "HR 8799 c, Marois et al\r\n" +
   "Kepler-22b, Kepler Science Team\r\n"
@@ -201,7 +201,7 @@ Mailer.sendMail(
 --------------------------------------------------------------
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 `XHTMLPlusImages` can also accept more than one `PlusImageHolder` if you
 have more than one file to attach.
@@ -210,29 +210,25 @@ Messages are sent using the "related" multi-part mime heading with
 "inline" disposition.
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
-* Lift ticket 1197 to
-https://github.com/lift/framework/issues/1197[improve Mailer
-functionality for attachments]
-* Wikipedia entry on http://en.wikipedia.org/wiki/MIME[Multipurpose
-Internet Mail Extensions (MIME)] Logging email rather than sending
-========================
+* Lift ticket 1197 to https://github.com/lift/framework/issues/1197[improve Mailer functionality for attachments]
+* Wikipedia entry on http://en.wikipedia.org/wiki/MIME[Multipurpose Internet Mail Extensions (MIME)] Logging email rather than sending
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You don't want email sent when developing your Lift application locally,
 but you do want to see what would have been sent.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 The solution is to use `Mailer.devModeSend` and here is an example for
 `Boot.scala`:
 
-code,scala---------------------------------------------------------
-code,scala
+[source,scala]
+---------------------------------------------------------
 import net.liftweb.util.Mailer._
 import javax.mail.internet.{MimeMessage,MimeMultipart}
   
@@ -253,7 +249,7 @@ of the first body part of the message. The key part is setting a
 `MimeMessage => Unit` function on `Mailer.devModeSend`.
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 When developing an application it is inconvenient to have to worry about
 setting up an SMTP server or inadvertently sending test messages to
@@ -265,19 +261,20 @@ profile, pilot and test). The default is to send email, except for
 `testModeSend`, which only logs the send.
 
 Run a task later
-----------------
+~~~~~~~~~~~~~~~~
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You want to schedule code to run later.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Use `net.liftweb.util.Schedule`:
 
-code,scala------------------------------------------------ code,scala
+[source,scala]
+------------------------------------------------
 Schedule( () => println("doing it"), 30 seconds)
 ------------------------------------------------
 
@@ -285,7 +282,7 @@ This would cause "doing it" to be printed on the console after 30
 seconds.
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 `Schedule` also includes a `schedule` method which will send a specified
 actor a specified message after a given delay.
@@ -297,32 +294,29 @@ Schedule returns a `ScheduledFuture[Unit]` from the Java concurrency
 library, which allows you to `cancel` the activity.
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
-*
-https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/Schedule.scala[Schedule.scala]
+* https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/Schedule.scala[Schedule.scala]
 source.
-*
-http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/ScheduledFuture.html[java.util.concurrent.ScheduledFuture]
-JavaDoc.
-* Recipe for link:Run+tasks+periodically.html[Running tasks
-periodically]
+* http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/ScheduledFuture.html[java.util.concurrent.ScheduledFuture] JavaDoc.
+* Recipe for link:Run+tasks+periodically.html[Running tasks periodically]
 
 Run tasks periodically
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You want a scheduled task to run periodically.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Use `net.liftweb.util.Schedule` ensuring that you call `schedule` again
 during your task to re-schedule it. For example:
 
-code,scala------------------------------------------------- code,scala
+[source,scala]
+-------------------------------------------------
 import net.liftweb.util.Schedule
 import net.liftweb.actor.LiftActor
 import net.liftweb.util.Helpers._
@@ -361,13 +355,13 @@ To ensure the process stops correctly when Lift shuts down, we register
 a shutdown hook in `Boot.scala` to send the `Stop` message to prevent
 future re-schedules:
 
-code,scala----------------------------------------------------------------------------
-code,scala
+[source,scala]
+----------------------------------------------------------------------------
 LiftRules.unloadHooks.append( () => MyScheduledTask ! MyScheduledTask.Stop )
 ----------------------------------------------------------------------------
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 Without the `Stop` message your actor would continue to be rescheduled
 until the JVM exits. This may be acceptable, but note that during
@@ -378,33 +372,30 @@ Schedule returns a `ScheduledFuture[Unit]` from the Java concurrency
 library, which allows you to `cancel` the activity.
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
-*
-https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/Schedule.scala[Schedule.scala]
-source.
-*
-http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/ScheduledFuture.html[java.util.concurrent.ScheduledFuture]
-JavaDoc.
+* https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/Schedule.scala[Schedule.scala] source.
+* http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/ScheduledFuture.html[java.util.concurrent.ScheduledFuture] JavaDoc.
 * Chapter 1 of _Lift in Action_ includes a CometActor clock example that
 uses `Schedule`, and further examples can be found in chapters 4 and 9.
 
 Fetching URLs
--------------
+~~~~~~~~~~~~~
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You want to fetch a URL from inside your Lift app.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Use _Dispatch_, "a library for HTTP interaction, from asynchronous GETs
 to multi-part OAuth-enticated POSTs". Before you start, include the
 dependencies in your `build.sbt` file:
 
-code,scala------------------------------------------------- code,scala
+[source,scala]
+-------------------------------------------------
 libraryDependencies ++= Seq(
  "net.databinder" %% "dispatch-core" % "0.8.8",
  "net.databinder" %% "dispatch-http" % "0.8.8",
@@ -416,7 +407,8 @@ Databinder is structured into a set of modules (e.g., for oAuth and
 Twitter). Above we're including a set for an example of fetching a URL
 and extracting all the meta tags:
 
-code,scala------------------------------------------ code,scala
+[source,scala]
+------------------------------------------
 import scala.xml.NodeSeq
 import dispatch._
 import dispatch.tagsoup.TagSoupHttp._
@@ -430,8 +422,8 @@ val result: NodeSeq = Http(page </> metas)
 
 The above produces:
 
-code,scala----------------------------------------------------------------------------------------
-code,scala
+[source,scala]
+----------------------------------------------------------------------------------------
 NodeSeq(<meta content="text/html; charset=utf-8" http-equiv="Content-Type"></meta>, 
  <meta content="width=device-width" name="viewport"></meta>,
  <meta content="The World Wide Web Consortium (W3C) is an international community where 
@@ -440,7 +432,7 @@ NodeSeq(<meta content="text/html; charset=utf-8" http-equiv="Content-Type"></met
 ----------------------------------------------------------------------------------------
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 As URL fetching has latency, you will want to look at making the request
 from an actor, a lazy-load snippet, via the various Dispatch executors
@@ -455,11 +447,9 @@ Related to _TagSoup_, _Dispatch_ also integrates with _JSoup_, which
 includes functions for manipulating the real-world HTML you fetch.
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
 * http://dispatch.databinder.net/Dispatch.html[Dispatch].
-* http://www.flotsam.nl/dispatch-periodic-table.html[Periodic table of
-Dispatch operators].
-* http://dispatch.databinder.net/JSoup.html[JSoup Dispatch]
-documentation.
+* http://www.flotsam.nl/dispatch-periodic-table.html[Periodic table of Dispatch operators].
+* http://dispatch.databinder.net/JSoup.html[JSoup Dispatch] documentation.
 

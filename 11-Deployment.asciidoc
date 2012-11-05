@@ -2,16 +2,16 @@ Production deployment
 ---------------------
 
 Deploying to CloudBees
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
-~~~~~~~
+^^^^^^^
 
 You have an account with the CloudBees PaaS hosting environment, and you
 want to deploy your Lift application there.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Use the SBT `package` command to produce a WAR file that can be deployed
 to CloudBees, and then use the SDK to configure and deploy your
@@ -20,8 +20,8 @@ application.
 For best performance you will want to ensure the Lift run mode is set to
 "production". Do this from the CloudBees SDK command line:
 
-code,scala---------------------------------------------------------
-code,scala
+[source,scala]
+---------------------------------------------------------
 \$ bees config:set -a myaccount/myapp run.mode=production
 ---------------------------------------------------------
 
@@ -33,8 +33,8 @@ CloudBees will remember this setting, so you only need to do it once.
 
 You can then deploy:
 
-code,scala---------------------------------------------------------------------
-code,scala
+[source,scala]
+---------------------------------------------------------------------
 \$ sbt package
 ...
 [info] Packaging /Users/richard/myapp/target/scala-2.9.1/myapp.war...
@@ -43,7 +43,7 @@ code,scala
 ---------------------------------------------------------------------
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 You may find it more convenient to install the SBT CloudBees plugin to
 deploy directly from SBT. "See Also" provides a link to this plugin and
@@ -58,8 +58,8 @@ If you are using a database in your application, you may find it useful
 to configure this in `src/main/webapp/WEB-INF/cloudbees-web.xml`. For
 example:
 
-code,scala--------------------------------------------------------------------------
-code,scala
+[source,scala]
+--------------------------------------------------------------------------
 <?xml version="1.0"?>
 <cloudbees-web-app xmlns="http://www.cloudbees.com/xml/webapp/1">
 
@@ -93,8 +93,8 @@ The above is a JNDI database configuration, defining a connection to a
 CloudBees database called "mydb". This will be used by Lift if the JNDI
 name is referenced in `Boot.scala`:
 
-code,scala------------------------------------------------------------
-code,scala
+[source,scala]
+------------------------------------------------------------
 DefaultConnectionIdentifier.jndiName = "jdbc/mydb"
     
 if (!DB.jndiJdbcConnAvailable_?) {
@@ -118,44 +118,34 @@ often. To turn off this feature set the following:
 ----------------------------------------------------------------
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
 * http://wiki.cloudbees.com/bin/view/RUN/BeesSDK[CloudBees SDK]
-* https://github.com/timperrett/sbt-cloudbees-plugin[SBT Cloudbees
-plugin].
-* http://wiki.cloudbees.com/bin/view/RUN/Session+Affinity[CloudBees
-Session Affinity]
-* As an alternative to `bees:config`, you can
-https://github.com/d6y/cloudbees-lift-filter[set run.mode via a filter]
+* https://github.com/timperrett/sbt-cloudbees-plugin[SBT Cloudbees plugin].
+* http://wiki.cloudbees.com/bin/view/RUN/Session+Affinity[CloudBees Session Affinity]
+* As an alternative to `bees:config`, you can https://github.com/d6y/cloudbees-lift-filter[set run.mode via a filter]
 
 MySQL unicode charset encoding
-------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
-~~~~~~~
+^^^^^^^
 
 Some characters stored in your MySQL database are appearing as `???`.
 
 Solution
-~~~~~~~~
+^^^^^^^^
 
 Ensure:
 
-* `Boot.scala` includes:
-`LiftRules.early.append(_.setCharacterEncoding("UTF-8"))`
-* Your JDBC connections URL includes
-`?useUnicode=true&characterEncoding=UTF-8`
+* `Boot.scala` includes: `LiftRules.early.append(_.setCharacterEncoding("UTF-8"))`
+* Your JDBC connections URL includes `?useUnicode=true&characterEncoding=UTF-8`
 * Your MySQL database has been created using a UTF-8 character set.
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
-*
-https://groups.google.com/forum/?fromgroups#!topic/liftweb/DL9AFyU5y2k[EMail
-thread on the Lift mailing list]
-* https://github.com/d6y/mysql-lift-charset-test[MySQL UTF-8 test Lift
-app] - although it uses SBT 0.7 so is rather out of date.
-*
-http://dev.mysql.com/doc/refman/5.6/en/connector-j-reference-configuration-properties.html[MySQL
-JDBC COnfiguration reference]
+* https://groups.google.com/forum/?fromgroups#!topic/liftweb/DL9AFyU5y2k[EMail thread on the Lift mailing list]
+* https://github.com/d6y/mysql-lift-charset-test[MySQL UTF-8 test Lift app] - although it uses SBT 0.7 so is rather out of date.
+* http://dev.mysql.com/doc/refman/5.6/en/connector-j-reference-configuration-properties.html[MySQL JDBC COnfiguration reference]
 
