@@ -255,7 +255,6 @@ the snapshot repository:
 
 [source,scala]
 ----
-code,scala
 resolvers += "snapshots" at "http://oss.sonatype.org/content/repositories/snapshots"
 ----
 
@@ -263,7 +262,7 @@ Second, change the `liftVersion` in your build to be 2.5-SNAPSHOT,
 rather than 2.4:
 
 [source,scala]
--------------------------------- code,scala
+--------------------------------
 val liftVersion = "2.5-SNAPSHOT"
 --------------------------------
 
@@ -312,7 +311,6 @@ with Scala 2.9.1:
 
 [source,scala]
 ---------------------------------------------------------------------
-code,scala
 scalaVersion := "2.9.1"
 
 libraryDependencies ++= {
