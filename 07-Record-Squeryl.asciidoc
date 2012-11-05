@@ -45,7 +45,7 @@ links to the documentation pages for popular containers.
 Some environments may also require that you to mention the JNDI resource
 in your `src/main/webapp/WEB-INF/web.xml` file:
 
-[code,xml]
+[source,xml]
 ------------------------------------------
 <resource-ref>
  <res-ref-name>jdbc/mydb</res-ref-name>
