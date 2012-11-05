@@ -25,8 +25,7 @@ start a basic Lift application.
 for Mac and Linux
 +++++++++++++++++
 
-* Download:
-https://github.com/d6y/lift_24_sbt/zipball/master[https://github.com/d6y/lift_24_sbt/zipball/master]
+* Download: https://github.com/d6y/lift_24_sbt/zipball/master[https://github.com/d6y/lift_24_sbt/zipball/master]
 * Unzip the file
 * Start Terminal or your favourite shell tool
 * Navigate into the unzipped folder
@@ -38,8 +37,7 @@ https://github.com/d6y/lift_24_sbt/zipball/master[https://github.com/d6y/lift_24
 for Windows
 +++++++++++
 
-* Download:
-https://github.com/d6y/lift_24_sbt/zipball/master[https://github.com/d6y/lift_24_sbt/zipball/master]
+* Download: https://github.com/d6y/lift_24_sbt/zipball/master[https://github.com/d6y/lift_24_sbt/zipball/master]
 * Unzip the file
 * ?
 * Run:`./sbt.bat`
@@ -121,12 +119,9 @@ subject of a future recipe.
 See also
 ^^^^^^^^
 
-* https://github.com/harrah/xsbt/wiki/Triggered-Execution[SBT Triggered
-Execution]
-* https://github.com/harrah/xsbt/wiki/Command-Line-Reference[SBT Command
-Line Reference]
-* https://github.com/siasia/xsbt-web-plugin/wiki[SBT Web Plugin
-Commands]
+* https://github.com/harrah/xsbt/wiki/Triggered-Execution[SBT Triggered Execution]
+* https://github.com/harrah/xsbt/wiki/Command-Line-Reference[SBT Command Line Reference]
+* https://github.com/siasia/xsbt-web-plugin/wiki[SBT Web Plugin Commands]
 * http://zeroturnaround.com/jrebel/[JRebel] Developing using Eclipse
 
 Problem
@@ -147,7 +142,6 @@ To create the project files for Eclipse, add the following to
 
 [source,scala]
 -----------------------------------------------------------------------
-code,scala
 addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.0.0")
 -----------------------------------------------------------------------
 
@@ -156,7 +150,6 @@ following:
 
 [source,scala]
 ------- 
-code,scala
 eclipse
 -------
 
@@ -169,7 +162,7 @@ Start `sbt` from a terminal window outside of Eclipse and enter the
 following:
 
 [source,scala]
--------------------------------------- code,scala
+--------------------------------------
 ~; container:start; container:reload /
 --------------------------------------
 
@@ -186,7 +179,7 @@ methods and classes. To achieve this once, run
 behaviour, add the following to your `build.sbt` file:
 
 [source,scala]
------------------------------- code,scala
+------------------------------
 EclipseKeys.withSource := true
 ------------------------------
 
@@ -202,14 +195,10 @@ See also
 ^^^^^^^^
 
 * http://scala-ide.org/download/current.html[ScalaIDE download]
-* https://github.com/typesafehub/sbteclipse/wiki/Using-sbteclipse[Using
-the sbteclipse plugin]
-* https://github.com/harrah/xsbt/wiki/Triggered-Execution[SBT Triggered
-Execution]
-* https://github.com/harrah/xsbt/wiki/Command-Line-Reference[SBT Command
-Line Reference]
-* https://github.com/siasia/xsbt-web-plugin/wiki[SBT Web Plugin
-Commands]
+* https://github.com/typesafehub/sbteclipse/wiki/Using-sbteclipse[Using the sbteclipse plugin]
+* https://github.com/harrah/xsbt/wiki/Triggered-Execution[SBT Triggered Execution]
+* https://github.com/harrah/xsbt/wiki/Command-Line-Reference[SBT Command Line Reference]
+* https://github.com/siasia/xsbt-web-plugin/wiki[SBT Web Plugin Commands]
 * http://zeroturnaround.com/jrebel/[JRebel]
 
 Viewing the lift_proto H2 database
@@ -228,16 +217,11 @@ Use the web interface included as part of H2, as documented in the first
 _See Also_ link. +
 Here are the steps:
 
-* Locate the H2 JAR file. For me, this was:
-`~/.ivy2/cache/com.h2database/h2/jars/h2-1.2.147.jar`.
-* Start the server from a terminal window using the JAR file you found:
-`java -cp /path/to/h2-version.jar org.h2.tools.Server`
+* Locate the H2 JAR file. For me, this was: `~/.ivy2/cache/com.h2database/h2/jars/h2-1.2.147.jar`.
+* Start the server from a terminal window using the JAR file you found: `java -cp /path/to/h2-version.jar org.h2.tools.Server`
 * This should launch your web browser, asking you to login.
 * Select "Generic H2 Server" in "Saved Settings".
-* Enter `jdbc:h2:/path/to/youapp/lift_proto.db;AUTO_SERVER=TRUE` for
-"JDBC URL", adjusting the path for the location of your database, and
-adjusting the name of the database ("lift_proto.db") if different in
-your `Boot.scala`.
+* Enter `jdbc:h2:/path/to/youapp/lift_proto.db;AUTO_SERVER=TRUE` for "JDBC URL", adjusting the path for the location of your database, and adjusting the name of the database ("lift_proto.db") if different in your `Boot.scala`.
 * Press "Connect" to view and edit your database.
 
 Discussion
@@ -249,17 +233,11 @@ should be able to configure other SQL tools to access the database.
 See also
 ^^^^^^^^
 
-* https://fmpwizard.telegr.am/blog/lift-and-h2[H2 web console and Lift]
-from @fmpwizard.
-*
-http://sofoklis.posterous.com/viewingediting-h2-database-via-web-interface[Viewing/Editing
-H2 database via web interface] blog post.
-*
-https://groups.google.com/forum/?fromgroups#!topic/liftweb/Gna1OTha-MI[Default
-username/password for lift_proto.db] mailing list discussion.
+* https://fmpwizard.telegr.am/blog/lift-and-h2[H2 web console and Lift] from @fmpwizard.
+* http://sofoklis.posterous.com/viewingediting-h2-database-via-web-interface[Viewing/Editing H2 database via web interface] blog post.
+* https://groups.google.com/forum/?fromgroups#!topic/liftweb/Gna1OTha-MI[Default username/password for lift_proto.db] mailing list discussion.
 * Mailing list discussion on
-https://groups.google.com/forum/?fromgroups#!topic/liftweb/4Tvfu9859e0[Easiest
-way to set up H2 database with web console at localhost:8080/console].
+https://groups.google.com/forum/?fromgroups#!topic/liftweb/4Tvfu9859e0[Easiest way to set up H2 database with web console at localhost:8080/console].
 * H2's http://www.h2database.com/html/tutorial.html[tutorial page].
 
 Using the latest Lift build
