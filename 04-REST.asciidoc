@@ -79,19 +79,25 @@ a valid XML-Sitemap markup:
 
 Make a snippet to fill the required gaps:
 
-```scala class MySitemapContent \{
+[source,scala]
+----
+class MySitemapContent \{
 
-lazy val entries = MyDBRecord.findAll(..)
+  lazy val entries = MyDBRecord.findAll(..)
 
-def base: CssSel = "loc *" #> "http://%s/".format(S.hostName) & "lastmod
-*" #> someDate.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZZ")
+  def base: CssSel = 
+    "loc *" #> "http://%s/".format(S.hostName) & 
+    "lastmod *" #> someDate.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZZ")
 
-def list: CssSel = "url *" #> entries.map(post => "loc *" #>
-"http://%s%s".format(S.hostName, post.url) & "lastmod *" #>
-post.date.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZZ"))
+  def list: CssSel = 
+    "url *" #> entries.map(post => 
+    "loc *" #> "http://%s%s".format(S.hostName, post.url) & 
+    "lastmod *" #> post.date.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZZ"))
 
 }
-```Note that Google Sitemaps need dates to be in ISO 8601 format. The built-in`java.text.SimpleDateFormat`does not support this format prior to Java 7. If you are using Java 6 you need to use`org.joda.time.DateTime`.
+----
+
+Note that Google Sitemaps need dates to be in ISO 8601 format. The built-in`java.text.SimpleDateFormat`does not support this format prior to Java 7. If you are using Java 6 you need to use`org.joda.time.DateTime`.
 With Java 7 "yyyy-MM-dd'T'HH:mmXXX" can be used as the pattern for the
 formatting.
 
