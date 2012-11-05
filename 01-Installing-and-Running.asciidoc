@@ -98,7 +98,8 @@ Run SBT while you are editing to handle compilation of Scala files.
 
 Start `sbt` and enter the following:
 
-code,scala-------------------------------------- code,scala
+[source,scala]
+--------------------------------------
 ~; container:start; container:reload /
 --------------------------------------
 
