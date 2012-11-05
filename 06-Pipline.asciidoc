@@ -89,7 +89,8 @@ InMemoryResponse
 `InMemoryResponse` is useful if you have already assembled the full
 content to send to the client. The signature is straightforward:
 
-[source,scala----------------------------------- [source,scala
+[source,scala]
+-----------------------------------
 case class InMemoryResponse(
   data: Array[Byte], 
   headers: List[(String, String)], 
