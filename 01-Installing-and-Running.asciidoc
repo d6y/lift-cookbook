@@ -330,7 +330,6 @@ against for each Lift component:
 
 [source,scala]
 --------------------------------------------------------------------------
-code,scala
 scalaVersion := "2.9.2"
 
 libraryDependencies ++= {
