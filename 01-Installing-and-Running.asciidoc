@@ -213,8 +213,7 @@ you'd like use a tool to look at the tables.
 Solution
 ^^^^^^^^
 
-Use the web interface included as part of H2, as documented in the first
-_See Also_ link. +
+Use the web interface included as part of H2, as documented in the first _See Also_ link. +
 Here are the steps:
 
 * Locate the H2 JAR file. For me, this was: `~/.ivy2/cache/com.h2database/h2/jars/h2-1.2.147.jar`.
@@ -288,8 +287,7 @@ See also
 
 * https://github.com/harrah/xsbt/wiki/Resolvers[SBT Resolvers].
 * Learn about SNAPSHOT versioning in
-http://www.sonatype.com/books/mvnref-book/reference/pom-relationships-sect-pom-syntax.html[Maven:
-The Complete Reference].
+http://www.sonatype.com/books/mvnref-book/reference/pom-relationships-sect-pom-syntax.html[Maven: The Complete Reference].
 * https://github.com/harrah/xsbt/wiki/Command-Line-Reference[SBT Command
 line reference]. Using a new version of Scala
 
@@ -356,10 +354,6 @@ break compatibility.
 See also
 ^^^^^^^^
 
-* Mailing list discussion on
-https://groups.google.com/forum/?fromgroups#!topic/liftweb/b4cwfpr67a8[Lift
-and Scala 2.9.2].
-* SBT
-https://github.com/harrah/xsbt/wiki/Getting-Started-Library-Dependencies[Library
-Dependencies] page describes `%` and `%%`.
+* Mailing list discussion on https://groups.google.com/forum/?fromgroups#!topic/liftweb/b4cwfpr67a8[Lift and Scala 2.9.2].
+* SBT https://github.com/harrah/xsbt/wiki/Getting-Started-Library-Dependencies[Library Dependencies] page describes `%` and `%%`.
 
