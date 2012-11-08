@@ -70,7 +70,7 @@ As with the run mode setting, CloudBees will remember these settings, so you
 only need to set them once.
 
 RDBMS configuration
-++++++++++++++++++++++
++++++++++++++++++++
 
 If you are using a SQL database in your application, you'll want to 
 configue `src/main/webapp/WEB-INF/cloudbees-web.xml`. For
