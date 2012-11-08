@@ -20,6 +20,7 @@ application.
 For best performance you will want to ensure the Lift run mode is set to
 "production". Do this from the CloudBees SDK command line:
 
+[source, bash]
 ---------------------------------------------------------
 $ bees config:set -a myaccount/myapp run.mode=production
 ---------------------------------------------------------
@@ -32,6 +33,7 @@ CloudBees will remember this setting, so you only need to do it once.
 
 You can then deploy:
 
+[source, bash]
 ---------------------------------------------------------------------
 $ sbt package
 ...
@@ -48,6 +50,7 @@ instances, be aware that by default CloudBees will round robin requests
 to each instance. If you use any of Lift's state features you'll want to
 enable session affinity (sticky sessions):
 
+[source, bash]
 ----------------------------------------------------------------
 $ bees app:update -a myaccount/myapp stickySession=true
 ----------------------------------------------------------------
@@ -58,6 +61,7 @@ requests in a cluster if one machine does not respond. A
 consequence of request buffering is that long-polling comet requests will timeout more
 often. To turn off this feature set the following:
 
+[source, bash]
 ----------------------------------------------------------------
 $ bees app:update -a myaccount/myapp disableProxyBuffering=true
 ----------------------------------------------------------------
@@ -72,6 +76,7 @@ If you are using a SQL database in your application, you'll want to
 configue `src/main/webapp/WEB-INF/cloudbees-web.xml`. For
 example:
 
+[source, xml]
 --------------------------------------------------------------------------
 <?xml version="1.0"?>
 <cloudbees-web-app xmlns="http://www.cloudbees.com/xml/webapp/1">
@@ -106,6 +111,7 @@ The above is a JNDI database configuration, defining a connection to a
 CloudBees database called "mydb". This will be used by Lift if the JNDI
 name is referenced in `Boot.scala`:
 
+[source, scala]
 ------------------------------------------------------------
 DefaultConnectionIdentifier.jndiName = "jdbc/mydb"
     
