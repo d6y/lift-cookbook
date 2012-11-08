@@ -1,4 +1,4 @@
-Production deployment
+Production Deployment
 ---------------------
 
 Deploying to CloudBees
@@ -20,45 +20,58 @@ application.
 For best performance you will want to ensure the Lift run mode is set to
 "production". Do this from the CloudBees SDK command line:
 
-[source,scala]
 ---------------------------------------------------------
-\$ bees config:set -a myaccount/myapp run.mode=production
+$ bees config:set -a myaccount/myapp run.mode=production
 ---------------------------------------------------------
 
 This will set the run mode to production for your CloudBees applications
-identified as ""myaccount/myapp". Omitting the `-a` will set it for your
+identified as "myaccount/myapp". Omitting the `-a` will set it for your
 whole CloudBees account.
 
 CloudBees will remember this setting, so you only need to do it once.
 
 You can then deploy:
 
-[source,scala]
 ---------------------------------------------------------------------
-\$ sbt package
+$ sbt package
 ...
 [info] Packaging /Users/richard/myapp/target/scala-2.9.1/myapp.war...
 ...
-\$ bees app:deploy ./target/scala-2.9.1/myapp.war
+$ bees app:deploy ./target/scala-2.9.1/myapp.war
 ---------------------------------------------------------------------
 
 Discussion
 ^^^^^^^^^^
 
-You may find it more convenient to install the SBT CloudBees plugin to
-deploy directly from SBT. "See Also" provides a link to this plugin and
-the excellent instructions for installing and configuring it.
-
 If you are deploying a single application to multiple CloudBees
 instances, be aware that by default CloudBees will round robin requests
 to each instance. If you use any of Lift's state features you'll want to
-enable session affinity (sticky sessions).
+enable session affinity (sticky sessions):
 
-If you are using a database in your application, you may find it useful
-to configure this in `src/main/webapp/WEB-INF/cloudbees-web.xml`. For
+----------------------------------------------------------------
+$ bees app:update -a myaccount/myapp stickySession=true
+----------------------------------------------------------------
+
+If you are using comet, it'll work fine, but CloudBees default is to do
+request buffering. This allows CloudBees to do smart things, such as re-routing 
+requests in a cluster if one machine does not respond. A
+consequence of request buffering is that long-polling comet requests will timeout more
+often. To turn off this feature set the following:
+
+----------------------------------------------------------------
+$ bees app:update -a myaccount/myapp disableProxyBuffering=true
+----------------------------------------------------------------
+
+As with the run mode setting, CloudBees will remember these settings, so you 
+only need to set them once.
+
+RDBMS configuration
+++++++++++++++++++++++
+
+If you are using a SQL database in your application, you'll want to 
+configue `src/main/webapp/WEB-INF/cloudbees-web.xml`. For
 example:
 
-[source,scala]
 --------------------------------------------------------------------------
 <?xml version="1.0"?>
 <cloudbees-web-app xmlns="http://www.cloudbees.com/xml/webapp/1">
@@ -93,7 +106,6 @@ The above is a JNDI database configuration, defining a connection to a
 CloudBees database called "mydb". This will be used by Lift if the JNDI
 name is referenced in `Boot.scala`:
 
-[source,scala]
 ------------------------------------------------------------
 DefaultConnectionIdentifier.jndiName = "jdbc/mydb"
     
@@ -107,23 +119,18 @@ only be available in a CloudBees environment. This means you can develop
 against a different database locally, and use your CloudBees database
 when deploying.
 
-If you are using comet, it'll work fine, but CloudBees default is to do
-request buffering. This allows CloudBees to do smart things, such as try
-re-routing requests in a cluster if one machine does not respond, but a
-consequence is that long-polling comet requests will time out more
-often. To turn off this feature set the following:
-
-----------------------------------------------------------------
-\$ bees app:update -a myaccount/myapp disableProxyBuffering=true
-----------------------------------------------------------------
 
 See Also
 ^^^^^^^^
 
-* http://wiki.cloudbees.com/bin/view/RUN/BeesSDK[CloudBees SDK]
-* https://github.com/timperrett/sbt-cloudbees-plugin[SBT Cloudbees plugin].
-* http://wiki.cloudbees.com/bin/view/RUN/Session+Affinity[CloudBees Session Affinity]
-* As an alternative to `bees:config`, you can https://github.com/d6y/cloudbees-lift-filter[set run.mode via a filter]
+A plugin is available to automate deployments from SBT. The plugin and the excellent 
+instructions for installing and configuring it can be found at https://github.com/timperrett/sbt-cloudbees-plugin[https://github.com/timperrett/sbt-cloudbees-plugin].
+
+For integration with messaging systems, you may been to access your CloudBees instance application 
+hostname and port number.  You can find this at https://developer.cloudbees.com/bin/view/Main/Finding+out+app+port+and+hostname.  This CloudBees developer portal contains a "Resources" section which provides details 
+of the CloudBees services.
+
+
 
 MySQL unicode charset encoding
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
