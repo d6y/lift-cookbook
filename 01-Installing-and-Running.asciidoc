@@ -51,6 +51,8 @@ Expected result
 The result of the above commands should be a basic Lift application running on
 your computer:
 
+image::images/App%20Home.png[]
+
 
 Discussion
 ^^^^^^^^^^
