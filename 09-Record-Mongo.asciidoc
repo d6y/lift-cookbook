@@ -1,4 +1,4 @@
-MongoDB persistence with Record
+MongoDB Persistence with Record
 -------------------------------
 
 This section gives recipes for making use of MongoDB in your Lift
@@ -7,7 +7,7 @@ https://www.assembla.com/spaces/liftweb/wiki/MongoDB[Lift Wiki pages for
 Mongo]. For recipes regarding Mongo itself, check out the
 http://cookbook.mongodb.org/[MongoDB Cookbook].
 
-Connecting to a Mongo database
+Connecting to a Mongo Database
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -21,7 +21,6 @@ Solution
 Configure your connection using `net.liftweb.mongodb` and `com.mongodb`
 in `Boot.scala`:
 
-[source,scala]
 -----------------------------------------------------------------
 import com.mongodb.{ServerAddress, Mongo}
 import net.liftweb.mongodb.{MongoDB,DefaultMongoIdentifier}
@@ -38,7 +37,6 @@ Discussion
 
 If your database needs authentication, use `MongoDB.defineDbAuth`:
 
-[source,scala]
 --------------------------------------------------------------
 MongoDB.defineDbAuth(DefaultMongoIdentifier, new Mongo(srvr), 
   "mydb", "username", "password")
@@ -56,7 +54,7 @@ See Also
 Configuration] on the wiki contains more details and options, including
 configuration for replica sets.
 
-Storing a hash in a Mongo record
+Storing a Hash in a Mongo Record
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -69,7 +67,6 @@ Solution
 
 Create a Mongo Record which contains a `MongoMapField`:
 
-[source,scala]
 -------------------------------------------------------------------------------
 import net.liftweb.mongodb._
 import net.liftweb.mongodb.record._
@@ -90,7 +87,6 @@ and the `population` is a map from a `String` key to an `Integer` value.
 
 We can use it in a snippet like this:
 
-[source,scala]
 ------------------------------------------------------------------
 class HelloWorld {
   
@@ -130,7 +126,7 @@ snippet could include:
 In Mongo the resulting data structure would be:
 
 ------------------------------------------------------
-\$ mongo scratch
+$ mongo scratch
 MongoDB shell version: 2.0.7
 connecting to: scratch
 > show collections
@@ -150,7 +146,6 @@ as `({ "_id" : "uk", "population" : { } })`
 To insert data from your snippet, you can modify the record to supply a
 new `Map`:
 
-[source,scala]
 -------------------------------------------------------------------
 uk.population(uk.population.is + ("Westminster"->81766)).save(true)
 -------------------------------------------------------------------
@@ -158,7 +153,6 @@ uk.population(uk.population.is + ("Westminster"->81766)).save(true)
 To access an individual element of the map, you can use `get` (or
 `value`):
 
-[source,scala]
 ---------------------------------------------- 
 uk.population.get("San Francisco")
 // will throw java.util.NoSuchElementException
@@ -166,7 +160,6 @@ uk.population.get("San Francisco")
 
 …or you can access via the standard Scala map interface:
 
-[source,scala]
 ------------------------------------------------------------
 val sf : Option[Int] = uk.population.is.get("San Francisco")
 ------------------------------------------------------------
@@ -188,7 +181,7 @@ See Also
 * https://groups.google.com/forum/?fromgroups=#!topic/liftweb/XoseG-8mIPc[MongoMapField
 Query] mailing list discussion.
 
-Embedding a document inside a Mongo record
+Embedding a Document inside a Mongo Record
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -204,7 +197,6 @@ Use `BsonRecord` to define the document to embed, and embed it using
 `BsonRecordField`. Here's an example of storing information about an
 image within a record:
 
-[source,scala]
 -----------------------------------------------------
 class Image private () extends BsonRecord[Image] {
   def meta = Image
@@ -218,9 +210,8 @@ object Image extends Image with BsonMetaRecord[Image]
 
 We can reference instances of the `Image` class via `BsonRecordField`:
 
-[source,scala]
-------------------------------------------------------------------------------
 
+------------------------------------------------------------------------------
 class Country private () extends MongoRecord[Country] with StringPk[Country] {
   override def meta = Country
   object flag extends BsonRecordField(this, Image)
@@ -233,7 +224,6 @@ object Country extends Country with MongoMetaRecord[Country] {
 
 To associate a value:
 
-[source,scala]
 -----------------------------------------------------------------------------
 val unionJack = 
   Image.createRecord.url("http://bit.ly/unionflag200").width(200).height(100)
@@ -267,7 +257,6 @@ saved as:
 
 You can prevent this by making the image optional:
 
-[source,scala]
 ---------------------------------------------------
 object image extends BsonRecordField(this, Image) {
   override def optional_? = true
@@ -278,7 +267,6 @@ With `optional_?` set in this way the image part of the Mongo document
 won't be saved if the value is not set. Within Scala you will then want
 to access the value with `valueBox` call:
 
-[source,scala]
 ---------------------------------------
 val img : Box[Image] = uk.flag.valueBox
 ---------------------------------------
@@ -289,7 +277,6 @@ value using `valueBox`.
 An alternative is to always provide a default value for the embedded
 document:
 
-[source,scala]
 -----------------------------------------------------------------------------
 object image extends BsonRecordField(this, Image) {
  override def defaultValue = 
@@ -303,7 +290,7 @@ See Also
 * https://www.assembla.com/spaces/liftweb/wiki/Mongo_Record_Embedded_Objects[Mongo
 Record Embedded Objects] on the Lift Wiki.
 
-Linking between Mongo records
+Linking between Mongo Records
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -320,7 +307,6 @@ Create a reference using a `MongoRefField` such as `ObjectIdRefField` or
 As an example we can create records representing countries, where a
 country references the planet where you can find it:
 
-[source,scala]
 ------------------------------------------------------------------------------
 class Planet private() extends MongoRecord[Planet] with StringPk[Planet] {
   override def meta = Planet
@@ -343,7 +329,6 @@ object Country extends Country with MongoMetaRecord[Country] {
 
 In a snippet we can make us of the link:
 
-[source,scala]
 -----------------------------------------------------------------------------
 class HelloWorld {
 
@@ -375,7 +360,6 @@ on a `MongoRefField`. You can see this by turning on logging in the
 Mongo driver. Do this by adding the following to the start of your
 `Boot.scala`:
 
-[source,scala]
 ----------------------------------------- 
 System.setProperty("DEBUG.MONGO", "true")
 System.setProperty("DB.TRACE", "true")
@@ -401,7 +385,6 @@ the `fact` method.
 The `obj` call will cache the `planet` reference. That means you could
 say...
 
-[source,scala]
 ------------------------------------------
 ".country *" #> uk.id &
 ".planet *" #> uk.planet.obj.map(_.id) &
@@ -419,7 +402,6 @@ Querying by reference
 
 Searching for records by a reference is straight-forward:
 
-[source,scala]
 ------------------------------------------------------------------------------
 val earth : Planet = ...
 val onEarth : List[Country]= Country.findAll(Country.planet.name, earth.id.is)
@@ -427,7 +409,6 @@ val onEarth : List[Country]= Country.findAll(Country.planet.name, earth.id.is)
 
 Or in this case, because we have String references, we could just say:
 
-[source,scala]
 --------------------------------------------------------------------------
 val onEarth : List[Country]= Country.findAll(Country.planet.name, "earth")
 --------------------------------------------------------------------------
@@ -437,7 +418,6 @@ Updating and deleting
 
 Updating a reference is as you'd expect:
 
-[source,scala]
 ----------------------------------------------------------
 uk.planet.obj.foreach(_.review("Mostly harmless.").update)
 ----------------------------------------------------------
@@ -453,7 +433,6 @@ A `uk.planet.obj` call will now return a planet with the new review.
 
 Or you could replace the reference with another:
 
-[source,scala]
 -----------------------------------------------------------------------
 uk.planet( Planet.createRecord.id("mars").save(true).id.is ).save(true)
 -----------------------------------------------------------------------
@@ -484,7 +463,7 @@ See Also
 Record Referenced Objects] wiki page.
 * http://stackoverflow.com/questions/9545341/configure-logging-for-the-mongodb-java-driver[Configure logging for the MongoDB Java driver] on Stackoverflow.
 
-Storing geospatial values
+Storing Geospatial Values
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -498,7 +477,6 @@ Solution
 Create a `Geo` container and use when you need it in your model. For
 example:
 
-[source,scala]
 -----------------------------------------------
 class Geo extends BsonRecord[Geo] {
   def meta = Geo
@@ -512,7 +490,6 @@ object Geo extends Geo with BsonMetaRecord[Geo]
 
 You can reference instances in your schema:
 
-[source,scala]
 --------------------------------------------------------
 class Thing private () extends MongoRecord[Thing] {
   override def meta = Thing
@@ -530,7 +507,6 @@ object Thing extends Thing with MongoMetaRecord[Thing] {
 
 To store a value you could do something like this:
 
-[source,scala]
 -----------------------------------------------------------
 val place = Geo.createRecord.lat(50.816673d).lon(-0.13441d)
 val thing = Thing.createRecord.loc(place).save(true)
