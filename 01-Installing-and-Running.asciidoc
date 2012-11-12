@@ -4,7 +4,7 @@ Install and Running
 This chapter covers questions around starting development with Lift.
 You'll find hints about production deployment in later chapters.
 
-Downloading and running Lift
+Downloading and Running Lift
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -17,42 +17,40 @@ Solution
 
 The only prerequisite for installing and running Lift is to have Java
 1.5 or later installed. Instructions for installing Java can be found at
-http://java.com/en/download/manual.jsp[java.com].
+http://java.com/en/download/manual.jsp[http://java.com/en/download/manual.jsp].
 
 Once you have Java, the following instructions will download, build and
 start a basic Lift application.
 
-for Mac and Linux
+For Mac and Linux
 +++++++++++++++++
 
-* Download: https://github.com/d6y/lift_24_sbt/zipball/master[https://github.com/d6y/lift_24_sbt/zipball/master]
-* Unzip the file
-* Start Terminal or your favourite shell tool
-* Navigate into the unzipped folder
-* Run:`./sbt`
-* Required libraries will be downloaded
-* At the SBT prompt (>) type: `container:start`
-* Start your browser and go to `http://127.0.0.1:8080/`
+* Visit http://liftweb.net/download[http://liftweb.net/download] and download the Lift 2.5-M3 ZIP file.
+* Unzip the file.
+* Start Terminal or your favourite shell tool.
+* Navigate into the unzipped folder and into the `scala_2.9` sub-folder and then the lift_blank` folder.
+* Run:`./sbt`.
+* Required libraries will be downloaded automatically.
+* At the SBT prompt (>) type: `container:start`.
+* Open your browser and go to `http://127.0.0.1:8080/`.
 
-for Windows
+For Windows
 +++++++++++
 
-* Download: https://github.com/d6y/lift_24_sbt/zipball/master[https://github.com/d6y/lift_24_sbt/zipball/master]
-* Unzip the file
-* ?
-* Run:`./sbt.bat`
-* Required libraries will be downloaded
-* At the SBT prompt (>) type: `container:start`
+* Visit http://liftweb.net/download[http://liftweb.net/download] and download the Lift 2.5-M3 ZIP file.
+* Extract the contents of the ZIP file.
+* Navigate in Explorer to the extracted folder, and inside there navigate into `scala_2.9` and then `lift_blank`. 
+* Double click `sbt.bat` and a terminal window should open.
+* Required libraries will be downloaded automatically.
+* At the SBT prompt (>) type: `container:start`.
 * Start your browser and go to `http://127.0.0.1:8080/`
 
 Expected result
 +++++++++++++++
 
-The result of the above commands should be a basic Lift app running on
-your computer.
+The result of the above commands should be a basic Lift application running on
+your computer:
 
-image:img/running_lift_basic_browser_small.jpg[Screenshot of the Lift
-basic app running,title="Lift Basic app in a browser"]
 
 Discussion
 ^^^^^^^^^^
@@ -60,20 +58,15 @@ Discussion
 Lift isn't installed in the usual sense of "installing software".
 Instead it uses standard build tools, such as SBT or Maven, to assemble
 your application built with the Lift framework. This recipe has
-downloaded a bare-bones Lift application, and then started it using a
-build tool.
+downloaded a ZIp containing four bare-bones Lift applications, and then started it 
+via the SBT build tool.
 
 The `sbt` command starts the Simple Build Tool, a dependency management
 tool used by Scala projects. It will check the project and download any
 libraries required by this Lift application. The command
-`container:start` starts the web server on port 8080 (by default) and
+`container:start` starts the web server on the default port of 8080 and
 passes requests to the Lift application.
 
-You may be wondering why this recipe doesn't use the official Lift
-http://liftweb.net/getting_started[getting started page] download. It's
-because that download currently uses an older version of SBT which has a
-different structure and different commands compared to the latest
-version we use in this cookbook.
 
 See also
 ^^^^^^^^
