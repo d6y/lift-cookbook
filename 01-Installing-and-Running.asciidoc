@@ -59,23 +59,36 @@ Discussion
 
 Lift isn't installed in the usual sense of "installing software".
 Instead it uses standard build tools, such as SBT or Maven, to assemble
-your application built with the Lift framework. This recipe has
-downloaded a ZIp containing four bare-bones Lift applications, and then started it 
-via the SBT build tool.
+your application with the Lift framework. This recipe has
+downloaded a ZIP containing four bare-bones Lift applications, and then started 
+one of them via the build too.
 
-The `sbt` command starts the Simple Build Tool, a dependency management
+Typing `sbt` starts the Simple Build Tool, a dependency management
 tool used by Scala projects. It will check the project and download any
-libraries required by this Lift application. The command
-`container:start` starts the web server on the default port of 8080 and
-passes requests to the Lift application.
+libraries required by this Lift application. 
 
+The command `container:start` starts the web server on the default port of 8080 and
+passes requests to the Lift application. The word "container" refers to the
+software you deploy your application into. There are a variety of containers (Jetty and 
+Tomcat are probably the best known) all of which conform to a standard for deployment.  
+The upshot is you can build your application and deploy to whichever one you prefer.  
+The `container:start` command is starting Jetty.
+
+If you take a look at `build.sbt` you'll see:
+* basic information about your application, including a name and version;
+* resolvers, which inform SBT where to fetch dependencies from;
+* settings for plugins and the Scala compiler; and
+* a list of dependencies required to run your application on Lift.
+
+The source code of the application resides in `src/main/webapp` and 'src/main/scala'.
 
 See also
 ^^^^^^^^
 
-* https://github.com/harrah/xsbt/wiki[Simple Build Tool]
+The Simple Build Tool documentation is at http://www.scala-sbt.org[http://www.scala-sbt.org].
 
-Developing using a text editor
+
+Developing Using a Text Editor
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -89,7 +102,7 @@ Solution
 
 Run SBT while you are editing to handle compilation of Scala files.
 
-Start `sbt` and enter the following:
+Start `sbt` and enter the following to the SBT prompt:
 
 [source,scala]
 --------------------------------------
@@ -114,10 +127,14 @@ subject of a future recipe.
 See also
 ^^^^^^^^
 
-* https://github.com/harrah/xsbt/wiki/Triggered-Execution[SBT Triggered Execution]
-* https://github.com/harrah/xsbt/wiki/Command-Line-Reference[SBT Command Line Reference]
-* https://github.com/siasia/xsbt-web-plugin/wiki[SBT Web Plugin Commands]
-* http://zeroturnaround.com/jrebel/[JRebel] Developing using Eclipse
+* There's more about triggered execution at http://www.scala-sbt.org/release/docs/Detailed-Topics/Triggered-Execution[http://www.scala-sbt.org/release/docs/Detailed-Topics/Triggered-Execution].
+
+* Reference for the core SBT command line: http://www.scala-sbt.org/release/docs/Detailed-Topics/Command-Line-Reference[http://www.scala-sbt.org/release/docs/Detailed-Topics/Command-Line-Reference].
+
+* Command reference for the web plugin for SBT: https://github.com/siasia/xsbt-web-plugin/wiki[https://github.com/siasia/xsbt-web-plugin/wiki].
+
+Developing using Eclipse
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
@@ -143,12 +160,11 @@ addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.0.0")
 You can then create Eclipse project files within SBT by entering the
 following:
 
-[source,scala]
 ------- 
 eclipse
 -------
 
-In Eclipse, navigate to File -> Import.. and select "General > Existing
+In Eclipse, navigate to "File > Import.." and select "General > Existing
 Projects into Workspace". Navigate to and select your Lift project. You
 are now set up to develop you application in Eclipse.
 
@@ -156,7 +172,7 @@ Run SBT while you are editing to handle reloads of the web container.
 Start `sbt` from a terminal window outside of Eclipse and enter the
 following:
 
-[source,scala]
+
 --------------------------------------
 ~; container:start; container:reload /
 --------------------------------------
@@ -194,7 +210,7 @@ See also
 * https://github.com/harrah/xsbt/wiki/Triggered-Execution[SBT Triggered Execution]
 * https://github.com/harrah/xsbt/wiki/Command-Line-Reference[SBT Command Line Reference]
 * https://github.com/siasia/xsbt-web-plugin/wiki[SBT Web Plugin Commands]
-* http://zeroturnaround.com/jrebel/[JRebel]
+
 
 Viewing the lift_proto H2 database
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
