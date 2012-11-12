@@ -72,17 +72,18 @@ passes requests to the Lift application. The word "container" refers to the
 software you deploy your application into. There are a variety of containers (Jetty and 
 Tomcat are probably the best known) all of which conform to a standard for deployment.  
 The upshot is you can build your application and deploy to whichever one you prefer.  
-The `container:start` command is starting Jetty.
+The `container:start` command uses Jetty.
 
-If you take a look at `build.sbt` you'll see:
+Your application build is configured by `build.sbt`.  Looking inside you'll see:
+
 * basic information about your application, including a name and version;
 * resolvers, which inform SBT where to fetch dependencies from;
 * settings for plugins and the Scala compiler; and
 * a list of dependencies required to run your application on Lift.
 
-The source code of the application resides in `src/main/webapp` and 'src/main/scala'.
+The source code of the application resides in `src/main/webapp` and `src/main/scala`.
 
-See also
+See Also
 ^^^^^^^^
 
 The Simple Build Tool documentation is at http://www.scala-sbt.org[http://www.scala-sbt.org].
@@ -104,7 +105,6 @@ Run SBT while you are editing to handle compilation of Scala files.
 
 Start `sbt` and enter the following to the SBT prompt:
 
-[source,scala]
 --------------------------------------
 ~; container:start; container:reload /
 --------------------------------------
@@ -124,7 +124,7 @@ The restarting of the web container isn't always as efficient as you'd
 like. This can often be avoided by using JRebel, which will be the
 subject of a future recipe.
 
-See also
+See Also
 ^^^^^^^^
 
 * There's more about triggered execution at http://www.scala-sbt.org/release/docs/Detailed-Topics/Triggered-Execution[http://www.scala-sbt.org/release/docs/Detailed-Topics/Triggered-Execution].
@@ -152,7 +152,6 @@ to accomplish this.
 To create the project files for Eclipse, add the following to
 `plugins.sbt`, which can be found in the `project` directory:
 
-[source,scala]
 -----------------------------------------------------------------------
 addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.0.0")
 -----------------------------------------------------------------------
@@ -189,7 +188,6 @@ methods and classes. To achieve this once, run
 `eclipse with-source=true`, but if you want this to be the default
 behaviour, add the following to your `build.sbt` file:
 
-[source,scala]
 ------------------------------
 EclipseKeys.withSource := true
 ------------------------------
@@ -202,7 +200,7 @@ The restarting of the web container isn't always as efficient as you'd
 like. This can often be avoided by using JRebel, which will be the
 subject of a future recipe.
 
-See also
+See Also
 ^^^^^^^^
 
 * http://scala-ide.org/download/current.html[ScalaIDE download]
@@ -212,7 +210,7 @@ See also
 * https://github.com/siasia/xsbt-web-plugin/wiki[SBT Web Plugin Commands]
 
 
-Viewing the lift_proto H2 database
+Viewing the lift_proto H2 Database
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -240,7 +238,7 @@ Discussion
 Using the connection information given here and in the links below, you
 should be able to configure other SQL tools to access the database.
 
-See also
+See Also
 ^^^^^^^^
 
 * https://fmpwizard.telegr.am/blog/lift-and-h2[H2 web console and Lift] from @fmpwizard.
@@ -264,7 +262,6 @@ Solution
 You need to make two changes to your `build.sbt` file. First, reference
 the snapshot repository:
 
-[source,scala]
 ----
 resolvers += "snapshots" at "http://oss.sonatype.org/content/repositories/snapshots"
 ----
@@ -272,7 +269,6 @@ resolvers += "snapshots" at "http://oss.sonatype.org/content/repositories/snapsh
 Second, change the `liftVersion` in your build to be 2.5-SNAPSHOT,
 rather than 2.4:
 
-[source,scala]
 --------------------------------
 val liftVersion = "2.5-SNAPSHOT"
 --------------------------------
@@ -292,7 +288,7 @@ Snapshot releases are different: they are the result of an automated
 build, and change often. You can force SBT to resolve the latest
 versions by running the command `clean` and then `update`.
 
-See also
+See Also
 ^^^^^^^^
 
 * https://github.com/harrah/xsbt/wiki/Resolvers[SBT Resolvers].
@@ -301,6 +297,9 @@ http://www.sonatype.com/books/mvnref-book/reference/pom-relationships-sect-pom-s
 * https://github.com/harrah/xsbt/wiki/Command-Line-Reference[SBT Command
 line reference]. Using a new version of Scala
 
+
+Using a New Version of Scala
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
@@ -359,7 +358,7 @@ Lift components.
 Please note this only works for minor releases of Scala: major releases
 break compatibility.
 
-See also
+See Also
 ^^^^^^^^
 
 * Mailing list discussion on https://groups.google.com/forum/?fromgroups#!topic/liftweb/b4cwfpr67a8[Lift and Scala 2.9.2].
