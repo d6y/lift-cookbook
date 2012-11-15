@@ -25,25 +25,28 @@ start a basic Lift application.
 For Mac and Linux
 +++++++++++++++++
 
-* Visit http://liftweb.net/download[http://liftweb.net/download] and download the Lift 2.5-M3 ZIP file.
+* Visit http://liftweb.net/download[http://liftweb.net/download] and download the Lift 2.5-M3 Zip file.
 * Unzip the file.
 * Start Terminal or your favourite shell tool.
-* Navigate into the unzipped folder and into the `scala_2.9` sub-folder and then the lift_blank` folder.
+* Navigate into the unzipped folder and into the `scala_29` sub-folder and then the lift_basic` folder.
 * Run:`./sbt`.
 * Required libraries will be downloaded automatically.
 * At the SBT prompt (>) type: `container:start`.
 * Open your browser and go to `http://127.0.0.1:8080/`.
+* When you're done, type `exit` at the SBT prompt to stop your application from running.
 
 For Windows
 +++++++++++
 
-* Visit http://liftweb.net/download[http://liftweb.net/download] and download the Lift 2.5-M3 ZIP file.
-* Extract the contents of the ZIP file.
-* Navigate in Explorer to the extracted folder, and inside there navigate into `scala_2.9` and then `lift_blank`. 
-* Double click `sbt.bat` and a terminal window should open.
+* Visit http://liftweb.net/download[http://liftweb.net/download] locate the link to the Zip version of Lift 2.5-M3 and save this to disk.
+* Extract the contents of the Zip file.
+* Navigate in Explorer to the extracted folder, and inside navigate into `scala_29` and then `lift_basic`. 
+* Double click `sbt.bat` to run the build tool and a terminal window should open.
 * Required libraries will be downloaded automatically.
 * At the SBT prompt (>) type: `container:start`.
+* You may find Windows Firewall blocking Java from running. If so, opt to "allow access".
 * Start your browser and go to `http://127.0.0.1:8080/`
+* When you're done, type `exit` at the SBT prompt to stop your application from running.
 
 Expected result
 +++++++++++++++
@@ -60,12 +63,13 @@ Discussion
 Lift isn't installed in the usual sense of "installing software".
 Instead it uses standard build tools, such as SBT or Maven, to assemble
 your application with the Lift framework. This recipe has
-downloaded a ZIP containing four bare-bones Lift applications, and then started 
-one of them via the build too.
+downloaded a Zip containing four fairly minimal Lift applications, and then started 
+one of them via the build tool.
 
 Typing `sbt` starts the Simple Build Tool, a dependency management
-tool used by Scala projects. It will check the project and download any
-libraries required by this Lift application. 
+tool used by Scala projects. It will check the project definition and download any
+libraries required by this Lift application. This download happens once and the downloaded
+files are stored on disk in a `.ivy2` in your home folder.
 
 The command `container:start` starts the web server on the default port of 8080 and
 passes requests to the Lift application. The word "container" refers to the
