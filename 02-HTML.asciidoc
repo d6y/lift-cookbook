@@ -100,9 +100,11 @@ Discussion
 
 When using `&` think of the CSS selectors as always applying to the
 original template, no matter what other expressions you are combining.
+This is because `&` is aggregating the selectors together before applying them; whereas `andThen` is 
+a method of all Scala functions that composes two functions together, with the fist being
+called before the second.   
 
-
-Compare the example above with the change of replacing `andThen` with
+Compare the example above if we change the `andThen` with
 `&`:
 
 ----
@@ -113,21 +115,17 @@ scala> render(<div id="foo"/>)
 res1: scala.xml.NodeSeq = NodeSeq(<div id="bar"></div>)           
 ----
 
-The second expression will not match  as it is applied to the original
-input of `<div id="foo"/>`.  This results in the second expression adding
+The second expression will not match as it is applied to the original
+input of `<div id="foo"/>`. There's no `id="bar"` in there to match on,
+so this means in the second expression adds
 nothing to the `render`.
 
 See Also
 ^^^^^^^^
 
-* Mailing list discussion on:
-https://groups.google.com/forum/?fromgroups#!topic/liftweb/fz3Pmlhzhfg[CSS
-Selector in render on element ID created in the same render].
-* http://simply.liftweb.net/index-7.10.html#toc-Section-7.10[CSS
-Selector Transforms] in _Simply Lift_.
-* Wiki page on
-http://www.assembla.com/spaces/liftweb/wiki/Binding_via_CSS_Selectors[Binding
-via CSS Selectors].
+This topic is from the Lift mailing list, and you can see the original context there:
+https://groups.google.com/forum/?fromgroups#!topic/liftweb/fz3Pmlhzhfg[https://groups.google.com/forum/?fromgroups#!topic/liftweb/fz3Pmlhzhfg].
+
 
 
 Setting Meta Tag Contents
@@ -143,7 +141,7 @@ Solution
 
 Use the `@` CSS binding name selector. For example, given:
 
-[source,scala]
+
 ----
 <meta name="keywords" content="some words go here" />
 ----
@@ -151,7 +149,6 @@ Use the `@` CSS binding name selector. For example, given:
 The following snippet code will update the value of the contents
 attribute:
 
-[source,scala]
 ----
 "@keywords [content]" #> "other words to use" 
 ----
@@ -166,10 +163,10 @@ general mechanisms, not specific to meta tags.
 See Also
 ^^^^^^^^
 
-* http://simply.liftweb.net/index-7.10.html#toc-Section-7.10[CSS
-Selector Transforms] in _Simply Lift_.
+The syntax for selectors is best described in _Simply Lift_ at http://simply.liftweb.net/index-7.10.html#toc-Section-7.10[http://simply.liftweb.net/index-7.10.html#toc-Section-7.10].
 
-Setting the page title
+
+Setting the Page Title
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -190,7 +187,6 @@ text you want:
 Assuming you have a `<title>` tag in your template, the above will
 result in:
 
-[source,scala]
 ----
 <title>I am different</title>
 ----
@@ -202,7 +198,6 @@ It is also possible to set the page title from the contents of `SiteMap,
 meaning the title used will be the title you've assigned to the page in
 the site map:
 
-[source,scala]
 ----
 <title class="lift:Menu.title"></title>
 ----
@@ -211,7 +206,6 @@ The `lift:Menu.title` code prepends to any existing text in the title.
 This means the following will have the phrase "Site Title - " in the
 title followed by the page title:
 
-[source,scala]
 ----
 <title class="lift:Menu.title">Site Title - </title>
 ----
@@ -220,7 +214,6 @@ If you need more control, you can of course bind on title using a
 regular snippet. This example uses a custom snippet to put the site
 title after the page title:
 
-[source,scala]
 ----
 <title class="lift:MyTitle"></title>
 
