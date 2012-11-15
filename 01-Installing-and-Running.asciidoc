@@ -154,8 +154,9 @@ in <<jrebel>>.
 
 Edits to HTML files don't trigger the SBT compile and reload commands.
 This is because SBTs default behaviour is to look for
-Scala and Java source file changes, and changes to files in `src/main/resources'. 
-However, this is fine because Jetty will use your modified HTML file when you reload the browser page.
+Scala and Java source file changes, and changes to files in `src/main/resources`. 
+This works out just fine, because Jetty will use your modified HTML file when you 
+reload the browser page.
 
 
 See Also
@@ -210,8 +211,7 @@ Use the "Scala IDE for Eclipse" plugin to Eclipse. The instructions for this
 are given at http://scala-ide.org[http://scala-ide.org]. We recommend the
 stable version. This will give you an Eclipse perspective that knows about Scala.
 
-To create the project files for Eclipse to read, install "sbteclipse" by adding the following to
-`projects/plugins.sbt`:
+To create the project files to allow Eclipse to load your Lift project, install "sbteclipse" by adding the following to `projects/plugins.sbt`:
 
 -----------------------------------------------------------------------
 addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.1.0")
@@ -224,29 +224,31 @@ following:
 eclipse
 -------
 
-In Eclipse, navigate to "File > Import.." and select "General > Existing
-Projects into Workspace". Navigate to and select your Lift project. You
+Open the project in Eclipse by navigating to "File > Import.." and select "General > Existing
+Projects into Workspace". Browse to, and select, your Lift project. You
 are now set up to develop your application in Eclipse.
 
-Run SBT while you are editing to handle reloads of the web container.
-Start `sbt` from a terminal window outside of Eclipse and enter the
+
+To see live changes as you edit and save your work, run SBT in a sepeate terminal window.  That is, start `sbt` from a terminal window outside of Eclipse and enter the
 following:
 
 --------------------------------------
 ~; container:start; container:reload /
 --------------------------------------
 
-This command is described in <<texteditor>>.
+This behaviour of this command is described in <<texteditor>>.
 
 You can then edit in Eclipse, save to compile, and in your web browser hit reload to see
-the change. 
+the changes. 
 
 Discussion
 ^^^^^^^^^^
 
-You can also force the SBT `eclipse` command to download the Lift
-source and Scaladoc. This will allow you to click through to the Lift source from
+One of the great benefits of an IDE is the ability to navigate source, by cmd+click (Mac) or F3 (PC).
+You can ask the SBT `eclipse` command to download the Lift
+source and Scaladoc, allowing you to click through to the Lift source from
 methods and classes, which is a useful way to discover more about Lift.
+
 To achieve this in a project, run `eclipse with-source=true`, but if you want 
 this to be the default behaviour, add the following to your `build.sbt` file:
 
@@ -284,13 +286,12 @@ Problem
 ^^^^^^^
 
 You're developing using the default `lift_proto.db` H2 database, and
-you'd like use a tool to look at the tables.
+you would like use a tool to look at the tables.
 
 Solution
 ^^^^^^^^
 
-Use the web interface included as part of H2, as documented in the first _See Also_ link. +
-Here are the steps:
+Use the web interface included as part of H2. Here are the steps:
 
 * Locate the H2 JAR file. For me, this was: `~/.ivy2/cache/com.h2database/h2/jars/h2-1.2.147.jar`.
 * Start the server from a terminal window using the JAR file you found: `java -cp /path/to/h2-version.jar org.h2.tools.Server`
@@ -302,18 +303,18 @@ Here are the steps:
 Discussion
 ^^^^^^^^^^
 
-Using the connection information given here and in the links below, you
-should be able to configure other SQL tools to access the database.
+The default Lift projects that include a database, such as `lift_basic`, use the H2 relational database as it can be included as an SBT dependency and requires no external installation or configuation. It's a fine product, althogh production deployments typically use standalone databases, such as PostgreSQL or MySQL.
+
+Even if you're deploying to a non-H2 database it may be useful to keep H2 around because it has an in-memory mode, which is great for unit tests. This means you can create a database in-memory, no files on disk, and throw it away when your unit tests ends.
+
+If you don't like the web interface, the connection settings described in this recipie should give you the information you need to configure other SQL tools.
 
 See Also
 ^^^^^^^^
 
-* https://fmpwizard.telegr.am/blog/lift-and-h2[H2 web console and Lift] from @fmpwizard.
-* http://sofoklis.posterous.com/viewingediting-h2-database-via-web-interface[Viewing/Editing H2 database via web interface] blog post.
-* https://groups.google.com/forum/?fromgroups#!topic/liftweb/Gna1OTha-MI[Default username/password for lift_proto.db] mailing list discussion.
-* Mailing list discussion on
-https://groups.google.com/forum/?fromgroups#!topic/liftweb/4Tvfu9859e0[Easiest way to set up H2 database with web console at localhost:8080/console].
-* H2's http://www.h2database.com/html/tutorial.html[tutorial page].
+The properties of H2 are described at  http://www.h2database.com[http://www.h2database.com].
+
+If you're using the console frequently, consider mapping it accessable from your Lift application in development node.  This is described by Diego Medina in a blog post at https://fmpwizard.telegr.am/blog/lift-and-h2[https://fmpwizard.telegr.am/blog/lift-and-h2].
 
 
 
@@ -360,15 +361,10 @@ versions by running the command `clean` and then `update`.
 See Also
 ^^^^^^^^
 
-* https://github.com/harrah/xsbt/wiki/Resolvers[SBT Resolvers].
-* Learn about SNAPSHOT versioning in
-http://www.sonatype.com/books/mvnref-book/reference/pom-relationships-sect-pom-syntax.html[Maven: The Complete Reference].
-* https://github.com/harrah/xsbt/wiki/Command-Line-Reference[SBT Command
-line reference]. Using a new version of Scala
-
+To learn the detail of SNAPSHOT versions, dig into the Maven Complete Reference at [http://www.sonatype.com/books/mvnref-book/reference/pom-relationships-sect-pom-syntax.html[http://www.sonatype.com/books/mvnref-book/reference/pom-relationships-sect-pom-syntax.html].
 
 Using a New Version of Scala
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Problem
 ^^^^^^^
@@ -388,7 +384,6 @@ version.
 For example, assuming your `build.sbt` file is set up to use Lift 2.4
 with Scala 2.9.1:
 
-[source,scala]
 ---------------------------------------------------------------------
 scalaVersion := "2.9.1"
 
@@ -405,7 +400,6 @@ built against Scala 2.9.1. Replace `%%` with `%` for the `net.liftweb`
 resources and explicitly include the Scala version that Lift was built
 against for each Lift component:
 
-[source,scala]
 --------------------------------------------------------------------------
 scalaVersion := "2.9.2"
 
@@ -422,14 +416,17 @@ Discussion
 
 In the example we have forced SBT to explicitly fetch the 2.9.1 version
 of the Lift resources rather than allow it to compute the URL to the
-Lift components.
+Lift components.  This is the difference between using `%%` in a
+dependency and `%`.
 
 Please note this only works for minor releases of Scala: major releases
-break compatibility.
+break compatibility.  For example Scala 2.9.1 is compatibile with Scala 2.9.0, but not 2.10.
 
 See Also
 ^^^^^^^^
 
-* Mailing list discussion on https://groups.google.com/forum/?fromgroups#!topic/liftweb/b4cwfpr67a8[Lift and Scala 2.9.2].
-* SBT https://github.com/harrah/xsbt/wiki/Getting-Started-Library-Dependencies[Library Dependencies] page describes `%` and `%%`.
+Binary compatibily in Scala is discussed on the Scala user mailing list at  
+http://article.gmane.org/gmane.comp.lang.scala.user/39290[http://article.gmane.org/gmane.comp.lang.scala.user/39290].
+
+The SBT behaviour is described at: http://www.scala-sbt.org/release/docs/Getting-Started/Library-Dependencies[http://www.scala-sbt.org/release/docs/Getting-Started/Library-Dependencies].
 
