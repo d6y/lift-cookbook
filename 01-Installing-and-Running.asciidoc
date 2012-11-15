@@ -93,6 +93,7 @@ See Also
 The Simple Build Tool documentation is at http://www.scala-sbt.org[http://www.scala-sbt.org].
 
 
+[[texteditor]]
 Developing Using a Text Editor
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -105,7 +106,7 @@ editor, hitting reload in your browser to see changes.
 Solution
 ^^^^^^^^
 
-Run SBT while you are editing to handle compilation of Scala files.
+Run SBT while you are editing to allow it to handle compilation of Scala files.
 
 Start `sbt` and enter the following to the SBT prompt:
 
@@ -122,11 +123,40 @@ Discussion
 An SBT command prefixed with `~` makes that command run when files
 change. The first semicolon introduces a sequence of commands, where if
 the first command succeeds, the second will run. The second semicolon
-means the `reload` command will run if the `start` command ran OK.
+means the `reload` command will run if the `start` command ran OK. The `start` 
+command will recompile any Scala source files that have changed.
 
-The restarting of the web container isn't always as efficient as you'd
-like. This can often be avoided by using JRebel, which will be the
-subject of a future recipe.
+When you run SBT in this way, you'll notice the following output:
+
+----------------------------------------------------------
+1. Waiting for source changes... (press enter to interrupt)
+-----------------------------------------------------------
+
+And indeed, if you do press enter in the SBT window you'll exit this "triggered
+execution" mode and SBT will no longer be looking for file changes. However, while
+SBT is watching for changes, the output will indicate when this happens with something 
+that looks a little like this:
+
+----------------------------------------------------------------------------------
+[info] Compiling 1 Scala source to target/scala-2.9.1/classes...
+[success] Total time: 1 s, completed 15-Nov-2012 18:14:46
+[pool-301-thread-4] DEBUG net.liftweb.http.LiftServlet - Destroyed Lift handler.
+[info] stopped o.e.j.w.WebAppContext{/,[src/main/webapp/]}
+[info] NO JSP Support for /, did not find org.apache.jasper.servlet.JspServlet
+[info] started o.e.j.w.WebAppContext{/,[src/main/webapp/]}
+[success] Total time: 0 s, completed 15-Nov-2012 18:14:46
+2. Waiting for source changes... (press enter to interrupt)
+----------------------------------------------------------------------------------
+
+Restarting the web container each time you edit a Scala file isn't ideal. You can reduce
+the need for restarts by integrating JRebel into your development environment, as described
+in <<jrebel>>.
+
+Edits to HTML files don't trigger the SBT compile and reload commands.
+This is because SBTs default behaviour is to look for
+Scala and Java source file changes, and changes to files in `src/main/resources'. 
+However, this is fine because Jetty will use your modified HTML file when you reload the browser page.
+
 
 See Also
 ^^^^^^^^
@@ -136,6 +166,33 @@ See Also
 * Reference for the core SBT command line: http://www.scala-sbt.org/release/docs/Detailed-Topics/Command-Line-Reference[http://www.scala-sbt.org/release/docs/Detailed-Topics/Command-Line-Reference].
 
 * Command reference for the web plugin for SBT: https://github.com/siasia/xsbt-web-plugin/wiki[https://github.com/siasia/xsbt-web-plugin/wiki].
+
+
+[[jrebel]]
+Incorporating JRebel
+~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to avoid container restarts when you change a Scala source file by using JRebel.
+
+Solutions
+^^^^^^^^^
+
+TODO
+
+Discussion
+^^^^^^^^^^
+
+TODO
+
+See Also
+^^^^^^^^
+
+ALSO TODO
+
+
 
 Developing using Eclipse
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -149,18 +206,18 @@ reload in your browser to see changes.
 Solution
 ^^^^^^^^
 
-You will need to have the http://scala-ide.org/[Scala IDE for Eclipse]
-installed. There is a link in the See also section with instructions how
-to accomplish this.
+Use the "Scala IDE for Eclipse" plugin to Eclipse. The instructions for this 
+are given at http://scala-ide.org[http://scala-ide.org]. We recommend the
+stable version. This will give you an Eclipse perspective that knows about Scala.
 
-To create the project files for Eclipse, add the following to
-`plugins.sbt`, which can be found in the `project` directory:
+To create the project files for Eclipse to read, install "sbteclipse" by adding the following to
+`projects/plugins.sbt`:
 
 -----------------------------------------------------------------------
-addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.0.0")
+addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.1.0")
 -----------------------------------------------------------------------
 
-You can then create Eclipse project files within SBT by entering the
+You can then create Eclipse project files (`.project` and `.classpath`) within SBT by entering the
 following:
 
 ------- 
@@ -169,49 +226,55 @@ eclipse
 
 In Eclipse, navigate to "File > Import.." and select "General > Existing
 Projects into Workspace". Navigate to and select your Lift project. You
-are now set up to develop you application in Eclipse.
+are now set up to develop your application in Eclipse.
 
 Run SBT while you are editing to handle reloads of the web container.
 Start `sbt` from a terminal window outside of Eclipse and enter the
 following:
 
-
 --------------------------------------
 ~; container:start; container:reload /
 --------------------------------------
 
-You can then edit in Eclipse, and in your web browser hit reload to see
-the change.
+This command is described in <<texteditor>>.
+
+You can then edit in Eclipse, save to compile, and in your web browser hit reload to see
+the change. 
 
 Discussion
 ^^^^^^^^^^
 
 You can also force the SBT `eclipse` command to download the Lift
-source. This will allow you to click through to the Lift source from
-methods and classes. To achieve this once, run
-`eclipse with-source=true`, but if you want this to be the default
-behaviour, add the following to your `build.sbt` file:
+source and Scaladoc. This will allow you to click through to the Lift source from
+methods and classes, which is a useful way to discover more about Lift.
+To achieve this in a project, run `eclipse with-source=true`, but if you want 
+this to be the default behaviour, add the following to your `build.sbt` file:
 
 ------------------------------
 EclipseKeys.withSource := true
 ------------------------------
 
-If you find yourself using the plugin frequently, you may wish to set it
-in your global SBT configuration files: `~/.sbt/plugins/build.sbt` for
-the module definition and `~/.sbt/user.sbt` for any settings.
+If you find yourself using the plugin frequently, you may wish to declare it
+in your global SBT configuration files so it appies to all projects.  To do that,
+create a `~/.sbt/plugins/plugins.sbt` file containing:
 
-The restarting of the web container isn't always as efficient as you'd
-like. This can often be avoided by using JRebel, which will be the
-subject of a future recipe.
+------------------------------------------------------------------------
+resolvers += Classpaths.typesafeResolver
+
+addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.1.0")
+------------------------------------------------------------------------
+
+Note the blank line between the `resolvers` and the `addSbtPlugin` is significant to SBT.
+
+Finally, set any global configurations (such as `withSource`) `in `~/.sbt/global.sbt`.
 
 See Also
 ^^^^^^^^
 
-* http://scala-ide.org/download/current.html[ScalaIDE download]
-* https://github.com/typesafehub/sbteclipse/wiki/Using-sbteclipse[Using the sbteclipse plugin]
-* https://github.com/harrah/xsbt/wiki/Triggered-Execution[SBT Triggered Execution]
-* https://github.com/harrah/xsbt/wiki/Command-Line-Reference[SBT Command Line Reference]
-* https://github.com/siasia/xsbt-web-plugin/wiki[SBT Web Plugin Commands]
+There are other useful settings for sbteclipse, described at https://github.com/typesafehub/sbteclipse/wiki[https://github.com/typesafehub/sbteclipse/wiki].
+
+The SBT guide to using plugins, http://www.scala-sbt.org/release/docs/Getting-Started/Using-Plugins[http://www.scala-sbt.org/release/docs/Getting-Started/Using-Plugins] and the wiki page for global configuration, http://www.scala-sbt.org/release/docs/Detailed-Topics/Global-Settings[http://www.scala-sbt.org/release/docs/Detailed-Topics/Global-Settings], explains the `~/.sbt/` structure for SBT.
+
 
 
 Viewing the lift_proto H2 Database
@@ -251,6 +314,8 @@ See Also
 * Mailing list discussion on
 https://groups.google.com/forum/?fromgroups#!topic/liftweb/4Tvfu9859e0[Easiest way to set up H2 database with web console at localhost:8080/console].
 * H2's http://www.h2database.com/html/tutorial.html[tutorial page].
+
+
 
 Using the latest Lift build
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
