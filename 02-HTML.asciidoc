@@ -40,12 +40,16 @@ res0: scala.xml.NodeSeq =
 Discussion
 ^^^^^^^^^^
 
-CSS Selector transforms are one of the distinguishing features of Lift. They succinctly describe a node in your template (left-hand side) and give a replcement (right-hand side). They do take a little while to get use to, so being able to test them at the Scala REPL is useful.
+CSS selector transforms are one of the distinguishing features of Lift. They succinctly describe a node in your template (left-hand side) and give a replcement (right-hand side). They do take a little while to get use to, so being able to test them at the Scala REPL is useful.
+
+It may help to know that prior to CSS selectors Lift snippets were typically defined in terms
+of a function that took a `NodeSeq` and returned a `NodeSeq`, often via the `bind` method.  When Lift processes such a template it knows what the input `NodeSeq` is, so it's natural to supply a function that returns a `NodeSeq`.  You won't see that usage so often any more, but the principle is the same. 
 
 The CSS selector functionality in Lift gives you a `CssSel` function
-which is `NodeSeq => NodeSeq`. Knowing this, you can construct an input
-`NodeSeq` (called `in` above), create your CSS function (called `f`) and
-then apply it to get the `NodeSeq` output (called `res0`, above).
+which is `NodeSeq => NodeSeq`. We exploit this in the above example by constructing an input
+`NodeSeq` (called `in`), then creating a CSS function (called `f`).  Because we know that `CssSel`
+is defined as a `NodeSeq => NodeSeq` the natural way to execute the selector is to supply
+the `in` as a parameter, and this gives us the answer, `res0`.
 
 See Also
 ^^^^^^^^
@@ -67,11 +71,11 @@ binding expressions.
 Solution
 ^^^^^^^^
 
-Use `andThen` rather than `&` to compose your selector expressions. For
-example, suppose we want to replace `<div id="foo"/>` with
+Use `andThen` rather than `&` to compose your selector expressions. 
+
+For example, suppose we want to replace `<div id="foo"/>` with
 `<div id="bar">bar content</div>` but for some reason we needed to
 generate the `bar` div as a separate step in the selector expression:
-
 
 ----
 sbt> console
@@ -97,6 +101,7 @@ Discussion
 When using `&` think of the CSS selectors as always applying to the
 original template, no matter what other expressions you are combining.
 
+
 Compare the example above with the change of replacing `andThen` with
 `&`:
 
@@ -108,8 +113,9 @@ scala> render(<div id="foo"/>)
 res1: scala.xml.NodeSeq = NodeSeq(<div id="bar"></div>)           
 ----
 
-The second expression will not match as it is applied to the original
-input of `<div id="foo"/>`.
+The second expression will not match  as it is applied to the original
+input of `<div id="foo"/>`.  This results in the second expression adding
+nothing to the `render`.
 
 See Also
 ^^^^^^^^
