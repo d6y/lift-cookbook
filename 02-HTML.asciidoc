@@ -1,7 +1,7 @@
 HTML
 ----
 
-Testing and debugging CSS selectors
+Testing and Debugging CSS Selectors
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -12,9 +12,8 @@ You want to explore or debug CSS selectors interactively.
 Solution
 ^^^^^^^^
 
-Use the Scala REPL to run your CSS selector:
+Use the Scala REPL to run your CSS selector. From withing SBT use the `console` command to get into the REPL. Here's an example were we test out a CSS selector which applies a href to a link:
 
-[source,scala]
 ----
 > console             
 [info] Starting scala interpreter...
@@ -41,6 +40,8 @@ res0: scala.xml.NodeSeq =
 Discussion
 ^^^^^^^^^^
 
+CSS Selector transforms are one of the distinguishing features of Lift. They succinctly describe a node in your template (left-hand side) and give a replcement (right-hand side). They do take a little while to get use to, so being able to test them at the Scala REPL is useful.
+
 The CSS selector functionality in Lift gives you a `CssSel` function
 which is `NodeSeq => NodeSeq`. Knowing this, you can construct an input
 `NodeSeq` (called `in` above), create your CSS function (called `f`) and
@@ -49,11 +50,12 @@ then apply it to get the `NodeSeq` output (called `res0`, above).
 See Also
 ^^^^^^^^
 
-* http://simply.liftweb.net/index-7.10.html#toc-Section-7.10[CSS
-Selector Transforms] in _Simply Lift_.
-* Section 6.1.2 of _Lift in Action_.
+The syntax for selectors is best described in _Simply Lift_ at http://simply.liftweb.net/index-7.10.html#toc-Section-7.10[http://simply.liftweb.net/index-7.10.html#toc-Section-7.10].
 
-Sequencing CSS selector operations
+Section 6.1.2 of _Lift in Action_ also describes selectors and gives examples.
+
+
+Sequencing CSS Selector Operations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -70,7 +72,7 @@ example, suppose we want to replace `<div id="foo"/>` with
 `<div id="bar">bar content</div>` but for some reason we needed to
 generate the `bar` div as a separate step in the selector expression:
 
-[source,scala]
+
 ----
 sbt> console
 [info] Starting scala interpreter...
@@ -98,7 +100,6 @@ original template, no matter what other expressions you are combining.
 Compare the example above with the change of replacing `andThen` with
 `&`:
 
-[source,scala]
 ----
 scala> def render = "#foo" #> <div id="bar" /> & "#bar *" #> "bar content"
 render: net.liftweb.util.CssSel
@@ -122,7 +123,8 @@ Selector Transforms] in _Simply Lift_.
 http://www.assembla.com/spaces/liftweb/wiki/Binding_via_CSS_Selectors[Binding
 via CSS Selectors].
 
-Setting meta tag contents
+
+Setting Meta Tag Contents
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -175,7 +177,6 @@ Solution
 Select all the elements of the `title` element and replace them with the
 text you want:
 
-[source,scala]
 ----
 "title *" #> "I am different"
 ----
@@ -381,8 +382,10 @@ https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftw
 source where `PassThru` is defined.
 * _Simply Lift_ section
 http://simply.liftweb.net/index-7.10.html#toc-Section-7.10[7.10 CSS
-Selector Transforms]. Snippet not found when using HTML5
+Selector Transforms]. 
 
+Snippet not found when using HTML5
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
@@ -416,8 +419,10 @@ See Also
 and XHTML are different] important notes from the mailing list.
 * Wiki page on
 http://www.assembla.com/wiki/show/liftweb/HtmlProperties_XHTML_and_HTML5[HtmlProperties,
-XHTML and HTML5]. Avoiding CSS and JavaScript caching
+XHTML and HTML5]. 
 
+Avoiding CSS and JavaScript Caching
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
@@ -585,8 +590,10 @@ XHTML and HTML5].
 * Mailing list discussion on a
 https://groups.google.com/forum/?fromgroups#!topic/liftweb/rG_pOXdp4Ew[designer
 friendly way of head merge.].
-* http://validator.w3.org/[W3C HTML validator]. Custom 404 page
+* http://validator.w3.org/[W3C HTML validator]. 
 
+Custom 404 page
+~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
@@ -797,8 +804,10 @@ https://github.com/lift/modules/blob/master/textile/src/main/scala/net/liftweb/t
 Source code for Textile].
 *
 https://github.com/lift/modules/blob/master/textile/src/test/scala/net/liftweb/textile/TextileSpec.scala[Lift
-tests for the Textile plugin]. Access restriction by HTTP header
+tests for the Textile plugin]. 
 
+Access restriction by HTTP header
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
@@ -831,9 +840,8 @@ request for the page will be redirected with a Lift error notice of
 
 This can be tested from the command line using a tool like cURL:
 
-[source,scala]
 ----
-\$ curl  http://127.0.0.1:8080/restricted.html -H "ALLOWED:YES"
+$ curl http://127.0.0.1:8080/restricted.html -H "ALLOWED:YES"
 ----
 
 Discussion
@@ -864,6 +872,4 @@ where `If` and other tests are defined.
 * http://exploring.liftweb.net/onepage/index.html#toc-Chapter-7[Site map
 in _Exploring Lift_].
 
-Comments? Questions? Corrections?
-mailto:liftweb@googlegroups.com?subject=Cookbook%20-%20Access%20restriction%20by%20HTTP%20header[Discuss
-this recipe on the Lift Web mailing list].
+
