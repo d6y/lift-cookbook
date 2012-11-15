@@ -141,7 +141,6 @@ Solution
 
 Use the `@` CSS binding name selector. For example, given:
 
-
 ----
 <meta name="keywords" content="some words go here" />
 ----
