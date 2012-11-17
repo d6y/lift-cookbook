@@ -209,7 +209,7 @@ result in:
 Discussion
 ^^^^^^^^^^
 
-It is also possible to set the page title from the contents of `SiteMap,
+It is also possible to set the page title from the contents of `SiteMap`,
 meaning the title used will be the title you've assigned to the page in
 the site map:
 
@@ -240,16 +240,12 @@ object MyTitle {
 See Also
 ^^^^^^^^
 
-* http://simply.liftweb.net/index-7.10.html#toc-Section-7.10[CSS
-Selector Transforms] in _Simply Lift_.
-* http://www.assembla.com/spaces/liftweb/wiki/SiteMap[Wiki page for
-SiteMap]
-*
-http://exploring.liftweb.net/master/index-7.html#toc-Subsection-7.2.3[Using
-] in _Exploring Lift_.
-* Mailing list discussion of
-http://groups.google.com/group/liftweb/browse_thread/thread/e19bd2dda2b3159d[dynamic
-titles on sitemap].
+*  _Simply Lift_ chapter 7: http://simply.liftweb.net/index-7.10.html[http://simply.liftweb.net/index-7.10.html].
+
+* The Wiki page for SiteMap: http://www.assembla.com/spaces/liftweb/wiki/SiteMap[http://www.assembla.com/spaces/liftweb/wiki/SiteMap].
+
+* The "dynamic titles on sitemap" mailing list discussion offers further options for computing page titles:
+http://groups.google.com/group/liftweb/browse_thread/thread/e19bd2dda2b3159d[http://groups.google.com/group/liftweb/browse_thread/thread/e19bd2dda2b3159d].
 
 Including HTML5 Shiv
 ~~~~~~~~~~~~~~~~~~~~
