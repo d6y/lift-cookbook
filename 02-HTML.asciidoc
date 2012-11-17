@@ -175,9 +175,6 @@ res0: scala.xml.NodeSeq = NodeSeq(<div class="wrapper funky"></div>)
 ---------------------------------------------------------------------
 
 
-
-
-
 See Also
 ^^^^^^^^
 
