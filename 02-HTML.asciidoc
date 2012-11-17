@@ -247,6 +247,7 @@ See Also
 * The "dynamic titles on sitemap" mailing list discussion offers further options for computing page titles:
 http://groups.google.com/group/liftweb/browse_thread/thread/e19bd2dda2b3159d[http://groups.google.com/group/liftweb/browse_thread/thread/e19bd2dda2b3159d].
 
+
 Including HTML5 Shiv
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -262,7 +263,6 @@ Solution
 Put the markup in a snippet and include the snippet in your page or
 template.
 
-[source,scala]
 ----
 package code.snippet
 
@@ -278,7 +278,6 @@ object Html5Shiv {
 Reference the snippet in the `<head>` of your
 `templates-hidden/default.html`, e.g.,:
 
-[source,html]
 ----
 <script class="lift:Html5Shiv"></script>
 ----
@@ -287,17 +286,22 @@ Discussion
 ^^^^^^^^^^
 
 The HTML5 parser used by Lift does not carry comments from the source
-through to the rendered page. If you're looking at `Unparsed` and
-worried, your instincts are correct, but in this case we do want
-unparsed XML content (the comment tag) included in the output.
+through to the rendered page. If you just tried to paste the html5shim markup into 
+your template you'd find it missing from the rendered page.
+
+We deal with this by generating unparsed markup from a snippet. If you're looking at 
+`Unparsed` and worried, your instincts are correct.  Normally Lift would cause the
+markup to be escaped, but in this case we really do want
+unparsed XML content (the comment tag) included in the output. 
 
 See Also
 ^^^^^^^^
 
-*
-https://groups.google.com/forum/?fromgroups#!topic/liftweb/kLzcJwfIqHQ[How
-to incorporate html5shiv], from the mailing list.
-* http://code.google.com/p/html5shim/[html5shim Google code page].
+If you're doing a lot of IE conditional includes, take a look at the mailing list
+suggestion from Antonio Salazar Cardozo for using a IE confitional comment snippet: https://groups.google.com/d/msg/liftweb/kLzcJwfIqHQ/K91MdtoNz0MJ[https://groups.google.com/d/msg/liftweb/kLzcJwfIqHQ/K91MdtoNz0MJ].
+
+The html5shim project can be found at: http://code.google.com/p/html5shim/[http://code.google.com/p/html5shim/].
+
 
 Adding a Google +1 button
 ~~~~~~~~~~~~~~~~~~~~~~~~~
