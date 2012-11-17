@@ -142,27 +142,46 @@ Solution
 Use the `@` CSS binding name selector. For example, given:
 
 ----
-<meta name="keywords" content="some words go here" />
+<meta name="keywords" content="words, here, please" />
 ----
 
 The following snippet code will update the value of the contents
 attribute:
 
 ----
-"@keywords [content]" #> "other words to use" 
+"@keywords [content]" #> "words, we, really, want" 
 ----
 
 Discussion
 ^^^^^^^^^^
 
-The `@` selector selects all elements with the given name. The
-`[content]` part matches on the attribute of `content`. These are
-general mechanisms, not specific to meta tags.
+The `@` selector selects all elements with the given name. It's useful in this case to change `<meta name="keyword">` tag, but you may also see it used with elsewhere, for example with HTML forms to select input fields, such as `<input name="address">`.  
+
+The `[content]` part is an example of a _replacement rule_ that can follow a selector. That's to say, it's not specific to the `@` selector and can be used with other selectors.  In this example it adds or replaces the value of the attribute called "content".
+
+There are two other replacement rules useful for manipulating attributes: removing attributes and appending to attributes:
+
+* `[content!]` to remove an attribute with a matching value, which in our example would be `"@keywords [content!]" #> "words, here, please"`.
+* `[content+]` to append to the value, such as `"@keywords [content+]" #> ", more"`.
+
+Although not directly relevant to `meta` tags, you should be aware of there is one convenient special case for appending to an attribute. If the attribute is `class`, a space is added together with your class value. As a demonstration of that, here's an example of appending a class called "funky" to a `div`:
+
+---------------------------------------------------------------------
+scala> def render = "div [class+]" #> "funky"
+render: net.liftweb.util.CssSel
+
+scala> render(<div class="wrapper"/>)
+res0: scala.xml.NodeSeq = NodeSeq(<div class="wrapper funky"></div>)
+---------------------------------------------------------------------
+
+
+
+
 
 See Also
 ^^^^^^^^
 
-The syntax for selectors is best described in _Simply Lift_ at http://simply.liftweb.net/index-7.10.html#toc-Section-7.10[http://simply.liftweb.net/index-7.10.html#toc-Section-7.10].
+The syntax for selectors is best described in _Simply Lift_ at http://simply.liftweb.net/index-7.10.html[http://simply.liftweb.net/index-7.10.html].
 
 
 Setting the Page Title
