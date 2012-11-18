@@ -497,7 +497,7 @@ The source for `LiftRules` shows the default implementation of `attachResourceId
 Google's _Optimize caching_ notes are a good source of information about browser behaviour: https://developers.google.com/speed/docs/best-practices/caching[https://developers.google.com/speed/docs/best-practices/caching].
 
 
-Adding to the head of a page
+Adding to the Head of a Page
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -513,7 +513,6 @@ Use the `lift:head` snippet or CSS class so Lift knows to merge the
 contents with the `<head>` of your page. For example, suppose you have
 the following contents in `templates-hidden/default.html`:
 
-[source,html]
 ----
 <html lang="en" xmlns:lift="http://liftweb.net/"> 
   <head> 
@@ -534,7 +533,6 @@ Also suppose you have `index.html` on which you want to include `my.css`
 just for that page. Do so by including the CSS in the part of the page
 that will get processed and mark it for the head with `lift:head`:
 
-[source,html]
 -----
 <!DOCTYPE html>
 <html>
@@ -553,7 +551,6 @@ that will get processed and mark it for the head with `lift:head`:
 Note that this `index.html` page is validated HTML5, and will produce a
 result with the custom CSS inside the `<head>` tag, something like this:
 
-[source,html]
 ----
 <!DOCTYPE html>
 <html lang="en">
@@ -596,12 +593,11 @@ You may also see `data-lift="head"` is also used as an alternative to
 See Also
 ^^^^^^^^
 
-* Wiki page on
-http://www.assembla.com/spaces/liftweb/wiki/HtmlProperties_XHTML_and_HTML5[HtmlProperties
-XHTML and HTML5].
+
 * Mailing list discussion on a
 https://groups.google.com/forum/?fromgroups#!topic/liftweb/rG_pOXdp4Ew[designer
 friendly way of head merge.].
+
 * http://validator.w3.org/[W3C HTML validator]. 
 
 Custom 404 page
