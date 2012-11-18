@@ -646,7 +646,7 @@ slash.
 See Also
 ^^^^^^^^
 
-The Wiki entry for this topic: http://www.assembla.com/spaces/liftweb/wiki/Custom_404_-_URI_not_found_page[http://www.assembla.com/spaces/liftweb/wiki/Custom_404_-_URI_not_found_page].
+The Wiki entry for this topic: http://www.assembla.com/spaces/liftweb/wiki/Custom_404_-_URI_not_found_page
 
 
 Other Custom Status Pages
