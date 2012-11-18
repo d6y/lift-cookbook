@@ -301,7 +301,8 @@ source.
 * http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/ScheduledFuture.html[java.util.concurrent.ScheduledFuture] JavaDoc.
 * Recipe for link:Run+tasks+periodically.html[Running tasks periodically]
 
-Run tasks periodically
+[[RunTasksPeriodically]]
+Run Tasks Periodically
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Problem

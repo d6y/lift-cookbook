@@ -1,6 +1,8 @@
 HTML
 ----
 
+Generating HTML is often a major component of web applications.  This chapter is concerned with Lift's _View First_ approach and use of _CSS Selectors_.  Later chapters focus on Form processing, REST web services, and JavaScript (Ajax and Comet).
+
 Testing and Debugging CSS Selectors
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -22,7 +24,7 @@ Welcome to Scala version 2.9.1.final
 Type in expressions to have them evaluated.
 Type :help for more information.
 
-scala> import net.liftweb.util.Helpers._ 
+scala> import net.liftweb.util.Helpers._
 import net.liftweb.util.Helpers._
 
 scala> val in = <a>click me</a>
@@ -40,7 +42,7 @@ res0: scala.xml.NodeSeq =
 Discussion
 ^^^^^^^^^^
 
-CSS selector transforms are one of the distinguishing features of Lift. They succinctly describe a node in your template (left-hand side) and give a replcement (right-hand side). They do take a little while to get use to, so being able to test them at the Scala REPL is useful.
+CSS selector transforms are one of the distinguishing features of Lift. They succinctly describe a node in your template (left-hand side) and give a replacement (right-hand side). They do take a little while to get use to, so being able to test them at the Scala REPL is useful.
 
 It may help to know that prior to CSS selectors Lift snippets were typically defined in terms
 of a function that took a `NodeSeq` and returned a `NodeSeq`, often via the `bind` method.  When Lift processes such a template it knows what the input `NodeSeq` is, so it's natural to supply a function that returns a `NodeSeq`.  You won't see that usage so often any more, but the principle is the same. 
@@ -593,14 +595,13 @@ You may also see `data-lift="head"` is also used as an alternative to
 See Also
 ^^^^^^^^
 
+* Mailing list discussion on _Designer Friendly Way of Head Merge_ at https://groups.google.com/d/msg/liftweb/rG_pOXdp4Ew/cPHTyTDhmWEJ[https://groups.google.com/d/msg/liftweb/rG_pOXdp4Ew/cPHTyTDhmWEJ].
 
-* Mailing list discussion on a
-https://groups.google.com/forum/?fromgroups#!topic/liftweb/rG_pOXdp4Ew[designer
-friendly way of head merge.].
+* The W3C HTML validator is a useful tool for tracking down HTML markup issues that may cause problems with content being moved into the head of your page. http://validator.w3.org/[http://validator.w3.org/]. 
 
-* http://validator.w3.org/[W3C HTML validator]. 
 
-Custom 404 page
+
+Custom 404 Page
 ~~~~~~~~~~~~~~~
 
 Problem
@@ -613,7 +614,6 @@ Solution
 
 In `Boot.scala` add the following:
 
-[source,scala]
 ----
 LiftRules.uriNotFound.prepend(NamedPF("404handler"){
   case (req,failure) => 
@@ -646,10 +646,10 @@ slash.
 See Also
 ^^^^^^^^
 
-* http://www.assembla.com/spaces/liftweb/wiki/Custom_404_-_URI_not_found_page[Lift
-Wiki entry for this topic]
+The Wiki entry for this topic: http://www.assembla.com/spaces/liftweb/wiki/Custom_404_-_URI_not_found_page[http://www.assembla.com/spaces/liftweb/wiki/Custom_404_-_URI_not_found_page].
 
-Other custom status pages
+
+Other Custom Status Pages
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -667,7 +667,6 @@ For example, suppose we want to provide a customised page for 403
 ("Forbidden") statuses created in your Lift application. In `Boot.scala`
 we could add the following:
 
-[source,scala]
 ----
 LiftRules.responseTransformers.append {
   case r if r.toResponse.code == 403 => RedirectResponse("/403.html")
@@ -675,8 +674,8 @@ LiftRules.responseTransformers.append {
 }
 ----
 
-The file `src/main/webapp/403.html` will now be served for requests that
-generate 403 status codes. Other requests are passed through.
+The file _src/main/webapp/403.html_ will now be served for requests that
+generate 403 status codes. Other, non 403, requests are left untransformed.
 
 Discussion
 ^^^^^^^^^^
@@ -685,14 +684,15 @@ Discussion
 `LiftResponse => LiftResponse` functions to change a response at the end
 of the HTTP processing cycle. This is a very general mechanism: in this
 example we are matching on a status code, but we could match on anything
-exposed by `LiftResponse`. We've shown a `RedirectResponse` being
+exposed by `LiftResponse`. 
+
+We've shown a `RedirectResponse` being
 returned but there are many different kinds of `LiftResponse` we could
 send to the client.
 
 One way to test the above example is to add the following to Boot to
-make all requests to `/secret` return a 403:
+make all requests to _/secret_ return a 403:
 
-[source,scala]
 ----
 val Protected = If(() => false, () => ForbiddenResponse("no way"))
 
@@ -704,17 +704,18 @@ val entries = List(
 )
 ----
 
+If you request _/secret_, a 403 response will be triggered, which will match the response transformer showing you
+the _403.html_ page.
+
 See Also
 ^^^^^^^^
 
-* _The Request/Response Lifecycle_ in
-http://exploring.liftweb.net/master/index-9.html#toc-Section-9.2[Exploring
-Lift].
-* Mailing list discussion of
-https://groups.google.com/forum/?fromgroups#!topic/liftweb/9wU0hzQ0wgs%5B1-25%5D[custom
-error 403 page].
+_The Request/Response Lifecycle_ section in _Exploring Lift_ in gives more details about the processing pipeline. 
+http://exploring.liftweb.net/master/index-9.html#toc-Section-9.2[http://exploring.liftweb.net/master/index-9.html#toc-Section-9.2
+].
 
-Links in notices
+
+Links in Notices
 ~~~~~~~~~~~~~~~~
 
 Problem
@@ -728,7 +729,6 @@ Solution
 
 Include a `NodeSeq` containing a link in your notice:
 
-[source,scala]
 ----
 S.error("checkPrivacyPolicy", 
   <span>See our <a href="/policy">privacy policy</a></span>)
@@ -736,7 +736,6 @@ S.error("checkPrivacyPolicy",
 
 You might pair this with the following in your template:
 
-[source,html]
 ----
 <div class="lift:Msg?id=checkPrivacyPolicy"></div>
 ----
@@ -744,14 +743,10 @@ You might pair this with the following in your template:
 See Also
 ^^^^^^^^
 
-* http://www.assembla.com/spaces/liftweb/wiki/Lift_Notices_and_Auto_Fadeout[Lift
-Notices and Auto Fadeout] wiki page.
-* Mailing list question:
-https://groups.google.com/forum/?fromgroups#!topic/liftweb/Q6ToHnebOB0[Is
-there a way for the display of the S.errror to have a clickable URL in
-it?]
+Lift notices are described on the Wiki: http://www.assembla.com/spaces/liftweb/wiki/Lift_Notices_and_Auto_Fadeout[http://www.assembla.com/spaces/liftweb/wiki/Lift_Notices_and_Auto_Fadeout].
 
-Rendering Textile markup
+
+Rendering Textile Markup
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -765,13 +760,15 @@ Solution
 Install the Lift Textile module in your `build.sbt` file by adding the
 following to the list of dependencies:
 
-`scala "net.liftweb" %% "lift-textile" % liftVersion % "compile->default",`
-You can then render Textile using `toHtml` method:
-
-[source,scala]
 ----
-scala> import net.liftweb.textile._                   
-import net.liftweb.textile._
+"net.liftmodules" %% "textile" % (liftVersion + "1.1") % "compile->default",
+----
+
+You can then use the module to render Textile using the `toHtml` method:
+
+----
+scala> import net.liftmodules.textile._                   
+import net.liftmodules.textile._
 
 scala> TextileParser.toHtml("""h1. Hi!              
  | 
@@ -794,90 +791,22 @@ Textile markup into HTML is pretty easy to use.</p>,
 Discussion
 ^^^^^^^^^^
 
-Textile is one of many
-http://en.wikipedia.org/wiki/Lightweight_markup_language[lightweight
-markup language], but stands out for Lift users as being easy to install
-and use.
+There's nothing special code has to do to become a Lift module, although there are common conventions: they typically are packaged as _net.liftmodules_, but don't have to be; they usually depend on a version of Lift; they sometimes use the hooks provided by `LiftRules` to provide a particular behaviour.  Anyone can create and publish a Lift module, and anyone can contribute to existing modules. In the end, they are declared as dependencies in SBT, and pulled into your code just like any other dependency.
+
+The dependency version is made up of two elements: the Lift version, and the module version. This is because modules have their own release cycle, so you could have versions 1.1, 1.2 and 1.3 all for the same version of Lift. However, they may also depend on certain features of Lift, hence the combined version number.
+
 
 See Also
 ^^^^^^^^
 
-* http://redcloth.org/hobix.com/textile/[A Textile Reference].
-* http://textile.thresholdstate.com/[An online Textile to HTML tool]
-from Threshold State.
-* _Lift in Action_, chapter 7 contains a wiki example that uses the
+* There's no real specification of what Textile is, but there are references available which cover the typical kinds of mark up to enter and what HTML you can expect to see: http://redcloth.org/hobix.com/textile/[http://redcloth.org/hobix.com/textile/].
+
+* _Lift in Action_, chapter 7 contains a Wiki example that uses the
 Textile plugin.
-*
-https://github.com/lift/modules/blob/master/textile/src/main/scala/net/liftweb/textile/TextileParser.scala[Lift
-Source code for Textile].
-*
-https://github.com/lift/modules/blob/master/textile/src/test/scala/net/liftweb/textile/TextileSpec.scala[Lift
-tests for the Textile plugin]. 
 
-Access restriction by HTTP header
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* The home of the Textile module: https://github.com/liftmodules/textile[
+https://github.com/liftmodules/textile].
 
-Problem
-^^^^^^^
+* The unit tests for the Textile module give you a good set of examples of what is supported: https://github.com/liftmodules/textile/blob/master/src/test/scala/net/liftmodules/textile/TextileSpec.scala[https://github.com/liftmodules/textile/blob/master/src/test/scala/net/liftmodules/textile/TextileSpec.scala].
 
-You need to control access to a page based on the value of a HTTP
-header.
-
-Solution
-^^^^^^^^
-
-Use a custom `If` in SiteMap:
-
-[source,scala]
-----
-val HeaderRequired = If(  
-  () => S.request.map(_.header("ALLOWED") == Full("YES")) openOr false,
-  "Access not allowed" 
-)
-
-// Build SiteMap
-val entries = List(
-      Menu.i("Restricted") / "restricted" >> HeaderRequired
-)
-----
-
-In this example `restricted.html` can only be viewed if the request
-includes a HTTP header called `ALLOWED` with a value of `Yes`. Any other
-request for the page will be redirected with a Lift error notice of
-"Access not allowed".
-
-This can be tested from the command line using a tool like cURL:
-
-----
-$ curl http://127.0.0.1:8080/restricted.html -H "ALLOWED:YES"
-----
-
-Discussion
-^^^^^^^^^^
-
-The `If` test ensures the `() => Boolean` function you supply as a first
-argument returns `true` before the page it applies to is shown. The
-second argument is what Lift does if the test isn't true, and should be
-a `() => LiftResponse` function, meaning you can return whatever you
-like, including redirects to other pages.
-
-In the example we are making use of a convenient implicit conversation
-from a `String` ("Access not allowed") to a redirection that will take
-the user to the home page (actually
-`LiftRules.siteMapFailRedirectLocation`) with a notice which shows the
-string.
-
-See Also
-^^^^^^^^
-
-* Mailing list thread on
-https://groups.google.com/forum/?fromgroups#!topic/liftweb/CtSGkPbgEVw[testing
-a Loc for a HTTP Header Value for Access Control].
-* Source for
-https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/sitemap/Loc.scala[Loc.scala]
-where `If` and other tests are defined.
-* Chapter 7, "SiteMap and access control" in _Lift in Action_.
-* http://exploring.liftweb.net/onepage/index.html#toc-Chapter-7[Site map
-in _Exploring Lift_].
-
-
+* http://www.liftmodules.net[http://www.liftmodules.net] describes the module system in Lift.
