@@ -16,6 +16,7 @@ Solution
 
 Use the Scala REPL to run your CSS selector. From withing SBT use the `console` command to get into the REPL. Here's an example were we test out a CSS selector which applies a href to a link:
 
+[source,scala]
 ----
 > console             
 [info] Starting scala interpreter...
@@ -79,6 +80,7 @@ For example, suppose we want to replace `<div id="foo"/>` with
 `<div id="bar">bar content</div>` but for some reason we needed to
 generate the `bar` div as a separate step in the selector expression:
 
+[source,scala]
 ----
 sbt> console
 [info] Starting scala interpreter...
@@ -109,6 +111,7 @@ called before the second.
 Compare the example above if we change the `andThen` with
 `&`:
 
+[source,scala]
 ----
 scala> def render = "#foo" #> <div id="bar" /> & "#bar *" #> "bar content"
 render: net.liftweb.util.CssSel
@@ -143,6 +146,7 @@ Solution
 
 Use the `@` CSS binding name selector. For example, given:
 
+[source,html]
 ----
 <meta name="keywords" content="words, here, please" />
 ----
@@ -150,6 +154,7 @@ Use the `@` CSS binding name selector. For example, given:
 The following snippet code will update the value of the contents
 attribute:
 
+[source,scala]
 ----
 "@keywords [content]" #> "words, we, really, want" 
 ----
@@ -168,6 +173,7 @@ There are two other replacement rules useful for manipulating attributes: removi
 
 Although not directly relevant to `meta` tags, you should be aware of there is one convenient special case for appending to an attribute. If the attribute is `class`, a space is added together with your class value. As a demonstration of that, here's an example of appending a class called "funky" to a `div`:
 
+[source,scala]
 ---------------------------------------------------------------------
 scala> def render = "div [class+]" #> "funky"
 render: net.liftweb.util.CssSel
@@ -197,6 +203,7 @@ Solution
 Select all the elements of the `title` element and replace them with the
 text you want:
 
+[source,scala]
 ----
 "title *" #> "I am different"
 ----
@@ -204,6 +211,7 @@ text you want:
 Assuming you have a `<title>` tag in your template, the above will
 result in:
 
+[source,html]
 ----
 <title>I am different</title>
 ----
@@ -215,6 +223,7 @@ It is also possible to set the page title from the contents of `SiteMap`,
 meaning the title used will be the title you've assigned to the page in
 the site map:
 
+[source,html]
 ----
 <title class="lift:Menu.title"></title>
 ----
@@ -223,6 +232,7 @@ The `lift:Menu.title` code appends to any existing text in the title.
 This means the following will have the phrase "Site Title - " in the
 title followed by the page title:
 
+[source,html]
 ----
 <title class="lift:Menu.title">Site Title - </title>
 ----
@@ -231,9 +241,13 @@ If you need more control, you can of course bind on title using a
 regular snippet. This example uses a custom snippet to put the site
 title after the page title:
 
+[source,html]
 ----
 <title class="lift:MyTitle"></title>
+-----
 
+[source,scala]
+----
 object MyTitle {
   def render = <title><lift:Menu.title /> - Site Title</title>
 }
@@ -265,6 +279,7 @@ Solution
 Put the markup in a snippet and include the snippet in your page or
 template.
 
+[source,scala]
 ----
 package code.snippet
 
@@ -280,6 +295,7 @@ object Html5Shiv {
 Reference the snippet in the `<head>` of your
 `templates-hidden/default.html`, e.g.,:
 
+[source,html]
 ----
 <script class="lift:Html5Shiv"></script>
 ----
@@ -324,6 +340,7 @@ return the original markup.
 
 Starting with the original markup...
 
+[source,html]
 ----
 <div class="myclass"> 
   <p>Nothing to worry about</p> 
@@ -332,6 +349,7 @@ Starting with the original markup...
 
 ...we could leave it alone or change it with this snippet:
 
+[source,scala]
 ----
 def render = if (someCondition)
     ".myclass *" #> <p>The condition happened</p>
@@ -378,6 +396,7 @@ Solution
 
 Switch to the designer-friendly snippet invocation mechanism. E.g.,
 
+[source,html]
 ----
 <div class="lift:HellowWorld.howdy">...</div>
 ----
@@ -393,6 +412,7 @@ Switching to the designer-friendly mechnism is the solution here, and you gain v
 
 In this text we use the HTML5 parser, which is set in `Boot.scala`:
 
+[source,scala]
 -----
 // Use HTML5 for rendering
 LiftRules.htmlProperties.default.set( (r: Req) => 
@@ -422,6 +442,7 @@ Solution
 
 Add the `lift:with-resource-id` class attribute to script or link tags:
 
+[source,html]
 ----
 <script class="lift:with-resource-id" src="/myscript.js" 
  type="text/javascript"></script>
@@ -433,6 +454,7 @@ starts, it defeats browser caching.
 
 The resultant HTML might be:
 
+[source,html]
 ----
 <script src="/myscript.js?F619732897824GUCAAN=_" 
   type="text/javascript" ></script>
@@ -461,6 +483,7 @@ to move the random resouce ID out of the query parameter and into the path.
 Here's one approach to doing this. Rather than generate JavaScript and CSS links that look like `/myscript.js?F61973`, we will generate `/cache/F61973/myscript.js`. We then will need to tell Lift to take requests 
 that look like this new format, and render the correct content for the request.  This all happens in `Boot.scala`:
 
+[source, scala]
 -----------
 // The random number we're using to avoid caching
 val resourceId = Helpers.nextFuncName
@@ -515,6 +538,7 @@ Use the `lift:head` snippet or CSS class so Lift knows to merge the
 contents with the `<head>` of your page. For example, suppose you have
 the following contents in `templates-hidden/default.html`:
 
+[source,html]
 ----
 <html lang="en" xmlns:lift="http://liftweb.net/"> 
   <head> 
@@ -535,6 +559,7 @@ Also suppose you have `index.html` on which you want to include `my.css`
 just for that page. Do so by including the CSS in the part of the page
 that will get processed and mark it for the head with `lift:head`:
 
+[source,html]
 -----
 <!DOCTYPE html>
 <html>
@@ -553,6 +578,7 @@ that will get processed and mark it for the head with `lift:head`:
 Note that this `index.html` page is validated HTML5, and will produce a
 result with the custom CSS inside the `<head>` tag, something like this:
 
+[source,html]
 ----
 <!DOCTYPE html>
 <html lang="en">
@@ -614,6 +640,7 @@ Solution
 
 In `Boot.scala` add the following:
 
+[source,scala]
 ----
 LiftRules.uriNotFound.prepend(NamedPF("404handler"){
   case (req,failure) => 
@@ -667,6 +694,7 @@ For example, suppose we want to provide a customised page for 403
 ("Forbidden") statuses created in your Lift application. In `Boot.scala`
 we could add the following:
 
+[source,scala]
 ----
 LiftRules.responseTransformers.append {
   case r if r.toResponse.code == 403 => RedirectResponse("/403.html")
@@ -693,6 +721,7 @@ send to the client.
 One way to test the above example is to add the following to Boot to
 make all requests to _/secret_ return a 403:
 
+[source,scala]
 ----
 val Protected = If(() => false, () => ForbiddenResponse("no way"))
 
@@ -729,6 +758,7 @@ Solution
 
 Include a `NodeSeq` containing a link in your notice:
 
+[source,scala]
 ----
 S.error("checkPrivacyPolicy", 
   <span>See our <a href="/policy">privacy policy</a></span>)
@@ -736,6 +766,7 @@ S.error("checkPrivacyPolicy",
 
 You might pair this with the following in your template:
 
+[source,html]
 ----
 <div class="lift:Msg?id=checkPrivacyPolicy"></div>
 ----
@@ -760,12 +791,14 @@ Solution
 Install the Lift Textile module in your `build.sbt` file by adding the
 following to the list of dependencies:
 
+[source,scala]
 ----
 "net.liftmodules" %% "textile" % (liftVersion + "1.1") % "compile->default",
 ----
 
 You can then use the module to render Textile using the `toHtml` method:
 
+[source,scala]
 ----
 scala> import net.liftmodules.textile._                   
 import net.liftmodules.textile._
