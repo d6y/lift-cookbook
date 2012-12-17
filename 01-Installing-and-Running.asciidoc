@@ -270,7 +270,7 @@ Even with JRebel you will need to restart your applications from time to time, b
 
 But there are also other situations that JRebel cannot help with, such as when a superclass changes. Generally, JRebel will emit a warning about this in the console window.  If that happens, stop and start your application.
 
-The `-Drebel.lift_plugin=true` setting adds Lift-specific functionality to JRebel.  Specifically, it allows JRebel to reload changes to `LiftScreen`, `Wizard` and `RestHelper`s. This means you can change fields or screens, and change REST `serve` code. 
+The `-Drebel.lift_plugin=true` setting adds Lift-specific functionality to JRebel.  Specifically, it allows JRebel to reload changes to `LiftScreen`, `Wizard` and `RestHelper`. This means you can change fields or screens, and change REST `serve` code. 
 
 
 Purchased licenses
@@ -376,7 +376,7 @@ There are other useful settings for sbteclipse, described at https://github.com/
 The SBT guide to using plugins, http://www.scala-sbt.org/release/docs/Getting-Started/Using-Plugins[http://www.scala-sbt.org/release/docs/Getting-Started/Using-Plugins] and the wiki page for global configuration, http://www.scala-sbt.org/release/docs/Detailed-Topics/Global-Settings[http://www.scala-sbt.org/release/docs/Detailed-Topics/Global-Settings], explains the `~/.sbt/` structure for SBT.
 
 
-
+[[idea]]
 Developing using Intellij IDEA
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
