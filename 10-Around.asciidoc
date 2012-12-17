@@ -213,7 +213,10 @@ See Also
 ^^^^^^^^
 
 * Lift ticket 1197 to https://github.com/lift/framework/issues/1197[improve Mailer functionality for attachments]
-* Wikipedia entry on http://en.wikipedia.org/wiki/MIME[Multipurpose Internet Mail Extensions (MIME)] Logging email rather than sending
+* Wikipedia entry on http://en.wikipedia.org/wiki/MIME[Multipurpose Internet Mail Extensions (MIME)] 
+
+Logging email rather than sending
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^

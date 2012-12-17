@@ -1,4 +1,4 @@
-Forms processing in Lift
+Forms Processing in Lift
 ------------------------
 
 This section gives examples of working with Lift forms in different
@@ -20,7 +20,7 @@ process an input value, and echo the value back out. Here we have
 `dumbForm.html` which contains a form wrapped in a snippet:
 
 [source,html]
-----
+------------------
 <div class="lift:DumbForm">
 
 <form  action="/dumbForm.html" method="post">
@@ -31,12 +31,12 @@ process an input value, and echo the value back out. Here we have
 <div id="result"> </div>
 
 </div>
-----
+------------------
 
 Pick out the values in the snippet:
 
 [source,scala]
-----
+------------------
 package code.snippet
 
 import net.liftweb.util._
@@ -62,7 +62,7 @@ class DumbForm {
   }
   
 }
-----
+------------------
 
 When you run this code you'll see
 `No input present! Rendering input form HTML` on the console, and when
@@ -111,7 +111,7 @@ function to run on the server when the form is submitted. Given this
 form...
 
 [source,html]
-----
+---------------------------------------------------------
 <div class="lift:AjaxExample">
  <form class="lift:form.ajax">
   <input type="text" name="info" value="" />
@@ -119,14 +119,14 @@ form...
  </form>
  <div id="result"></div>
 </div>
-----
+---------------------------------------------------------
 
 ...we use the following snippet to accept the text field input of `info`
 and send back a JavasScript command to update the `result` div with the
 value sent to us:
 
 [source,scala]
-----
+---------------------------------------------------------
 package code.snippet
 
 import net.liftweb.util.Helpers._
@@ -152,7 +152,7 @@ class AjaxExample {
   }
 
 }
-----
+---------------------------------------------------------
 
 Discussion
 ^^^^^^^^^^
@@ -199,7 +199,7 @@ Make use of Lift's `jlift.js` Javascript and `JsonHandler` code.
 Consider this HTML, which is not in a form, but includes `jlift.js`:
 
 [source,html]
-----
+---------------------------------------------------------
 <div class="lift:JsonForm" >
 
  <!--  required for JSON forms processing -->
@@ -215,12 +215,12 @@ Consider this HTML, which is not in a form, but includes `jlift.js`:
  </div>
  <div id="result"></div>
 </div>
-----
+---------------------------------------------------------
 
 The server-side code to accept the input as JSON would be as follows:
 
 [source,scala]
-----
+---------------------------------------------------------
 package code.snippet
 
 import net.liftweb.util._
@@ -253,16 +253,18 @@ class JsonForm {
 
     }
 }
-----
+---------------------------------------------------------
 
 If you click the go button and observe the network traffic, you'll see
 the following sent to the server:
 
-[source,json]
-----
-{ "command":"processForm",
-  "params":{"name":"Royal Society","motto":"Nullius in verba"} }
-----
+[source,javascript]
+---------------------------------------------------------
+{ 
+  "command": "processForm",
+  "params": {"name":"Royal Society","motto":"Nullius in verba"} 
+}
+---------------------------------------------------------
 
 The server will send back JavaScript to update the `results` div with
 "The motto of the Royal Society is Nullius in verba".
@@ -292,14 +294,17 @@ Rest helpers in Lift to do that.
 See Also
 ^^^^^^^^
 
-*
-http://www.javabeat.net/2011/05/using-json-forms-with-ajax-in-lift-framework/[Using
+* http://www.javabeat.net/2011/05/using-json-forms-with-ajax-in-lift-framework/[Using
 JSON forms with AJAX in Lift Framework].
+
 * _Lift in Action_, section 9.1.4 "Using JSON forms with AJAX".
+
 * Example Lift application demonstrating
 https://github.com/marekzebrowski/lift-basics[Simple form] processing.
+
 * Section 10.4, JSON, in
 http://exploring.liftweb.net/master/index-10.html[Exploring Lift].
+
 * http://en.wikipedia.org/wiki/Nullius_in_verba[Nullius in verba].
 
 Conditionally disable a checkbox
@@ -319,21 +324,20 @@ it to your checkbox transform. For example, suppose you have a simple
 checkbox:
 
 [source,scala]
-----
+---------------------------------------------------------
 class Likes {
   var likeTurtles = false
   def checkbox = "*" #> SHtml.checkbox(likeTurtles, likeTurtles = _ )
 }
-----
+---------------------------------------------------------
 
 Further suppose you want to disable it roughly 50% of the time:
 
 [source,scala]
 ----
-def disabler = if (math.random > 0.5d)
-  "* [disabled]" #> "disabled"
-else
-  PassThru
+def disabler = 
+ if (math.random > 0.5d) "* [disabled]" #> "disabled"
+ else PassThru
 
 def conditionallyDisabledCheckbox = 
   "*" #> disabler( SHtml.checkbox(likeTurtles, likeTurtles = _ ) )
@@ -406,18 +410,18 @@ class MySnippet {
 The corresponding template would be:
 
 [source,html]
-----
+---------------------------------------------------------
 <div class="lift:MySnippet.multi?form=post">
   <p>What can I getcha?</p>
   <div id="opts">options go here</div>
   <input type="submit" value="Submit" />
 </div>
-----
+---------------------------------------------------------
 
 This will render as something like:
 
-[source,hmtl]
-----
+[source,html]
+---------------------------------------------------------
 <form action="/" method="post"><div>
   <p>What can I getcha?</p>
   <div id="opts">
@@ -429,7 +433,7 @@ This will render as something like:
   </div>
   <input value="Submit" type="submit">
 </form>
-----
+---------------------------------------------------------
 
 Discussion
 ^^^^^^^^^^
@@ -453,7 +457,7 @@ could modify the above code to be a stateful snippet and remember the
 values we selected:
 
 [source,scala]
-----
+---------------------------------------------------------
 class MySnippet extends StatefulSnippet {
 
   def dispatch = {
@@ -473,7 +477,7 @@ class MySnippet extends StatefulSnippet {
     SHtml.multiSelect(options, current, current = _)
   )
 }
-----
+---------------------------------------------------------
 
 Each time the form is submited the `current` list of IDs is set to
 whatever you have selected in the browser. But note that we have started
@@ -491,19 +495,19 @@ provides a text name, but the value is in terms of a class. Likewise,
 the list of default values will be a list of class instances:
 
 [source,scala]
-----
+---------------------------------------------------------
 val options : List[(Item,String)] = inventory.map(i => (i -> i.name))
 val current = inventory.head :: Nil
-----
+---------------------------------------------------------
 
 The call to generate the multi-select from this data is similar, but
 note that the function receives a list of `Item`:
 
 [source,scala]
-----
+---------------------------------------------------------
 "#opts *" #> SHtml.multiSelectObj(options, current, 
   (xs: List[Item]) => println("Got "+xs) )
-----
+---------------------------------------------------------
 
 Enumerations
 ++++++++++++
@@ -511,7 +515,7 @@ Enumerations
 You can use `multiSelectObj` with enumerations:
 
 [source,scala]
-----
+---------------------------------------------------------
 object Item extends Enumeration {
   type Item = Value
   val Coffee, Milk, Sugar = Value
@@ -526,7 +530,7 @@ var current = Item.Coffee :: Nil
   
 def multi = "#opts *" #> SHtml.multiSelectObj[Item](options, current, 
   xs => println("Got "+xs) )
-----
+---------------------------------------------------------
 
 See Also
 ^^^^^^^^

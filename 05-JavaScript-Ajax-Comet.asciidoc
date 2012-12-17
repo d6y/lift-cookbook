@@ -81,8 +81,10 @@ https://groups.google.com/forum/?fromgroups#!topic/liftweb/N7ttFlumvuk[easiest
 way to trigger server-side Scala code].
 * https://groups.google.com/forum/?fromgroups#!topic/liftweb/uAgy21xOMRs[Bind
 a button click with SHtml.onEvent] mailing list thread.
-* https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/SHtml.scala[SHtml.scala source code.Set up client-side actions from your Scala code]
+* https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/SHtml.scala[SHtml.scala source code].
 
+Set up client-side actions from your Scala code
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
@@ -101,7 +103,7 @@ that we're setting up this binding in our server-side Lift code:
 ----
 class HelloWorld {
   def buttonBind = 
-    "#button [onclick]" #> "\$('#button').fadeOut('slow')"
+    "#button [onclick]" #> "$('#button').fadeOut('slow')"
 }
 ----
 
@@ -119,7 +121,7 @@ Lift will render the page as:
 [source,html]
 ----
 <form>
-  <input onclick="\$('#button').fadeOut('slow')" 
+  <input onclick="$('#button').fadeOut('slow')" 
     value="Click me" type="button" id="button">
 </form>
 ----
@@ -165,7 +167,11 @@ See Also
 ^^^^^^^^
 
 * The https://groups.google.com/d/msg/liftweb/uAgy21xOMRs/bDjS69VWpp4J[mailing list discussion] that suggested this.
-* http://exploring.liftweb.net/master/index-10.html#toc-Chapter-10[Chapter 10] of _Exploring Lift_.Focus on a field on page load
+* http://exploring.liftweb.net/master/index-10.html#toc-Chapter-10[Chapter 10] of _Exploring Lift_.
+
+
+Focus on a field on page load
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^

@@ -15,7 +15,7 @@ Solution
 
 In `Boot.scala` call `initWithSquerylSession`...
 
-[source,scala]]
+[source,scala]
 ------------------------------------------------------------
 import javax.sql.DataSource
 val ds = new InitialContext().
@@ -374,7 +374,10 @@ See Also
 partial update in Squeryl].
 * Mailing list discussion
 https://groups.google.com/d/msg/liftweb/G4U14pQbZZ4/V24YvhUPvEEJ[regarding
-LifecycleCallbacks]. Logging SQL
+LifecycleCallbacks]. 
+
+Logging SQL
+~~~~~~~~~~~
 
 Problem
 ^^^^^^^

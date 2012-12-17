@@ -358,7 +358,6 @@ Use the JSON DSL. For example:
 
 [source,scala]
 ----
-[source,scala
 package code.lib
 
 import net.liftweb.http.rest._
@@ -386,7 +385,7 @@ LiftRules.statelessDispatch.append(code.lib.QuotationAPI)
 Running this example produces:
 
 ----
-\$ curl -H 'Content-type: text/json' http://127.0.0.1:8080/quotation
+$ curl -H 'Content-type: text/json' http://127.0.0.1:8080/quotation
 {
   "text":"A beach house isn't just real estate. It's a state of mind.",
   "by":"Douglas Adams"

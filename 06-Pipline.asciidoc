@@ -25,6 +25,7 @@ Use `OutputStreamResponse`, passing it a function that will write to the
 
 In this example we'll stream all the integers from 1:
 
+[source,scala]
 -------------------------------------------------------------------
 import net.liftweb.http.{Req,OutputStreamResponse}
 import net.liftweb.http.rest._
@@ -45,6 +46,7 @@ object Numbers extends RestHelper {
 
 Wire this into Lift in `Boot.scala`:
 
+[source,scala]
 ----------------------------------
 LiftRules.dispatch.append(Numbers)
 ----------------------------------
@@ -56,6 +58,7 @@ For more control over status codes, headers and cookies, there are a
 variety of signatures for the `OutputStreamResponse` object. For the
 most control, create an instance of the `OutputStreamResponse` class:
 
+[source,scala]
 ----------------------------------- 
 case class OutputStreamResponse(
   out: (OutputStream) => Unit,  
@@ -85,6 +88,7 @@ InMemoryResponse
 `InMemoryResponse` is useful if you have already assembled the full
 content to send to the client. The signature is straightforward:
 
+[source,scala]
 -----------------------------------
 case class InMemoryResponse(
   data: Array[Byte], 
@@ -102,6 +106,7 @@ with `OutputStreamResponse`, where you are pushing data to the client.
 Construct this type of response by providing a method that can be read
 from:
 
+[source,scala]
 -------------------------------------------
 case class StreamingResponse(
   data: {def read(buf: Array[Byte]): Int}, 
@@ -148,6 +153,8 @@ suppose we have the file _/tmp/important_ and we only want selected
 requests to download that file from the _/download/important_ URL. The
 structure for that would be:
 
+
+[source,scala]
 -------------------------------------------------------
 object DownloadService extends RestHelper {
 
@@ -170,6 +177,7 @@ compromised.
 
 For our example, `Known` is checking a static list of names:
 
+[source,scala]
 ---------------------------------------------------------------------------
 val knownFiles = List("important")
 
@@ -181,6 +189,7 @@ object Known {
 For requests to these known resources, we convert the REST request into
 a `Box[LiftResponse]`. For permitted access we serve up the file:
 
+[source,scala]
 ---------------------------------------------------------------------
 private def permitted = scala.math.random < 0.5d
 
@@ -198,6 +207,7 @@ If no permission is given, the user is redirected to `/sorry.html`.
 
 All of this is wired into Lift in `Boot.scala` with:
 
+[source,scala]
 ------------------------------------------
 LiftRules.dispatch.append(DownloadService)
 ------------------------------------------
@@ -222,6 +232,7 @@ for these.
 
 Guard expressions can also be useful for these kinds of situations:
 
+[source,scala]
 ----------------------------------------------------------------------------
 serve {
   case "download" :: Known(id) :: Nil Get _ if permitted => fileResponse(id)
@@ -254,6 +265,7 @@ Solution
 
 Use a custom `If` in SiteMap:
 
+[source,scala]
 ----
 val HeaderRequired = If(  
   () => S.request.map(_.header("ALLOWED") == Full("YES")) openOr false,
@@ -316,6 +328,7 @@ Solution
 Add an `onBeginServicing` function in `Boot.scala` to log the request.
 For example:
 
+[source,scala]
 -----------------------------------
 LiftRules.onBeginServicing.append {
   case r => println("Received: "+r)
@@ -332,6 +345,7 @@ function signature it expects is `Req => Unit`.
 If you want to select only certain paths, you can. For example, to track
 all requests starting _/paypal_:
 
+[source,scala]
 -----------------------------------------------------
 LiftRules.onBeginServicing.append {
   case r @ Req(List("paypal", _), _, _) => println(r)
@@ -361,6 +375,7 @@ Solution
 
 Make use of the hooks in `LiftSession`. For example, in `Boot.scala`:
 
+[source,scala]
 ------------------------------------------------------------
 LiftSession.afterSessionCreate ::= 
  ( (s:LiftSession, r:Req) => println("Session created") )
@@ -409,6 +424,7 @@ Solution
 
 Append to `LiftRules.unloadHooks`.
 
+[source,scala]
 --------------------------------------------------------------
 LiftRules.unloadHooks.append( () => println("Shutting down") )
 --------------------------------------------------------------
@@ -441,6 +457,7 @@ Solution
 
 In `Boot.scala`:
 
+[source,scala]
 ----------------------------------------------------
 LiftRules.enableContainerSessions = false
 LiftRules.statelessReqTest.append { case _ => true }
@@ -462,6 +479,7 @@ Using `statelessReqTest` allows you to decide based on the
 `StatelessReqTest` if it should be stateless (`true`) or not (`false`).
 For example:
 
+[source,scala]
 -----------------------------------------------------------------
 def asset(file: String) = 
   List(".js", ".gif", ".css").exists(file.endsWith)
@@ -502,6 +520,7 @@ Solution
 
 Declare an exception handler in `Boot.scala`:
 
+[source,scala]
 --------------------------------------------------
 LiftRules.exceptionHandler.prepend {
   case (runMode, request, exception) =>           
@@ -529,6 +548,7 @@ You can return any kind of `LiftResponse`, including `RedirectResponse`,
 This second example shows matching on Ajax requests only, and returning
 a JavaScript dialog to the browser:
 
+[source,scala]
 -----------------------------------------------------
 import net.liftweb.http.js.JsCmds._
 
@@ -566,6 +586,7 @@ Solution
 
 Cast `S.request`:
 
+[source,scala]
 -----------------------------------------------------------
 import net.liftweb.http.S
 import net.liftweb.http.provider.servlet.HTTPRequestServlet
@@ -579,6 +600,7 @@ val servletRequest: Box[HttpServletRequest] = for {
 
 You can then make your API call:
 
+[source,scala]
 ----------------------------------------------
 servletRequest.foreach { r => yourApiCall(r) }
 ----------------------------------------------
@@ -594,6 +616,7 @@ servlet container.
 As your code will have a direct dependency on the Java Servlet API,
 you'll need to include this dependency in your SBT build:
 
+[source,scala]
 -------------------------------------------------------------
 "javax.servlet" % "servlet-api" % "2.5" % "provided->default"
 -------------------------------------------------------------
@@ -617,6 +640,7 @@ Solution
 Add an `earlyResponse` function in `Boot.scala` redirecting insecure
 requests. For example:
 
+[source,scala]
 ---------------------------------------------------------------------------------------
 LiftRules.earlyResponse.append { (req: Req) ⇒ if (req.request.scheme != "https") {
   val uriAndQueryString = req.uri + (req.request.queryString.map(s => "?"+s) openOr "")
@@ -649,6 +673,8 @@ they contain no information about the protocol used between the client
 and the load balancer." In this situation modify the above test from
 `req.request.scheme != "https"` to:
 
+
+[source,scala]
 ------------------------------------------------
 req.header("X-Forwarded-Proto") != Full("https")
 ------------------------------------------------

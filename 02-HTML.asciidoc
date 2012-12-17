@@ -767,9 +767,9 @@ S.error("checkPrivacyPolicy",
 You might pair this with the following in your template:
 
 [source,html]
-----
+---------------------------------------------------------
 <div class="lift:Msg?id=checkPrivacyPolicy"></div>
-----
+---------------------------------------------------------
 
 See Also
 ^^^^^^^^
@@ -799,7 +799,7 @@ following to the list of dependencies:
 You can then use the module to render Textile using the `toHtml` method:
 
 [source,scala]
-----
+---------------------------------------------------------
 scala> import net.liftmodules.textile._                   
 import net.liftmodules.textile._
 
@@ -819,7 +819,7 @@ Textile markup into HTML is pretty easy to use.</p>,
 <li> In this example</li>
 </ul>, 
 , )
-----
+---------------------------------------------------------
 
 Discussion
 ^^^^^^^^^^
@@ -845,3 +845,5 @@ https://github.com/liftmodules/textile].
 * The unit tests for the Textile module give you a good set of examples of what is supported: https://github.com/liftmodules/textile/blob/master/src/test/scala/net/liftmodules/textile/TextileSpec.scala[https://github.com/liftmodules/textile/blob/master/src/test/scala/net/liftmodules/textile/TextileSpec.scala].
 
 * http://www.liftmodules.net[http://www.liftmodules.net] describes the module system in Lift.
+
+

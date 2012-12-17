@@ -62,7 +62,7 @@ Expected result
 The result of the above commands should be a basic Lift application running on
 your computer:
 
-image::images/App%20Home.png[]
+image::images/apphome.png[]
 
 
 Discussion
@@ -228,14 +228,16 @@ Finally, configure SBT by modifying the `sbt` script to enable JRebel.  This mea
 For Mac and Linux, the script that's included with the Lift downloads would become:
 
 --------------------------
-java -Drebel.lift_plugin=true -noverify -javaagent:/opt/zt/jrebel/jrebel.jar -Xmx1024M -Xss2M -XX:MaxPermSize=512m -XX:+CMSClassUnloadingEnabled -jar `dirname $0`/sbt-launch-0.12.jar "$@"
+java -Drebel.lift_plugin=true -noverify -javaagent:/opt/zt/jrebel/jrebel.jar -Xmx1024M -Xss2M \ 
+-XX:MaxPermSize=512m -XX:+CMSClassUnloadingEnabled -jar `dirname $0`/sbt-launch-0.12.jar "$@"
 --------------------------
 
 For Windows, modify `sbt.bat` to be:
 
 --------------------------
 set SCRIPT_DIR=%~dp0
-java -Drebel.lift_plugin=true -noverify -javaagent:c:/opt/zt/jrebel/jrebel.jar -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256m -Xmx1024M -Xss2M -jar "%SCRIPT_DIR%\sbt-launch-0.12.jar" %*
+java -Drebel.lift_plugin=true -noverify -javaagent:c:/opt/zt/jrebel/jrebel.jar \ 
+-XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256m -Xmx1024M -Xss2M -jar "%SCRIPT_DIR%\sbt-launch-0.12.jar" %*
 --------------------------
 
 There's nothing else to do to use JRebel.  When you start SBT you'll see a large banner starting something like this:
@@ -471,7 +473,7 @@ If you're using the console frequently, consider mapping it accessible from your
 
 
 
-Using the latest Lift build
+Using the Latest Lift build
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -520,7 +522,7 @@ To learn the detail of SNAPSHOT versions, dig into the Maven Complete Reference 
 
 
 Using a New Version of Scala
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
