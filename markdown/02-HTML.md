@@ -177,7 +177,7 @@ It is also possible to set the page title from the contents of `SiteMap, meaning
 <title class="lift:Menu.title"></title>
 ```
 
-The `lift:Menu.title` code prepends to any existing text in the title.  This means the following will have the phrase "Site Title - " in the title followed by the page title:
+The `lift:Menu.title` code appends to any existing text in the title.  This means the following will have the phrase "Site Title - " in the title followed by the page title:
 
 ```scala
 <title class="lift:Menu.title">Site Title - </title>
