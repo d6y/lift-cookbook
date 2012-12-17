@@ -1,15 +1,13 @@
 Install and Running
 -------------------
 
-This chapter covers questions around starting development with Lift.
-You'll find hints about production deployment in later chapters.
+This chapter covers questions around starting development with Lift: running a first Lift application and setting up a development environment. You'll find answers regarding production deployment in <<deployment>>.
 
 Downloading and Running Lift
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
-
 You want to install and run Lift on your computer.
 
 Solution
@@ -17,7 +15,7 @@ Solution
 
 The only prerequisite for installing and running Lift is to have Java
 1.5 or later installed. Instructions for installing Java can be found at
-http://java.com/en/download/manual.jsp[http://java.com/en/download/manual.jsp].
+http://java.com/[http://java.com/].
 
 Once you have Java, the following instructions will download, build and
 start a basic Lift application.
@@ -61,15 +59,20 @@ Discussion
 ^^^^^^^^^^
 
 Lift isn't installed in the usual sense of "installing software".
-Instead it uses standard build tools, such as SBT or Maven, to assemble
-your application with the Lift framework. This recipe has
-downloaded a Zip containing four fairly minimal Lift applications, and then started 
-one of them via the build tool.
+Instead you use standard build tools, such as SBT or Maven, to assemble your application with the Lift framework. In this recipe we downloaded a ZIP file containing four fairly minimal Lift applications, and then started one of them via the build tool.
 
 Typing `sbt` starts the Simple Build Tool, a dependency management
-tool used by Scala projects. It will check the project definition and download any
-libraries required by this Lift application. This download happens once and the downloaded
+tool used by Scala projects (it's not specific to Lift).  SBT will check the project definition and download any libraries required, which includes the Lift framework.
+
+This download happens once, and the downloaded
 files are stored on disk in a `.ivy2` in your home folder.
+
+Your application build is configured by `build.sbt`.  Looking inside you'll see:
+
+* basic information about your application, including a name and version;
+* resolvers, which inform SBT where to fetch dependencies from;
+* settings for plugins and the Scala compiler; and
+* a list of dependencies required to run your application, which will include the Lift framework.
 
 The command `container:start` starts the web server on the default port of 8080 and
 passes requests to the Lift application. The word "container" refers to the
@@ -77,13 +80,6 @@ software you deploy your application into. There are a variety of containers (Je
 Tomcat are probably the best known) all of which conform to a standard for deployment.  
 The upshot is you can build your application and deploy to whichever one you prefer.  
 The `container:start` command uses Jetty.
-
-Your application build is configured by `build.sbt`.  Looking inside you'll see:
-
-* basic information about your application, including a name and version;
-* resolvers, which inform SBT where to fetch dependencies from;
-* settings for plugins and the Scala compiler; and
-* a list of dependencies required to run your application on Lift.
 
 The source code of the application resides in `src/main/webapp` and `src/main/scala`.
 
@@ -106,9 +102,7 @@ editor, hitting reload in your browser to see changes.
 Solution
 ^^^^^^^^
 
-Run SBT while you are editing to allow it to handle compilation of Scala files.
-
-Start `sbt` and enter the following to the SBT prompt:
+Run SBT while you are editing, and ask it to detect and compile changes to Scala files.  To do that, start `sbt` and enter the following to the SBT prompt:
 
 --------------------------------------
 ~; container:start; container:reload /
@@ -148,25 +142,34 @@ that looks a little like this:
 2. Waiting for source changes... (press enter to interrupt)
 ----------------------------------------------------------------------------------
 
-Restarting the web container each time you edit a Scala file isn't ideal. You can reduce
-the need for restarts by integrating JRebel into your development environment, as described
-in <<jrebel>>.
-
 Edits to HTML files don't trigger the SBT compile and reload commands.
-This is because SBTs default behaviour is to look for
+This is because SBT's default behaviour is to look for
 Scala and Java source file changes, and changes to files in `src/main/resources`. 
 This works out just fine, because Jetty will use your modified HTML file when you 
 reload the browser page.
 
+Restarting the web container each time you edit a Scala file isn't ideal. You can reduce
+the need for restarts by integrating JRebel into your development environment, as described
+in <<jrebel>>.
+
+However, if you are making a serious number of edits, you may prefer to issue a `container:stop` command until you're ready to run you application again with `container:start` to prevent SBT compiling and restarting your application. The SBT console has a command history, and using the up and down keyboard arrows allows you to navigate to previous commands and run them by pressing the return key.  That takes some of the tedium out of these long commands.
+
+One error you may run into is:
+
+------------------------------------------
+java.lang.OutOfMemoryError: PermGen space
+------------------------------------------
+
+The "permanent generation" is a Java virtual machine concept. It's the area of memory used for storing classes amongst other things.  It's a fixed size and once it is full this PermGen error appears.  As you might imagine, continually restarting a container causes many classes to be loaded and unloaded, but the process is not perfect, effectively leaking memory. The best you can do is stop and then restart SBT.  If you're seeing this error often, check the setting for `-XX:MaxPermSize` inside the `sbt` (or `sbt.bat`) script, and if you can, double it.
 
 See Also
 ^^^^^^^^
 
-* There's more about triggered execution at http://www.scala-sbt.org/release/docs/Detailed-Topics/Triggered-Execution[http://www.scala-sbt.org/release/docs/Detailed-Topics/Triggered-Execution].
+There's more about triggered execution at http://www.scala-sbt.org/release/docs/Detailed-Topics/Triggered-Execution[http://www.scala-sbt.org/release/docs/Detailed-Topics/Triggered-Execution].
 
-* Reference for the core SBT command line: http://www.scala-sbt.org/release/docs/Detailed-Topics/Command-Line-Reference[http://www.scala-sbt.org/release/docs/Detailed-Topics/Command-Line-Reference].
+Reference for the core SBT command line: http://www.scala-sbt.org/release/docs/Detailed-Topics/Command-Line-Reference[http://www.scala-sbt.org/release/docs/Detailed-Topics/Command-Line-Reference].
 
-* Command reference for the web plugin for SBT: https://github.com/siasia/xsbt-web-plugin/wiki[https://github.com/siasia/xsbt-web-plugin/wiki].
+Command reference for the web plugin for SBT is at: https://github.com/siasia/xsbt-web-plugin/wiki[https://github.com/siasia/xsbt-web-plugin/wiki].
 
 
 [[jrebel]]
@@ -176,23 +179,91 @@ Incorporating JRebel
 Problem
 ^^^^^^^
 
-You want to avoid container restarts when you change a Scala source file by using JRebel.
+You want to avoid application restarts when you change a Scala source file by using JRebel.
 
 Solutions
 ^^^^^^^^^
 
-TODO
+There are three steps required: install JRebel once; each year request the free Scala license; and configure SBT to use JRebel.
+
+First, visit the http://zeroturnaround.com/software/jrebel/[http://zeroturnaround.com/software/jrebel/] and request the free Scala license.  
+
+Second, download the "Generic ZIP Archive" version of JRebel, unzip it to where you like. For this recipe I've chosen to use `/opt/zt/jrebel/`.  
+
+When your have received your account confirmation email from JRebel, you can copy your "authentication token" from the "Active" area of ZeroTurnaround's site. To apply the token to your local install, run the JRebel configuration script:
+
+---------------------------------------
+$ /opt/zt/jrebel/bin/jrebel-config.sh 
+---------------------------------------
+
+For Windows navigate to and launch `bin\jrebel-config.cmd`.
+
+In the "Activation" setting select "I want to use myJRebel" and then in the "License" section paste in your activation token. Click the "Activate" button, and once you see the license status change to "You have a valid myJRebel token..." click "Finish".  
+
+Finally, configure SBT by modifying the `sbt` script to enable JRebel.  This means setting the `-javaagent` and `-noverify` flags for Java, and enabling the JRebel Lift plugin. 
+
+For Mac and Linux, the script that's included with the Lift downloads would become:
+
+--------------------------
+java -Drebel.lift_plugin=true -noverify -javaagent:/opt/zt/jrebel/jrebel.jar -Xmx1024M -Xss2M -XX:MaxPermSize=512m -XX:+CMSClassUnloadingEnabled -jar `dirname $0`/sbt-launch-0.12.jar "$@"
+--------------------------
+
+For Windows, modify `sbt.bat` to be:
+
+--------------------------
+set SCRIPT_DIR=%~dp0
+java -Drebel.lift_plugin=true -noverify -javaagent:c:/opt/zt/jrebel/jrebel.jar -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256m -Xmx1024M -Xss2M -jar "%SCRIPT_DIR%\sbt-launch-0.12.jar" %*
+--------------------------
+
+There's nothing else to do to use JRebel.  When you start SBT you'll see a large banner starting something like this:
+
+---------------------------
+2012-12-16 23:00:32] #############################################################
+[2012-12-16 23:00:32] 
+[2012-12-16 23:00:32]  JRebel 5.1.1 (201211271929)
+[2012-12-16 23:00:32]  (c) Copyright ZeroTurnaround OU, Estonia, Tartu.
+[2012-12-16 23:00:32] 
+[2012-12-16 23:00:32]  Over the last 30 days JRebel prevented 
+[2012-12-16 23:00:32]  at least 335 redeploys/restarts saving you about 13.6 hours.
+....
+---------------------------
+
+With JRebel installed, you can now `container:start` your application, modify and compile a Scala file and reload a page in your application. You'll see a notice that the class has been reloaded:
+
+-------------------------------------------------------------------------
+[2012-12-16 23:15:44] JRebel: Reloading class 'code.snippet.HelloWorld'.
+-------------------------------------------------------------------------
+
+That change is live, without having to restart the container. 
 
 Discussion
 ^^^^^^^^^^
 
-TODO
+JRebel is very likely to speed up your development. It updates code in a running Java virtual machine, without having to stop it or start it.  The effect is that, on the whole, you can compile a class, then hit reload in your browser to see the change in your Lift application. 
+
+Even with JRebel you will need to restart your applications from time to time, but JRebel usually reduces the number of restarts. For example, `Boot.scala` is run when your application starts, so if you modify something in your `Boot.scala` you'll need to start and start your application. JRebel can't help with that.
+
+But there are also other situations that JRebel cannot help with, such as when a superclass changes. Generally, JRebel will emit a warning about this in the console window.  If that happens, stop and start your application.
+
+The `-Drebel.lift_plugin=true` setting adds Lift-specific functionality to JRebel.  Specifically, it allows JRebel to reload changes to `LiftScreen`, `Wizard` and `RestHelper`s. This means you can change fields or screens, and change REST `serve` code. 
+
+
+Purchased licenses
+++++++++++++++++++
+
+This recipe used a free Scala license for a service called myJRebel. This communicates with JRebel servers via the activation code.  If you have purchased a license from ZeroTurnaround, the situation is slightly different.  In this case, you will have a license key which you store in a file. You can place the file, `jrebel.lic` in your `/opt/zt/jrebel/` folder, but you may prefer to keep it separate from your installation.  To do that, modify the `sbt` script and specify the location of the file by adding another Java setting:
+
+-----------------------------------
+-Drebel.license=/path/to/jrebel.lic
+-----------------------------------
+
 
 See Also
 ^^^^^^^^
 
-ALSO TODO
+You'll find details about how JRebel works in the FAQ at: http://zeroturnaround.com/software/jrebel/resources/faq/[http://zeroturnaround.com/software/jrebel/resources/faq/].
 
+The Lift support was announced in a blog post in 2012 at http://zeroturnaround.com/jrebel/lift-support-in-jrebel/[http://zeroturnaround.com/jrebel/lift-support-in-jrebel/], where you'll find more about the capabilities of the plugin.
 
 
 Developing using Eclipse
@@ -229,14 +300,13 @@ Projects into Workspace". Browse to, and select, your Lift project. You
 are now set up to develop your application in Eclipse.
 
 
-To see live changes as you edit and save your work, run SBT in a sepeate terminal window.  That is, start `sbt` from a terminal window outside of Eclipse and enter the
-following:
+To see live changes as you edit and save your work, run SBT in a separate terminal window.  That is, start `sbt` from a terminal window outside of Eclipse and enter the following:
 
 --------------------------------------
 ~; container:start; container:reload /
 --------------------------------------
 
-This behaviour of this command is described in <<texteditor>>.
+This behaviour of this command is described in <<texteditor>>, but if you're using JRebel (see <<jrebel>>) then you just need to run `container:start` by itself.
 
 You can then edit in Eclipse, save to compile, and in your web browser hit reload to see
 the changes. 
@@ -314,7 +384,7 @@ See Also
 
 The properties of H2 are described at  http://www.h2database.com[http://www.h2database.com].
 
-If you're using the console frequently, consider mapping it accessable from your Lift application in development node.  This is described by Diego Medina in a blog post at https://fmpwizard.telegr.am/blog/lift-and-h2[https://fmpwizard.telegr.am/blog/lift-and-h2].
+If you're using the console frequently, consider mapping it accessible from your Lift application in development node.  This is described by Diego Medina in a blog post at https://fmpwizard.telegr.am/blog/lift-and-h2[https://fmpwizard.telegr.am/blog/lift-and-h2].
 
 
 
@@ -420,7 +490,7 @@ Lift components.  This is the difference between using `%%` in a
 dependency and `%`.
 
 Please note this only works for minor releases of Scala: major releases
-break compatibility.  For example Scala 2.9.1 is compatibile with Scala 2.9.0, but not 2.10.
+break compatibility.  For example Scala 2.9.1 is compatible with Scala 2.9.0, but not 2.10.
 
 See Also
 ^^^^^^^^
