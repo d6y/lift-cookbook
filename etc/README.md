@@ -1,8 +1,11 @@
+One time:
 
-brew install asciidoc
-brew install source-highlight
+    brew install asciidoc
+    brew install source-highlight
 
-cat *asciidoc | asciidoc -b html5 -a toc2 --theme=flask - > out.html
+    cp -r images/* ~/Desktop/cookbook.liftweb.net/src/main/webapp/images/
+    cat [0-9]*asciidoc | asciidoc  -b html5 -a toc2 --theme=flask - > ~/Desktop/cookbook.liftweb.net/src/main/webapp/index.html
+
 
 
 

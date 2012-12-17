@@ -237,7 +237,8 @@ For Windows, modify `sbt.bat` to be:
 --------------------------
 set SCRIPT_DIR=%~dp0
 java -Drebel.lift_plugin=true -noverify -javaagent:c:/opt/zt/jrebel/jrebel.jar \ 
--XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256m -Xmx1024M -Xss2M -jar "%SCRIPT_DIR%\sbt-launch-0.12.jar" %*
+-XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256m -Xmx1024M -Xss2M 
+-jar "%SCRIPT_DIR%\sbt-launch-0.12.jar" %*
 --------------------------
 
 There's nothing else to do to use JRebel.  When you start SBT you'll see a large banner starting something like this:
