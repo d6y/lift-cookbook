@@ -1,13 +1,14 @@
 Install and Running
 -------------------
 
-This chapter covers questions around starting development with Lift: running a first Lift application and setting up a development environment. You'll find answers regarding production deployment in <<deployment>>.
+This chapter covers questions regarding starting development with Lift: running a first Lift application and setting up a coding environment. You'll find answers regarding production deployment in <<deployment>>.
 
 Downloading and Running Lift
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
+
 You want to install and run Lift on your computer.
 
 Solution
@@ -17,6 +18,15 @@ The only prerequisite for installing and running Lift is to have Java
 1.5 or later installed. Instructions for installing Java can be found at
 http://java.com/[http://java.com/].
 
+You can find out if you have Java from the shell or command prompt by asking for the version you have installed:
+
+----------------------------------------------------------------
+$ java -version
+java version "1.7.0_07"
+Java(TM) SE Runtime Environment (build 1.7.0_07-b10)
+Java HotSpot(TM) 64-Bit Server VM (build 23.3-b01, mixed mode)
+----------------------------------------------------------------
+
 Once you have Java, the following instructions will download, build and
 start a basic Lift application.
 
@@ -25,8 +35,8 @@ For Mac and Linux
 
 * Visit http://liftweb.net/download[http://liftweb.net/download] and download the Lift 2.5-M3 Zip file.
 * Unzip the file.
-* Start Terminal or your favourite shell tool.
-* Navigate into the unzipped folder and into the `scala_29` sub-folder and then the lift_basic` folder.
+* Start _Terminal_ or your favourite shell tool.
+* Navigate into the unzipped folder and into the `scala_29` sub-folder and then into the `lift_basic` folder.
 * Run:`./sbt`.
 * Required libraries will be downloaded automatically.
 * At the SBT prompt (>) type: `container:start`.
@@ -61,6 +71,9 @@ Discussion
 Lift isn't installed in the usual sense of "installing software".
 Instead you use standard build tools, such as SBT or Maven, to assemble your application with the Lift framework. In this recipe we downloaded a ZIP file containing four fairly minimal Lift applications, and then started one of them via the build tool.
 
+Simple Build Tool
++++++++++++++++++
+
 Typing `sbt` starts the Simple Build Tool, a dependency management
 tool used by Scala projects (it's not specific to Lift).  SBT will check the project definition and download any libraries required, which includes the Lift framework.
 
@@ -74,6 +87,9 @@ Your application build is configured by `build.sbt`.  Looking inside you'll see:
 * settings for plugins and the Scala compiler; and
 * a list of dependencies required to run your application, which will include the Lift framework.
 
+Running Your Application
+++++++++++++++++++++++++
+
 The command `container:start` starts the web server on the default port of 8080 and
 passes requests to the Lift application. The word "container" refers to the
 software you deploy your application into. There are a variety of containers (Jetty and 
@@ -81,13 +97,20 @@ Tomcat are probably the best known) all of which conform to a standard for deplo
 The upshot is you can build your application and deploy to whichever one you prefer.  
 The `container:start` command uses Jetty.
 
-The source code of the application resides in `src/main/webapp` and `src/main/scala`.
+Source Code
++++++++++++
+
+The source code of the application resides in `src/main/webapp` and `src/main/scala`. If you take a look at `index.html` in the `webapp` folder you'll see mention of `lift:helloWorld`. That's a reference to the class defined in `scala/code/snippet/HelloWorld.scala`. This is a _snippet invocation_ and an example of Lift's _view first_ approach to web applications. That is, there's no routing set up for the index page to collect the data and forward it to the view. Instead, the view defines areas of the content that are replaced with functions, such as those functions defined in `HelloWorld.scala`.
+
+Lift knows to look in the `code` package for snippets because that package is declared as a location for snippets in `scala/bootstrap/liftweb/Boot.scala`. The Boot class is run when starting your application, and it's where you can configure the behaviour of Lift.
+
 
 See Also
 ^^^^^^^^
 
 The Simple Build Tool documentation is at http://www.scala-sbt.org[http://www.scala-sbt.org].
 
+Tutorials for Lift can be found in _Simply Lift_ at http://simply.liftweb.net/[http://simply.liftweb.net/] and in _Lift in Action_ (Tim Perrett, 2011, Manning Publications Co).
 
 [[texteditor]]
 Developing Using a Text Editor
@@ -251,7 +274,7 @@ The `-Drebel.lift_plugin=true` setting adds Lift-specific functionality to JRebe
 Purchased licenses
 ++++++++++++++++++
 
-This recipe used a free Scala license for a service called myJRebel. This communicates with JRebel servers via the activation code.  If you have purchased a license from ZeroTurnaround, the situation is slightly different.  In this case, you will have a license key which you store in a file. You can place the file, `jrebel.lic` in your `/opt/zt/jrebel/` folder, but you may prefer to keep it separate from your installation.  To do that, modify the `sbt` script and specify the location of the file by adding another Java setting:
+This recipe used a free Scala license for a service called myJRebel. This communicates with JRebel servers via the activation code.  If you have purchased a license from ZeroTurnaround, the situation is slightly different.  In this case, you will have a license key which you store in a file. You can place the file, `jrebel.lic` in a `.jrebel` folder in your home directory, or alongside `jrebel.jar` (e.g., in the `/opt/zt/jrebel/` folder if that's where you installed JRebel), or you can specify some other location.  To do that, modify the `sbt` script and specify the location of the file by adding another Java setting:
 
 -----------------------------------
 -Drebel.license=/path/to/jrebel.lic
@@ -284,6 +307,7 @@ stable version. This will give you an Eclipse perspective that knows about Scala
 
 To create the project files to allow Eclipse to load your Lift project, install "sbteclipse" by adding the following to `projects/plugins.sbt`:
 
+[source,scala]
 -----------------------------------------------------------------------
 addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.1.0")
 -----------------------------------------------------------------------
@@ -322,6 +346,7 @@ methods and classes, which is a useful way to discover more about Lift.
 To achieve this in a project, run `eclipse with-source=true`, but if you want 
 this to be the default behaviour, add the following to your `build.sbt` file:
 
+[source,scala]
 ------------------------------
 EclipseKeys.withSource := true
 ------------------------------
@@ -330,6 +355,7 @@ If you find yourself using the plugin frequently, you may wish to declare it
 in your global SBT configuration files so it appies to all projects.  To do that,
 create a `~/.sbt/plugins/plugins.sbt` file containing:
 
+[source,scala]
 ------------------------------------------------------------------------
 resolvers += Classpaths.typesafeResolver
 
@@ -347,6 +373,63 @@ There are other useful settings for sbteclipse, described at https://github.com/
 
 The SBT guide to using plugins, http://www.scala-sbt.org/release/docs/Getting-Started/Using-Plugins[http://www.scala-sbt.org/release/docs/Getting-Started/Using-Plugins] and the wiki page for global configuration, http://www.scala-sbt.org/release/docs/Detailed-Topics/Global-Settings[http://www.scala-sbt.org/release/docs/Detailed-Topics/Global-Settings], explains the `~/.sbt/` structure for SBT.
 
+
+
+Developing using Intellij IDEA
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to use the Intellij IDEA development environment when writing your Lift application.
+
+Solution
+^^^^^^^^
+
+You need the Scala plugin for IntelliJ, and an SBT plugin to generate the IDEA project files.
+
+The IntelliJ plugin you'll need to install once, and these instructions are for IntelliJ IDEA 12.  The details may vary between releases of the IDE, but the basic idea is to find the JetBrains Scala plugin, and download and install it.
+
+From the "Welcome to Intellij IDEA" screen, select "Configure" and then "Plugins". Select "Browse repositories...". In the search box, top right, type "Scala".  You'll find on the left a number of matches: select "Scala".  On the right, you'll see confirmation that this is the "Plugin for Scala language support" and the vendor is JetBrains Inc. Select the "Download and Install" icon from the top of the window (or right click to download and install). "Close" the dialog, and OK out of the Plugins window. You'll be promoted to restart IntelliJ IDEA.
+
+With the IDE configured, you now need to add the SBT plugin inside your project by adding the following to the file `projects/plugins.sbt`:
+
+[source,scala]
+------------------------------------------------------------------------
+addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.2.0")
+------------------------------------------------------------------------
+
+Start SBT and at the SBT prompt create the IDEA project files by typing:
+
+---------
+gen-idea
+---------
+
+This will generate the `.idea` and `.iml` files you need so you can do "File" and "Open..." in IntelliJ and navigate to your project.
+
+To see live changes as you edit and save your work, run SBT in a separate terminal window.  That is, start `sbt` from a terminal window outside of IntelliJ and enter the following:
+
+--------------------------------------
+~; container:start; container:reload /
+--------------------------------------
+
+This behaviour of this command is described in <<texteditor>>, but if you're using JRebel (see <<jrebel>>) then you just need to run `container:start` by itself.
+
+Each time you make the project, the container will pick up the changes, and you can see them by re-loading your browser window. 
+
+Discussion
+^^^^^^^^^^
+
+By default the `gen-idea` command will fetch source for dependent libraries. That means out-of-the-box you can click though to Lift source code to explore it and learn more about the framework.
+
+
+
+See Also
+^^^^^^^^
+
+The sbt-idea plugin at https://github.com/mpeltonen/sbt-idea[https://github.com/mpeltonen/sbt-idea] doesn't have a configuration guide yet. One way to discover the features is to browse the release notes in the `notes` folder of that project.
+
+JetBrains have a blog for the Scala plugin with feature news and tips: http://blog.jetbrains.com/scala/[http://blog.jetbrains.com/scala/].
 
 
 Viewing the lift_proto H2 Database
@@ -373,11 +456,11 @@ Use the web interface included as part of H2. Here are the steps:
 Discussion
 ^^^^^^^^^^
 
-The default Lift projects that include a database, such as `lift_basic`, use the H2 relational database as it can be included as an SBT dependency and requires no external installation or configuation. It's a fine product, althogh production deployments typically use standalone databases, such as PostgreSQL or MySQL.
+The default Lift projects that include a database, such as `lift_basic`, use the H2 relational database as it can be included as an SBT dependency and requires no external installation or configuration. It's a fine product, although production deployments typically use standalone databases, such as PostgreSQL or MySQL.
 
 Even if you're deploying to a non-H2 database it may be useful to keep H2 around because it has an in-memory mode, which is great for unit tests. This means you can create a database in-memory, no files on disk, and throw it away when your unit tests ends.
 
-If you don't like the web interface, the connection settings described in this recipie should give you the information you need to configure other SQL tools.
+If you don't like the web interface, the connection settings described in this recipe should give you the information you need to configure other SQL tools.
 
 See Also
 ^^^^^^^^
@@ -402,15 +485,17 @@ Solution
 You need to make two changes to your `build.sbt` file. First, reference
 the snapshot repository:
 
+[source,scala]
 ----
 resolvers += "snapshots" at "http://oss.sonatype.org/content/repositories/snapshots"
 ----
 
-Second, change the `liftVersion` in your build to be 2.5-SNAPSHOT,
-rather than 2.4:
+Second, change the `liftVersion` in your build to be the latest version. For this example, we will
+assume there is a 2.6-SNAPSHOT to use rather than a 2.5 version:
 
+[source,scala]
 --------------------------------
-val liftVersion = "2.5-SNAPSHOT"
+val liftVersion = "2.6-SNAPSHOT"
 --------------------------------
 
 Restarting SBT (or issuing a `reload` command) will trigger a download
@@ -419,8 +504,8 @@ of the latest build.
 Discussion
 ^^^^^^^^^^
 
-Production releases of Lift (e.g., "2.4"), as well as milestone releases
-(e.g., "2.4-M1") and release candidates (e.g., "2.4-RC1") are published
+Production releases of Lift (e.g., "2.4", "25"), as well as milestone releases
+(e.g., "2.5-M3") and release candidates (e.g., "2.5-RC1") are published
 into a releases repository. When SBT downloads them, they are downloaded
 once.
 
@@ -432,6 +517,7 @@ See Also
 ^^^^^^^^
 
 To learn the detail of SNAPSHOT versions, dig into the Maven Complete Reference at [http://www.sonatype.com/books/mvnref-book/reference/pom-relationships-sect-pom-syntax.html[http://www.sonatype.com/books/mvnref-book/reference/pom-relationships-sect-pom-syntax.html].
+
 
 Using a New Version of Scala
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -454,6 +540,7 @@ version.
 For example, assuming your `build.sbt` file is set up to use Lift 2.4
 with Scala 2.9.1:
 
+[source,scala]
 ---------------------------------------------------------------------
 scalaVersion := "2.9.1"
 
@@ -470,6 +557,7 @@ built against Scala 2.9.1. Replace `%%` with `%` for the `net.liftweb`
 resources and explicitly include the Scala version that Lift was built
 against for each Lift component:
 
+[source,scala]
 --------------------------------------------------------------------------
 scalaVersion := "2.9.2"
 
@@ -484,10 +572,14 @@ libraryDependencies ++= {
 Discussion
 ^^^^^^^^^^
 
-In the example we have forced SBT to explicitly fetch the 2.9.1 version
+Dependencies have a particular naming convention.  For example, the `lift-webkit` library for Lift 2.5-M3 is called `lift-webkit_2.9.1-2.5-M3.jar`.  Normally in `build.sbt` we simply refer to `"net.liftweb" %% "lift-webkit"` and SBT turns that into the name of a file that can be downloaded. 
+
+However, in the above example we have forced SBT to explicitly fetch the 2.9.1 version
 of the Lift resources rather than allow it to compute the URL to the
-Lift components.  This is the difference between using `%%` in a
-dependency and `%`.
+Lift components.  This is the difference between using `%%` and `%` in a
+dependency: with `%%` you do not specify the Scala version as SBT will append
+the `scalaVersion` number automatically; with '%' this automatic change is not made, so
+have to manually specify more details for the name of the library.
 
 Please note this only works for minor releases of Scala: major releases
 break compatibility.  For example Scala 2.9.1 is compatible with Scala 2.9.0, but not 2.10.
@@ -495,7 +587,7 @@ break compatibility.  For example Scala 2.9.1 is compatible with Scala 2.9.0, bu
 See Also
 ^^^^^^^^
 
-Binary compatibily in Scala is discussed on the Scala user mailing list at  
+Binary compatibly in Scala is discussed on the Scala user mailing list at  
 http://article.gmane.org/gmane.comp.lang.scala.user/39290[http://article.gmane.org/gmane.comp.lang.scala.user/39290].
 
 The SBT behaviour is described at: http://www.scala-sbt.org/release/docs/Getting-Started/Library-Dependencies[http://www.scala-sbt.org/release/docs/Getting-Started/Library-Dependencies].
