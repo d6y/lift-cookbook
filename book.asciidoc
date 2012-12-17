@@ -18,8 +18,6 @@ include::06-Pipline.asciidoc[]
 
 include::07-Record-Squeryl.asciidoc[]
 
-include::08-Mapper.asciidoc[]
-
 include::09-Record-Mongo.asciidoc[]
 
 include::10-Around.asciidoc[]
