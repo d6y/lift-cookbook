@@ -1,49 +1,35 @@
-Contributing, bug reports & getting help
+Contributing, Bug Reports & Getting Help
 ----------------------------------------
 
-How to add a new recipe to this Cookbook
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+You'd Like Some Help
+~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
 
-You'd like to add a new page to this cookbook.
+You're stuck on something in Lift and you'd like some help.
 
 Solution
 ^^^^^^^^
 
-If you're comfortable using Git, you can fork the repository and send a
-push request.
-
-Alternatively, download the template file, write your recipe, and email
-to the Lift mailing list.
-
-The template is:
-https://raw.github.com/d6y/lift-cookbook/master/template.md[https://raw.github.com/d6y/lift-cookbook/master/template.md]
+Ask a question on the Lift mailing list at https://groups.google.com/group/liftweb[https://groups.google.com/group/liftweb].
 
 Discussion
 ^^^^^^^^^^
 
-The cookbook is structured using Markdown and Pamflet. Each recipe is a
-file with the same structure as the template file, and gives one good
-solution to a problem. Feel free to discuss alternatives or related
-concepts in the discussion section.
+You will find some information about Lift on StackOverflow, Quora and elsewhere, but the mailing list is _the_ place to go to get help and support. You can also search the archive to see if your question has already been addressed, but questions are very welcome as it helps the Lift community understand what users need and what might be causing problems or need explanation. Much of what you're reading here originates from questions that have been asked on the mailing list.
 
-If you've forked the project from Github, you'll find all the pages in
-the `docs` folder, with sub-folders for each section. The filenames are
-used for ordering the pages and sections. Feel free to send pull
-requests.
+New members to the mailing list are moderated to trim out spam. This means your message may take a few hours to show up first time you post.
 
 See Also
 ^^^^^^^^
 
-* https://github.com/d6y/lift-cookbook/[This project on Github]
-* http://daringfireball.net/projects/markdown/syntax[Markdown syntax guide]
-* http://pamflet.databinder.net/Pamflet.html[Pamflet]
-* http://pamflet.databinder.net/Filenames+and+Page+Names.html[Pamflet filenames and titles]
-* http://pamflet.databinder.net/Source+Code+Highlighting.html[Formatting source code]
+The Lift community is one of the things that makes Lift what it is. Please take a look at http://liftweb.net/community[http://liftweb.net/community] before posting: you'll get the best response with a polite question.
 
-How to report bugs
+If you need paid consulting, development or SLA-backed support, there's a list of organizations on the Wiki at https://www.assembla.com/spaces/liftweb/wiki/Commercial_Support[https://www.assembla.com/spaces/liftweb/wiki/Commercial_Support].
+
+
+How to Report Bugs
 ~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -57,30 +43,179 @@ Solution
 Discuss your findings on the Lift mailing list, saying what you're
 seeing, and what you'd expect to see.
 
-By all means look at https://github.com/lift/modules/issues[existing
-issues] to see if your issue is there or recently fixed, but do not
-raise a ticket unless asked to do so by a Lift committer on the mailing
-list.
+By all means look at the existing tickets to see if your issue is there or recently fixed, but please do not
+raise a ticket unless asked to do so by a Lift committer on the mailing list.
 
 Discussion
 ^^^^^^^^^^
 
-*"If Lift is not behaving as you expect, please ask questions about what
-you're seeing. The ideal form of these questions is 'When I do X, my
-Lift app does Y, but I expect it to do Z, why?' This provides a set of
+[quote, David Pollack, http://lift.la/expected-behavior-in-the-lift-community]
+____
+If Lift is not behaving as you expect, please ask questions about what
+you're seeing. The ideal form of these questions is "When I do X, my
+Lift app does Y, but I expect it to do Z, why?" This provides a set of
 language to discuss your application and the way that Lift responds to
 requests. Perhaps there's a way of improving Lift. Perhaps there's a
 concept that's different in Lift than you might be used to. Perhaps
 there's a documentation issue that can help bridge the gap between what
 Lift is doing and what you expect it to do. Most importantly, just
 because Lift is behaving differently than you expect it to, it's not
-necessarily a bug in Lift."* (from
-http://lift.la/expected-behavior-in-the-lift-community[Expected Behavior
-in the Lift community])
+necessarily a bug in Lift.
+____
+
+A great way to get help with the issue you have, or getting a bug fixed, is to produce a small example to illustrate the problem and posting it on GitHub. The key is to provide instructions so someone can run the example and see exactly what you see without having to jump though hoops.
+
 
 See Also
 ^^^^^^^^
 
-* http://www.assembla.com/wiki/show/liftweb/Posting_example_code[How to post a code example]
-* http://www.assembla.com/wiki/show/liftweb/Creating_tickets[Creating tickets]
+You'll find a list of tickets at http://ticket.liftweb.net/[http://ticket.liftweb.net/].
+
+If you're asked to, or want to, post example code there's a guide at http://www.assembla.com/wiki/show/liftweb/Posting_example_code[http://www.assembla.com/wiki/show/liftweb/Posting_example_code].
+
+If you've found a bug, and you're asked to create a ticket, the main thing to do is to include a link to the mailing list discussion of the issue, as described at http://www.assembla.com/wiki/show/liftweb/Creating_tickets[http://www.assembla.com/wiki/show/liftweb/Creating_tickets]. 
+
+
+
+Contributing Small Code Changes and ScalaDoc
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You have a small change or ScalaDoc improvement you'd like incorporated into Lift.
+
+Solution
+^^^^^^^^
+
+It doesn't hurt to discuss your proposed changes on the mailing list, but then make a pull request against the Lift Git repository.
+
+Your change must meet one of the following requirements:
+
+* It's change to a comment.
+* It's example code.
+* It's a small change, enhancements, or bug fixes to Lift's code.
+
+Your pull request must include an edit to add your signature to the bottom of the `contributors.md` file.
+
+
+Discussion
+^^^^^^^^^^
+
+Historically Lift had a strict contributor policy of simply not accepting any code contributions. All the code in Lift was created by committers who had signed an agreement to assign copyright to the Lift project, meaning that corporations wanting to adopt Lift could do so without litigation concerns.
+
+The safety is still there, now via the requirement for a signature on the contributors file, which reads:
+
+[quote]
+____
+By submitting this pull request which includes my name and email address (the email address may be in a non-robot readable format), I agree that the entirety of the contribution is my own original work, that there are no prior claims on this work including, but not limited to, any agreements I may have with my employer or other contracts, and that I license this work under an Apache 2.0 license.
+____
+
+
+See Also
+^^^^^^^^
+
+This contribution policy was introduced in November 2012, and can be read about at http://www.lift.la/blog/new_contribution_policy
+[http://www.lift.la/blog/new_contribution_policy].
+
+The `contributors.md` file is found at: https://github.com/lift/framework/blob/master/contributors.md[https://github.com/lift/framework/blob/master/contributors.md].
+
+The Lift source is on GitHub at https://github.com/lift/[https://github.com/lift/].  The _framework_ project is probably the one you want, although you'll also find Git repositories for examples and Lift web sites there.
+
+GitHub provide an introduction to pull requests at https://help.github.com/articles/using-pull-requests[https://help.github.com/articles/using-pull-requests].
+
+<<modules>> describes how to share code of any size via Lift modules.
+
+
+Contributing Documentation
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+TODO
+
+Solution
+^^^^^^^^
+
+TODO
+
+Discussion
+^^^^^^^^^^
+
+TODO 
+
+See Also
+^^^^^^^^
+
+TODO
+
+
+How to Add a New Recipe to this Cookbook
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You'd like to add or change a section or chapter to this cookbook.
+
+Solution
+^^^^^^^^
+
+If you're comfortable using Git, you can fork the repository and send a
+pull request.
+
+Alternatively, download the template file, write your recipe, and email
+to the Lift mailing list.
+
+The template is at: `template.asciidoc`
+
+Assignment?
+
+Discussion
+^^^^^^^^^^
+
+The cookbook is structured using a markup language called Asciidoc. 
+
+Each recipe is a
+file with the same structure as the template file, and gives one good
+solution to a problem. Feel free to discuss alternatives or related
+concepts in the discussion section.
+
+If you've forked the project from Github, you'll find all the pages in
+the `docs` folder, with sub-folders for each section. The filenames are
+used for ordering the pages and sections. Feel free to send pull
+requests.
+
+See Also
+^^^^^^^^
+
+* https://github.com/d6y/lift-cookbook/[This project on Github]
+
+Asciidoc
+
+
+[[modules]]
+Sharing Code in Modules
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+TODO
+
+Solution
+^^^^^^^^
+
+TODO
+
+Discussion
+^^^^^^^^^^
+
+TODO 
+
+See Also
+^^^^^^^^
+
+TODO
 
