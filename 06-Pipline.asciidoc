@@ -361,7 +361,7 @@ See Also
 There are various hooks into the Lift pipeline, and further explanation on the mailing list.  For example, _What's the difference between LiftRules.early and LiftRules.onBeginServicing and when does S.locale get initialized?_ from the Lift mailing list: https://groups.google.com/d/topic/liftweb/K0S1rU0qtX0/discussion[https://groups.google.com/d/topic/liftweb/K0S1rU0qtX0/discussion].
 
 
-
+[[OnSession]]
 Running Code when Sessions are Created (or Destroyed)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
