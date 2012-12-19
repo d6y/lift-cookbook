@@ -262,7 +262,7 @@ object Snowstorm {
   }
 
   def addSnow(s: LiftSession, r: Req) = S.putInHead(
-  <script type="text/javascript" src="/classpath/snowstorm.js"></script> )
+    <script type="text/javascript" src="/classpath/snowstorm.js"></script> )
 
   LiftSession.onBeginServicing = addSnow _ ::  LiftSession.onBeginServicing
 
