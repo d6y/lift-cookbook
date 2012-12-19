@@ -175,7 +175,7 @@ pull request.
 Alternatively, download a template file, write your recipe, and email
 to the Lift mailing list at https://groups.google.com/group/liftweb[https://groups.google.com/group/liftweb].  
 
-You can find the template file at: `template.asciidoc`
+You can find the template file at: https://raw.github.com/d6y/lift-cookbook/master/template.asciidoc[https://raw.github.com/d6y/lift-cookbook/master/template.asciidoc].
 
 Discussion
 ^^^^^^^^^^
