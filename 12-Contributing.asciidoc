@@ -235,7 +235,7 @@ Solution
 
 Create a Lift module, and then reference the module from your Lift projects.
 
-As an example, let's create a module to embed the Snowstorm snow effect JavaScript to every page in your Lift web application (please don't do this). 
+As an example, let's create a module to embed the Snowstorm snow fall effect on every page in your Lift web application (please don't do this). 
 
 There's nothing special about modules: they are code, packaged and used like any other dependency. What makes them possible is the exposure of extension points via `LiftRules`. There main convention is to have an `init` method that other Lift applications can use to initialize your module.
 
