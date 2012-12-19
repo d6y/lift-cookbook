@@ -17,9 +17,9 @@ Ask a question on the Lift mailing list at https://groups.google.com/group/liftw
 Discussion
 ^^^^^^^^^^
 
-You will find some information about Lift on StackOverflow, Quora and elsewhere, but the mailing list is _the_ place to go to get help and support. You can also search the archive to see if your question has already been addressed, but questions are very welcome as it helps the Lift community understand what users need and what might be causing problems or need explanation. Much of what you're reading here originates from questions that have been asked on the mailing list.
+You will find some information about Lift on StackOverflow, Quora and elsewhere, but the mailing list is _the_ place to go to get help and support. You can search the archive to see if your question has already been addressed, but questions are very welcome as it helps the Lift community understand what users need and what might be causing problems or need explanation. Much of what you're reading here originates from questions that have been asked on the mailing list.
 
-New members to the mailing list are moderated to trim out spam. This means your message may take a few hours to show up first time you post.
+New members to the mailing list are moderated to help reduce spam. This means the first time you post your message may take a few hours to show up.
 
 See Also
 ^^^^^^^^
@@ -88,13 +88,11 @@ You have a small change or ScalaDoc improvement you'd like incorporated into Lif
 Solution
 ^^^^^^^^
 
-It doesn't hurt to discuss your proposed changes on the mailing list, but then make a pull request against the Lift Git repository.
-
-Your change must meet one of the following requirements:
+You can issue pull requests against the Lift source providing your change meets one of the following requirements:
 
 * It's change to a comment.
 * It's example code.
-* It's a small change, enhancements, or bug fixes to Lift's code.
+* It's a _small_ change, enhancements, or bug fix to Lift.
 
 Your pull request must include an edit to add your signature to the bottom of the `contributors.md` file.
 
@@ -102,7 +100,7 @@ Your pull request must include an edit to add your signature to the bottom of th
 Discussion
 ^^^^^^^^^^
 
-Historically Lift had a strict contributor policy of simply not accepting any code contributions. All the code in Lift was created by committers who had signed an agreement to assign copyright to the Lift project, meaning that corporations wanting to adopt Lift could do so without litigation concerns.
+Historically Lift had a strict contributor policy of simply not accepting any code contributions except from committers who had signed an agreement to assign copyright to the Lift project.  This allowed corporations wanting to adopt Lift to do so without litigation concerns.
 
 The safety is still there, now via the requirement for a signature on the contributors file, which reads:
 
@@ -111,12 +109,12 @@ ____
 By submitting this pull request which includes my name and email address (the email address may be in a non-robot readable format), I agree that the entirety of the contribution is my own original work, that there are no prior claims on this work including, but not limited to, any agreements I may have with my employer or other contracts, and that I license this work under an Apache 2.0 license.
 ____
 
+What's a small change? That's a good question, and if you're unsure, talk about your proposed change on the mailing list.
 
 See Also
 ^^^^^^^^
 
-This contribution policy was introduced in November 2012, and can be read about at http://www.lift.la/blog/new_contribution_policy
-[http://www.lift.la/blog/new_contribution_policy].
+This contribution policy was introduced in November 2012, and can be read about at http://www.lift.la/blog/new_contribution_policy[http://www.lift.la/blog/new_contribution_policy].
 
 The `contributors.md` file is found at: https://github.com/lift/framework/blob/master/contributors.md[https://github.com/lift/framework/blob/master/contributors.md].
 
@@ -149,8 +147,6 @@ Discussion
 ^^^^^^^^^^
 
 If you're unsure about a change you'd like to make, just ask for feedback on the Lift mailing list. 
-
-what's good for the wiki?
 
 
 One limitation of the watcher role on Assembla is that you cannot move pages. If you create a new page in the wrong section, or want to reorganise pages, you'll need to ask on the Lift mailing list for someone with permissions to do that for you.
@@ -193,7 +189,7 @@ To find out where to make a change you need to know that each chapter is a separ
 Licensing
 +++++++++
 
-This Cookbook is built upon the contributions of many people, under a Creative Commons license. Your contribution will need to be in agreement with that, but also there is the version produced by O'Reilly (perhaps you're holding that version?), and O'Reilly also need the rights to produce the book. Consequently, each contribution will need to include the following: 
+This Cookbook is built upon the contributions of many people, under a Creative Commons license. Your contribution will need to be in agreement with that, but there is also a version produced by O'Reilly (perhaps you're holding that version?), and O'Reilly also need the rights to produce the book. Consequently, each contribution will need to include the following: 
 
 [quote]
 ____
@@ -241,9 +237,9 @@ Create a Lift module, and then reference the module from your Lift projects.
 
 As an example, let's create a module to embed the Snowstorm snow effect JavaScript to every page in your Lift web application (please don't do this). 
 
-There's nothing special about modules: they are code, packaged and used like any other dependency. What makes them possible is the exposure of Lift's extension points via `LiftRules`. There main convention is to have an `init` method that other Lift applications can use to initialize your module.
+There's nothing special about modules: they are code, packaged and used like any other dependency. What makes them possible is the exposure of extension points via `LiftRules`. There main convention is to have an `init` method that other Lift applications can use to initialize your module.
 
-For our snow storm we're going to package some JavaScript, allow the JavaScript to be customised, and inject the script on every page.
+For our snow storm we're going to package some JavaScript and inject the script on to every page.
 
 Starting with the `lift_blank` template downloaded from liftweb.net, we can remove all the source and HTML files as this won't be a runnable Lift application in itself. However, it will leave us with the regular Lift structure and build configuration.
 
@@ -265,8 +261,8 @@ object Snowstorm {
      case "snowstorm.js" :: Nil => true
   }
 
-  def addSnow(s: LiftSession, r: Req) =
-    S.putInHead(<script type="text/javascript" src="/classpath/snowstorm.js"></script>)
+  def addSnow(s: LiftSession, r: Req) = S.putInHead(
+  <script type="text/javascript" src="/classpath/snowstorm.js"></script> )
 
   LiftSession.onBeginServicing = addSnow _ ::  LiftSession.onBeginServicing
 
@@ -278,7 +274,7 @@ object Snowstorm {
 Here we are plugging into Lift's processing pipeline and adding the required
 JavaScript to the head of every page.
 
-We will modify the `build.sbt` to give the prject name, organisation and version number.  We also can remove many of the dependencies and the web plugin as we only depend on the web elements of Lift:
+We modify `build.sbt` to give the module a name, organisation and version number.  We also can remove many of the dependencies and the web plugin as we only depend on the web API elements of Lift:
 
 [source,scala]
 --------------------------------------------------------------
@@ -292,7 +288,7 @@ scalaVersion := "2.9.1"
 
 resolvers ++= Seq(
    "snapshots" at "http://oss.sonatype.org/content/repositories/snapshots",
-   "releases"        at "http://oss.sonatype.org/content/repositories/releases"
+   "releases" at "http://oss.sonatype.org/content/repositories/releases"
 )
 
 scalacOptions ++= Seq("-deprecation", "-unchecked")
@@ -305,7 +301,7 @@ libraryDependencies ++= {
 }
 --------------------------------------------------------------
 
-We can publish this plugin to the repository on disk by starting SBT and running:
+We can publish this plugin to the repository on disk by starting SBT and typing:
 
 ---------------------------
 publish-local
@@ -315,11 +311,12 @@ With our module built and published, we can now include it in our Lift applicati
 
 [source,scala]
 --------------------------------------------------------------
-...
-"net.liftweb" %% "lift-webkit" % liftVersion  % "compile",
-"net.liftmodules" %% "lift-jquery-module" % (liftVersion + "-2.0"),
-"net.liftmodules" %% "snowstorm" % "1.0.0",
-...
+libraryDependencies ++= {
+  val liftVersion = "2.5-M3"
+  Seq(
+  ...
+  "net.liftmodules" %% "snowstorm" % "1.0.0",
+  ...
 --------------------------------------------------------------
 
 In our Lift application's `Boot.scala` we finally initialise the plugin:
@@ -335,11 +332,11 @@ When we run our Lift application, white snow will be falling on every page, supp
 Discussion
 ^^^^^^^^^^
 
-The module is self contained: there's no need for users to copy JavaScript files around or modify their templates.  To achieve that we've made use of `ResourceServer`.  When we reference the JavaScript file via `/classpath/snowstorm.js`, Lift will attempt to locate `snowstorm.js` from the classpath.  This is what we want because for our Lift application the file will be inside the module JAR file.
+The module is self contained: there's no need for users to copy JavaScript files around or modify their templates.  To achieve that we've made use of `ResourceServer`.  When we reference the JavaScript file via `/classpath/snowstorm.js`, Lift will attempt to locate `snowstorm.js` from the classpath.  This is what we want for our Lift application because `snowstorm.js` will be inside the module JAR file.
 
-However, we do not want to expose all files on the classpath to anyone visiting our application. To avoid that, Lift looks for resources inside a `toserve` folder, which for our purposes means files and folders inside `src/main/resources/toserve`.  Think of `/classpath` meaning `toserve` (although, you can change those values via `LiftRules.resourceServerPath` and `ResourceServer.baseResourceLocation`).
+However, we do not want to expose all files on the classpath to anyone visiting our application. To avoid that, Lift looks for resources inside a `toserve` folder, which for our purposes means files and folders inside `src/main/resources/toserve`.  You can think of `/classpath` meaning `toserve` (although, you can change those values via `LiftRules.resourceServerPath` and `ResourceServer.baseResourceLocation`).
 
-A further precaution is that you need to explicitly allow access to these resources.  That's done with:
+As a further precaution you need to explicitly allow access to these resources.  That's done with:
 
 [source,scala]
 --------------------------------------------------------------
@@ -350,9 +347,9 @@ ResourceServer.allow {
 
 We're just always returning `true` for anyone who asks for this resource, but we could dynamically control access here if we wanted.
 
-`S.putInHead` adds the JavaScript to the head of a page, and is triggered on every page by `LiftSession.onBeginServicing` (also discussed in <<OnSession>>). We could make use of `Req` here to restrict the snow storm to particular pages, but we're indiscriminatingly adding it to every page.
+`S.putInHead` adds the JavaScript to the head of a page, and is triggered on every page by `LiftSession.onBeginServicing` (also discussed in <<OnSession>>). We could make use of `Req` here to restrict the snow storm to particular pages, but we're adding it to every page.
 
-Hopefully you can see that anything you can do in a Lift application you can probably turn into a Lift module.  A typoically approach might be to have functionality in a Lift application, and then factor out settings in `Boot` into a module `init` method.  For example, if you wanted to provide REST services as a module, that would be possible and is an approach taken by the Lift Paypal module.
+Hopefully you can see that anything you can do in a Lift application you can probably turn into a Lift module.  A typical approach might be to have functionality in a Lift application, and then factor out settings in `Boot` into a module `init` method.  For example, if you wanted to provide REST services as a module, that would be possible and is an approach taken by the Lift Paypal module.
 
 Making your Module Available
 ++++++++++++++++++++++++++++
@@ -370,7 +367,8 @@ import sbt._
 import sbt.Keys._
 
 object LiftModuleBuild extends Build {
-  val liftVersion = SettingKey[String]("liftVersion", "Version number of the Lift Web Framework")
+  val liftVersion = SettingKey[String]("liftVersion", 
+    "Version number of the Lift Web Framework")
   val project = Project("LiftModule", file("."))
 }
 --------------------------------------------------------------
@@ -397,16 +395,36 @@ What this gives you is a way for the version of your module to depend on the `li
 
 Don't forget to announce your module on the Lift mailing list.
 
+Debugging Your Module
++++++++++++++++++++++
+
+When working on a module and testing it in a Lift application, it would be a chore to have to publish your module each time you changed it. Fortunately, SBT allows your Lift application to depend on the source of a module.  To use this, change your Lift project to remove the dependency on the published module and instead add a local dependency by creating `project/LocalModuleDev.scala`:
+
+
+[source,scala]
+------------------------------------
+import sbt._
+object LocalModuleDev extends Build {
+  lazy val root = Project("", file(".")) dependsOn(google)
+  lazy val snow = ProjectRef(uri("../snowstorm"), "LiftModule")
+}
+------------------------------------
+
+We are assuming that the snowstorm source can be found at `../snowstorm` relative to the Lift application we are using. With this in place, when you build your Lift project, SBT will automatically compile and depend on changes in the local `snowstorm` module. 
+
+
 See Also
 ^^^^^^^^
 
-Originally Lift included a set of modules, but these have been separated out to individual projects at: https://github.com/liftmodules/[https://github.com/liftmodules/].  The Lift contributor policy outlined in <<LiftCodeContributions>> doesn't apply to Lift modules: you're free to contribute to these modules as you would any other open source project.
+Originally Lift included a set of modules, but these have been separated out to individual projects at https://github.com/liftmodules/[https://github.com/liftmodules/].  The Lift contributor policy outlined in <<LiftCodeContributions>> doesn't apply to Lift modules: you're free to contribute to these modules as you would any other open source project.
 
 The Lift wiki pages for modules can be reached via http://liftmodules.net[http://liftmodules.net].
 
 The Snowstorm project ("setting CPUs on fire worldwide every winter since 2003") is at: https://github.com/scottschiller/snowstorm/[https://github.com/scottschiller/snowstorm/] and the module developed for this recipe is at https://github.com/LiftCookbook/snowstorm-example-module[https://github.com/LiftCookbook/snowstorm-example-module].
 
 To publish to Sonatype, take a look at their guide: https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide[https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide]. CloudBees offer an open source repository, which you can learn about via http://www.cloudbees.com/foss/foss-dev.cb[http://www.cloudbees.com/foss/foss-dev.cb].
+
+There are other ways to structure common code between Lift applications. For an example that uses SBT modules and Git, see the mailing list discussion on "Modularize Lift Applications" at https://groups.google.com/d/msg/liftweb/7GA5t0lefzI/c1wf6W1keDcJ[https://groups.google.com/d/msg/liftweb/7GA5t0lefzI/c1wf6W1keDcJ].
 
 
 
