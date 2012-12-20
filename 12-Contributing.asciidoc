@@ -237,9 +237,9 @@ Create a Lift module, and then reference the module from your Lift projects.
 
 As an example, let's create a module to embed the Snowstorm snow fall effect on every page in your Lift web application (please don't do this). 
 
-There's nothing special about modules: they are code, packaged and used like any other dependency. What makes them possible is the exposure of extension points via `LiftRules`. There main convention is to have an `init` method that other Lift applications can use to initialize your module.
+There's nothing special about modules: they are code, packaged and used like any other dependency. What makes them possible is the exposure of extension points via `LiftRules`. The main convention is to have an `init` method that Lift applications can use to initialize your module.
 
-For our snow storm we're going to package some JavaScript and inject the script on to every page.
+For our snow storm we're going to package some JavaScript and inject the script onto every page.
 
 Starting with the `lift_blank` template downloaded from liftweb.net, we can remove all the source and HTML files as this won't be a runnable Lift application in itself. However, it will leave us with the regular Lift structure and build configuration.
 
