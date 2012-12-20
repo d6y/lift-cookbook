@@ -405,7 +405,7 @@ When working on a module and testing it in a Lift application, it would be a cho
 ------------------------------------
 import sbt._
 object LocalModuleDev extends Build {
-  lazy val root = Project("", file(".")) dependsOn(google)
+  lazy val root = Project("", file(".")) dependsOn(snow)
   lazy val snow = ProjectRef(uri("../snowstorm"), "LiftModule")
 }
 ------------------------------------
