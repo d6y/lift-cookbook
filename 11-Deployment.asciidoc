@@ -18,7 +18,9 @@ Use the SBT `package` command to produce a WAR file that can be deployed
 to CloudBees, and then use the SDK to configure and deploy your
 application.
 
-For best performance you will want to ensure the Lift run mode is set to
+From within the CloudBees "Grand Central" console, create a new application under your account. In what follows we'll assume your account is called _myaccount_ and you application is called _myapp_.
+
+For the best performance you will want to ensure the Lift run mode is set to
 "production". Do this from the CloudBees SDK command line:
 
 [source, bash]
@@ -40,8 +42,11 @@ $ sbt package
 ...
 [info] Packaging /Users/richard/myapp/target/scala-2.9.1/myapp.war...
 ...
-$ bees app:deploy ./target/scala-2.9.1/myapp.war
+$ bees -a app:deploy ./target/scala-2.9.1/myapp.war
 ---------------------------------------------------------------------
+
+This will send your WAR file to CloudBees and deploy it.  You'll see the location (URL) of your application output from the bees `app:deploy` command when it completes.
+
 
 Discussion
 ^^^^^^^^^^
@@ -56,11 +61,11 @@ enable session affinity (sticky sessions):
 $ bees app:update -a myaccount/myapp stickySession=true
 ----------------------------------------------------------------
 
-If you are using comet, it'll work fine, but CloudBees default is to do
-request buffering. This allows CloudBees to do smart things, such as re-routing 
+If you are using comet, it'll work fine, but CloudBees default is to enable
+_request buffering_. This allows CloudBees to do smart things, such as re-routing 
 requests in a cluster if one machine does not respond. A
 consequence of request buffering is that long-polling comet requests will timeout more
-often. To turn off this feature set the following:
+often. To turn this feature off, run the following:
 
 [source, bash]
 ----------------------------------------------------------------
@@ -74,7 +79,7 @@ RDBMS configuration
 +++++++++++++++++++
 
 If you are using a SQL database in your application, you'll want to 
-configue `src/main/webapp/WEB-INF/cloudbees-web.xml`. For
+configure `src/main/webapp/WEB-INF/cloudbees-web.xml`. For
 example:
 
 [source, xml]
@@ -89,9 +94,9 @@ example:
   <param name="password" value="dbpassword" />
   <param name="url" value="jdbc:cloudbees://mydb" />
 
-  <!-- Connection Pool settings: 
+  <!-- For these connections settings, see: 
    http://commons.apache.org/dbcp/configuration.html 
-   -->
+  -->
   <param name="maxActive" value="10" />
   <param name="maxIdle" value="2" />
   <param name="maxWait" value="15000" />
@@ -126,20 +131,88 @@ only be available in a CloudBees environment. This means you can develop
 against a different database locally, and use your CloudBees database
 when deploying.
 
+Host IP and Port Number
++++++++++++++++++++++++
+
+Generally you don't need to know about your deployed instance's public name and port number. Requests to your application URL are routed to the specific instance by CloudBees. However there are situations, especially when you have multiple instances, where you do need to find this out. For example, if you want to receive messages from Amazon's Simple Notification Service (SNS), then each instance will need to give a direct URL to SNS when the application boots.  
+
+To get the public hostname, you need to make a HTTP request to `http://instance-data/latest/meta-data/public-hostname`, as documented at https://developer.cloudbees.com/bin/view/Main/Finding+out+app+port+and+hostname[https://developer.cloudbees.com/bin/view/Main/Finding+out+app+port+and+hostname].  For example:
+
+[source, scala]
+------------------------------------------------------------
+import io.Source
+
+val beesPublicHostname : Box[String] = tryo {
+  Source.fromURL("http://instance-data/latest/meta-data/public-hostname").
+    getLines().toStream.head
+}
+------------------------------------------------------------
+
+This will return a `Full` hostname on the CloudBees environment, but when running locally will fail and return a `Failure`. For example:
+
+[source, scala]
+------------------------------------------------------------
+Failure(instance-data,Full(java.net.UnknownHostException: instance-data),Empty)
+------------------------------------------------------------
+
+The port number can be read from the JVM system property of `sun.java.command`. This is the command that started your application and it includes the port number. An example would be:
+
+------------------------------------------------------------
+net.stax.appserver.bootstrap.Bootstrap -dir /var/genapp/apps/d414b3f4/staxcat 
+  -port 8783 -config /var/genapp/apps/d414b3f4/appserver.xml
+------------------------------------------------------------
+
+We can pick out the port number with a regular expression:
+
+[source, scala]
+------------------------------------------------------------
+val beesPort : Box[String] = for {
+  command <- Box !! System.getProperty("sun.java.command")
+  port <- """.*-port (\d+) .*""".r findFirstMatchIn command
+} yield port group 1
+------------------------------------------------------------
+
+Running locally this will return a `Empty` box, but on CloudBees you'll see a `Full[String]` port number.
+
+You might put these two values together as follows:
+
+[source, scala]
+------------------------------------------------------------
+import java.net.InetAddress
+
+val hostAndPort : String =
+  (beesPublicHostname openOr InetAddress.getLocalHost.getHostAddress) +
+  ":" +
+  (beesPort openOr "8080")
+------------------------------------------------------------
+
+Running locally `hostAndPort` might be `192.168.1.60:8080` and running on CloudBees it would be something like `ec2-204-236-222-252.compute-1.amazonaws.com:8520`. 
+
+ClickStarts
++++++++++++
+
+ClickStart Applications are templates to quickly get an application and build up and running at CloudBees. The Lift ClickStart creates a private Git source repository at CloudBees which contains a Lift 2.4 application, provisions a MySQL database, creates a Maven-based Jenkins build, and deploys the application.  All you need to do is provide a name for the application (without whitespace).
+
+To access the Git source repository created for you, you'll need to upload a SSH public key. You can do this in the "My Keys" section of your account settings on the CloudBees web site.
+
+The build that's created for you will automatically build and deploy your application to CloudBees when you push changes to your Git repository.
+
+If all of that's a good match to the technologies and services you want to use, ClickStart is a great way to deploy your application. Alternatively, it gives you a starting point from which you can modify elements; or you could fork the CloudBees Lift template and create your own from https://github.com/CloudBees-community/lift_template[https://github.com/CloudBees-community/lift_template].
+
 
 See Also
 ^^^^^^^^
 
+The CloudBees SDK provides command line tools for configuring and controlling applications. It can be found at https://wiki.cloudbees.com/bin/view/RUN/BeesSDK[https://wiki.cloudbees.com/bin/view/RUN/BeesSDK].
+
+The CloudBees developer portal (https://developer.cloudbees.com[https://developer.cloudbees.com])contains a "Resources" section which provides details of the CloudBees services.
+
 A plugin is available to automate deployments from SBT. The plugin and the excellent 
 instructions for installing and configuring it can be found at https://github.com/timperrett/sbt-cloudbees-plugin[https://github.com/timperrett/sbt-cloudbees-plugin].
 
-For integration with messaging systems, you may been to access your CloudBees instance application 
-hostname and port number.  You can find this at https://developer.cloudbees.com/bin/view/Main/Finding+out+app+port+and+hostname.  This CloudBees developer portal contains a "Resources" section which provides details 
-of the CloudBees services.
 
 
-
-MySQL unicode charset encoding
+MySQL Unicode Charset Encoding
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
