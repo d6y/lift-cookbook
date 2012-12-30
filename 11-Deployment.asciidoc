@@ -212,27 +212,111 @@ instructions for installing and configuring it can be found at https://github.co
 
 
 
-MySQL Unicode Charset Encoding
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Deploying to Amazon Elastic Beanstalk
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
 
-Some characters stored in your MySQL database are appearing as `???`.
+You want to run your Lift application on Amazon Web Services (AWS) Elastic Beanstalk.
+
 
 Solution
 ^^^^^^^^
 
-Ensure:
+Create a new Tomcat 7 _environment_, use SBT to package your Lift application as a WAR file, and then deploy the application to your environment.
 
-* `Boot.scala` includes: `LiftRules.early.append(_.setCharacterEncoding("UTF-8"))`
-* Your JDBC connections URL includes `?useUnicode=true&characterEncoding=UTF-8`
-* Your MySQL database has been created using a UTF-8 character set.
+To create a new environment, visit the AWS console, navigate to Elastic Beanstalk and select "Apache Tomcat 7" as your environment. This will create and launch a default Beanstalk application. This will take a few minutes, but eventually report "Successfully running version Sample Application". You'll be shown the URL of the application (something like `http://default-environment-nsdmixm7ja.elasticbeanstalk.com` and visiting the URL you're given will show the running default Amazon application.
+
+Prepare your WAR file by running:
+
+[source, bash]
+------------------------
+$ sbt package
+-------------------------
+
+This will write a WAR file into the `target` folder.  To deploy this WAR file from the AWS Beanstalk web console, select the "Versions" tab under the "Elastic Beanstalk Application Details" and click the "Upload new version" button. You'll be given a dialog where you must give a version label and use the "Choose file" button to select the WAR file you just built.  You can either upload and deploy in one step, or upload first and then select the version in the console and hit the "Deploy" button.
+
+The Beanstalk console will show "Environment updating..." and after some minutes it'll report "Successfully running version".  You Lift application is now deployed and running on Beanstalk.
+
+A final step is to enable Lift's production run mode. From the environment in the AWS Beanstalk web console, follow the "Edit Configuration" link. A dialog will appear, and under the "Container" tab add `-Drun.mode=production` to the "JVM Command Line Options" and hit "Apply Changes" to redeploy your application.
+
+Discussion
+^^^^^^^^^^
+
+Elastic Beanstalk provides a pre-built stack of software and infrastructure, in this case: Linux, Tomcat 7, a 64 bit "t1.micro" EC2 instance, load balancing, and an S3 bucket. That's the _environment_ and it has reasonable default settings.  Beanstalk also provides an easy way to deploy your Lift application.  As we've seen in this recipe, you upload an application (WAR file) to Beanstalk and deploy it to the environment.
+
+As with many cloud providers keep in mind that you want to avoid local file storage. The reason for this is to allow instances to be terminated or restarted without data loss. You can get persistent local file storage, for example using Amazon Elastic Block Storage, but you're fighting against the nature of the platform.
+
+With your Beanstalk application you do have a file system and you can write to it. For example, log files are written there.  To access them, from the AWS console, navigate to your environment, into the "Logs" tab and hit the "Snapshot" button. This will take a copy of the logs and store them in an S3 bucket, and give you a link to the file contents.  This is a single file showing the content of variety of log files, and `catalina.out` will be the one showing any output from your Lift application.  If you want to try to keep these log files around, you can configure the environment to rotate the logs to S3 every hour from the "Container" tab under "Edit Configuration".
+
+The Lift application WAR files are stored in the same S3 bucket that the logs are stored in. From the AWS console, you'll find it under the S3 page listed with a name like `elasticbeanstalk-us-east-1-5989673916964`. You'll note that the AWS uploads makes your WAR filename unique by adding a prefix to each filename. If you need to be able to tell the difference between these files in S3, one good approach is to is to bump the `version` value in your `build.sbt` file.  This version number is included in the WAR filename.
+
+Multiple Instances
+++++++++++++++++++
+
+Beanstalks enables _auto scaling_ by default. That is, it launches a single instance of your Lift application, but if the load increases above a threshold, up to four instances may be running.
+
+If you're making use of Lift's state features, you'll need to enable sticky sessions from the "Load Balancer" tab of the environment configuration. It's a check box named "Enable Session Stickiness"---it's easy to miss, but that tab does scroll to show more options if you don't see it first time.
+
+
+Working with a Database
+++++++++++++++++++++++++
+
+There's nothing unusual you have to do to use Lift and a database from Beanstalk. However, Beanstalk does try to make it easy for you to work with Amazon's Relational Database Service (RDS).  Either when creating your Beanstalk environment, or from the configuration options later, you can add an RDS instance, which will either be an Oracle, SQL-Server or MySQL database. 
+
+The MySQL option will create a MySQL 5.5 InnoDB database for you, unfortunately using the latin1 character set rather than UTF-8 (the _See Also_ section provides links to how to change the character encoding).  The database will be accessible from Beanstalk, but not from other locations on the internet. To change that, modify the security groups for the RDS instance from the AWS web console.  For example, you might permit access from your IP address.
+
+When your application launches with an associated RDS instance, the JVM system properties include settings for the database name, host, port, user and password.  You could pull them together like this in `Boot.scala`:
+
+[source,scala]
+-------------------------------------------
+Class.forName("com.mysql.jdbc.Driver")
+
+val connection = for {
+  host <- Box !! System.getProperty("RDS_HOSTNAME")
+  port <- Box !! System.getProperty("RDS_PORT")
+  db   <- Box !! System.getProperty("RDS_DB_NAME")
+  user <- Box !! System.getProperty("RDS_USERNAME")
+  pass <- Box !! System.getProperty("RDS_PASSWORD")
+} yield DriverManager.getConnection(
+    "jdbc:mysql://%s:%s/%s" format (host,port,db),
+    user, pass)
+-------------------------------------------
+
+That would give you a `Box[Connection]` which, if `Full`, you could use in a `SquerylRecord.initWithSquerylSession` call for example (see <<Squeryl>>).  
+
+Alternatively you might want to guarantee a connection by supplying defaults for all the values with something like this:
+
+[source,scala]
+-------------------------------------------
+Class.forName("com.mysql.jdbc.Driver")
+
+val connection = {
+  val host = System.getProperty("RDS_HOSTNAME", "localhost")
+  val port = System.getProperty("RDS_PORT", "3306")
+  val db = System.getProperty("RDS_DB_NAME", "db")
+  val user = System.getProperty("RDS_USERNAME", "sa")
+  val pass = System.getProperty("RDS_PASSWORD", "")
+
+  DriverManager.getConnection(
+    "jdbc:mysql://%s:%s/%s" format (host,port,db),
+    user, pass)
+}
+-------------------------------------------
+
 
 See Also
 ^^^^^^^^
 
-* https://groups.google.com/forum/?fromgroups#!topic/liftweb/DL9AFyU5y2k[EMail thread on the Lift mailing list]
-* https://github.com/d6y/mysql-lift-charset-test[MySQL UTF-8 test Lift app] - although it uses SBT 0.7 so is rather out of date.
-* http://dev.mysql.com/doc/refman/5.6/en/connector-j-reference-configuration-properties.html[MySQL JDBC COnfiguration reference]
+Amazon provide a walk-through with screen shots, showing how to create a Beanstalk application.  It's at: http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/GettingStarted.Walkthrough.html[http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/GettingStarted.Walkthrough.html]. 
+
+_Elastic Beanstalk_, by van Villet _et al_ (2011, O'Reilly Media, Inc) goes into the details of the Beanstalk infrastructure, how to work with Eclipse, enabling continuous integration, and how to hack the instance, for example to use NGINX as a front-end to Beanstalk.
+
+The Amazon documentation for "Configuring Databases with AWS Elastic Beanstalk" is at: http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/using-features.managing.db.html[http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/using-features.managing.db.html],
+
+A blog post from Matthew McEachen describes the steps to configure Amazon RDS to use UTF-8 character encoding: http://matthew.mceachen.us/blog/howto-configure-an-amazon-rds-instance-to-use-utf-8-925.html[http://matthew.mceachen.us/blog/howto-configure-an-amazon-rds-instance-to-use-utf-8-925.html].
+
+
 

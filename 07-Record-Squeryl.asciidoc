@@ -1,3 +1,4 @@
+[[Squeryl]]
 Relational database persistence with Record and Squeryl
 -------------------------------------------------------
 
@@ -456,4 +457,36 @@ See Also
 page.
 * https://groups.google.com/forum/?fromgroups#!topic/liftweb/TXbDGdX54LQ[MySQL,
 Squeryl and MEDIUMTEXT with Record] mailing list discussion.
+
+
+
+
+
+
+MySQL Unicode Charset Encoding
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+Some characters stored in your MySQL database are appearing as `???`.
+
+Solution
+^^^^^^^^
+
+Ensure:
+
+* `Boot.scala` includes: `LiftRules.early.append(_.setCharacterEncoding("UTF-8"))`
+* Your JDBC connections URL includes `?useUnicode=true&characterEncoding=UTF-8`
+* Your MySQL database has been created using a UTF-8 character set.
+
+See Also
+^^^^^^^^
+
+* https://groups.google.com/forum/?fromgroups#!topic/liftweb/DL9AFyU5y2k[EMail thread on the Lift mailing list]
+* https://github.com/d6y/mysql-lift-charset-test[MySQL UTF-8 test Lift app] - although it uses SBT 0.7 so is rather out of date.
+* http://dev.mysql.com/doc/refman/5.6/en/connector-j-reference-configuration-properties.html[MySQL JDBC COnfiguration reference]
+
+
+
 
