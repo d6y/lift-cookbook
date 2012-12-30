@@ -211,7 +211,7 @@ instructions for installing and configuring it can be found at https://github.co
 
 
 
-
+[[Beanstalk]]
 Deploying to Amazon Elastic Beanstalk
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -241,7 +241,7 @@ The Beanstalk console will show "Environment updating..." and after some minutes
 
 A final step is to enable Lift's production run mode. From the environment in the AWS Beanstalk web console, follow the "Edit Configuration" link. A dialog will appear, and under the "Container" tab add `-Drun.mode=production` to the "JVM Command Line Options" and hit "Apply Changes" to redeploy your application.
 
-[ConsoleImage]
+[[ConsoleImage]]
 image::images/beanstalkconsole.png[AWS Console, with Elastic Beanstalk service selected]
 
 Discussion
