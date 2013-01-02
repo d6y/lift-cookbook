@@ -410,6 +410,7 @@ These hooks are used in an example application to demonstrate how you might log 
 Session management is discussed in section 9.5 of _Exploring Lift_: http://exploring.liftweb.net/master/index-9.html#toc-Section-9.5[http://exploring.liftweb.net/master/index-9.html#toc-Section-9.5].
 
 
+[[ShutdownHooks]]
 Run Code when Lift Shuts Down
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -444,6 +445,7 @@ See Also
 
 <<RunTasksPeriodically>> includes an example of using a unload hook. 
 
+[[RunningStateless]]
 Running Stateless 
 ~~~~~~~~~~~~~~~~~
 
