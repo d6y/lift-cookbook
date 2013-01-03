@@ -359,7 +359,7 @@ This recipe walks through the process in three stages: one-time set up; deployme
 
 If you've not already done so, download and install the Heroku command line tools ("Toolbelt") and login using your Heuroku credentials and upload an SSH key:
 
-[source, bash]
+[source]
 ---------------------------
 $ heroku login
 Enter your Heroku credentials.
@@ -375,7 +375,7 @@ Authentication successful.
 
 Install the deploy plugin:
 
-[source, bash]
+[source]
 -------------------------------
 $ heroku plugins:install https://github.com/heroku/heroku-deploy
 Installing heroku-deploy... done
@@ -383,7 +383,7 @@ Installing heroku-deploy... done
 
 With that one-time set up complete, you can create an application on Heroku. Here we've not specified a name so we given a random name of `glacial-waters-6292` which we will use throughout this recipe:  
 
-[source, bash]
+[source]
 -------------------------------
 $ heroku create
 Creating glacial-waters-6292... done, stack is cedar
@@ -392,12 +392,13 @@ http://glacial-waters-6292.herokuapp.com/ | git@heroku.com:glacial-waters-6292.g
 
 Before deploying, we set the Lift run mode to production.  This is done via the `config:set` command.  First check the current settings for `JAVA_OPTS` and then modify the options by adding `-Drun.mode=production`:
 
-[source, bash]
+[source]
 -------------------------------
 $ heroku config:get JAVA_OPTS --app glacial-waters-6292
 -Xmx384m -Xss512k -XX:+UseCompressedOops
 
-$ heroku config:set JAVA_OPTS="-Drun.mode=production -Xmx384m -Xss512k -XX:+UseCompressedOops" --app glacial-waters-6292 
+$ heroku config:set JAVA_OPTS="-Drun.mode=production -Xmx384m -Xss512k
+  -XX:+UseCompressedOops" --app glacial-waters-6292 
 -------------------------------
 
 We can deploy to Heroku by packaging the application as a WAR file, and then running the Heroku `deploy:war` command:
@@ -406,10 +407,10 @@ We can deploy to Heroku by packaging the application as a WAR file, and then run
 -------------------------------
 $ sbt package
 ....
-[info] Packaging target/scala-2.9.1/lift-2.5-starter-template_2.9.1-0.0.1.war ...
+[info] Packaging target/scala-2.9.1/myapp-0.0.1.war ...
 ....
-$ heroku deploy:war --war target/scala-2.9.1/lift-2.5-starter-template_2.9.1-0.0.1.war --app glacial-waters-6292
-Uploading target/scala-2.9.1/lift-2.5-starter-template_2.9.1-0.0.1.war............done
+$ heroku deploy:war --war target/scala-2.9.1/myapp-0.0.1.war --app glacial-waters-6292
+Uploading target/scala-2.9.1/myapp-0.0.1.war............done
 Deploying to glacial-waters-6292.........done
 Created release v6
 -----------------------------
@@ -470,7 +471,7 @@ This handling of `SIGTERM` may be a surprise, but if we look at how the applicat
 $ heroku run bash --app glacial-waters-6292
 Running `bash` attached to terminal... up, run.8802
 ~ $ ls
-Procfile  lift-2.5-starter-template_2.9.1-0.0.1.war  webapp-runner-7.0.29.3.jar
+Procfile  myapp-0.0.1.war  webapp-runner-7.0.29.3.jar
 -------------------------------
 
 Second, by looking at the processes executing:
@@ -478,7 +479,8 @@ Second, by looking at the processes executing:
 [source, bash]
 -------------------------------
 $ heroku ps --app glacial-waters-6292
-=== web: `${PRE_JAVA}java ${JAVA_OPTS} -jar webapp-runner-7.0.29.3.jar --port ${PORT} ${WEBAPP_RUNNER_OPTS} lift-2.5-starter-template_2.9.1-0.0.1.war`
+=== web: `${PRE_JAVA}java ${JAVA_OPTS} -jar webapp-runner-7.0.29.3.jar 
+ --port ${PORT} ${WEBAPP_RUNNER_OPTS} myapp-0.0.1.war`
 web.1: up 2013/01/01 22:37:35 (~ 31s ago)
 -------------------------------
 
@@ -513,7 +515,8 @@ Fork/Follow: Unsupported
 The URL of the database is provided to your Lift application as the `DATABASE_URL` environment variable. It will have a value something like this:
 
 ---------------------------
-postgres://gghetjutddgr:RNC_lINakkk899HHYEFUppwG@ec2-54-243-230-119.compute-1.amazonaws.com:5432/d44nsahps11hda
+postgres://gghetjutddgr:RNC_lINakkk899HHYEFUppwG@ec2-54-243-230-119.compute-1.
+ amazonaws.com:5432/d44nsahps11hda
 ---------------------------
 
 This URL containers a user name, password, host and database name, but needs to be manipulated to be used by JDBC.  To do so, you might include the following in `Boot.scala`:
@@ -534,9 +537,11 @@ def initHerokuDb(dbInfo: String) {
 
   // Construct JDBC connection string from the URI:
   def connection = DriverManager.getConnection(
-    "jdbc:postgresql://" + dbUri.getHost + ':' + dbUri.getPort + dbUri.getPath, user, pass)
+    "jdbc:postgresql://" + dbUri.getHost + ':' + dbUri.getPort + 
+      dbUri.getPath, user, pass)
 
-  SquerylRecord.initWithSquerylSession(Session.create(connection, new PostgreSqlAdapter))
+  SquerylRecord.initWithSquerylSession(
+    Session.create(connection, new PostgreSqlAdapter))
 
   S.addAround(new LoanWrapper {
     override def apply[T](f: => T): T = inTransaction { f }
@@ -575,8 +580,9 @@ $
 To access via a JDBC tool outside of the Heroku environment, you'll need to include parameters to force SSL. For example:
 
 -----------------------------------------
-jdbc:postgresql://ec2-54-243-230-119.compute-1.amazonaws.com:5432/d44nsahps11hda?username=gghetjutddgr
-  &password=RNC_lINakkk899HHYEFUppwG&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
+jdbc:postgresql://ec2-54-243-230-119.compute-1.amazonaws.com:5432/d44nsahps11hda?
+  username=gghetjutddgr&password=RNC_lINakkk899HHYEFUppwG&ssl=true&sslfactory=
+  org.postgresql.ssl.NonValidatingFactory
 -----------------------------------------
 
 
