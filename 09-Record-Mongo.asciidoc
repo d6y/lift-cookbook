@@ -2,10 +2,7 @@ MongoDB Persistence with Record
 -------------------------------
 
 This section gives recipes for making use of MongoDB in your Lift
-application. You should get acquainted with the
-https://www.assembla.com/spaces/liftweb/wiki/MongoDB[Lift Wiki pages for
-Mongo]. For recipes regarding Mongo itself, check out the
-http://cookbook.mongodb.org/[MongoDB Cookbook].
+application. For recipes regarding Mongo itself, check out the MongoDB Cookbook at http://cookbook.mongodb.org/[http://cookbook.mongodb.org/].
 
 Connecting to a Mongo Database
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -55,6 +52,8 @@ See Also
 * https://www.assembla.com/wiki/show/liftweb/Mongo_Configuration[Mongo
 Configuration] on the wiki contains more details and options, including
 configuration for replica sets.
+
+
 
 Storing a Hash in a Mongo Record
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -145,8 +144,11 @@ Discussion
 ^^^^^^^^^^
 
 The default value for the map will be an empty map, represented in Mongo
-as `({ "_id" : "uk", "population" : { } })`
+as:
 
+----------------------------------------
+({ "_id" : "uk", "population" : { } })
+----------------------------------------
 To insert data from your snippet, you can modify the record to supply a
 new `Map`:
 
@@ -555,4 +557,166 @@ See Also
 
 * Mailing list discussion of https://groups.google.com/d/topic/liftweb/qTCry26wfOc/discussion [Geospatial indexing on lift-mongodb-record].
 * Mongo's http://www.mongodb.org/display/DOCS/Geospatial+Indexing[Geospacial Indexing] page.
+
+
+Unit Testing Record with Mongo
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to write unit tests to run against your Lift Record code with MongoDB.
+
+Solution
+^^^^^^^^
+
+Using the Specs2 testing framework, surround your specification with a _context_ which creates and connects to a database for each test and destroys it after the test runs.
+
+Create a Scala trait to set up and destroy a connection to Mongo.  We'll be mixing this trait into your specifications: 
+
+[source, scala]
+--------------------------------------------
+import net.liftweb.http.{Req, S, LiftSession}
+import net.liftweb.util.StringHelpers
+import net.liftweb.common.Empty
+import net.liftweb.mongodb._
+import com.mongodb.ServerAddress
+import com.mongodb.Mongo
+import org.specs2.mutable.Around
+import org.specs2.execute.Result
+
+trait MongoTestKit {
+
+  val server = new Mongo(new ServerAddress("127.0.0.1", 27017))
+
+  def dbName = "test_"+this.getClass.getName
+    .replace(".", "_")
+    .toLowerCase
+
+  def initDb() : Unit = MongoDB.defineDb(DefaultMongoIdentifier, server, dbName)
+
+  def destroyDb() : Unit = {
+    MongoDB.use(DefaultMongoIdentifier) { d => d.dropDatabase() }
+    MongoDB.close
+  }
+
+  trait TestLiftSession {
+    def session = new LiftSession("", StringHelpers.randomString(20), Empty)
+    def inSession[T](a: => T): T = S.init(Req.nil, session) { a }
+  }
+
+  object MongoContext extends Around with TestLiftSession {
+    def around[T <% Result](testToRun: =>T) = {
+      initDb()
+      try {
+        inSession {
+          testToRun
+        }
+      } finally {
+        destroyDb()
+      }
+    }
+  }
+
+}
+--------------------------------------------
+
+This trait provides the plumbing for connection to a Mongo server running locally, and creates a database based on the name of the class it is mixed into.  The important part is the `MongoContext` which ensures that `around` your specification the database is initialized, and that after your specification is run, it is cleaned up.
+
+To use this in a specification, mix in the trait and then add the context:
+
+[source, scala]
+--------------------------------------------
+import org.specs2.mutable._
+
+class MySpec extends Specification with MongoTestKit  {
+
+  "My Record" should {
+
+    "be able to create records" in MongoContext {
+      val r = MyRecord.createRecord
+      // ...your useful test here...
+      r.valueBox.isDefined must beTrue
+    }
+
+  }
+}
+--------------------------------------------
+
+You can now run the test in SBT by typing `test`:
+
+------------------------------------------------------------
+> test
+[info] Compiling 1 Scala source to target/scala-2.9.1/test-classes...
+[info] My Record should
+[info] + be able to create records
+[info]  
+[info]  
+[info] Total for specification MySpec
+[info] Finished in 1 second, 199 ms
+[info] 1 example, 0 failure, 0 error
+[info] 
+[info] Passed: : Total 1, Failed 0, Errors 0, Passed 0, Skipped 0
+[success] Total time: 1 s, completed 03-Jan-2013 22:47:54
+-----------------------------------------------------------
+
+
+Discussion
+^^^^^^^^^^
+
+Lift normally provides all the scaffolding you need to connect and run against MongoDB. Without a running Lift application, we need to ensure Mongo is configured when our tests run outside of Lift, and that's what the `MongoTestKit` trait is providing for us.
+
+The one unusual part of the test set up is including a `TestLiftSession`. This provides an empty session around your test, which is useful if you are accessing or testing state-related code (e.g., access to `S`).  It's not strictly necessary for running tests against Record, but it has been included here because you may want to do that at some point, for example if you are testing user login via Mongo Records.
+
+There are a few nice tricks in SBT to help you run tests. Running `test` will run all the tests in your project. If you want to focus on just one test, you can:
+
+------------------------------------------------------------
+> test-only org.example.code.MySpec
+------------------------------------------------------------
+
+This command also supports wildcards, so if we only wanted to run tests that start with the word "Mongo" we could:
+
+------------------------------------------------------------
+> test-only org.example.code.Mongo*
+------------------------------------------------------------
+
+There's also `test-quick` (in SBT 0.12) which will only run tests that have not been run, have changed, or failed last time and `~test` to watch for changes in tests and run them.
+
+`test-only` together with modifications to `around` in `MongoTestKit` can be a good way to track down any issues you have with a test.  By disabling the call to `destroyDb()` you can jump into the MongoDB shell and examine the state of the database after a test has run.
+
+If your tests are modifying data and have the potential to interact, you'll want to stop SBT from running your tests in parallel. A symptom of this would be tests that fail apparently randomly, or working tests that stop working when you add a new test.  Disable by adding the following to `build.sbt`:
+
+[source, scala]
+--------------------------------------------
+parallelExecution in Test := false
+--------------------------------------------
+
+IntelliJ IDEA detects and allows you to runs Specs2 tests automatically.  With Eclipse, you'll need to include the JUnit runner annotation at the start of your specification:
+
+[source, scala]
+--------------------------------------------
+import org.junit.runner.RunWith
+import org.specs2.runner.JUnitRunner
+
+@RunWith(classOf[JUnitRunner])
+class MySpec extends Specification with MongoTestKit  {
+...
+--------------------------------------------
+
+You can then "Run As..." the class in Eclipse.
+
+See Also
+^^^^^^^^
+
+Specs2 is documented at: http://specs2.org/[http://specs2.org/].
+
+If you prefer to use the Scala Test framework (http://www.scalatest.org[http://www.scalatest.org]), take a look at Tim Nelson's _Mongo Auth_ Lift module at https://github.com/eltimn/lift-mongoauth[https://github.com/eltimn/lift-mongoauth]. It includes tests using that framework that run against Mongo.  Much of what Tim has written there has been used to produce this recipe for Specs2. 
+
+The test interface provided by SBT, such as the `test` command, also supports the ability to fork tests, set specific configurations for test cases, and ways to select which tests are run. You'll find it at: http://www.scala-sbt.org/release/docs/Detailed-Topics/Testing[http://www.scala-sbt.org/release/docs/Detailed-Topics/Testing].
+
+The Lift Wiki describes more about unit testing and Lift sessions:
+https://www.assembla.com/wiki/show/liftweb/Unit_Testing_Snippets_With_A_Logged_In_User[https://www.assembla.com/wiki/show/liftweb/Unit_Testing_Snippets_With_A_Logged_In_User].
+
+
+
 
