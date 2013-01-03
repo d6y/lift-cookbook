@@ -359,7 +359,6 @@ This recipe walks through the process in three stages: one-time set up; deployme
 
 If you've not already done so, download and install the Heroku command line tools ("Toolbelt") and login using your Heuroku credentials and upload an SSH key:
 
-[source]
 ---------------------------
 $ heroku login
 Enter your Heroku credentials.
@@ -371,40 +370,37 @@ Found the following SSH public keys:
 Which would you like to use with your Heroku account? 2
 Uploading SSH public key ~/.ssh/id_rsa.pub... done
 Authentication successful.
------------------------------
+---------------------------
 
 Install the deploy plugin:
 
-[source]
--------------------------------
+---------------------------
 $ heroku plugins:install https://github.com/heroku/heroku-deploy
 Installing heroku-deploy... done
---------------------------------
+---------------------------
 
 With that one-time set up complete, you can create an application on Heroku. Here we've not specified a name so we given a random name of `glacial-waters-6292` which we will use throughout this recipe:  
 
-[source]
--------------------------------
+---------------------------
 $ heroku create
 Creating glacial-waters-6292... done, stack is cedar
 http://glacial-waters-6292.herokuapp.com/ | git@heroku.com:glacial-waters-6292.git
--------------------------------
+---------------------------
 
 Before deploying, we set the Lift run mode to production.  This is done via the `config:set` command.  First check the current settings for `JAVA_OPTS` and then modify the options by adding `-Drun.mode=production`:
 
-[source]
--------------------------------
+---------------------------
 $ heroku config:get JAVA_OPTS --app glacial-waters-6292
 -Xmx384m -Xss512k -XX:+UseCompressedOops
 
 $ heroku config:set JAVA_OPTS="-Drun.mode=production -Xmx384m -Xss512k
   -XX:+UseCompressedOops" --app glacial-waters-6292 
--------------------------------
+---------------------------
 
 We can deploy to Heroku by packaging the application as a WAR file, and then running the Heroku `deploy:war` command:
 
 [source, bash]
--------------------------------
+---------------------------
 $ sbt package
 ....
 [info] Packaging target/scala-2.9.1/myapp-0.0.1.war ...
@@ -413,7 +409,7 @@ $ heroku deploy:war --war target/scala-2.9.1/myapp-0.0.1.war --app glacial-water
 Uploading target/scala-2.9.1/myapp-0.0.1.war............done
 Deploying to glacial-waters-6292.........done
 Created release v6
------------------------------
+---------------------------
 
 Your Lift application is now running on Heroku.
 
@@ -426,14 +422,14 @@ There are a couple of important comments regarding Lift applications on Heroku. 
 The second important point to note is that the dyno will be restarted every day. Additionally, if you are only running one web dyno, it will be idled after an hour of inactivity. You can see this happening by tailing your application log:
 
 [source, bash]
--------------------------------
+---------------------------
 $ heroku logs -t --app glacial-waters-6292
 ...
 2012-12-31T11:31:39+00:00 heroku[web.1]: Idling
 2012-12-31T11:31:41+00:00 heroku[web.1]: Stopping all processes with SIGTERM
 2012-12-31T11:31:43+00:00 heroku[web.1]: Process exited with status 143
 2012-12-31T11:31:43+00:00 heroku[web.1]: State changed from up to down
-----------------------------
+---------------------------
 
 Anyone visiting your Lift application will cause Heroku to unidle your application.
 
@@ -442,47 +438,47 @@ Note, though, that the application was stopped with a `SIGTERM`.  This is a Unix
 For example, you might add this to `Boot.scala` if you're running on Heroku:
 
 [source, scala]
--------------------------------
+---------------------------
 Runtime.getRuntime().addShutdownHook(new Thread {
   override def run() {
     println("Shutdown hook being called")
     // Do useful clean up here
   }
 })
--------------------------------
+---------------------------
 
 Do not count on being able to do much during shutdown.  Heroku allows around 10 seconds before killing the JVM after issuing the `SIGTERM`.
 
 Possibly a more general approach is to perform clean up using Lift's unload hooks (see <<ShutdownHooks>>) and then arrange the hooks to be called when Heroku sends the signal to terminate:
 
 [source, scala]
--------------------------------
+---------------------------
 Runtime.getRuntime().addShutdownHook(new Thread {
   override def run() {
     LiftRules.unloadHooks.toList.foreach{ f => tryo { f() } }
   }
 })
--------------------------------
+---------------------------
 
 This handling of `SIGTERM` may be a surprise, but if we look at how the application is running on Heroku, things become clearer.  The dyno an allocation of resources (512m of memory), allowing an arbitrary command to be run. The command being run is a Java process starting a "webapp runner" package. You can see this in two ways. First, if you shell to your dyno, you'll see a WAR file as well as a JAR file:
 
 [source, bash]
--------------------------------
+---------------------------
 $ heroku run bash --app glacial-waters-6292
 Running `bash` attached to terminal... up, run.8802
 ~ $ ls
 Procfile  myapp-0.0.1.war  webapp-runner-7.0.29.3.jar
--------------------------------
+---------------------------
 
 Second, by looking at the processes executing:
 
 [source, bash]
--------------------------------
+---------------------------
 $ heroku ps --app glacial-waters-6292
 === web: `${PRE_JAVA}java ${JAVA_OPTS} -jar webapp-runner-7.0.29.3.jar 
  --port ${PORT} ${WEBAPP_RUNNER_OPTS} myapp-0.0.1.war`
 web.1: up 2013/01/01 22:37:35 (~ 31s ago)
--------------------------------
+---------------------------
 
 Here we see a Java process executing a JAR file called `webapp-runner-7.0.29.3.jar` which is passed our WAR file as an argument. This is not identical to the Tomcat `catalina.sh` script you may be more familiar with, but instead is this launcher process: https://github.com/jsimone/webapp-runner[https://github.com/jsimone/webapp-runner]. As it does not register a handler to deal with `SIGTERM`, so we will have to if we need to release any resources during shutdown.
 
@@ -498,7 +494,7 @@ Heroku make no restrictions on which databases you can connect to from your Lift
 You can find out if you have a database by running the `pg` command:
 
 [source, bash]
--------------------------------
+---------------------------
 $ heroku pg --app glacial-waters-6292
 === HEROKU_POSTGRESQL_BLACK_URL (DATABASE_URL)
 Plan:        Dev
@@ -510,7 +506,7 @@ Data Size:   5.9 MB
 Tables:      0
 Rows:        0/10000 (In compliance)
 Fork/Follow: Unsupported
--------------------------------
+---------------------------
 
 The URL of the database is provided to your Lift application as the `DATABASE_URL` environment variable. It will have a value something like this:
 
@@ -522,7 +518,7 @@ postgres://gghetjutddgr:RNC_lINakkk899HHYEFUppwG@ec2-54-243-230-119.compute-1.
 This URL containers a user name, password, host and database name, but needs to be manipulated to be used by JDBC.  To do so, you might include the following in `Boot.scala`:
 
 [source, scala]
-------------------------------------------------
+---------------------------
  Box !! System.getenv("DATABASE_URL") match {
   case Full(url) => initHerokuDb(url)
   case _ => // configure local database perhaps
@@ -547,25 +543,25 @@ def initHerokuDb(dbInfo: String) {
     override def apply[T](f: => T): T = inTransaction { f }
   })
 }
-------------------------------------------------
+---------------------------
 
 Here we are testing for the presence of the `DATABASE_URL` environment variable, which would indicate that we are in the Heroku environment. The example code then goes on to initialize Squeryl Record in Lift (described in <<Squeryl>>) using the Heroku database settings.
 
 For it to run `build.sbt` needs the appropriate dependencies for Record and PostgresSQL:
 
 [source, scala]
-------------------------------------------------
+---------------------------
 ...
 "postgresql" % "postgresql" % "9.1-901.jdbc4",
 "net.liftweb" %% "lift-record" % liftVersion,
 "net.liftweb" %% "lift-squeryl-record" % liftVersion,
 ...
-------------------------------------------------
+---------------------------
 
 With this in place, your Lift application can make use of the Heroku database. You can also access the database from the shell, e.g.,:
 
 [source, bash]
-----------------------------
+---------------------------
 $ pg:psql --app glacial-waters-6292
 psql (9.1.4, server 9.1.6)
 SSL connection (cipher: DHE-RSA-AES256-SHA, bits: 256)
@@ -575,15 +571,15 @@ d44nsahps11hda=> \d
 No relations found.
 d44nsahps11hda=> \q
 $ 
--------------------------------
+---------------------------
 
 To access via a JDBC tool outside of the Heroku environment, you'll need to include parameters to force SSL. For example:
 
------------------------------------------
+---------------------------
 jdbc:postgresql://ec2-54-243-230-119.compute-1.amazonaws.com:5432/d44nsahps11hda?
   username=gghetjutddgr&password=RNC_lINakkk899HHYEFUppwG&ssl=true&sslfactory=
   org.postgresql.ssl.NonValidatingFactory
------------------------------------------
+---------------------------
 
 
 See Also
