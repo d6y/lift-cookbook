@@ -4,15 +4,15 @@ Production Deployment
 
 Deploying a Lift application to production means little more than packaging it and ensuring you set the _run mode_ to `production`. The recipes in this chapter show how to do this for various hosted services.
 
-You can also install and run a _container_ such as Tomcat or Jetty on your own servers (containers were introduced in <<RunningYourApplication>>). This brings with it the need to understand how to install, configure, start, stop and manage each container, and how to integrate it with load balancers or other front-ends. These are large topics, and you can find out more from such sources as:
+You can also install and run a _container_ such as Tomcat or Jetty on your own servers. Containers were introduced in <<RunningYourApplication>>. This brings with it the need to understand how to install, configure, start, stop and manage each container, and how to integrate it with load balancers or other front-ends. These are large topics, and you can find out more from such sources as:
 
 * The deployment section of the Lift Wiki at https://www.assembla.com/spaces/liftweb/wiki/Deployment[https://www.assembla.com/spaces/liftweb/wiki/Deployment].
 
-* Chapter 15, "Deployment and scaling" in _Lift in Action_ (Timothy Perrett, 2012, Manning Publications Co.).
+* Timothy Perrett (2012), _Lift in Action_, Chapter 15, "Deployment and scaling", Manning Publications Co.
 
-* Jason Brittain and Ian F. Darwin, _Tomcat: The Definitive Guide_ (2007, O'Reilly Media, Inc.).
+* Jason Brittain and Ian F. Darwin (2007), _Tomcat: The Definitive Guide_, O'Reilly Media, Inc.
 
-* Tanuj Khare, _Apache Tomcat 7 Essentials_ (2012, Packt Publishing).
+* Tanuj Khare (2012) _Apache Tomcat 7 Essentials_, Packt Publishing.
 
 
 [[CloudBees]]
@@ -431,7 +431,7 @@ Your Lift application is now running on Heroku.
 Discussion
 ^^^^^^^^^^
 
-There are a couple of important comments regarding Lift applications on Heroku. First, note that there's no support for session affinity. This means if you deploy to multiple _dynos_ (Heroku terminology for instances), there is no co-ordination over which requests go to which servers. As a consequence, you won't be able to make use of Lift's stateful features and will want to turn them off--<<RunningStateless>> describes for how to do that.
+There are a couple of important comments regarding Lift applications on Heroku. First, note that there's no support for session affinity. This means if you deploy to multiple _dynos_ (Heroku terminology for instances), there is no co-ordination over which requests go to which servers. As a consequence, you won't be able to make use of Lift's stateful features and will want to turn them off (<<RunningStateless>> describes for how to do that).
 
 The second important point to note is that the dyno will be restarted every day. Additionally, if you are only running one web dyno, it will be idled after an hour of inactivity. You can see this happening by tailing your application log:
 
@@ -636,13 +636,13 @@ Use the _publish/subscribe_ (pubsub) model to connect each server to a _topic_ a
 
 There are a variety of technologies you can use to accomplish this, such as databases, message systems, actor systems. For this recipe we will use the RabitMQ message service, but there are examples using CouchDB and Amazon's Simple Notification Service in the _See Also_ section. 
 
-Regardless of the technology, the principle is that illustrated in <<DistributedCometDiagram>>. A comet event originating on one Lift application, is sent to a service for redistribution. It is the responsibility of this service to ensure all the participating Lift applications receive the event so it can be processed as normal by Lift.
+Regardless of the technology, the principle is that illustrated in <<DistributedCometDiagram>>. A comet event originating on one Lift application, is sent to a service for redistribution. It is the responsibility of this service (labeled as "topic" in the figure) is to ensure all the participating Lift applications receive the event so it can be processed as normal by Lift.
 
 [[DistributedCometDiagram]]
-.Comet events originating on one server are distributed to a topic.
+.Comet events originating on one server are distributed via a topic.
 image::images/topic.png[]
 
-The first step is to download and installing RabbitMQ from http://rabbitmq.com/[http://rabbitmq.com/]. 
+The first step is to download and install RabbitMQ from http://rabbitmq.com/[http://rabbitmq.com/]. Then start the server:
 
 -----------------------------------------
 $ ./sbin/rabbitmq-server -detatched
@@ -676,9 +676,12 @@ object Rabbit {
   val exchange = "lift.chat"
   val routing = ""
   val durable = true
+  val noAck = false
 
-  object RemoteSend extends AMQPSender[String](factory, host, port, exchange, routing) {
-    def configure(channel: Channel) = channel.exchangeDeclare(exchange, "fanout", durable)
+  object RemoteSend extends AMQPSender[String](factory, host, port, 
+    exchange, routing) {
+    def configure(channel: Channel) = 
+      channel.exchangeDeclare(exchange, "fanout", durable)
   }
 
   object RemoteReceiver extends AMQPDispatcher[String](factory, host, port) {
@@ -686,14 +689,15 @@ object Rabbit {
       channel.exchangeDeclare(exchange, "fanout", durable)
       val queueName = channel.queueDeclare().getQueue()
       channel.queueBind(queueName, exchange, routing)
-      channel.basicConsume(queueName, false, new SerializedConsumer(channel, this))
+      channel.basicConsume(queueName, noAck, 
+        new SerializedConsumer(channel, this))
     }
   }
 
 }
 -----------------------------------------
 
-This is establishing `RemoteSend` and `RemoteReceiver` actors that serialise `String`s via RabbitMQ.  This code is explored in the following _Discussion_ section.
+This code is establishing `RemoteSend` and `RemoteReceiver` actors that serialise `String` values via RabbitMQ.  This code is explored in the _Discussion_ section below.
 
 To make use of this and route comet messages over RabbitMQ we need to make two changes.  In `Boot.scala` we need to start listening for messages from RabbitMQ:
 
@@ -713,7 +717,7 @@ override def lowPriority = {
 }
 -----------------------------------------
 
-The change to route messages over RabbitMQ is to redirect any `String`s from clients to RabbitMQ, and handle any AMQP messages from RabbitMQ and update all clients:
+The change to route messages over RabbitMQ is to redirect any `String` from clients to RabbitMQ, and handle any AMQP messages from RabbitMQ and update all clients:
 
 [source, scala]
 -----------------------------------------
@@ -723,7 +727,7 @@ override def lowPriority = {
 }
 -----------------------------------------
 
-This change means all our comet chat messages go out to RabbitMQ where they are distributed to all the instances of our Lift application, and all the instances receive the messages back and update chat clients as normal.
+This change means all our comet chat messages go out to RabbitMQ where they are distributed to all the instances of our Lift application, and all the instances receive the messages back as `AMQPMessage` instances and update chat clients as normal.
 
 Discussion
 ^^^^^^^^^^
@@ -741,9 +745,9 @@ $ sbt
 
 You can then visit one application at `http://127.0.0.1:8080` and another at `http://127.0.0.1:9090`.
 
-In the example code, you can see that `AMQPSender[T]` and `AMQPDispatcher[T]` take care of most of the work for us, and we provide some configuration.  In the case of `RemoteSend` we're configuring the `AMQPSender` to work with `String`s and to work with an _exchange_ called "lift.chat". In RabbitMQ the exchange is the entity we send messages to, and the exchange has the responsibility for passing on the message.  In this case the exchange is a _fanout_ (a simple kind of topic) where each subscriber receives a copy of any messages sent to the exchange.  This is clearly what we want to get our chat messages sent to all connection Lift instances of the chat application.
+In the example code, you can see that `AMQPSender[T]` and `AMQPDispatcher[T]` take care of most of the work for us, and we provide some configuration.  In the case of `RemoteSend` we're configuring the `AMQPSender` to work with `String` messages and to work with an _exchange_ called "lift.chat". In RabbitMQ the exchange is the entity we send messages to, and the exchange has the responsibility for passing on the message.  In this case the exchange is a _fanout_ (a simple kind of topic) where each subscriber receives a copy of any messages sent to the exchange.  This is clearly what we want to get our chat messages sent to all connected Lift instances of the chat application.
 
-The `RemoteReceiver` is also configured to receive `String`s, although the configuration is a little longer. Here, as well as indicating the exchange to be used, we declare a _temporary queue_ for our Lift instance.  The queue is the place where RabbitMQ sends messages, and what we're saying here is that each receiver has its own queue. The fanout exchange will ensure any message sent to the exchange is placed into every queue. The queue has a random name assigned by RabbitMQ and is destroyed we disconnect from it.
+The `RemoteReceiver` is also configured to receive `String` messages, although the configuration is a little longer. Here, as well as indicating the exchange to be used, we declare a _temporary queue_ for our Lift instance.  The queue is the place where RabbitMQ sends messages, and what we're saying here is that each receiver has its own queue. The fanout exchange will ensure any message sent to the exchange is placed into every queue. The queue has a random name assigned by RabbitMQ and is destroyed we disconnect from it.
 
 The final part of the `RemoteReceiver` is to specify how we consume messages. The default behaviour of `RemoteSend` is to serialise objects, so we mirror that in the receiver by using the `SerializedConsumer` class provided by the AMQP module.
  
@@ -785,7 +789,7 @@ The Lift Chat example is described in _Simply Lift_ at http://simply.liftweb.net
 
 The Lift AMQP module is: https://github.com/liftmodules/amqp[https://github.com/liftmodules/amqp].
 
-If you want to learn more about RabbitMQ, take a look at the tutorials (http://www.rabbitmq.com/tutorials/tutorial-five-java.html[http://www.rabbitmq.com/tutorials/tutorial-five-java.html]) or Alvaro Videla and Jason J.W. Williams book: _RabbitMQ in Action: Distributed Messaging for Everyone_ (2012), Manning Publications.
+If you want to learn more about RabbitMQ, take a look at the tutorials (http://www.rabbitmq.com/tutorials/tutorial-five-java.html[http://www.rabbitmq.com/tutorials/tutorial-five-java.html]) or Alvaro Videla and Jason J.W. Williams (2012), _RabbitMQ in Action: Distributed Messaging for Everyone_, Manning Publications.
 
 Diego Medina has implemented a distributed comet solution using CouchDB, and has described it in a blog post at https://fmpwizard.telegr.am/blog/distributed-comet-chat-lift[https://fmpwizard.telegr.am/blog/distributed-comet-chat-lift].  
 
