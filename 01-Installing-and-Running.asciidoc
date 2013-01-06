@@ -60,8 +60,10 @@ Expected result
 +++++++++++++++
 
 The result of the above commands should be a basic Lift application running on
-your computer:
+your computer as shown in <<LiftBasicScreenshot>>.
 
+[[LiftBasicScreenshot]]
+.The basic Lift application home page.
 image::images/apphome.png[]
 
 
@@ -87,6 +89,7 @@ Your application build is configured by `build.sbt`.  Looking inside you'll see:
 * settings for plugins and the Scala compiler; and
 * a list of dependencies required to run your application, which will include the Lift framework.
 
+[[RunningYourApplication]]
 Running Your Application
 ++++++++++++++++++++++++
 
