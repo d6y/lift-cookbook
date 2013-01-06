@@ -640,7 +640,7 @@ Regardless of the technology, the principle is that illustrated in <<Distributed
 
 [[DistributedCometDiagram]]
 .Comet events originating on one server are distributed via a topic.
-image::images/topic.png[]
+image::images/topic.png[width=640]
 
 The first step is to download and install RabbitMQ from http://rabbitmq.com/[http://rabbitmq.com/]. Then start the server:
 
