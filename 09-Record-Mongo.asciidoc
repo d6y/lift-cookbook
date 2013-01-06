@@ -631,6 +631,8 @@ import org.specs2.mutable._
 
 class MySpec extends Specification with MongoTestKit  {
 
+  sequential
+
   "My Record" should {
 
     "be able to create records" in MongoContext {
@@ -684,12 +686,14 @@ There's also `test-quick` (in SBT 0.12) which will only run tests that have not 
 
 `test-only` together with modifications to `around` in `MongoTestKit` can be a good way to track down any issues you have with a test.  By disabling the call to `destroyDb()` you can jump into the MongoDB shell and examine the state of the database after a test has run.
 
-If your tests are modifying data and have the potential to interact, you'll want to stop SBT from running your tests in parallel. A symptom of this would be tests that fail apparently randomly, or working tests that stop working when you add a new test.  Disable by adding the following to `build.sbt`:
+If your tests are modifying data and have the potential to interact, you'll want to stop SBT from running your tests in parallel. A symptom of this would be tests that fail apparently randomly, or working tests that stop working when you add a new test, or tests that seem to lock up.  Disable by adding the following to `build.sbt`:
 
 [source, scala]
 --------------------------------------------
 parallelExecution in Test := false
 --------------------------------------------
+
+You'll notice that the example specification includes the line: `sequential`.  This disables the default behaviour in Specs2 of running all tests concurrently.
 
 IntelliJ IDEA detects and allows you to runs Specs2 tests automatically.  With Eclipse, you'll need to include the JUnit runner annotation at the start of your specification:
 
