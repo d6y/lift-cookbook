@@ -419,7 +419,8 @@ $ sbt package
 ....
 [info] Packaging target/scala-2.9.1/myapp-0.0.1.war ...
 ....
-$ heroku deploy:war --war target/scala-2.9.1/myapp-0.0.1.war --app glacial-waters-6292
+$ heroku deploy:war --war target/scala-2.9.1/myapp-0.0.1.war 
+  --app glacial-waters-6292
 Uploading target/scala-2.9.1/myapp-0.0.1.war............done
 Deploying to glacial-waters-6292.........done
 Created release v6
@@ -474,7 +475,7 @@ Runtime.getRuntime().addShutdownHook(new Thread {
 })
 ---------------------------
 
-This handling of `SIGTERM` may be a surprise, but if we look at how the application is running on Heroku, things become clearer.  The dyno an allocation of resources (512m of memory), allowing an arbitrary command to be run. The command being run is a Java process starting a "webapp runner" package. You can see this in two ways. First, if you shell to your dyno, you'll see a WAR file as well as a JAR file:
+This handling of `SIGTERM` may be a surprise, but if we look at how the application is running on Heroku, things become clearer.  The dyno is an allocation of resources (512m of memory) and allows an arbitrary command to run. The command being run is a Java process starting a "webapp runner" package. You can see this in two ways. First, if you shell to your dyno, you'll see a WAR file as well as a JAR file:
 
 [source, bash]
 ---------------------------
@@ -496,7 +497,9 @@ web.1: up 2013/01/01 22:37:35 (~ 31s ago)
 
 Here we see a Java process executing a JAR file called `webapp-runner-7.0.29.3.jar` which is passed our WAR file as an argument. This is not identical to the Tomcat `catalina.sh` script you may be more familiar with, but instead is this launcher process: https://github.com/jsimone/webapp-runner[https://github.com/jsimone/webapp-runner]. As it does not register a handler to deal with `SIGTERM`, so we will have to if we need to release any resources during shutdown.
 
-All of this means that if you want to launch a Lift application in a different way, you can. You'd need to wrap an appropriate container (Jetty or Tomcat for example), and provide a `main` method for Heroku to call.
+All of this means that if you want to launch a Lift application in a different way, you can. You'd need to wrap an appropriate container (Jetty or Tomcat for example), and provide a `main` method for Heroku to call. This is sometimes called "containerless deployment".
+
+If you are not a Heruoku Enterprise Java customer, and you're uncomfortable with the unsupported nature of the `deploy:war` plugin, you now know what you need to do to run in a supported way: provide a `main` method that launches you application and listen for connections. The _See Also_ section gives pointers for how to do this.
 
 
 Database Access in Heroku
@@ -605,7 +608,7 @@ _Dynos and the Dyno Manifold_ are described at: https://devcenter.heroku.com/art
 
 The JVM shutdown hooks are described in the JDK documentation: http://docs.oracle.com/javase/7/docs/api/java/lang/Runtime.html[http://docs.oracle.com/javase/7/docs/api/java/lang/Runtime.html].
 
-
+Heroku's guide to containerless deployment makes use of Maven to package your application, as is documented at https://devcenter.heroku.com/articles/java-webapp-runner[https://devcenter.heroku.com/articles/java-webapp-runner].  There are also a template SBT project from Matthew Henderson that includes a `JettyLauncher` class: https://github.com/ghostm/lift_blank_heroku[https://github.com/ghostm/lift_blank_heroku].
 
 
 
