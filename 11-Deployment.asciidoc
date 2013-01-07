@@ -532,7 +532,7 @@ postgres://gghetjutddgr:RNC_lINakkk899HHYEFUppwG@ec2-54-243-230-119.compute-1.
  amazonaws.com:5432/d44nsahps11hda
 ---------------------------
 
-This URL containers a user name, password, host and database name, but needs to be manipulated to be used by JDBC.  To do so, you might include the following in `Boot.scala`:
+This URL contains a user name, password, host and database name, but needs to be manipulated to be used by JDBC.  To do so, you might include the following in `Boot.scala`:
 
 [source, scala]
 ---------------------------
