@@ -267,7 +267,7 @@ A final step is to enable Lift's production run mode. From the environment in th
 
 [[ConsoleImage]]
 .AWS Console, with Elastic Beanstalk service selected.
-image::images/beanstalkconsole.png[AWS Console, with Elastic Beanstalk service selected]
+image::images/beanstalkconsole.png[width=640]
 
 Discussion
 ^^^^^^^^^^
@@ -355,7 +355,7 @@ The Amazon documentation for "Configuring Databases with AWS Elastic Beanstalk" 
 
 //////////////////////////////////////////
 
-
+[[HerokuDeployment]]
 Deploying to Heroku
 ~~~~~~~~~~~~~~~~~~~
 

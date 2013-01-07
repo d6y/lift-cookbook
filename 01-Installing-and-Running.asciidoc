@@ -64,7 +64,7 @@ your computer as shown in <<LiftBasicScreenshot>>.
 
 [[LiftBasicScreenshot]]
 .The basic Lift application home page.
-image::images/apphome.png[]
+image::images/apphome.png[width=640]
 
 
 Discussion
