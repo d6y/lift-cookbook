@@ -623,7 +623,7 @@ Heroku's guide to containerless deployment makes use of Maven to package your ap
 
 //////////////////////////////////////////
 
-
+[[DistributedComet]]
 Distributing Comet Across Multiple Servers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
