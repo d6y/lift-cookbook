@@ -148,8 +148,8 @@ and the `population` is a map from a `String` key to an `Integer` value.
 
 We can use it in a snippet like this:
 
-[source,scala]
-------------------------------------------------------------------
+[source, scala]
+-------------------------------------------------------------------------------
 class Places {
   
   val uk = Country.find("uk") openOr {
@@ -166,7 +166,7 @@ class Places {
         ".name *" #> name & ".pop *" #> pop
       )  
 }
-------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 When this snippet is called, it looks up a record by `_id` of "uk" or
 creates it using some canned information. The template to go with the
