@@ -148,7 +148,7 @@ and the `population` is a map from a `String` key to an `Integer` value.
 
 We can use it in a snippet like this:
 
-[source, scala]
+[source,scala]
 -------------------------------------------------------------------------------
 class Places {
   
@@ -160,9 +160,9 @@ class Places {
 
     Country.createRecord.id("uk").population(info).save
   }
-  
+
   def facts = "#facts" #> (
-      for { (name,pop) <- uk.population.is} yield 
+      for { (name,pop) <- uk.population.is} yield
         ".name *" #> name & ".pop *" #> pop
       )  
 }

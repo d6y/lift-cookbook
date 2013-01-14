@@ -8,4 +8,5 @@ One time:
 
 
 
+    cat 00-Lift-Cookbook.asciidoc 01-Installing-and-Running.asciidoc 02-HTML.asciidoc 03-Forms.asciidoc 04-REST.asciidoc 05-JavaScript-Ajax-Comet.asciidoc 06-Pipline.asciidoc 07-Record-Squeryl.asciidoc 09-Record-Mongo.asciidoc 10-Around.asciidoc 11-Deployment.asciidoc 12-Contributing.asciidoc | asciidoc  -b html5 -a toc2 --theme=flask - > /tmp/o.html
 
