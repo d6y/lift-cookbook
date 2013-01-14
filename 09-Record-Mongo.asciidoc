@@ -162,9 +162,9 @@ class Places {
   }
 
   def facts = "#facts" #> (
-      for { (name,pop) <- uk.population.is} yield
-        ".name *" #> name & ".pop *" #> pop
-      )  
+    for { (name,pop) <- uk.population.is } yield
+      ".name *" #> name & ".pop *" #> pop
+  )
 }
 -------------------------------------------------------------------------------
 
