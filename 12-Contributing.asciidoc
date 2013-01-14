@@ -164,7 +164,7 @@ How to Add a New Recipe to this Cookbook
 Problem
 ^^^^^^^
 
-You'd like to add (or change) a section or chapter to this cookbook.
+You'd like to add a section or chapter to this cookbook.
 
 Solution
 ^^^^^^^^
@@ -186,27 +186,18 @@ The cookbook is structured using a markup language called Asciidoc. If you're fa
 
 To find out where to make a change you need to know that each chapter is a separate file, and each recipe is a section in that file.  
 
+
 Licensing
 +++++++++
 
-This Cookbook is built upon the contributions of many people, under a Creative Commons license. Your contribution will need to be in agreement with that, but there is also a version produced by O'Reilly (perhaps you're holding that version?), and O'Reilly also need the rights to produce the book. Consequently, each contribution will need to include the following: 
+We ask contributors the following:
 
-[quote]
-____
-By submitting this content, I understand and agree that:
+* You agree to license your work (including the words you write, the code you use and any images) to us under the Creative Commons Attribution, Non Commercial, No Derivatives license.
 
-* I am the owner of the content I am submitting.
+* You assert that the work is your own, or you have the necessary permission for the work.
 
-* The the content is original work, except for pre-existing material which is in the public domain.
+To keep things simple, all author royalties from this book are given to charity.
 
-* The text can be used and modified and published in the web version of this text under the Creative Commons Attribution Noncommercial No Derivative Works license.
-
-* O'Reilly will have other exclusive rights to print, copy, publish, market, display, distribute, and provide access to the content.
-
-* Any author royalties will be passed to charity.
-____
-
-The best way to supply that will be in your commit message in Git, or via email if you've send a file that way.
 
 
 See Also
