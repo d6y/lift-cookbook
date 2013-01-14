@@ -72,14 +72,17 @@ object MongoUrl {
     val server = new Mongo(new ServerAddress(uri.getHost, uri.getPort))
 
     Option(uri.getUserInfo).map(_.split(":")) match {
-      case Some(Array(user,pass)) => MongoDB.defineDbAuth(id, server, db, user, pass)
-      case _ => MongoDB.defineDb(id, server, db)
+      case Some(Array(user,pass)) => 
+        MongoDB.defineDbAuth(id, server, db, user, pass)
+      case _ => 
+        MongoDB.defineDb(id, server, db)
     }
   }
 
 }
 
-MongoUrl.defineDb(DefaultMongoIdentifier, "mongodb://user:pass@127.0.0.1:27017/myDb")
+MongoUrl.defineDb(DefaultMongoIdentifier, 
+  "mongodb://user:pass@127.0.0.1:27017/myDb")
 --------------------------------------------------------------
 
 The full URL scheme for MongoDB is more complicated, allowing for multiple hosts and connection parameters, but the above code handles optional user name and password fields and may be enough to get you up and running with your Mongo configuration.
@@ -245,7 +248,8 @@ uk.population(uk.population.is + ("Westminster"->81766)).update
 Note that we are using `update` here, rather than `save`.  The `save` method is pretty smart and will either insert a new document into a Mongo collection or _replace_ an existing document based on the `_id`.  Update is different: it detects just the changed fields of the document and updates them. It will send this command to Mongo for the document:
 
 -------------------------------------------------------------------
-{ "$set" : { "population" : { "Brighton" : 134293 , "Liverpool" : 469017 , "Birmingham" : 970892 , "Westminster" : 81766} }
+{ "$set" : { "population" : { "Brighton" : 134293 , "Liverpool" : 469017 , 
+  "Birmingham" : 970892 , "Westminster" : 81766} }
 -------------------------------------------------------------------
 
 You'll probably want to use `update` over `save` for changes to existing records.
@@ -278,7 +282,7 @@ runtime.
 See Also
 ^^^^^^^^
 
-A discussion on the mailing list regarding the limited type support in `MongoMapField` and a possible way around it by overriding `asDBObject`: https://groups.google.com/d/msg/liftweb/XoseG-8mIPc/OLyIu6FrHIgJ[https://groups.google.com/d/msg/liftweb/XoseG-8mIPc/OLyIu6FrHIgJ].
+A discussion on the mailing list regarding the limited type support in `MongoMapField` and a possible way around it by overriding `asDBObject` can be found at: https://groups.google.com/d/msg/liftweb/XoseG-8mIPc/OLyIu6FrHIgJ[https://groups.google.com/d/msg/liftweb/XoseG-8mIPc/OLyIu6FrHIgJ].
 
 
 [[MongoEmbedding]]
@@ -622,12 +626,13 @@ import code.model._
 
 scala> Country.where(_.id eqs "uk").fetch
 res1: List[code.model.Country] = List(class code.model.Country={_id=uk, 
-  population=Map(Brighton -> 134293, Liverpool -> 469017, Birmingham -> 970892)})
+  population=Map(Brighton->134293, Liverpool->469017, Birmingham->970892)})
 
 scala> Country.where(_.id eqs "uk").count
 res2: Long = 1
 
-scala> Country.where(_.id eqs "uk").modify(_.population at "Brighton" inc 1).updateOne()
+scala> Country.where(_.id eqs "uk").
+  modify(_.population at "Brighton" inc 1).updateOne()
 
 ---------------------------------------------
 
@@ -765,7 +770,8 @@ If we tried to insert a duplicate city, our call to `save(true)` would result in
 
 [source,scala]
 -----------------------------------------------------------
-com.mongodb.MongoException$DuplicateKey: E11000 duplicate key error index: cookbook.example.city.$loc_2d 
+com.mongodb.MongoException$DuplicateKey: E11000 duplicate key 
+  error index: cookbook.example.city.$loc_2d 
 -----------------------------------------------------------
 
 There are other levels of write concern, available via another variant of `save` which takes a `WriteConcern` as an argument.
@@ -785,12 +791,12 @@ The reason this recipe uses Rouge's `LatLong` class is to enable us to query usi
 
 -----------------------------------------------------------
 > db.example.city.find({}, {_id:0} )
-{ "name" : "London, UK", "loc" : { "lat" : 51.5, "long" : -0.166667 } }
-{ "name" : "Brighton, UK", "loc" : { "lat" : 50.819059, "long" : -0.136642 } }
-{ "name" : "Paris, France", "loc" : { "lat" : 48.866667, "long" : 2.333333 } }
-{ "name" : "Berlin, Germany", "loc" : { "lat" : 52.533333, "long" : 13.416667 } }
-{ "name" : "Sydney, Australia", "loc" : { "lat" : -33.867387, "long" : 151.207629 } }
-{ "name" : "New York, USA", "loc" : { "lat" : 40.714623, "long" : -74.006605 } }
+{"name": "London, UK", "loc": {"lat": 51.5, "long": -0.166667} }
+{"name": "Brighton, UK", "loc": {"lat": 50.819059, "long": -0.136642} }
+{"name": "Paris, France", "loc": {"lat": 48.866667, "long": 2.333333} }
+{"name": "Berlin, Germany", "loc": {"lat": 52.533333, "long": 13.416667} }
+{"name": "Sydney, Australia", "loc": {"lat": -33.867387, "long": 151.207629} }
+{"name": "New York, USA", "loc": {"lat": 40.714623, "long": -74.006605} }
 -----------------------------------------------------------
 
 We can now find those cities within a 500km of London:
@@ -855,7 +861,7 @@ $ sbt
 [info] Compiling 1 Scala source to /cookbook_mongo/target/scala-2.9.1/classes...
 [info] Starting scala interpreter...
 [info] 
-Welcome to Scala version 2.9.1.final (Java HotSpot(TM) 64-Bit Server VM, Java 1.7.0_07).
+Welcome to Scala version 2.9.1.final ...
 Type in expressions to have them evaluated.
 Type :help for more information.
 
@@ -868,8 +874,9 @@ scala> import code.model._
 import code.model._
 
 scala> Country.findAll
-res2: List[code.model.Country] = List(class code.model.Country={_id=uk, population=Map
-  (Brighton -> 134293, Liverpool -> 469017, Birmingham -> 970892)})
+res2: List[code.model.Country] = List(class code.model.Country={_id=uk, 
+  population=Map(Brighton -> 134293, Liverpool -> 469017, 
+  Birmingham -> 970892)})
 
 scala> :q
 ---------------------------------------------
@@ -886,18 +893,20 @@ import bootstrap.liftweb._
 scala> import net.liftweb.mongodb._
 import net.liftweb.mongodb._
 
-scala> MongoUrl.defineDb(DefaultMongoIdentifier, "mongodb://127.0.0.1:27017/cookbook")
+scala> MongoUrl.defineDb(DefaultMongoIdentifier, 
+  "mongodb://127.0.0.1:27017/cookbook")
 
 scala> Country.findAll
-res2: List[code.model.Country] = List(class code.model.Country={_id=uk, population=Map(
-  Brighton -> 134293, Liverpool -> 469017, Birmingham -> 970892)})
+res2: List[code.model.Country] = List(class code.model.Country={_id=uk, 
+  population=Map(Brighton -> 134293, Liverpool -> 469017, 
+    Birmingham -> 970892)})
 ---------------------------------------------
 
 
 See Also
 ^^^^^^^^
 
-<<ConnectingToMongo>> for connecting to Monog and <<Rouge>> for querying with Rouge.
+<<ConnectingToMongo>> for connecting to MongoDB and <<QueryingWithRouge>> for querying with Rouge.
 
 
 
