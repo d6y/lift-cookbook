@@ -666,7 +666,7 @@ The DSL constructs a query which we then `fetch` to send the query to MongoDB. T
 
 * `findAndDeleteOne` and `bulkDelete_!!` -- to delete records.
 
-The query language itself is expressive, and the best place to explore the variety of queries is in the `QueryTest` specification in teh source for Rouge.  This is linked to from the README of the project on Github.
+The query language itself is expressive, and the best place to explore the variety of queries is in the `QueryTest` specification in the source for Rouge.  You'll find a link to this in the README of the project on Github.
 
 
 [NOTE]
@@ -700,7 +700,7 @@ Solution
 ^^^^^^^^
 
 Use Rouge's `LatLong` class to embed location information in your model. For
-example, we can store the location of a city like thisL
+example, we can store the location of a city like this:
 
 [source,scala]
 -----------------------------------------------
@@ -750,7 +750,7 @@ Discussion
 
 MongoDB supports _geospatial indexes_, and we're making use of this by doing two things.  First, 
 we are storing the location information in one of MongoDB's permitted formats.  The format is
-and embedding document containing the coordinates. We could also have use a array of two values
+an embedding document containing the coordinates. We could also have use a array of two values
 to represent the point.
 
 Second, we're creating a index of type "2d", which allows us to use Mongo's geospatial functions such as `$near` and `$within`. The `unique=true` in the `ensureIndex` highlights that you can control
@@ -764,9 +764,9 @@ from "normal" to "safe".
 With the normal write concern, the call to `save` would return as soon
 as the request has gone down the wire to the Mongo server.  This gives a certain degree of reliability in that
 `save` would fail if the network had gone away. However, there's no indication that the server has
-processed the request.  For example, if we tried to insert a city at the exact same location as one that was already in the database, the index uniqueness rule would be violated and the record would not be saved.  With just `save` (or `save(false)`) our Lift application would not receive this error. The save would fail silently.Raising the concern to "safe" causes `save(true)` to wait for an acknowledgment from the Mongo server, which means the application will receive exceptions of some kinds of errors.  
+processed the request.  For example, if we tried to insert a city at the exact same location as one that was already in the database, the index uniqueness rule would be violated and the record would not be saved.  With just `save` (or `save(false)`) our Lift application would not receive this error, and the call would fail silently. Raising the concern to "safe" causes `save(true)` to wait for an acknowledgment from the Mongo server, which means the application will receive exceptions for some kinds of errors.  
 
-If we tried to insert a duplicate city, our call to `save(true)` would result in:
+As an example, if we tried to insert a duplicate city, our call to `save(true)` would result in:
 
 [source,scala]
 -----------------------------------------------------------
@@ -774,7 +774,7 @@ com.mongodb.MongoException$DuplicateKey: E11000 duplicate key
   error index: cookbook.example.city.$loc_2d 
 -----------------------------------------------------------
 
-There are other levels of write concern, available via another variant of `save` which takes a `WriteConcern` as an argument.
+There are other levels of write concern, available via another variant of `save` which takes a `WriteConcern` as an argument. 
 
 If you ever need to drop an index, the MongoDB command is:
 
