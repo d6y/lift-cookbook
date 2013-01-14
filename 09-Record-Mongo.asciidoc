@@ -116,7 +116,7 @@ The full specification for Mongo connection URLs is: http://docs.mongodb.org/man
 
 [[MongoHashMap]]
 Storing a HashMap in a Mongo Record
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
@@ -281,7 +281,7 @@ See Also
 A discussion on the mailing list regarding the limited type support in `MongoMapField` and a possible way around it by overriding `asDBObject`: https://groups.google.com/d/msg/liftweb/XoseG-8mIPc/OLyIu6FrHIgJ[https://groups.google.com/d/msg/liftweb/XoseG-8mIPc/OLyIu6FrHIgJ].
 
 
-
+[[MongoEmbedding]]
 Embedding a Document Inside a Mongo Record
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -682,7 +682,7 @@ The motivation for Rouge is described in a Foursquare engineering blog post: htt
 
 
 
-[MongoGeospatial]
+[[MongoGeospatial]]
 Storing Geospatial Values
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -901,7 +901,7 @@ See Also
 
 
 
-[MongoUnitTest]
+[[MongoUnitTest]]
 Unit Testing Record with Mongo
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
