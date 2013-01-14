@@ -432,9 +432,19 @@ Your Lift application is now running on Heroku.
 Discussion
 ^^^^^^^^^^
 
-There are a couple of important comments regarding Lift applications on Heroku. First, note that there's no support for session affinity. This means if you deploy to multiple _dynos_ (Heroku terminology for instances), there is no co-ordination over which requests go to which servers. As a consequence, you won't be able to make use of Lift's stateful features and will want to turn them off (<<RunningStateless>> describes for how to do that).
+There are a few important comments regarding Lift applications on Heroku. First, note that there's no support for session affinity. This means if you deploy to multiple _dynos_ (Heroku terminology for instances), there is no co-ordination over which requests go to which servers. As a consequence, you won't be able to make use of Lift's stateful features and will want to turn them off (<<RunningStateless>> describes for how to do that).
 
-The second important point to note is that the dyno will be restarted every day. Additionally, if you are only running one web dyno, it will be idled after an hour of inactivity. You can see this happening by tailing your application log:
+Second, if you are using Lift comet features, there's an adjustment to make in `Boot.scala` to work a little better in the Heroku environment:
+
+[source, scala]
+---------------------------
+LiftRules.cometRequestTimeout = Full(25)
+---------------------------
+
+This setting controls how long Lift waits before testing a comet connection. We're replacing the Lift default of 120 seconds 
+with 25 seconds because Heroku terminates connections after 30 seconds.  Although Lift recovers from this, the user experience may be to see a delay when interacting with a page.  
+
+A third important point to note is that the dyno will be restarted every day. Additionally, if you are only running one web dyno, it will be idled after an hour of inactivity. You can see this happening by tailing your application log:
 
 [source, bash]
 ---------------------------
@@ -610,7 +620,7 @@ The JVM shutdown hooks are described in the JDK documentation: http://docs.oracl
 
 Heroku's guide to containerless deployment makes use of Maven to package your application, as is documented at https://devcenter.heroku.com/articles/java-webapp-runner[https://devcenter.heroku.com/articles/java-webapp-runner].  There are also a template SBT project from Matthew Henderson that includes a `JettyLauncher` class: https://github.com/ghostm/lift_blank_heroku[https://github.com/ghostm/lift_blank_heroku].
 
-
+The way Heroku deal with comet long-poling is described at https://devcenter.heroku.com/articles/request-timeout[https://devcenter.heroku.com/articles/request-timeout].
 
 /////////////////////////////////////////
 
