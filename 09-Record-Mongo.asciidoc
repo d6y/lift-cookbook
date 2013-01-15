@@ -593,19 +593,19 @@ See Also
 
 
 
-[[QueryingWithRouge]]
-Using Rouge
+[[QueryingWithRogue]]
+Using Rogue
 ~~~~~~~~~~~
 
 Problem
 ^^^^^^^
 
-You want to use Foursquare's type-safe domain specific language (DSL), Rouge, for querying and updating Mongo records.
+You want to use Foursquare's type-safe domain specific language (DSL), Rogue, for querying and updating Mongo records.
 
 Solution
 ^^^^^^^^
 
-You need to include the Rouge dependency in your build and import Rouge into your code. 
+You need to include the Rogue dependency in your build and import Rogue into your code. 
 
 For the first step, edit `build.sbt` and add:
 
@@ -614,7 +614,7 @@ For the first step, edit `build.sbt` and add:
 "com.foursquare" %% "rogue" % "1.1.8" intransitive()
 ---------------------------------------------
 
-In your code `import com.foursquare.rogue._` and then start using Rouge.  For example, using the Scala console (see <<MongoScalaConsole>>):
+In your code `import com.foursquare.rogue._` and then start using Rogue.  For example, using the Scala console (see <<MongoScalaConsole>>):
 
 [source, scala]
 ---------------------------------------------
@@ -639,8 +639,7 @@ scala> Country.where(_.id eqs "uk").
 Discussion
 ^^^^^^^^^^
 
-Rouge is able to use information in your Lift Record to offer an elegant way to query and update records. It's type safe meaning, for example, if you try to use an `Int` where a `String` is expected in a query, Mongo would allow that and fail to find results at runtime, but Rouge enables Scala to reject the query at compile time:
-
+Rogue is able to use information in your Lift Record to offer an elegant way to query and update records. It's type safe meaning, for example, if you try to use an `Int` where a `String` is expected in a query, Mongo would allow that and fail to find results at runtime, but Rogue enables Scala to reject the query at compile timeRogue
 [source, scala]
 ---------------------------------------------
 scala> Country.where(_.id eqs 7).fetch
@@ -666,12 +665,12 @@ The DSL constructs a query which we then `fetch` to send the query to MongoDB. T
 
 * `findAndDeleteOne` and `bulkDelete_!!` -- to delete records.
 
-The query language itself is expressive, and the best place to explore the variety of queries is in the `QueryTest` specification in the source for Rouge.  You'll find a link to this in the README of the project on Github.
+The query language itself is expressive, and the best place to explore the variety of queries is in the `QueryTest` specification in the source for Rogue.  You'll find a link to this in the README of the project on Github.
 
 
 [NOTE]
-Rouge is working towards a v2 release which introduces a number of new concepts. If you want to give it a try, take a look at the
-instructions and comments on the Rouge 
+Rogue is working towards a v2 release which introduces a number of new concepts. If you want to give it a try, take a look at the
+instructions and comments on the Rogue 
 mailing list at: https://groups.google.com/d/topic/rogue-users/SdtFCU-w3ng/[https://groups.google.com/d/topic/rogue-users/SdtFCU-w3ng/].
 
 
@@ -680,9 +679,9 @@ See Also
 
 For geospacial queries, see <<MongoGeospatial>>.
 
-The README page for Rouge is a great starting point, and includes a link to `QueryTest` giving plenty of example queries to crib from: https://github.com/foursquare/rogue[https://github.com/foursquare/rogue].
+The README page for Rogue is a great starting point, and includes a link to `QueryTest` giving plenty of example queries to crib from: https://github.com/foursquare/rogue[https://github.com/foursquare/rogue].
 
-The motivation for Rouge is described in a Foursquare engineering blog post: http://engineering.foursquare.com/2011/01/21/rogue-a-type-safe-scala-dsl-for-querying-mongodb/[http://engineering.foursquare.com/2011/01/21/rogue-a-type-safe-scala-dsl-for-querying-mongodb/].
+The motivation for Rogue is described in a Foursquare engineering blog post: http://engineering.foursquare.com/2011/01/21/rogue-a-type-safe-scala-dsl-for-querying-mongodb/[http://engineering.foursquare.com/2011/01/21/rogue-a-type-safe-scala-dsl-for-querying-mongodb/].
 
 
 
@@ -699,7 +698,7 @@ You want to store latitude and longitude information in Mongo.
 Solution
 ^^^^^^^^
 
-Use Rouge's `LatLong` class to embed location information in your model. For
+Use Rogue's `LatLong` class to embed location information in your model. For
 example, we can store the location of a city like this:
 
 [source,scala]
@@ -786,7 +785,7 @@ db.example.city.dropIndex( "loc_2d" )
 Querying
 ++++++++
 
-The reason this recipe uses Rouge's `LatLong` class is to enable us to query using the Rouge DSL.  Suppose we've inserted other cities into our collection:
+The reason this recipe uses Rogue's `LatLong` class is to enable us to query using the Rogue DSL.  Suppose we've inserted other cities into our collection:
 
 
 -----------------------------------------------------------
@@ -821,7 +820,7 @@ This would query MongoDB with this clause...
 The form of the query is a centre point and a spherical radius.  Records falling
 inside that radius match the query and are returned closest first. We calculate
 the radius in radians: 500km divided by the radius of the Earth, approximately 6378km, gives
-us an angle in radians. We convert this to `Degrees` as required by Rouge.  
+us an angle in radians. We convert this to `Degrees` as required by Rogue.  
 
 
 See Also
@@ -906,7 +905,7 @@ res2: List[code.model.Country] = List(class code.model.Country={_id=uk,
 See Also
 ^^^^^^^^
 
-<<ConnectingToMongo>> for connecting to MongoDB and <<QueryingWithRouge>> for querying with Rouge.
+<<ConnectingToMongo>> for connecting to MongoDB and <<QueryingWithRogue>> for querying with Rogue.
 
 
 
