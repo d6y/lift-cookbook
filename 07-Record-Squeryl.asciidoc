@@ -1,8 +1,102 @@
 [[Squeryl]]
-Relational database persistence with Record and Squeryl
+Relational Database Persistence with Record and Squeryl
 -------------------------------------------------------
 
-Using a JNDI datasource
+[[ConfiguringSqueryl]]
+Configuring Squeryl and Record
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to configure your Lift application to use Squeryl and Record.
+
+Solution
+^^^^^^^^
+
+Include the Squeryl-Record dependency in your build, and in `Boot.scala` provide a database connection function to `SquerylRecord.initWithSquerylSession`.
+
+For example, to configure Squeryl with PostgreSQL, modify `build.sbt` to add two dependencies: one for Squeryl-Record and one for the database driver:
+
+[source, scala]
+---------------------------------------------------------------
+libraryDependencies ++= {
+  val liftVersion = "2.5-M4" 
+  Seq(
+    "net.liftweb" %% "lift-webkit" % liftVersion,
+    "net.liftweb" %% "lift-squeryl-record" % liftVersion,
+    "postgresql" % "postgresql" % "9.1-901.jdbc4" 
+    ...
+    )
+}
+---------------------------------------------------------------
+
+This will give you access to Squeryl version 0.9.5-6.
+
+In `Boot.scala` we define a connection and register it with Squeryl:
+
+[source, scala]
+---------------------------------------------------------------
+Class.forName("org.postgresql.Driver")
+
+def connection = DriverManager.getConnection(
+  "jdbc:postgresql://localhost/mydb", 
+  "username", "password")
+
+SquerylRecord.initWithSquerylSession(
+  Session.create(connection, new PostgreSqlAdapter) )
+
+---------------------------------------------------------------
+
+All Squeryl queries need to run in the context of a transaction.  One way to provide a transaction is to configure
+a transaction around all HTTP requests. This is also configured in `Boot.scala`:
+
+[source, scala]
+---------------------------------------------------------------
+S.addAround(new LoanWrapper {
+  override def apply[T](f: => T): T = inTransaction { f }
+})
+---------------------------------------------------------------
+
+
+Discussion
+^^^^^^^^^^
+
+You can use any JVM persistence mechanism with Lift. What Lift Record provides is a light interface around persistence with bindings to Lift's CSS transforms, screens and wizards. Squeryl-Record is a concrete implementation to connect Record with Squeryl.  This means you can use standard Record objects, which are effectively your schema, with Squeryl and write queries wich are validated at compile time.
+
+Plugging into Squeryl means initializing Squeryl's session management, which allows us to wrap queries in Squeryl's `transaction` and `inTransaction` functions.  The difference between these two calls is that `inTransaction` will start a new transaction if one doesn't exist, whereas `transaction` always creates a new transaction.  
+
+By ensuring a transaction is available for all HTTP requests via `addAround`, we can write queries in Lift and for the most part not have to establish transactions ourselves unless we want to.  For example, in a REST service we can write:
+
+[source,scala]
+------------------------------------------------------------
+import net.liftweb.squerylrecord.RecordTypeMode._
+MyRecord.createRecord.myField(aValue).save
+------------------------------------------------------------
+
+Or, if you prefer the Squery style of inserts:
+
+[source,scala]
+------------------------------------------------------------
+import net.liftweb.squerylrecord.RecordTypeMode._
+myTable.insert( MyRecord.createRecord.myField(aValue) )
+------------------------------------------------------------
+
+In this recipe, the `PostgreSqlAdapter` is being used. SQueryl also supports: `OracleAdapter`, `MySQLInnoDBAdapter` and `MySQLAdapter`, `MSSQLServer`, `H2Adapter`, `DB2Adapter` and `DerbyAdapter`.
+
+
+See Also
+^^^^^^^^
+
+The Squeryl _Getting Started Guide_ links to more information about session management and configuration: http://squeryl.org/getting-started.html[http://squeryl.org/getting-started.html].
+
+See <<SquerylJNDI>> for configuring connections via Java Naming and Directory Interface (JNDI).
+
+
+
+
+[[SquerylJNDI]]
+Using a JNDI Datasource
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -34,7 +128,7 @@ Discussion
 ^^^^^^^^^^
 
 The Java Naming and Directory Interface (JNDI) is service provided by
-the web container (e.g., Jetty, Tomcat, etc) which allows you to
+the web container (e.g., Jetty, Tomcat) which allows you to
 configure a database connection in the container and then refer the
 connection by name in your application. One advantage of this is that
 you can avoid including database credentials to your Lift source base.
@@ -55,15 +149,19 @@ in your `src/main/webapp/WEB-INF/web.xml` file:
 </resource-ref>
 ------------------------------------------
 
+
 See Also
 ^^^^^^^^
 
-* List of
-http://squeryl.org/api/org/squeryl/adapters/package.html[Squeryl database adapters].
-* An example http://www.assembla.com/spaces/liftweb/wiki/Apache_and_Jetty_Configuration[Jetty JNDI configuration] on the Lift wiki.
-* http://docs.codehaus.org/display/JETTY/JNDI[Jetty 6 JNDI documentation].
-* Eclipse http://wiki.eclipse.org/Jetty/Howto/Configure_JNDI_Datasource[Jetty JNDI documentation].
-* http://tomcat.apache.org/tomcat-7.0-doc/jndi-resources-howto.html[Tomcat 7] JNDI information.
+Resources for JDNI configuration include:
+
+* An example on the Lift Wiki for Apache and Jetty configuration at:http://www.assembla.com/spaces/liftweb/wiki/Apache_and_Jetty_Configuration[http://www.assembla.com/spaces/liftweb/wiki/Apache_and_Jetty_Configuration].
+
+* The documentation for Jetty gives examples for various databases: http://www.eclipse.org/jetty/documentation/current/jndi-datasource-examples.html[http://www.eclipse.org/jetty/documentation/current/jndi-datasource-examples.html].
+
+* For Tomcat, the JNDI configuration guide is: http://tomcat.apache.org/tomcat-7.0-doc/jndi-resources-howto.html#JDBC_Data_Sources[http://tomcat.apache.org/tomcat-7.0-doc/jndi-resources-howto.html#JDBC_Data_Sources].
+
+
 
 Adding validation to a field
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
