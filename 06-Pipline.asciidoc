@@ -508,7 +508,8 @@ This stateless request control was introduced in Lift 2.2.  The announcement on 
 
 The Wiki page on stateless requests describes Lift's behaviour if statefull actions are attempted: http://www.assembla.com/wiki/show/liftweb/Stateless_Requests[http://www.assembla.com/wiki/show/liftweb/Stateless_Requests].
 
-Catch Any exception
+[[CatchException]]
+Catch Any Exception
 ~~~~~~~~~~~~~~~~~~~
 
 Problem
