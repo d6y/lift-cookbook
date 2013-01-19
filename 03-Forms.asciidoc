@@ -597,7 +597,8 @@ class FileUploadSnippet {
 
     def processForm() = upload match {
       case Full(FileParamHolder(_, mimeType, fileName, file)) =>
-        println("%s of type %s is %d bytes long" format (fileName, mimeType, file.length))
+        println("%s of type %s is %d bytes long".
+           format (fileName, mimeType, file.length) )
 
       case _ => println("No file?")
     }
@@ -633,17 +634,17 @@ val files : List[FileParamHolder] = S.request.map(_.uploadedFiles) openOr Nil
 
 However, as we're dealing with a form with a single upload field it's easier to use `SHtml.fileUpload` to bind the input to our `upload` variable.  Lift arranges for the function `f => upload = Full(f)` to be called when a file is selected and uploaded via this field. If the file is zero length, the function is not called.
 
-The default behaviour for Lift is to read the file into memory and present it as a `FileParamHolder`.  In this recipe we're matching on the fields of the `FileParamGolder` and simply printing out what we know about the file.  We're ignoring the first parameter which will be Lift's generated name for the field, but capturing the mime type, original filename and the raw data that was in the file.
+The default behaviour for Lift is to read the file into memory and present it as a `FileParamHolder`.  In this recipe we're pattern matching on the fields of the `FileParamHolder` and simply printing out what we know about the file.  We're ignoring the first parameter which will be Lift's generated name for the field, but capturing the mime type, original filename and the raw data that was in the file.
 
 You probably don't want to use this method for very large files.  In fact, `LiftRules` provides a number of size restrictions which you can control:
 
 * `LiftRules.maxMimeFileSize` -- the maximum size of any single file uploaded (7MB by default).
 
-* `LiftRules.maxMimeSize` -- the maximum size of the multi-part upload in total (8MB default)
+* `LiftRules.maxMimeSize` -- the maximum size of the multi-part upload in total (8MB by default)
 
-Why two settings?  Because when the form is submitted, there may be a number of fields on the form.  For example, in the recipe the value of the submit button is send as one of the parts, and the file is sent as another. Hence, you might want to limit file size, but allow for some field values to be submitted too.
+Why two settings?  Because when the form is submitted, there may be a number of fields on the form.  For example, in the recipe the value of the submit button is send as one of the parts, and the file is sent as another. Hence, you might want to limit file size, but allow for some field values, or multiple files, to be submitted.
 
-If you hit the limit, an exception will be thrown from the underlying file upload library. You can catch the exception, as described in <<CatchException>>:
+If you hit the size limit an exception will be thrown from the underlying file upload library. You can catch the exception, as described in <<CatchException>>:
 
 [source,scala]
 ---------------------------------------------------------
@@ -653,23 +654,23 @@ LiftRules.exceptionHandler.prepend {
 }
 ---------------------------------------------------------
 
-Be aware that the container (Jetty, Tomcat) or any web server (Apache, NGINX) may also have limits on file uploads.
+Be aware that the container (Jetty, Tomcat) or any web server (Apache, NGINX) may also have limits on file upload sizes.
 
 [[UploadToDisk]]
-Uploading a file directory into memory may be fine for some situations, but you may want to upload larger items to the server as a file and then processes it in Lift as a stream.  Lift supports this via the following setting:
+Uploading a file into memory may be fine for some situations, but you may want to upload larger items to disk and then processes them in Lift as a stream.  Lift supports this via the following setting:
 
 [source,scala]
 ---------------------------------------------------------
 LiftRules.handleMimeFile = OnDiskFileParamHolder.apply
 ---------------------------------------------------------
 
-The `handleMimeFile` variable excepts to be given a function that takes a field name, mime type, filename and `InputStream` and returns a `FileParamHolder`.  The default implementation of this is the `InMemFileParamHolder`, but changing to `OnDiskFileParamHolder` means Lift will write the file to disk first. You can of course implement your own handler in addition to using `OnDiskFileParamHolder` or `InMemFileParamHolder`.
+The `handleMimeFile` variable expects to be given a function that takes a field name, mime type, filename and `InputStream` and returns a `FileParamHolder`.  The default implementation of this is the `InMemFileParamHolder`, but changing to `OnDiskFileParamHolder` means Lift will write the file to disk first. You can of course implement your own handler in addition to using `OnDiskFileParamHolder` or `InMemFileParamHolder`.
 
 With `OnDiskFileParamHolder`, the file will be written to a temporary location (`System.getProperty("java.io.tmpdir")`) but it's up to you to remove it when you're done with the file. For example, our snippet could change to:
 
 [source,scala]
 ---------------------------------------------------------
-def processForm() = file match {
+def processForm() = upload match {
   
   case Full(content : OnDiskFileParamHolder) =>
     println("File is at "+content.localFile.getAbsolutePath)
@@ -681,13 +682,13 @@ def processForm() = file match {
 }
 ---------------------------------------------------------
 
-Be aware that `OnDiskFileParamHolder` would  match against the `FileParamHolder` pattern used in the recipe. However, if you access the `file` field of that class, you'll bring the file into memory, which would defeat the point of storing it on disk to process it as a stream.
+Be aware that `OnDiskFileParamHolder` implements `FileParamHolder` so would  match the original `FileParamHolder` pattern used in the recipe. However, if you access the `file` field of `OnDiskFileParamHolder`, you'll bring the file into memory, which would defeat the point of storing it on disk to process it as a stream.
 
 If you want to monitor the progress of the upload on the server side, you can. There's a hook in `LiftRules` which called as the upload is running:
 
 [source,scala]
 ---------------------------------------------------------
-def progressPrinter(bytesRead: Long, contentLength: Long, fieldIndex: Int) : Unit = {
+def progressPrinter(bytesRead: Long, contentLength: Long, fieldIndex: Int) {
   println("Read %d of %d for %d" format (bytesRead, contentLength, fieldIndex))
 }
 
@@ -715,12 +716,12 @@ Ajax File Upload
 Problem
 ^^^^^^^
 
-You want to offer your users a Ajax file upload tool, with progress bars and drag and drop support.
+You want to offer your users an Ajax file upload tool, with progress bars and drag and drop support.
 
 Solution
 ^^^^^^^^
 
-Add Sebastian Tschan's _jQuery File Upload_ widget (https://github.com/blueimp/jQuery-File-Upload[https://github.com/blueimp/jQuery-File-Upload]) to your project, and provide REST end points to receive files.
+Add Sebastian Tschan's _jQuery File Upload_ widget (https://github.com/blueimp/jQuery-File-Upload[https://github.com/blueimp/jQuery-File-Upload]) to your project, and implement a REST end point to receive files.
 
 The first step is to download the widget, and drag the `js` folder into your application as `src/main/webapp/js`.  We can then use the JavaScript in a template:
 
@@ -776,7 +777,7 @@ The first step is to download the widget, and drag the `js` folder into your app
 
 This template provides an input field for files, an area to use as a progress indicator, and configures the widget when the page loads in a JQuery `$( ... )` block.
 
-The final part is to implement a Lift REST service to receive the file or files.  The URL of the service is set in `data-url` on the `input` field.  Here we're using `/upload`:
+The final part is to implement a Lift REST service to receive the file or files.  The URL of the service, `/upload`, is set in `data-url` on the `input` field, and that's the address we match on:
 
 [source,scala]
 ---------------------------------------------------------
@@ -793,7 +794,7 @@ object AjaxFileUpload extends RestHelper {
       for (file <- req.uploadedFiles) {
         println("Received: "+file.fileName)
       }
-    OkResponse()
+      OkResponse()
 
   }
 
@@ -820,7 +821,7 @@ May of the features just require JavaScript configuration.  For example, we've u
 
 In the REST service the uploaded file are available via the `uploadedFiles` method on the request. When Lift receives a multi-part form it automatically extracts files as `uploadedFiles`, each of which is a `FileParamHolder` which gives us access to the `fileName`, `length`, `mimeType` and `fileStream`. 
 
-By default uploaded files are held in memory, but that can be changed (see <<UploadToDisk>>).
+By default uploaded files are held in memory, but that can be changed (see <<UploadToDisk>> in <<FileUpload>>).
 
 In the recipe we return a 200 (`OkResponse`).  If we wanted to signal to the widget that a file was rejected we can return another code. For example, perhaps we want to reject all files except PNG images.  On the server-side we can do that by replacing the `OkResponse` with a test:
 
@@ -843,7 +844,7 @@ fail: function (e, data) {
 }
 ---------------------------------------------------------
 
-If we uploaded, say a JPEG, the browser would see an alert dialog reporting "Only PNGs".
+If we uploaded, say a JPEG, the browser would show an alert dialog reporting "Only PNGs".
 
 See Also
 ^^^^^^^^
