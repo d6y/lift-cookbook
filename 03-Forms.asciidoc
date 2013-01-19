@@ -710,7 +710,7 @@ http://tools.ietf.org/html/rfc1867[http://tools.ietf.org/html/rfc1867]
 
 [[AjaxFileUpload]]
 Ajax File Upload
-~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
