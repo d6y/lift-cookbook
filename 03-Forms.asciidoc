@@ -2,9 +2,9 @@ Forms Processing in Lift
 ------------------------
 
 This section gives examples of working with Lift forms in different
-ways.
+ways.  You'll find many of the examples in https://github.com/LiftCookbook/cookbook_forms[https://github.com/LiftCookbook/cookbook_forms].
 
-Plain old form processing
+Plain Old Form Processing
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -94,7 +94,7 @@ Fashioned is good].
 * https://github.com/marekzebrowski/lift-basics[Simple forms], example
 Lift project.
 
-Ajax form processing
+Ajax Form Processing
 ~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -184,7 +184,7 @@ http://scala-tools.org/mvnsites/liftweb-2.4/net/liftweb/http/SHtml.html[SHtml
 Scala Doc].
 * Lift's http://demo.liftweb.net/ajax[Ajax Demo page].
 
-Ajax JSON form processing
+Ajax JSON Form Processing
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -307,7 +307,7 @@ http://exploring.liftweb.net/master/index-10.html[Exploring Lift].
 
 * http://en.wikipedia.org/wiki/Nullius_in_verba[Nullius in verba].
 
-Conditionally disable a checkbox
+Conditionally Disable a Checkbox
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -371,10 +371,12 @@ See Also
 * Mailing list question regarding
 https://groups.google.com/d/topic/liftweb/KBVhkuM1NQQ/discussion[how to
 conditionally mark a SHtml.checkbox as disabled].
+
 * _Simply Lift_ http://simply.liftweb.net/index-7.10.html[7.10 CSS
 Selector Transforms].
 
-Use a select box with multiple options
+
+Use a Select Box with Multiple Options
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -447,7 +449,7 @@ The function given to `multiSelect` will receive the values (ids), not
 the names, of the options. That is, if you ran the above code, and
 selected "Coffee" and "Milk" the function would see `List("a", "b")`.
 
-Selected no options
+Selected No Options
 +++++++++++++++++++
 
 Be aware if no options are selected at all, your handling function is
@@ -486,7 +488,7 @@ that if the receiving function in `multiSelect` is never called, that
 would mean you have nothing selected. That may be useful, depending on
 what behaviour you need in your application.
 
-Type-safe options
+Type-safe Options
 +++++++++++++++++
 
 If you don't want to work in terms of `String` values for an option, you
@@ -535,8 +537,324 @@ def multi = "#opts *" #> SHtml.multiSelectObj[Item](options, current,
 See Also
 ^^^^^^^^
 
-* _Exploring Lift_, Chapter 6,
-http://exploring.liftweb.net/master/index-6.html[Forms in Lift].
-* https://www.assembla.com/spaces/liftweb/tickets/1139[Ticket 1139],
-Cannot clear out multiselect.
+_Exploring Lift_, Chapter 6, "Forms in Lift", http://exploring.liftweb.net/[http://exploring.liftweb.net/].
+
+Ticket relating to no options being selected: https://github.com/lift/framework/issues/1139[https://github.com/lift/framework/issues/1139]
+
+
+
+[[FileUpload]]
+File Upload
+~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want a snippet to allow users to upload a file to your Lift application.
+
+Solution
+^^^^^^^^
+
+Use a `FileParamHolder` in your snippet, and extract file information from it when the form is submitted.
+
+Starting with a form which is marked as "multipart=true":
+
+[source,html]
+---------------------------------------------------------
+<html>
+<head>
+  <title>File Upload</title>
+  <script id="jquery" src="/classpath/jquery.js" type="text/javascript"></script>
+  <script id="json" src="/classpath/json.js" type="text/javascript"></script>
+</head>
+<body>
+<form class="lift:FileUploadSnippet?form=post;multipart=true">
+   <label for="file">
+     Select a file: <input id="file"></input>
+   </label>
+   <input type="submit" value="Submit"></input>
+</form>
+</body>
+</html>
+---------------------------------------------------------
+
+We can bind the form in a snippet:
+
+[source,scala]
+---------------------------------------------------------
+package code.snippet
+
+import net.liftweb.util.Helpers._
+import net.liftweb.http.SHtml._
+import net.liftweb.http.FileParamHolder
+import net.liftweb.common.{Full, Empty, Box}
+
+class FileUploadSnippet {
+
+  def render = {
+
+    var upload : Box[FileParamHolder] = Empty
+
+    def processForm() = upload match {
+      case Full(FileParamHolder(_, mimeType, fileName, file)) =>
+        println("%s of type %s is %d bytes long" format (fileName, mimeType, file.length))
+
+      case _ => println("No file?")
+    }
+
+    "#file" #> fileUpload(f => upload = Full(f)) &
+      "type=submit" #> onSubmitUnit(processForm)
+
+  }
+}
+
+---------------------------------------------------------
+
+This allows you to access the `Array[Byte]` of the file in the `processForm` method when the form is submitted.
+
+
+Discussion
+^^^^^^^^^^
+
+HTTP includes an encoding type of "multipart/form-data" which was introduced to support binary data uploads.  The `?form=post;multipart=true` parameters in the template mark the form with this encoding, and the HTML generated will look
+like this:
+
+[source,html]
+---------------------------------------------------------
+<form enctype="multipart/form-data" method="post" action="/fileupload">
+---------------------------------------------------------
+
+When the browser submits the form, Lift detects the "multipart/form-data" encoding and extracts any files from the request.  These are available as `uploadedFiles` on a `Req` object, for example:
+
+[source, scala]
+---------------------------------------------------------
+val files : List[FileParamHolder] = S.request.map(_.uploadedFiles) openOr Nil
+---------------------------------------------------------
+
+However, as we're dealing with a form with a single upload field it's easier to use `SHtml.fileUpload` to bind the input to our `upload` variable.  Lift arranges for the function `f => upload = Full(f)` to be called when a file is selected and uploaded via this field. If the file is zero length, the function is not called.
+
+The default behaviour for Lift is to read the file into memory and present it as a `FileParamHolder`.  In this recipe we're matching on the fields of the `FileParamGolder` and simply printing out what we know about the file.  We're ignoring the first parameter which will be Lift's generated name for the field, but capturing the mime type, original filename and the raw data that was in the file.
+
+You probably don't want to use this method for very large files.  In fact, `LiftRules` provides a number of size restrictions which you can control:
+
+* `LiftRules.maxMimeFileSize` -- the maximum size of any single file uploaded (7MB by default).
+
+* `LiftRules.maxMimeSize` -- the maximum size of the multi-part upload in total (8MB default)
+
+Why two settings?  Because when the form is submitted, there may be a number of fields on the form.  For example, in the recipe the value of the submit button is send as one of the parts, and the file is sent as another. Hence, you might want to limit file size, but allow for some field values to be submitted too.
+
+If you hit the limit, an exception will be thrown from the underlying file upload library. You can catch the exception, as described in <<CatchException>>:
+
+[source,scala]
+---------------------------------------------------------
+LiftRules.exceptionHandler.prepend {
+  case (_, _, x : FileUploadIOException) => 
+    ResponseWithReason(BadResponse(), "Unable to process file. Too large?")
+}
+---------------------------------------------------------
+
+Be aware that the container (Jetty, Tomcat) or any web server (Apache, NGINX) may also have limits on file uploads.
+
+[[UploadToDisk]]
+Uploading a file directory into memory may be fine for some situations, but you may want to upload larger items to the server as a file and then processes it in Lift as a stream.  Lift supports this via the following setting:
+
+[source,scala]
+---------------------------------------------------------
+LiftRules.handleMimeFile = OnDiskFileParamHolder.apply
+---------------------------------------------------------
+
+The `handleMimeFile` variable excepts to be given a function that takes a field name, mime type, filename and `InputStream` and returns a `FileParamHolder`.  The default implementation of this is the `InMemFileParamHolder`, but changing to `OnDiskFileParamHolder` means Lift will write the file to disk first. You can of course implement your own handler in addition to using `OnDiskFileParamHolder` or `InMemFileParamHolder`.
+
+With `OnDiskFileParamHolder`, the file will be written to a temporary location (`System.getProperty("java.io.tmpdir")`) but it's up to you to remove it when you're done with the file. For example, our snippet could change to:
+
+[source,scala]
+---------------------------------------------------------
+def processForm() = file match {
+  
+  case Full(content : OnDiskFileParamHolder) =>
+    println("File is at "+content.localFile.getAbsolutePath)
+    val in: InputStream = content.fileStream 
+    // do something with the stream here
+    val wasDeleted_? = content.localFile.delete()
+  
+  case _ => println("No file?")
+}
+---------------------------------------------------------
+
+Be aware that `OnDiskFileParamHolder` would  match against the `FileParamHolder` pattern used in the recipe. However, if you access the `file` field of that class, you'll bring the file into memory, which would defeat the point of storing it on disk to process it as a stream.
+
+If you want to monitor the progress of the upload on the server side, you can. There's a hook in `LiftRules` which called as the upload is running:
+
+[source,scala]
+---------------------------------------------------------
+def progressPrinter(bytesRead: Long, contentLength: Long, fieldIndex: Int) : Unit = {
+  println("Read %d of %d for %d" format (bytesRead, contentLength, fieldIndex))
+}
+
+LiftRules.progressListener = progressPrinter
+---------------------------------------------------------
+
+This is the progress of the whole multi-part upload, not just the file being uploaded.  In particular, the `contentLength` may not be known (in which case it will be `-1`), but if it is known it is the size of the complete multi-part upload. In the example in this recipe that would include the size of the file, but also the submit button value.  This also explains the `fieldIndex`, which is a counter as to which part is being processed. It will take on the values of 0 and 1 for the two parts in this example.
+
+
+See Also
+^^^^^^^^
+
+The HTTP file upload mechanics are described in RFC 1867, _Form-based File Upload in HTML_:
+http://tools.ietf.org/html/rfc1867[http://tools.ietf.org/html/rfc1867]
+
+<<RestBinaryData>> discusses file upload in the context of a REST service.
+
+
+
+
+[[AjaxFileUpload]]
+Ajax File Upload
+~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to offer your users a Ajax file upload tool, with progress bars and drag and drop support.
+
+Solution
+^^^^^^^^
+
+Add Sebastian Tschan's _jQuery File Upload_ widget (https://github.com/blueimp/jQuery-File-Upload[https://github.com/blueimp/jQuery-File-Upload]) to your project, and provide REST end points to receive files.
+
+The first step is to download the widget, and drag the `js` folder into your application as `src/main/webapp/js`.  We can then use the JavaScript in a template:
+
+[source,html]
+---------------------------------------------------------
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>jQuery File Upload Example</title>
+</head>
+<body>
+
+<h1>Drag files onto this page</h1>
+
+<input id="fileupload" type="file" name="files[]" data-url="/upload" multiple>
+
+<div id="progress" style="width:20em; border: 1pt solid silver; display: none">
+  <div id="progress-bar" style="background: green; height: 1em; width:0%"></div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="js/vendor/jquery.ui.widget.js"></script>
+<script src="js/jquery.iframe-transport.js"></script>
+<script src="js/jquery.fileupload.js"></script>
+
+<script>
+  $(function () {
+    $('#fileupload').fileupload({
+      dataType: 'json',
+      add: function (e,data) {
+        $('#progress-bar').css('width', '0%');
+        $('#progress').show();
+        data.submit();
+      },
+      progressall: function (e, data) {
+        var progress = parseInt(data.loaded / data.total * 100, 10) + '%';
+        $('#progress-bar').css('width', progress);
+      },
+      done: function (e, data) {
+        $.each(data.files, function (index, file) {
+          $('<p/>').text(file.name).appendTo(document.body);
+        });
+        $('#progress').fadeOut();
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
+---------------------------------------------------------
+
+This template provides an input field for files, an area to use as a progress indicator, and configures the widget when the page loads in a JQuery `$( ... )` block.
+
+The final part is to implement a Lift REST service to receive the file or files.  The URL of the service is set in `data-url` on the `input` field.  Here we're using `/upload`:
+
+[source,scala]
+---------------------------------------------------------
+package code.rest
+
+import net.liftweb.http.rest.RestHelper
+import net.liftweb.http.OkResponse
+
+object AjaxFileUpload extends RestHelper {
+
+  serve {
+
+    case "upload" :: Nil Post req =>
+      for (file <- req.uploadedFiles) {
+        println("Received: "+file.fileName)
+      }
+    OkResponse()
+
+  }
+
+}
+---------------------------------------------------------
+
+This implementation simply logs the name of the file received and acknowledges successful delivery with a 200 status code back to the widget.
+
+As with all REST services, it needs to be registered in `Boot.scala`:
+
+[source,scala]
+---------------------------------------------------------
+LiftRules.dispatch.append(code.rest.AjaxFileUpload)
+---------------------------------------------------------
+
+By default the widget makes the whole HTML page a drop-target for files, meaning you can drag a file onto the page and it will immediately be uploaded to your Lift application.
+
+Discussion
+^^^^^^^^^^
+
+In this recipe we've shown just the basic integration of the widget with a Lift application.  The demo site for the widget, http://blueimp.github.com/jQuery-File-Upload/[http://blueimp.github.com/jQuery-File-Upload/], shows other capabilities, and provides documentation on how to integrate them.  
+
+May of the features just require JavaScript configuration.  For example, we've used the widget's `add`, `progressall`, and `done` handlers to show, update and then fade out a progress bar.  When the upload is completed, the name of the uploaded file is appended to the page.
+
+In the REST service the uploaded file are available via the `uploadedFiles` method on the request. When Lift receives a multi-part form it automatically extracts files as `uploadedFiles`, each of which is a `FileParamHolder` which gives us access to the `fileName`, `length`, `mimeType` and `fileStream`. 
+
+By default uploaded files are held in memory, but that can be changed (see <<UploadToDisk>>).
+
+In the recipe we return a 200 (`OkResponse`).  If we wanted to signal to the widget that a file was rejected we can return another code. For example, perhaps we want to reject all files except PNG images.  On the server-side we can do that by replacing the `OkResponse` with a test:
+
+[source,scala]
+---------------------------------------------------------
+import net.liftweb.http.{ResponseWithReason, BadResponse, OkResponse}
+
+if (req.uploadedFiles.exists( _.mimeType != "image/png" ))
+  ResponseWithReason(BadResponse(), "Only PNGs")
+else
+  OkResponse()
+---------------------------------------------------------
+
+We would mirror this with a `fail` handler in the client JavaScript:
+
+[source,javascript]
+---------------------------------------------------------
+fail: function (e, data) {
+  alert(data.errorThrown);
+}
+---------------------------------------------------------
+
+If we uploaded, say a JPEG, the browser would see an alert dialog reporting "Only PNGs".
+
+See Also
+^^^^^^^^
+
+Diego Medina has posted a Gist of Lift REST code to integrate more fully with the image upload and image reviewing features of the widget, specifically implementing the JSON response that the widget expects for that functionality.  You'll find it at: https://gist.github.com/a6715d1e3664f73cd03a[https://gist.github.com/a6715d1e3664f73cd03a].
+
+<<FileUpload>> describes the basic file upload behaviour of Lift and how to control where files are stored.
+ 
+
+
+
+
+
 

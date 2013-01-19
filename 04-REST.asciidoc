@@ -274,6 +274,8 @@ Requst suffix matching] mailing list discussion.
 * http://simply.liftweb.net/index-5.3.html[Making it easier with
 RestHelper], section 5.3 of _Simply Lift_.
 
+
+[[RestBinaryData]]
 Accept binary data in a REST service
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -314,7 +316,7 @@ Test this service using a tool like cURL:
 
 [source,scala]
 ----
-\$ curl -X POST --data-binary "@dog.jpg" \
+$ url -X POST --data-binary "@dog.jpg" \
   -H 'Content-Type: image/jpg' http://127.0.0.1:8080/upload
 <?xml version="1.0" encoding="UTF-8"?>
 <b>got an image of 43685 bytes</b> 
@@ -340,8 +342,11 @@ See Also
 * https://groups.google.com/forum/?fromgroups#!topic/liftweb/6MnWRPP3TcU[Mailing
 list discussion] including code for restricting a request based on mime
 type.
+
 * http://stackoverflow.com/questions/3861455/form-too-large-exception[Form
 too large in Jetty]
+
+<<FileUpload>> describes form-based (multi-part) file uploads
 
 Returning JSON
 ~~~~~~~~~~~~~~
