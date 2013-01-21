@@ -115,8 +115,8 @@ The Simple Build Tool documentation is at http://www.scala-sbt.org[http://www.sc
 
 Tutorials for Lift can be found in _Simply Lift_ at http://simply.liftweb.net/[http://simply.liftweb.net/] and in _Lift in Action_ (Tim Perrett, 2011, Manning Publications Co).
 
-[[liftfromscratch]]
-Creating a Lift project from scratch using SBT
+[[LiftFromScratch]]
+Creating a Lift Project from Scratch using SBT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
