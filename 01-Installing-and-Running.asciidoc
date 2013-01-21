@@ -245,6 +245,37 @@ Discussion
 
 As shown above, creating a Lift project from scratch is a relatively simple process. However, it can be a tricky one for newcomers, especially if you are not used to the JVM ecosystem and its conventions for web containers. If you run into problems, make sure the files are in the correct locations and that their contents were not mistakenly modified. If all else fails, refere to the sample project below or ask for help on the http://groups.google.com/group/liftweb[Lift mailing list].
 
+Lift projects using SBT or similar build tools follow a standard project layout, where Scala source code is in `src/main/scala` and web resources are in `src/main/webapp`. Your Scala files must be placed either directly at `src/main/scala` or in nested directories matching organization and name you defined in `build.sbt`, in our case giving us `src/main/scala/org/yourorganization/liftfromscratch/`. Test files match the directory structure but are placed in `src/test/` instead of `src/main/`. Likewise, the `web.xml` file must be placed in `src/main/webapp/WEB-INF/` for it to be properly detected.
+
+Given these conventions, you should have a directly structure looking quite, if not exactly, like this:
+
+[source,bash]
+---------------------------------------------------------
+- project root directory
+  | build.sbt
+  - project/
+    | plugins.sbt
+  - src/
+    - main/
+      - scala/
+        - bootstrap/
+          | Boot.scala
+        - org/
+          - yourorganization/
+            - liftfromscratch/
+              | <your Scala code goes here>
+      - webapp/
+        | index.html
+        | <any other web resources - images, HTML documents, Javascript files, etc - go here>
+        - WEB-INF/
+          | web.xml
+    - test/
+      - scala/
+        - org/
+          - yourorganization/
+            - liftfromscratch/
+              | <your tests go here>
+---------------------------------------------------------
 
 See Also
 ^^^^^^^^
