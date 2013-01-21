@@ -5,8 +5,8 @@ This chapter deals with solutions relating to the Lift processing
 pipeline.
 
 You can get a great overview of the pipeline, including diagrams, from
-_Exploring Lift_ at http://exploring.liftweb.net/master/index-9.html#toc-Section-9.2[http://exploring.liftweb.net/master/index-9.html#toc-Section-9.2] 
-and also from from the Lift pipeline Wiki page at 
+_Exploring Lift_ at http://exploring.liftweb.net/master/index-9.html#toc-Section-9.2[http://exploring.liftweb.net/master/index-9.html#toc-Section-9.2]
+and also from from the Lift pipeline Wiki page at
 http://www.assembla.com/spaces/liftweb/wiki/HTTP_Pipeline[http://www.assembla.com/spaces/liftweb/wiki/HTTP_Pipeline].
 
 Streaming Content
@@ -36,10 +36,10 @@ object Numbers extends RestHelper {
   def infinite = Stream.from(1).map(num2bytes)
 
   def num2bytes(x: Int) = (x + "\n") getBytes("utf-8")
-  
+
   serve {
-    case Req("numbers" :: Nil, _, _) => 
-      OutputStreamResponse( (out) => infinite.foreach(out.write) ) 
+    case Req("numbers" :: Nil, _, _) =>
+      OutputStreamResponse( (out) => infinite.foreach(out.write) )
   }
 }
 -------------------------------------------------------------------
@@ -59,13 +59,13 @@ variety of signatures for the `OutputStreamResponse` object. For the
 most control, create an instance of the `OutputStreamResponse` class:
 
 [source,scala]
------------------------------------ 
+-----------------------------------
 case class OutputStreamResponse(
-  out: (OutputStream) => Unit,  
-  size: Long, 
-  headers: List[(String, String)], 
-  cookies: List[HTTPCookie], 
-  code: Int) 
+  out: (OutputStream) => Unit,
+  size: Long,
+  headers: List[(String, String)],
+  cookies: List[HTTPCookie],
+  code: Int)
 -----------------------------------
 
 Discussion
@@ -91,9 +91,9 @@ content to send to the client. The signature is straightforward:
 [source,scala]
 -----------------------------------
 case class InMemoryResponse(
-  data: Array[Byte], 
-  headers: List[(String, String)], 
-  cookies: List[HTTPCookie], 
+  data: Array[Byte],
+  headers: List[(String, String)],
+  cookies: List[HTTPCookie],
   code: Int)
 -----------------------------------
 
@@ -109,11 +109,11 @@ from:
 [source,scala]
 -------------------------------------------
 case class StreamingResponse(
-  data: {def read(buf: Array[Byte]): Int}, 
-  onEnd: () => Unit, 
-  size: Long, 
-  headers: List[(String, String)], 
-  cookies: List[HTTPCookie], 
+  data: {def read(buf: Array[Byte]): Int},
+  onEnd: () => Unit,
+  size: Long,
+  headers: List[(String, String)],
+  cookies: List[HTTPCookie],
   code: Int)
 -------------------------------------------
 
@@ -146,7 +146,7 @@ want to explain why.
 Solution
 ^^^^^^^^
 
-Use `RestHelper` to serve the file or an explanation page. 
+Use `RestHelper` to serve the file or an explanation page.
 
 For example,
 suppose we have the file _/tmp/important_ and we only want selected
@@ -161,11 +161,11 @@ object DownloadService extends RestHelper {
   // Code explained below to go here
 
   serve {
-    case "download" :: Known(fileId) :: Nil Get req => 
+    case "download" :: Known(fileId) :: Nil Get req =>
       if (permitted)
         fileResponse(fileId)
       else
-        Full(RedirectResponse("/sorry"))    
+        Full(RedirectResponse("/sorry"))
   }
 }
 -------------------------------------------------------
@@ -196,7 +196,7 @@ private def permitted = scala.math.random < 0.5d
 private def fileResponse(fileId: String): Box[LiftResponse] = for {
     file <- Box !! new java.io.File("/tmp/"+fileId)
     input <- tryo(new java.io.FileInputStream(file))
- } yield StreamingResponse(input, 
+ } yield StreamingResponse(input,
     () => input.close,
     file.length,
     ("Content-Disposition" -> "attachment; filename="+fileId) :: Nil,
@@ -267,9 +267,9 @@ Use a custom `If` in SiteMap:
 
 [source,scala]
 ----
-val HeaderRequired = If(  
+val HeaderRequired = If(
   () => S.request.map(_.header("ALLOWED") == Full("YES")) openOr false,
-  "Access not allowed" 
+  "Access not allowed"
 )
 
 // Build SiteMap
@@ -377,13 +377,13 @@ Make use of the hooks in `LiftSession`. For example, in `Boot.scala`:
 
 [source,scala]
 ------------------------------------------------------------
-LiftSession.afterSessionCreate ::= 
+LiftSession.afterSessionCreate ::=
  ( (s:LiftSession, r:Req) => println("Session created") )
 
-LiftSession.onBeginServicing ::= 
+LiftSession.onBeginServicing ::=
  ( (s:LiftSession, r:Req) => println("Processing request") )
 
-LiftSession.onShutdownSession ::= 
+LiftSession.onShutdownSession ::=
  ( (s:LiftSession) => println("Session going away") )
 ------------------------------------------------------------
 
@@ -443,10 +443,10 @@ being taken out of service".
 See Also
 ^^^^^^^^
 
-<<RunTasksPeriodically>> includes an example of using a unload hook. 
+<<RunTasksPeriodically>> includes an example of using a unload hook.
 
 [[RunningStateless]]
-Running Stateless 
+Running Stateless
 ~~~~~~~~~~~~~~~~~
 
 Problem
@@ -483,10 +483,10 @@ For example:
 
 [source,scala]
 -----------------------------------------------------------------
-def asset(file: String) = 
+def asset(file: String) =
   List(".js", ".gif", ".css").exists(file.endsWith)
 
-LiftRules.statelessReqTest.append { 
+LiftRules.statelessReqTest.append {
   case StatelessReqTest("index" :: Nil, httpReq) =>  true
   case StatelessReqTest(List(_, file),  _) if asset(file) => true
 }
@@ -526,7 +526,7 @@ Declare an exception handler in `Boot.scala`:
 [source,scala]
 --------------------------------------------------
 LiftRules.exceptionHandler.prepend {
-  case (runMode, request, exception) =>           
+  case (runMode, request, exception) =>
     logger.error("Boom! At "+request.uri)
     InternalServerErrorResponse()
 }
@@ -558,7 +558,7 @@ import net.liftweb.http.js.JsCmds._
 val ajax = LiftRules.ajaxPath
 
 LiftRules.exceptionHandler.prepend {
-  case (mode, Req(ajax :: _, _, PostRequest), ex) => 
+  case (mode, Req(ajax :: _, _, PostRequest), ex) =>
     logger.error("Error handing ajax")
     JavaScriptResponse(Alert("Boom!"))
 }
@@ -576,6 +576,7 @@ See Also
 This recipe was derived from a mailing list discussion: http://groups.google.com/group/liftweb/browse_thread/thread/842954ffc333b0f9[http://groups.google.com/group/liftweb/browse_thread/thread/842954ffc333b0f9].
 
 
+[[HttpServletRequest]]
 Accessing `HttpServletRequest`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -629,7 +630,7 @@ See Also
 
 This recipe was created from the mailing list _HttpRequest conversion_ discussion: https://groups.google.com/d/topic/liftweb/67tQXSY9XS4/discussion[https://groups.google.com/d/topic/liftweb/67tQXSY9XS4/discussion].
 
-Secure Requests Only 
+Secure Requests Only
 ~~~~~~~~~~~~~~~~~~~~
 
 Problem
