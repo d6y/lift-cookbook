@@ -26,7 +26,7 @@ process an input value, and echo the value back out. Here we have
 <form  action="/dumbForm.html" method="post">
   <input type="text" name="it" value="something" >
   <input type="submit" value="Go" >
-</form> 
+</form>
 
 <div id="result"> </div>
 
@@ -50,17 +50,17 @@ class DumbForm {
     r <- S.request if r.post_?  // restricting to POST requests
     v <- S.param("it")
   } yield v
-  
+
   def render = inputParam match {
-      case Full(x) => 
+      case Full(x) =>
         println("Input is: "+x)
         "#result *" #> x
-      
-      case _ =>  
+
+      case _ =>
         println("No input present! Rendering input form HTML")
-        PassThru  
+        PassThru
   }
-  
+
 }
 ------------------
 
@@ -137,7 +137,7 @@ import JsCmds._
 import scala.xml.Text
 
 class AjaxExample {
-  
+
   var inputVal = "default"
 
   def process(): JsCmd = {
@@ -146,8 +146,8 @@ class AjaxExample {
   }
 
   def render = {
-    "name=info" #> ( 
-        SHtml.text(inputVal, inputVal = _) ++ 
+    "name=info" #> (
+        SHtml.text(inputVal, inputVal = _) ++
         SHtml.hidden(process) )
   }
 
@@ -234,20 +234,20 @@ import scala.xml._
 
 class JsonForm {
 
-  def render = 
+  def render =
      "#formToJson" #> ((ns:NodeSeq) => SHtml.jsonForm(jsonHandler, ns)) &
-     "#jsonFormScript" #> Script(jsonHandler.jsCmd)   
-    
+     "#jsonFormScript" #> Script(jsonHandler.jsCmd)
+
     object jsonHandler extends JsonHandler {
-      
+
       def apply(in: Any): JsCmd = in match {
-          case JsonCmd("processForm", target, params: Map[String, _], all) => 
+          case JsonCmd("processForm", target, params: Map[String, _], all) =>
             val name = params.getOrElse("name", "No Name")
             val motto = params.getOrElse("motto", "No Motto")
-            SetHtml("result", 
-                Text("The motto of %s is %s".format(name,motto)) )      
-          
-          case _ => 
+            SetHtml("result",
+                Text("The motto of %s is %s".format(name,motto)) )
+
+          case _ =>
             SetHtml("result",Text("Unknown command"))
       }
 
@@ -260,9 +260,9 @@ the following sent to the server:
 
 [source,javascript]
 ---------------------------------------------------------
-{ 
+{
   "command": "processForm",
-  "params": {"name":"Royal Society","motto":"Nullius in verba"} 
+  "params": {"name":"Royal Society","motto":"Nullius in verba"}
 }
 ---------------------------------------------------------
 
@@ -335,11 +335,11 @@ Further suppose you want to disable it roughly 50% of the time:
 
 [source,scala]
 ----
-def disabler = 
+def disabler =
  if (math.random > 0.5d) "* [disabled]" #> "disabled"
  else PassThru
 
-def conditionallyDisabledCheckbox = 
+def conditionallyDisabledCheckbox =
   "*" #> disabler( SHtml.checkbox(likeTurtles, likeTurtles = _ ) )
 ----
 
@@ -395,15 +395,15 @@ Use `SHtml.multiSelect`:
 class MySnippet {
   def multi = {
     case class Item(id: String, name: String)
-    val inventory = Item("a", "Coffee") :: Item("b", "Milk") :: 
+    val inventory = Item("a", "Coffee") :: Item("b", "Milk") ::
        Item("c", "Sugar") :: Nil
-    
-     val options : List[(String,String)] = 
+
+     val options : List[(String,String)] =
        inventory.map(i => (i.id -> i.name))
-     
+
      val default = inventory.head.id :: Nil
-     
-     "#opts *" #> 
+
+     "#opts *" #>
        SHtml.multiSelect(options, default, xs => println("Selected: "+xs))
   }
 }
@@ -465,17 +465,17 @@ class MySnippet extends StatefulSnippet {
   def dispatch = {
     case "multi" => multi
   }
-  
+
   case class Item(id: String, name: String)
-  val inventory = Item("a", "Coffee") :: Item("b", "Milk") :: 
+  val inventory = Item("a", "Coffee") :: Item("b", "Milk") ::
     Item("c", "Sugar") :: Nil
-    
+
   val options : List[(String,String)] = inventory.map(i => (i.id -> i.name))
-    
+
   var current = inventory.head.id :: Nil
-  
+
   def multi = "#opts *" #> (
-    SHtml.hidden( () => current = Nil) ++ 
+    SHtml.hidden( () => current = Nil) ++
     SHtml.multiSelect(options, current, current = _)
   )
 }
@@ -507,7 +507,7 @@ note that the function receives a list of `Item`:
 
 [source,scala]
 ---------------------------------------------------------
-"#opts *" #> SHtml.multiSelectObj(options, current, 
+"#opts *" #> SHtml.multiSelectObj(options, current,
   (xs: List[Item]) => println("Got "+xs) )
 ---------------------------------------------------------
 
@@ -524,13 +524,13 @@ object Item extends Enumeration {
 }
 
 import Item._
-  
-val options : List[(Item,String)] = 
+
+val options : List[(Item,String)] =
   Item.values.toList.map(i => (i -> i.toString))
-    
+
 var current = Item.Coffee :: Nil
-  
-def multi = "#opts *" #> SHtml.multiSelectObj[Item](options, current, 
+
+def multi = "#opts *" #> SHtml.multiSelectObj[Item](options, current,
   xs => println("Got "+xs) )
 ---------------------------------------------------------
 
@@ -649,7 +649,7 @@ If you hit the size limit an exception will be thrown from the underlying file u
 [source,scala]
 ---------------------------------------------------------
 LiftRules.exceptionHandler.prepend {
-  case (_, _, x : FileUploadIOException) => 
+  case (_, _, x : FileUploadIOException) =>
     ResponseWithReason(BadResponse(), "Unable to process file. Too large?")
 }
 ---------------------------------------------------------
@@ -671,13 +671,13 @@ With `OnDiskFileParamHolder`, the file will be written to a temporary location (
 [source,scala]
 ---------------------------------------------------------
 def processForm() = upload match {
-  
+
   case Full(content : OnDiskFileParamHolder) =>
     println("File is at "+content.localFile.getAbsolutePath)
-    val in: InputStream = content.fileStream 
+    val in: InputStream = content.fileStream
     // do something with the stream here
     val wasDeleted_? = content.localFile.delete()
-  
+
   case _ => println("No file?")
 }
 ---------------------------------------------------------
@@ -815,11 +815,11 @@ By default the widget makes the whole HTML page a drop-target for files, meaning
 Discussion
 ^^^^^^^^^^
 
-In this recipe we've shown just the basic integration of the widget with a Lift application.  The demo site for the widget, http://blueimp.github.com/jQuery-File-Upload/[http://blueimp.github.com/jQuery-File-Upload/], shows other capabilities, and provides documentation on how to integrate them.  
+In this recipe we've shown just the basic integration of the widget with a Lift application.  The demo site for the widget, http://blueimp.github.com/jQuery-File-Upload/[http://blueimp.github.com/jQuery-File-Upload/], shows other capabilities, and provides documentation on how to integrate them.
 
 May of the features just require JavaScript configuration.  For example, we've used the widget's `add`, `progressall`, and `done` handlers to show, update and then fade out a progress bar.  When the upload is completed, the name of the uploaded file is appended to the page.
 
-In the REST service the uploaded file are available via the `uploadedFiles` method on the request. When Lift receives a multi-part form it automatically extracts files as `uploadedFiles`, each of which is a `FileParamHolder` which gives us access to the `fileName`, `length`, `mimeType` and `fileStream`. 
+In the REST service the uploaded file are available via the `uploadedFiles` method on the request. When Lift receives a multi-part form it automatically extracts files as `uploadedFiles`, each of which is a `FileParamHolder` which gives us access to the `fileName`, `length`, `mimeType` and `fileStream`.
 
 By default uploaded files are held in memory, but that can be changed (see <<UploadToDisk>> in <<FileUpload>>).
 
@@ -852,7 +852,10 @@ See Also
 Diego Medina has posted a Gist of Lift REST code to integrate more fully with the image upload and image reviewing features of the widget, specifically implementing the JSON response that the widget expects for that functionality.  You'll find it at: https://gist.github.com/a6715d1e3664f73cd03a[https://gist.github.com/a6715d1e3664f73cd03a].
 
 <<FileUpload>> describes the basic file upload behaviour of Lift and how to control where files are stored.
- 
+
+Antonio Salazar Cardozo has posted example code for performing Ajax file upload using Lift's Ajax mechanisms, which avoids external JavaScript libraries. You can find a description and link to the code at: https://groups.google.com/d/msg/liftweb/OuN1sqRMO_c/TrUGUaSvoN4J[https://groups.google.com/d/msg/liftweb/OuN1sqRMO_c/TrUGUaSvoN4J].
+
+
 
 
 

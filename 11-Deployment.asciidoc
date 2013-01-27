@@ -56,7 +56,7 @@ $ sbt package
 ...
 [info] Packaging /Users/richard/myapp/target/scala-2.9.1/myapp.war...
 ...
-$ bees -a app:deploy ./target/scala-2.9.1/myapp.war
+$ bees app:deploy -a myaccount/myapp ./target/scala-2.9.1/myapp.war
 ---------------------------------------------------------------------
 
 This will send your WAR file to CloudBees and deploy it.  You'll see the location (URL) of your application output from the bees `app:deploy` command when it completes.
@@ -76,7 +76,7 @@ $ bees app:update -a myaccount/myapp stickySession=true
 ----------------------------------------------------------------
 
 If you are using comet, it'll work fine, but the CloudBees default is to enable
-_request buffering_. This allows CloudBees to do smart things, such as re-routing 
+_request buffering_. This allows CloudBees to do smart things, such as re-routing
 requests in a cluster if one machine does not respond. A
 consequence of request buffering is that long-polling comet requests will timeout more
 often. To turn this feature off, run the following:
@@ -86,13 +86,13 @@ often. To turn this feature off, run the following:
 $ bees app:update -a myaccount/myapp disableProxyBuffering=true
 ----------------------------------------------------------------
 
-As with the run mode setting, CloudBees will remember these settings, so you 
+As with the run mode setting, CloudBees will remember these settings, so you
 only need to set them once.
 
 RDBMS Configuration
 +++++++++++++++++++
 
-If you are using a SQL database in your application, you'll want to 
+If you are using a SQL database in your application, you'll want to
 configure `src/main/webapp/WEB-INF/cloudbees-web.xml`. For
 example:
 
@@ -103,13 +103,13 @@ example:
 
 <appid>myaccount/myapp</appid>
 
-<resource name="jdbc/mydb" auth="Container" type="javax.sql.DataSource">  
+<resource name="jdbc/mydb" auth="Container" type="javax.sql.DataSource">
   <param name="username" value="dbuser" />
   <param name="password" value="dbpassword" />
   <param name="url" value="jdbc:cloudbees://mydb" />
 
-  <!-- For these connections settings, see: 
-   http://commons.apache.org/dbcp/configuration.html 
+  <!-- For these connections settings, see:
+   http://commons.apache.org/dbcp/configuration.html
   -->
   <param name="maxActive" value="10" />
   <param name="maxIdle" value="2" />
@@ -121,7 +121,7 @@ example:
   <!-- Avoid idle timeouts -->
   <param name="validationQuery" value="SELECT 1" />
   <param name="testOnBorrow" value="true" />
- 
+
  </resource>
 
 </cloudbees-web-app>
@@ -134,9 +134,9 @@ name is referenced in `Boot.scala`:
 [source, scala]
 ------------------------------------------------------------
 DefaultConnectionIdentifier.jndiName = "jdbc/mydb"
-    
+
 if (!DB.jndiJdbcConnAvailable_?) {
-  // set up alternative local database connection here      
+  // set up alternative local database connection here
 }
 ------------------------------------------------------------
 
@@ -148,7 +148,7 @@ when deploying.
 Host IP and Port Number
 +++++++++++++++++++++++
 
-Generally you don't need to know about your deployed instance's public host name and port number. Requests to your application URL are routed to the specific instance by CloudBees. However there are situations, especially when you have multiple instances, where you do need to find this out. For example, if you want to receive messages from Amazon's Simple Notification Service (SNS), then each instance will need to give a direct URL to SNS when the application boots.  
+Generally you don't need to know about your deployed instance's public host name and port number. Requests to your application URL are routed to the specific instance by CloudBees. However there are situations, especially when you have multiple instances, where you do need to find this out. For example, if you want to receive messages from Amazon's Simple Notification Service (SNS), then each instance will need to give a direct URL to SNS when the application boots.
 
 To get the public hostname, you need to make a HTTP request to `http://instance-data/latest/meta-data/public-hostname`, as documented at https://developer.cloudbees.com/bin/view/Main/Finding+out+app+port+and+hostname[https://developer.cloudbees.com/bin/view/Main/Finding+out+app+port+and+hostname].  For example:
 
@@ -172,7 +172,7 @@ Failure(instance-data,Full(java.net.UnknownHostException: instance-data),Empty)
 The port number can be read from the JVM system property of `sun.java.command`. This is the command that started your application and it includes the port number. An example would be:
 
 ------------------------------------------------------------
-net.stax.appserver.bootstrap.Bootstrap -dir /var/genapp/apps/d414b3f4/staxcat 
+net.stax.appserver.bootstrap.Bootstrap -dir /var/genapp/apps/d414b3f4/staxcat
   -port 8783 -config /var/genapp/apps/d414b3f4/appserver.xml
 ------------------------------------------------------------
 
@@ -199,7 +199,7 @@ val hostAndPort : String =
   ":" + (beesPort openOr "8080")
 ------------------------------------------------------------
 
-Running locally `hostAndPort` might be `192.168.1.60:8080` and running on CloudBees it would be something like `ec2-204-236-222-252.compute-1.amazonaws.com:8520`. 
+Running locally `hostAndPort` might be `192.168.1.60:8080` and running on CloudBees it would be something like `ec2-204-236-222-252.compute-1.amazonaws.com:8520`.
 
 ClickStarts
 +++++++++++
@@ -220,7 +220,7 @@ The CloudBees SDK provides command line tools for configuring and controlling ap
 
 The CloudBees developer portal (https://developer.cloudbees.com[https://developer.cloudbees.com])contains a "Resources" section which provides details of the CloudBees services.
 
-A plugin is available to automate deployments from SBT. The plugin and the excellent 
+A plugin is available to automate deployments from SBT. The plugin and the excellent
 instructions for installing and configuring it can be found at https://github.com/timperrett/sbt-cloudbees-plugin[https://github.com/timperrett/sbt-cloudbees-plugin].
 
 //////////////////////////////////////////
@@ -291,7 +291,7 @@ If you're making use of Lift's state features, you'll need to enable sticky sess
 Working with a Database
 ++++++++++++++++++++++++
 
-There's nothing unusual you have to do to use Lift and a database from Beanstalk. However, Beanstalk does try to make it easy for you to work with Amazon's Relational Database Service (RDS).  Either when creating your Beanstalk environment, or from the configuration options later, you can add an RDS instance, which cab be an Oracle, SQL-Server or MySQL database. 
+There's nothing unusual you have to do to use Lift and a database from Beanstalk. However, Beanstalk does try to make it easy for you to work with Amazon's Relational Database Service (RDS).  Either when creating your Beanstalk environment, or from the configuration options later, you can add an RDS instance, which cab be an Oracle, SQL-Server or MySQL database.
 
 The MySQL option will create a MySQL 5.5 InnoDB database. The database will be accessible from Beanstalk, but not from elsewhere on the Internet. To change that, modify the security groups for the RDS instance from the AWS web console.  For example, you might permit access from your IP address.
 
@@ -312,7 +312,7 @@ val connection = for {
     user, pass)
 -------------------------------------------
 
-That would give you a `Box[Connection]` which, if `Full`, you could use in a `SquerylRecord.initWithSquerylSession` call for example (see <<Squeryl>>).  
+That would give you a `Box[Connection]` which, if `Full`, you could use in a `SquerylRecord.initWithSquerylSession` call for example (see <<Squeryl>>).
 
 Alternatively you might want to guarantee a connection by supplying defaults for all the values with something like this:
 
@@ -337,7 +337,7 @@ val connection = {
 See Also
 ^^^^^^^^
 
-Amazon provide a walk-through with screen shots, showing how to create a Beanstalk application.  It's at: http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/GettingStarted.Walkthrough.html[http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/GettingStarted.Walkthrough.html]. 
+Amazon provide a walk-through with screen shots, showing how to create a Beanstalk application.  It's at: http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/GettingStarted.Walkthrough.html[http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/GettingStarted.Walkthrough.html].
 
 _Elastic Beanstalk_, by van Villet _et al_ (2011, O'Reilly Media, Inc) goes into the details of the Beanstalk infrastructure, how to work with Eclipse, enabling continuous integration, and how to hack the instance, for example to use NGINX as a front-end to Beanstalk.
 
@@ -377,7 +377,7 @@ If you've not already done so, download and install the Heroku command line tool
 $ heroku login
 Enter your Heroku credentials.
 Email: you@example.org
-Password (typing will be hidden): 
+Password (typing will be hidden):
 Found the following SSH public keys:
 1) github.pub
 2) id_rsa.pub
@@ -393,7 +393,7 @@ $ heroku plugins:install https://github.com/heroku/heroku-deploy
 Installing heroku-deploy... done
 ---------------------------
 
-With that one-time set up complete, you can create an application on Heroku. Here we've not specified a name so we given a random name of `glacial-waters-6292` which we will use throughout this recipe:  
+With that one-time set up complete, you can create an application on Heroku. Here we've not specified a name so we given a random name of `glacial-waters-6292` which we will use throughout this recipe:
 
 ---------------------------
 $ heroku create
@@ -408,7 +408,7 @@ $ heroku config:get JAVA_OPTS --app glacial-waters-6292
 -Xmx384m -Xss512k -XX:+UseCompressedOops
 
 $ heroku config:set JAVA_OPTS="-Drun.mode=production -Xmx384m -Xss512k
-  -XX:+UseCompressedOops" --app glacial-waters-6292 
+  -XX:+UseCompressedOops" --app glacial-waters-6292
 ---------------------------
 
 We can deploy to Heroku by packaging the application as a WAR file, and then running the Heroku `deploy:war` command:
@@ -419,7 +419,7 @@ $ sbt package
 ....
 [info] Packaging target/scala-2.9.1/myapp-0.0.1.war ...
 ....
-$ heroku deploy:war --war target/scala-2.9.1/myapp-0.0.1.war 
+$ heroku deploy:war --war target/scala-2.9.1/myapp-0.0.1.war
   --app glacial-waters-6292
 Uploading target/scala-2.9.1/myapp-0.0.1.war............done
 Deploying to glacial-waters-6292.........done
@@ -441,8 +441,8 @@ Second, if you are using Lift comet features, there's an adjustment to make in `
 LiftRules.cometRequestTimeout = Full(25)
 ---------------------------
 
-This setting controls how long Lift waits before testing a comet connection. We're replacing the Lift default of 120 seconds 
-with 25 seconds because Heroku terminates connections after 30 seconds.  Although Lift recovers from this, the user experience may be to see a delay when interacting with a page.  
+This setting controls how long Lift waits before testing a comet connection. We're replacing the Lift default of 120 seconds
+with 25 seconds because Heroku terminates connections after 30 seconds.  Although Lift recovers from this, the user experience may be to see a delay when interacting with a page.
 
 A third important point to note is that the dyno will be restarted every day. Additionally, if you are only running one web dyno, it will be idled after an hour of inactivity. You can see this happening by tailing your application log:
 
@@ -500,7 +500,7 @@ Second, by looking at the processes executing:
 [source, bash]
 ---------------------------
 $ heroku ps --app glacial-waters-6292
-=== web: `${PRE_JAVA}java ${JAVA_OPTS} -jar webapp-runner-7.0.29.3.jar 
+=== web: `${PRE_JAVA}java ${JAVA_OPTS} -jar webapp-runner-7.0.29.3.jar
  --port ${PORT} ${WEBAPP_RUNNER_OPTS} myapp-0.0.1.war`
 web.1: up 2013/01/01 22:37:35 (~ 31s ago)
 ---------------------------
@@ -515,7 +515,7 @@ If you are not a Heruoku Enterprise Java customer, and you're uncomfortable with
 Database Access in Heroku
 +++++++++++++++++++++++++
 
-Heroku make no restrictions on which databases you can connect to from your Lift application, but they try to make it easy to use their PostgreSQL service by attaching a free database to applications you create. 
+Heroku make no restrictions on which databases you can connect to from your Lift application, but they try to make it easy to use their PostgreSQL service by attaching a free database to applications you create.
 
 
 You can find out if you have a database by running the `pg` command:
@@ -560,7 +560,7 @@ def initHerokuDb(dbInfo: String) {
 
   // Construct JDBC connection string from the URI:
   def connection = DriverManager.getConnection(
-    "jdbc:postgresql://" + dbUri.getHost + ':' + dbUri.getPort + 
+    "jdbc:postgresql://" + dbUri.getHost + ':' + dbUri.getPort +
       dbUri.getPath, user, pass)
 
   SquerylRecord.initWithSquerylSession(
@@ -597,7 +597,7 @@ Type "help" for help.
 d44nsahps11hda=> \d
 No relations found.
 d44nsahps11hda=> \q
-$ 
+$
 ---------------------------
 
 To access via a JDBC tool outside of the Heroku environment, you'll need to include parameters to force SSL. For example:
@@ -645,9 +645,9 @@ You use Lift's Comet support, and want to run across multiple servers for increa
 Solution
 ^^^^^^^^
 
-Use the _publish/subscribe_ (pubsub) model to connect each server to a _topic_ and route comet message out to the topic where it can be broadcast to all servers that are part of your application. 
+Use the _publish/subscribe_ (pubsub) model to connect each server to a _topic_ and route comet message out to the topic where it can be broadcast to all servers that are part of your application.
 
-There are a variety of technologies you can use to accomplish this, such as databases, message systems, actor systems. For this recipe we will use the RabitMQ message service, but there are examples using CouchDB and Amazon's Simple Notification Service in the _See Also_ section. 
+There are a variety of technologies you can use to accomplish this, such as databases, message systems, actor systems. For this recipe we will use the RabitMQ message service, but there are examples using CouchDB and Amazon's Simple Notification Service in the _See Also_ section.
 
 Regardless of the technology, the principle is that illustrated in <<DistributedCometDiagram>>. A comet event originating on one Lift application, is sent to a service for redistribution. It is the responsibility of this service (labeled as "topic" in the figure) is to ensure all the participating Lift applications receive the event so it can be processed as normal by Lift.
 
@@ -661,9 +661,9 @@ The first step is to download and install RabbitMQ from http://rabbitmq.com/[htt
 $ ./sbin/rabbitmq-server -detatched
 -----------------------------------------
 
-This command will produce various messages as it starts but will eventually say: "broker running". 
+This command will produce various messages as it starts but will eventually say: "broker running".
 
-The Lift application we'll use to demonstrate the pubsub pattern is the real-time chat application, described in _Simply Lift_. 
+The Lift application we'll use to demonstrate the pubsub pattern is the real-time chat application, described in _Simply Lift_.
 The first modification is to include the Lift module to talk to RabbitMQ. This is a one-line addition to the `libraryDependencies` in `build.sbt`:
 
 [source, scala]
@@ -691,9 +691,9 @@ object Rabbit {
   val durable = true
   val noAck = false
 
-  object RemoteSend extends AMQPSender[String](factory, host, port, 
+  object RemoteSend extends AMQPSender[String](factory, host, port,
     exchange, routing) {
-    def configure(channel: Channel) = 
+    def configure(channel: Channel) =
       channel.exchangeDeclare(exchange, "fanout", durable)
   }
 
@@ -702,7 +702,7 @@ object Rabbit {
       channel.exchangeDeclare(exchange, "fanout", durable)
       val queueName = channel.queueDeclare().getQueue()
       channel.queueBind(queueName, exchange, routing)
-      channel.basicConsume(queueName, noAck, 
+      channel.basicConsume(queueName, noAck,
         new SerializedConsumer(channel, this))
     }
   }
@@ -763,14 +763,14 @@ In the example code, you can see that `AMQPSender[T]` and `AMQPDispatcher[T]` ta
 The `RemoteReceiver` is also configured to receive `String` messages, although the configuration is a little longer. Here, as well as indicating the exchange to be used, we declare a _temporary queue_ for our Lift instance.  The queue is the place where RabbitMQ sends messages, and what we're saying here is that each receiver has its own queue. The fanout exchange will ensure any message sent to the exchange is placed into every queue. The queue has a random name assigned by RabbitMQ and is destroyed we disconnect from it.
 
 The final part of the `RemoteReceiver` is to specify how we consume messages. The default behaviour of `RemoteSend` is to serialise objects, so we mirror that in the receiver by using the `SerializedConsumer` class provided by the AMQP module.
- 
+
 To see the behaviour of RabbitMQ, it's useful to install the management web console.  From the directory where you installed RabbitMQ:
 
 -----------------------------------------
 $ ./sbin/rabbitmq-plugins enable rabbitmq_management
 -----------------------------------------
 
-Visit the administrative web interface at `http://127.0.0.1:15672/` and login.  The default username and password is "guest". 
+Visit the administrative web interface at `http://127.0.0.1:15672/` and login.  The default username and password is "guest".
 
 Having to have RabbitMQ (or other type of pubsub solution) running during development may be inconvenient. In that case, you can simply not initialize the service in `Boot.scala`:
 
@@ -804,7 +804,7 @@ The Lift AMQP module is: https://github.com/liftmodules/amqp[https://github.com/
 
 If you want to learn more about RabbitMQ, take a look at the tutorials (http://www.rabbitmq.com/tutorials/tutorial-five-java.html[http://www.rabbitmq.com/tutorials/tutorial-five-java.html]) or Alvaro Videla and Jason J.W. Williams (2012), _RabbitMQ in Action: Distributed Messaging for Everyone_, Manning Publications.
 
-Diego Medina has implemented a distributed comet solution using CouchDB, and has described it in a blog post at https://fmpwizard.telegr.am/blog/distributed-comet-chat-lift[https://fmpwizard.telegr.am/blog/distributed-comet-chat-lift].  
+Diego Medina has implemented a distributed comet solution using CouchDB, and has described it in a blog post at https://fmpwizard.telegr.am/blog/distributed-comet-chat-lift[https://fmpwizard.telegr.am/blog/distributed-comet-chat-lift].
 
 Amazon's Simple Notification Service (SNS) is a fanout facility so can also be used to implement this pattern. You can find a Lift module for SNS at https://github.com/SpiralArm/liftmodules-aws-sns[https://github.com/SpiralArm/liftmodules-aws-sns].
 
