@@ -157,7 +157,7 @@ Resources for JDNI configuration include:
 * For Tomcat, the JNDI configuration guide is: http://tomcat.apache.org/tomcat-7.0-doc/jndi-resources-howto.html#JDBC_Data_Sources[http://tomcat.apache.org/tomcat-7.0-doc/jndi-resources-howto.html#JDBC_Data_Sources].
 
 
-[[SquerylyOneToMany]]
+[[SquerylOneToMany]]
 One-to-Many Relationship
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
