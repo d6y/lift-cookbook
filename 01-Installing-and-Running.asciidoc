@@ -1,8 +1,10 @@
+[[InstallAndRunning]]
 Install and Running
 -------------------
 
 This chapter covers questions regarding starting development with Lift: running a first Lift application and setting up a coding environment. You'll find answers regarding production deployment in <<deployment>>.
 
+[[DownloadAndRun]]
 Downloading and Running Lift
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -603,7 +605,7 @@ The sbt-idea plugin at https://github.com/mpeltonen/sbt-idea[https://github.com/
 
 JetBrains have a blog for the Scala plugin with feature news and tips: http://blog.jetbrains.com/scala/[http://blog.jetbrains.com/scala/].
 
-
+[[ViewH2]]
 Viewing the lift_proto H2 Database
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -690,6 +692,7 @@ See Also
 To learn the detail of SNAPSHOT versions, dig into the Maven Complete Reference at http://www.sonatype.com/books/mvnref-book/reference/pom-relationships-sect-pom-syntax.html[http://www.sonatype.com/books/mvnref-book/reference/pom-relationships-sect-pom-syntax.html].
 
 
+[[NewScala]]
 Using a New Version of Scala
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

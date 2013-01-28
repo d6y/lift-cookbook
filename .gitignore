@@ -1,3 +1,5 @@
 target
 \.idea
 \.idea_modules
+
+/images/.picasa.ini
