@@ -174,7 +174,7 @@ Use Squeryl's `oneToManyRelation` in your schema, and on your Lift model include
 The objective is to model the relationship as shown in <<SquerylPlanetOneToManyFigure>>.
 
 [[SquerylPlanetOneToManyFigure]]
-.One planet may have many setellites, but a satellite has one planet.
+.One planet may have many satellites, but a satellite orbits just one planet.
 image::images/planets.png[width=640]
 
 In code:
@@ -260,8 +260,8 @@ inTransaction {
   val earth = planets.insert(Planet.createRecord.name("Earth"))
   val mars = planets.insert(Planet.createRecord.name("Mars"))
 
-  // `.save` as a short-hand for `satellite.insert` when we don't need
-  // to immediately reference the record (`save` returns `Unit`).
+  // .save as a short-hand for satellite.insert when we don't need
+  // to immediately reference the record (save returns Unit).
   Satellite.createRecord.name("The Moon").planetId(earth.idField.is).save
   Satellite.createRecord.name("Phobos").planetId(mars.idField.is).save
 
@@ -317,7 +317,7 @@ val express = Satellite.createRecord.name("Mars Express")
 mars.satellites.associate(express)
 -----------------------------------------------------------
 
-The third method, `deleteAll` does what it sounds like it should do: it would execute the following and return the number of rows removed:
+The third method, `deleteAll` does what it sounds like it should do. It would execute the following and return the number of rows removed:
 
 [source, sql]
 -----------------------------------------------------------
@@ -354,6 +354,330 @@ See Also
 ~~~~~~~~
 
 Squeryl relations are documented at http://squeryl.org/relations.html[http://squeryl.org/relations.html].
+
+
+
+
+
+[[SquerylManyToMany]]
+Many-to-Many Relationship
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to model a many-to-many relationship, such as a planet being visted by many space probes, but a space probe also visiting many planets.
+
+Solution
+^^^^^^^^
+
+Use Squeryl's `manyToManyRelation` in your schema, and implement a record to hold the join between the two sides of the relationship. <<SquerylPlanetManyToManyFigure>> shows the structure we will create in this recipe, where `Visit` is the record that will connect each many to the other many.
+
+[[SquerylPlanetManyToManyFigure]]
+.Many-to-many: Jupiter was visited by Juno and Voyager 1; Saturn was visited by Voyager.
+image::images/visits.png[width=640]
+
+The schema is defined in terms of two tables, one for planets and one for space probes, plus a relationship between the two based on a third class, called `Visit`:
+
+[source, scala]
+-----------------------------------------------------------
+package code.model
+
+import org.squeryl.Schema
+import net.liftweb.record.{MetaRecord, Record}
+import net.liftweb.squerylrecord.KeyedRecord
+import net.liftweb.record.field.{IntField, StringField, LongField}
+import net.liftweb.squerylrecord.RecordTypeMode._
+import org.squeryl.dsl.ManyToMany
+
+object MySchema extends Schema {
+
+  val planets = table[Planet]
+  val probes = table[Probe]
+
+  val probeVisits = manyToManyRelation(probes, planets).via[Visit] {
+    (probe, planet, visit) => (visit.probeId === probe.id, visit.planetId === planet.id)
+  }
+
+  class Planet extends Record[Planet] with KeyedRecord[Long]   {
+    override def meta = Planet
+    override val idField = new LongField(this)
+    val name = new StringField(this, 256)
+    lazy val probes : ManyToMany[Probe,Visit] = MySchema.probeVisits.right(this)
+  }
+
+  object Planet extends Planet with MetaRecord[Planet]
+
+  class Probe extends Record[Probe] with KeyedRecord[Long] {
+    override def meta = Probe
+    override val idField = new LongField(this)
+    val name = new StringField(this, 256)
+    lazy val planets : ManyToMany[Planet,Visit] = MySchema.probeVisits.left(this)
+  }
+
+  object Probe extends Probe with MetaRecord[Probe]
+
+  class Visit extends Record[Visit] with KeyedRecord[Long] {
+    override def meta = Visit
+    override val idField = new LongField(this)
+    val planetId = new LongField(this)
+    val probeId = new LongField(this)
+  }
+
+  object Visit extends Visit with MetaRecord[Visit]
+}
+-----------------------------------------------------------
+
+In `Boot.scala` we can print out the schema...
+
+[source, scala]
+-----------------------------------------------------------
+inTransaction {
+  code.model.MySchema.printDdl
+}
+-----------------------------------------------------------
+
+...which will produce something like this, depending on the database in use:
+
+[source, sql]
+-----------------------------------------------------------
+-- table declarations :
+create table Planet (
+    name varchar(256) not null,
+    idField bigint not null primary key auto_increment
+  );
+create table Probe (
+    name varchar(256) not null,
+    idField bigint not null primary key auto_increment
+  );
+create table Visit (
+    idField bigint not null primary key auto_increment,
+    planetId bigint not null,
+    probeId bigint not null
+  );
+-- foreign key constraints :
+alter table Visit add constraint VisitFK1 foreign key (probeId) references Probe(idField);
+alter table Visit add constraint VisitFK2 foreign key (planetId) references Planet(idField);
+-----------------------------------------------------------
+
+`Planet.probes` and `Probe.planets` provide an `associate` method to establish a new relationship. For example, we can establish a set of planets and probes...
+
+[source, scala]
+-----------------------------------------------------------
+val jupiter = planets.insert(Planet.createRecord.name("Jupiter"))
+val saturn = planets.insert(Planet.createRecord.name("Saturn"))
+val juno = probes.insert(Probe.createRecord.name("Juno"))
+val voyager1 = probes.insert(Probe.createRecord.name("Voyager 1"))
+-----------------------------------------------------------
+
+...and then connect them:
+
+[source, scala]
+-----------------------------------------------------------
+juno.planets.associate(jupiter)
+voyager1.planets.associate(jupiter)
+voyager1.planets.associate(saturn)
+-----------------------------------------------------------
+
+A query is provided by `Probe.planets` and `Planet.probes` to look up the associations.  For example, we could access all the probes that had visited each planet with:
+
+[source, scala]
+-----------------------------------------------------------
+package code.snippet
+
+class ManyToManySnippet {
+  def render =
+    "#planet-visits" #> planets.map { planet =>
+      ".planet-name *" #> planet.name.is &
+      ".probe-name *" #> planet.probes.map(_.name.is)
+    }
+}
+-----------------------------------------------------------
+
+That snippet could be combined with a template that contained the following:
+
+[source, html]
+-----------------------------------------------------------
+<div data-lift="ManyToManySnippet">
+  <h1>Planet facts</h1>
+  <div id="planet-visits">
+    <p><span class="planet-name">Name will be here</span> was visited by:</p>
+    <ul>
+      <li class="probe-name">Probe name goes here</li>
+    </ul>
+  </div>
+</div>
+-----------------------------------------------------------
+
+The top half of <<SquerylManyToManyScreengrab>> gives an example of the output from this snippet and template.
+
+Discussion
+^^^^^^^^^^
+
+The Squeryl DSL `manyToManyRelation(probes, planets).via[Visit]` is the core element here connecting our `Planet`, `Probe` and `Visit` records together. It allows us to access the "left" and "right" sides of the relationship in our model as `Probe.planets` and `Planet.probes`.
+
+As with <<SquerylOneToMany>> for one-to-many relationships, the left and right sides are queries. When you ask for `Planet.probes` the database is queried appropriately with a join on the `Visit` records:
+
+[source, sql]
+-----------------------------------------------------------
+Select
+  Probe.name,
+  Probe.idField
+From
+  Visit,
+  Probe
+Where
+  (Visit.probeId = Probe.idField) and (Visit.planetId = ?)
+-----------------------------------------------------------
+
+Also as described in <<SquerylOneToMany>> there are stateful variants of `left` and `right` to cache the query results.
+
+In the data we inserted into the database, we did not have to mention `Visit`. The Squeryl `manyToManyRelation` has enough information to know how to insert a visit as the relationship.  Incidentally, it doesn't matter which way round we make the calls in a many-to-many relationship.  The following two expressions are equivalent and result in the same database structure:
+
+[source, scala]
+-----------------------------------------------------------
+juno.planets.associate(jupiter)
+// ..or..
+jupiter.probes.associate(juno)
+-----------------------------------------------------------
+
+You might even wonder why we had to bother with defining a `Visit` record at all, but there are benefits from doing so. For example, you can attach additional information onto the join table, such as the year the probe visited a planet.
+
+To do this, we modify the record to include the additional field.
+
+[source, scala]
+-----------------------------------------------------------
+class Visit extends Record[Visit] with KeyedRecord[Long] {
+  override def meta = Visit
+  override val idField = new LongField(this)
+  val planetId = new LongField(this)
+  val probeId = new LongField(this)
+  val year = new IntField(this)
+}
+-----------------------------------------------------------
+
+`Visit` is still a container for the `planetId` and `probeId` references, but we also have a plain integer holder for the year of the visit.
+
+To record a visit year, we need the `assign` method provided by `ManyToMany[T]`.  This will establish the relationship, but not change the database. Instead, it returns the `Visit` instance which we can change and then store in the database:
+
+[source, scala]
+-----------------------------------------------------------
+probeVisits.insert(voyager1.planets.assign(saturn).year(1980))
+-----------------------------------------------------------
+
+The return type of `assign` in this case is `Visit`, and `Visit` has a `year` field. Inserting the `Visit` record via `probeVisits` will create a row in the table for visits.
+
+
+To access this extra information on the `Visit` object, you can make use of a couple of methods provided by `ManyToMany[T]`:
+
+* `associations` -- a query returning the `Visit` objects related to the `Planet.probes` or `Probe.planets`.
+
+* `associationMap` -- a query returning pairs of `(Planet,Visit)` or `(Probe,Visit)` depending on which side of the join you call it on (probes or planets).
+
+For example, in a snippet we could list all the space probes, and for each probe show the planet it visited and what year it was there.  The snippet would look like this:
+
+[source, scala]
+-----------------------------------------------------------
+"#probe-visits" #> allProbes.map { probe =>
+  ".probe-name *" #> probe.name.is &
+  ".visit" #> probe.planets.associationMap.collect {
+    case (planet, visit) =>
+      ".planet-name *" #> planet.name.is &
+      ".year" #> visit.year.is
+    }
+}
+-----------------------------------------------------------
+
+We using `collect` here rather than `map` just to match the `(Planet,Visit)` tuple and give the values meaningful names. You could also use `( for { (planet, visit) <- probe.planets.associationMap } yield ... )` if you prefer.
+
+The lower-half of <<SquerylManyToManyScreengrab>> demonstrates how this snippet would render when combined with the following template:
+
+[source, scala]
+-----------------------------------------------------------
+<h1>Probe facts</h1>
+
+<div id="probe-visits">
+  <p><span class="probe-name">Space craft name</span> visited:</p>
+  <ul>
+    <li class="visit">
+      <span class="planet-name">Name here</span> in <span class="year">n</span>
+    </li>
+  </ul>
+</div>
+-----------------------------------------------------------
+
+[[SquerylManyToManyScreengrab]]
+.Example output from using the many-to-many features in this recipe.
+image::images/visitsscreengrab.png[width=640]
+
+To remove an association you have access to `dissociate` and `dissociateAll` on the `left` and `right` queries.  To remove a single association:
+
+
+[source, scala]
+-----------------------------------------------------------
+val numRowsChanged = juno.planets.dissociate(jupiter)
+-----------------------------------------------------------
+
+This would be executed in SQL as:
+
+[source, sql]
+-----------------------------------------------------------
+delete from Visit
+where
+  probeId = ? and planetId = ?
+-----------------------------------------------------------
+
+To remove all the associations:
+
+
+[source, scala]
+-----------------------------------------------------------
+val numRowsChanged = jupiter.probes.dissociateAll
+-----------------------------------------------------------
+
+The SQL for this is:
+
+[source, sql]
+-----------------------------------------------------------
+delete from Visit
+where
+  Visit.planetId = ?
+-----------------------------------------------------------
+
+What you cannot do is delete a `Planet` or `Probe` if that record still has associations in the `Visit` relationship.  What you'd get is a referential integrity exception thrown.  Instead, you'll need to `dissociatateAll` first:
+
+[source, scala]
+-----------------------------------------------------------
+jupiter.probes.dissociateAll
+planets.delete(jupiter.id)
+-----------------------------------------------------------
+
+However, if you do want _cascading deletes_ you can achieve this by overriding the default behaviour in your schema:
+
+-----------------------------------------------------------
+// To automatically remove probes when we remove planets:
+probeVisits.rightForeignKeyDeclaration.constrainReference(onDelete cascade)
+
+// To automatically remove planets when we remove probes:
+probeVisits.leftForeignKeyDeclaration.constrainReference(onDelete cascade)
+-----------------------------------------------------------
+
+This is part of the schema, in that it will change the table constraints, with `printDdl` producing this (depending on the database you use):
+
+[source, sql]
+-----------------------------------------------------------
+alter table Visit add constraint VisitFK1 foreign key (probeId) references Probe(idField) on delete cascade;
+alter table Visit add constraint VisitFK2 foreign key (planetId) references Planet(idField) on delete cascade;
+-----------------------------------------------------------
+
+See Also
+^^^^^^^^
+
+<<SquerylOneToMany>>, on one-to-many relationships, discusses `leftStateful` and `rightStaeful` relations, which are also applicable for many-to-many relationships.
+
+Foreign keys, cascading deletes, are described at: http://squeryl.org/relations.html[http://squeryl.org/relations.html].
+
+
 
 
 [[FieldValidation]]

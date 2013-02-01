@@ -89,6 +89,16 @@ $ bees app:update -a myaccount/myapp disableProxyBuffering=true
 As with the run mode setting, CloudBees will remember these settings, so you
 only need to set them once.
 
+Finally, you may want to increase the -permanent generation_ memory setting of the JVM. By default, an application has 64M assigned for the permgen. To increase this to 128M, run the `bees:update` commannd:
+
+[source, bash]
+----------------------------------------------------------------
+$ bees app:update -a myaccount/myapp jvmPermSize=128
+----------------------------------------------------------------
+
+The commands `bees app:info` and `bees config:list` will report back the settings for your application.
+
+
 RDBMS Configuration
 +++++++++++++++++++
 
@@ -219,6 +229,8 @@ See Also
 The CloudBees SDK provides command line tools for configuring and controlling applications. It can be found at https://wiki.cloudbees.com/bin/view/RUN/BeesSDK[https://wiki.cloudbees.com/bin/view/RUN/BeesSDK].
 
 The CloudBees developer portal (https://developer.cloudbees.com[https://developer.cloudbees.com])contains a "Resources" section which provides details of the CloudBees services.
+
+The JVM PermGen settings for CloudBees are described at https://wiki.cloudbees.com/bin/view/RUN/JVM+PermGen+Space[https://wiki.cloudbees.com/bin/view/RUN/JVM+PermGen+Space], and settings for which JVM is used can be found at https://developer.cloudbees.com/bin/view/RUN/JVMVersion[https://developer.cloudbees.com/bin/view/RUN/JVMVersion].  The run time stack defaults to Tomcat 6, but can also be changed as described at https://developer.cloudbees.com/bin/view/RUN/ClickStack[https://developer.cloudbees.com/bin/view/RUN/ClickStack].
 
 A plugin is available to automate deployments from SBT. The plugin and the excellent
 instructions for installing and configuring it can be found at https://github.com/timperrett/sbt-cloudbees-plugin[https://github.com/timperrett/sbt-cloudbees-plugin].
