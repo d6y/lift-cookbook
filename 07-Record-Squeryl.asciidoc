@@ -283,7 +283,7 @@ Moons of Mars are: List(Phobos, Deimos)
 
 
 Discussion
-~~~~~~~~~~
+^^^^^^^^^^
 
 The `planetToSatellites.left` method is not a simple collection of `Satellite` objects.  It's a Squeryl `Query[Satellite]`, meaning you can treat it like any other kind of `Queryable[Satellite]`.  For example we could ask for those satellites of a planet that are alphabetically after "E", which for Mars would match "Phobos":
 
@@ -351,7 +351,7 @@ Which version should you use? That will depend on your application, but you can 
 
 
 See Also
-~~~~~~~~
+^^^^^^^^
 
 Squeryl relations are documented at http://squeryl.org/relations.html[http://squeryl.org/relations.html].
 
@@ -396,14 +396,16 @@ object MySchema extends Schema {
   val probes = table[Probe]
 
   val probeVisits = manyToManyRelation(probes, planets).via[Visit] {
-    (probe, planet, visit) => (visit.probeId === probe.id, visit.planetId === planet.id)
+    (probe, planet, visit) =>
+      (visit.probeId === probe.id, visit.planetId === planet.id)
   }
 
-  class Planet extends Record[Planet] with KeyedRecord[Long]   {
+  class Planet extends Record[Planet] with KeyedRecord[Long] {
     override def meta = Planet
     override val idField = new LongField(this)
     val name = new StringField(this, 256)
-    lazy val probes : ManyToMany[Probe,Visit] = MySchema.probeVisits.right(this)
+    lazy val probes : ManyToMany[Probe,Visit] =
+      MySchema.probeVisits.right(this)
   }
 
   object Planet extends Planet with MetaRecord[Planet]
@@ -412,7 +414,8 @@ object MySchema extends Schema {
     override def meta = Probe
     override val idField = new LongField(this)
     val name = new StringField(this, 256)
-    lazy val planets : ManyToMany[Planet,Visit] = MySchema.probeVisits.left(this)
+    lazy val planets : ManyToMany[Planet,Visit] =
+      MySchema.probeVisits.left(this)
   }
 
   object Probe extends Probe with MetaRecord[Probe]
@@ -456,8 +459,10 @@ create table Visit (
     probeId bigint not null
   );
 -- foreign key constraints :
-alter table Visit add constraint VisitFK1 foreign key (probeId) references Probe(idField);
-alter table Visit add constraint VisitFK2 foreign key (planetId) references Planet(idField);
+alter table Visit add constraint VisitFK1 foreign key (probeId)
+  references Probe(idField);
+alter table Visit add constraint VisitFK2 foreign key (planetId)
+  references Planet(idField);
 -----------------------------------------------------------
 
 `Planet.probes` and `Probe.planets` provide an `associate` method to establish a new relationship. For example, we can establish a set of planets and probes...
@@ -479,7 +484,7 @@ voyager1.planets.associate(jupiter)
 voyager1.planets.associate(saturn)
 -----------------------------------------------------------
 
-A query is provided by `Probe.planets` and `Planet.probes` to look up the associations.  For example, we could access all the probes that had visited each planet with:
+We can also use `Probe.planets` and `Planet.probes` as a query to look up the associations.  To access all the probes that had visited each planet in a snippet, we can write this:
 
 [source, scala]
 -----------------------------------------------------------
@@ -494,7 +499,7 @@ class ManyToManySnippet {
 }
 -----------------------------------------------------------
 
-That snippet could be combined with a template that contained the following:
+The snippet could be combined with a template that contained the following:
 
 [source, html]
 -----------------------------------------------------------
@@ -541,9 +546,9 @@ juno.planets.associate(jupiter)
 jupiter.probes.associate(juno)
 -----------------------------------------------------------
 
-You might even wonder why we had to bother with defining a `Visit` record at all, but there are benefits from doing so. For example, you can attach additional information onto the join table, such as the year the probe visited a planet.
+You might even wonder why we had to bother with defining a `Visit` record at all, but there are benefits in doing so. For example, you can attach additional information onto the join table, such as the year the probe visited a planet.
 
-To do this, we modify the record to include the additional field.
+To do this, we modify the record to include the additional field:
 
 [source, scala]
 -----------------------------------------------------------
@@ -578,7 +583,7 @@ For example, in a snippet we could list all the space probes, and for each probe
 
 [source, scala]
 -----------------------------------------------------------
-"#probe-visits" #> allProbes.map { probe =>
+"#probe-visits" #> probes.map { probe =>
   ".probe-name *" #> probe.name.is &
   ".visit" #> probe.planets.associationMap.collect {
     case (planet, visit) =>
@@ -666,8 +671,11 @@ This is part of the schema, in that it will change the table constraints, with `
 
 [source, sql]
 -----------------------------------------------------------
-alter table Visit add constraint VisitFK1 foreign key (probeId) references Probe(idField) on delete cascade;
-alter table Visit add constraint VisitFK2 foreign key (planetId) references Planet(idField) on delete cascade;
+alter table Visit add constraint VisitFK1 foreign key (probeId)
+  references Probe(idField) on delete cascade;
+
+alter table Visit add constraint VisitFK2 foreign key (planetId)
+  references Planet(idField) on delete cascade;
 -----------------------------------------------------------
 
 See Also
