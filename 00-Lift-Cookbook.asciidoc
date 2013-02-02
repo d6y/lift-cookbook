@@ -18,15 +18,12 @@ Learning about Lift
 
 If you are looking to learn Lift, take a look at:
 
-* http://simply.liftweb.net/[Simply Lift].
-* http://www.manning.com/perrett/[Lift in Action], Manning Publications.
-* http://exploring.liftweb.net/[Exploring Lift] (also known as _The
-Definitive Guide to Lift_).
-* http://liftweb.net/getting_started[Getting Started] and
-http://www.assembla.com/spaces/liftweb/wiki/Resources[Resources] on the
-Lift web site.
-* http://seventhings.liftweb.net/[Seven Things] that distinguish Lift
-from other web frameworks.
+* _Simply Lift_, online at http://simply.liftweb.net[http://simply.liftweb.net].
+* http://www.packtpub.com/lift-web-applications/book[Lift Web Applications How-to], PACKT Publishing, 2013.
+* http://www.manning.com/perrett/[Lift in Action], Manning Publications, 2011.
+* _Seven Things_ that distinguish Lift from other web frameworks: http://seventhings.liftweb.net[http://seventhings.liftweb.net/].
+* _Exploring Lift_ online at http://exploring.liftweb.net[http://exploring.liftweb.net]  -- also known as http://www.apress.com/9781430224211[The
+Definitive Guide to Lift], Apress Media, 2009.
 
 Copyright
 ~~~~~~~~~
