@@ -803,7 +803,7 @@ The built-in validations are:
 * `valMaxLen` -- validate that a string is not above a given length.
 * `valRegex` -- validate a string matches the given pattern.
 
-An example of regular expression validation would be:
+An example of regular expression validation on a field would be:
 
 [source,scala]
 ------------------------------------------------------------
@@ -817,6 +817,18 @@ val url = new StringField(this, 1024) {
 }
 ------------------------------------------------------------
 
+The list of errors from `validate` are of type `List[FieldError]`.  The `S.error` method accepts this list and registered each validation error message so it can be shown on the page.  It does this by associating the message with an ID for the field, allowing you to pick out just the errors for an individual field, as we do in this recipe.  The ID is stored on the field, and in the case of `Planet.name` it is available as `Planet.name.uniqueFieldId`.  It's a `Box[String]` with a value of `Full("name_id")`.  It is this `name_id` value that we used in the `lift:Msg?id=name_id&errorClass=error` markup to pick out just the error for this field.
+
+You don't have to use `S.error` to display validation messages.  You can roll your own display code, making use of the `FieldError` directly.  As you can see from the source for `FieldError`, the error is available as a `msg` property:
+
+[source,scala]
+------------------------------------------------------------
+case class FieldError(field: FieldIdentifier, msg: NodeSeq) {
+  override def toString = field.uniqueFieldId + " : " + msg
+}
+------------------------------------------------------------
+
+
 See Also
 ^^^^^^^^
 
@@ -827,8 +839,8 @@ The `BaseField.scala` class in the Lift source code contains the definition of t
 
 
 [[CustomValidation]]
-Implementing Custom Validation Logic
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Custom Validation Logic
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
@@ -839,84 +851,117 @@ a record.
 Solution
 ^^^^^^^^
 
-Implement a function from the type of field you want to validate to
-`List[FieldError]`.
+Implement a function from the type of the field to
+`List[FieldError]`, and reference the function in the `validations` on the field.
 
-As an example, consider a database of people, where we want to ensure that no-one added to the
-database can have the same name. For this we need to provide a
-`String => List[FieldError]` function:
+Here's an example: we have a database of planets, and when a user
+enters a new planet, we want the name to be unique.  The name of the planet
+is a `String`, so we need to provide a function from `String => List[FieldError]`.
+
+With the validation function defined (`valUnique`), we include it in the list of `validations` on the
+`name` field:
 
 [source,scala]
 -------------------------------------------------------------------------
-class Person private () extends Record[Person] with KeyedRecord[Person] {
+import net.liftweb.util.FieldError
 
-  override def meta = Person
-
-  @Column(name = "id")
+class Planet extends Record[Planet] with KeyedRecord[Long] {
+  override def meta = Planet
   override val idField = new LongField(this)
 
-  val name = new StringField(this, 100) {
+  val name = new StringField(this, 256) {
     override def validations =
-      valUnique("Please change your name :-)") _ :: super.validations
+      valUnique("Planet already exists") _ ::
+      super.validations
   }
 
-  def valUnique(errorMsg: ⇒ String)(name: String): List[FieldError] =
-    Person.byName(name) match {
-      case Some(name) => FieldError(this.name, errorMsg) :: Nil
-      case _ => Nil
-  }
+  private def valUnique(errorMsg: => String)(name: String): List[FieldError] =
+    Planet.unique_?(name) match {
+      case true => FieldError(this.name, errorMsg) :: Nil
+      case false => Nil
+    }
+}
 
+object Planet extends Planet with MetaRecord[Planet] {
+  def unique_?(name: String) = from(planets) { p =>
+    where(lower(p.name) === lower(name)) select(p)
+  }.isEmpty
 }
 -------------------------------------------------------------------------
+
+The validation is triggered just like any other validation, as described in <<FieldValidation>>.
 
 Discussion
 ^^^^^^^^^^
 
 By convention validation functions have two argument lists: the first
 for the error message; the second to receive the value to validate. This
-allows you to easily re-use your validation function on other fields.
+allows you to easily re-use your validation function on other fields.  For example,
+if you wanted to validate that satellites have a unique name, you could use
+exactly the same function but provide a different error message.
 
 The `FieldError` you return needs to know the field it applies to as
 well as the message to display. In the example the field is `name`, but
-we've used `this.name` to avoid confusion with the `Some(name)` in the
-pattern match or the `name` passed as an argument to `valUnique`.
+we've used `this.name` to avoid confusion with the `name` parameter passed
+into the `valUnique` function.
 
-In case you're wondering, the implementation of `Person.byName` might
-be:
+The example code has used text for the error message, but there is a variation of `FieldError` that
+accepts `NodeSeq`.  This allows you to produce safe markup as part of the error if you need to.  For example:
 
 [source,scala]
----------------------------------------------
-def byName(name: String) =
-  from(YourSchema.people)
-  (p => where(lower(p.name) === lower(name))
-  select (l)).headOption
----------------------------------------------
+-------------------------------------------------------------------------
+FieldError(this.name, <p>Please see <a href="/policy">our name policy</a></p>)
+-------------------------------------------------------------------------
+
+For internationalisation, you may prefer to pass in a key to the validation function, and
+resolve it via `S.?`:
+
+[source,scala]
+-------------------------------------------------------------------------
+val name = new StringField(this, 256) {
+    override def validations =
+      valUnique("validation.planet") _ ::
+      super.validations
+  }
+
+// ...combined with...
+
+private def valUnique(errorKey: => String)(name: String): List[FieldError] =
+  Planet.unique_?(name) match {
+    case false => FieldError(this.name, S ? errorKey) :: Nil
+    case true => Nil
+  }
+-------------------------------------------------------------------------
+
 
 See Also
 ^^^^^^^^
 
 <<FieldValidation>> discusses field validation and the built-in validations.
 
+Text localisation is discussed on the Lift wiki at: https://www.assembla.com/wiki/show/liftweb/Localization[https://www.assembla.com/wiki/show/liftweb/Localization].
 
 
-Modify a field value before it is set
+[[SquerylFilter]]
+Modify a Field Value Before it is Set
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
 
 You want to modify the value of a field, so the value in your model is
-the modified version.
+the modified version.  For example, to clean a value by removing leading and trailing whitespace.
 
 Solution
 ^^^^^^^^
 
-Override `setFilter`. For example, to remove leading and trailing
-whitespace entered by the user:
+Override `setFilter` and provide a list of functions to apply to a field.
+
+To remove leading and trailing whitespace entered by the user, the field would use the `trim` filter:
 
 [source,scala]
 -----------------------------------------------------
-val title = new StringField(this, 256) {
+val name = new StringField(this, 256) {
    override def setFilter = trim _ :: super.setFilter
 }
 -----------------------------------------------------
@@ -932,13 +977,49 @@ The built-in filters are:
 * `removeRegExChars` -- removes matching regular expression characters.
 * `notNull` -- coverts null values to an empty string.
 
+Filters are run before validation. As an example, this means if you have a minimum length validation and the trim filter, users cannot pass the validation test by included spaces on the end of the value they enter.
+
+A filter for a `String` field would be of type `String => String`, and the `setFilter` function expects a `List` of these.  Knowing this, it's straight-forward to write custom filters. For example, here's is a filter that applies a simple form of title case on our `name` field:
+
+[source,scala]
+-----------------------------------------------------
+ def titleCase(in: String) =
+  in.split("\\s").
+  map(_.toList).
+  collect {
+    case x :: xs  => (Character.toUpperCase(x).toString :: xs).mkString
+  }.mkString(" ")
+-----------------------------------------------------
+
+This function is splitting the input string on spaces, converting each word into an array of characters, converting the first character into upper case, and then gluing the strings back together.
+
+When installed as a filter...
+
+[source,scala]
+-----------------------------------------------------
+val name = new StringField(this, 256) {
+   override def setFilter =
+    trim _ ::
+    titleCase _ ::
+    super.setFilter
+}
+-----------------------------------------------------
+
+...a user entering "jaglan beta" as a planet name would see it stored in the database as "Jaglan Beta".
+
+
 See Also
 ^^^^^^^^
 
-* Source for https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/BaseField.scala[BaseField.scala] which includes the definition of the filters.
+The best place to understand the filters is the trait `StringValidators` in the source for `BaseField`: https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/BaseField.scala[https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/BaseField.scala].
 
-Put a random value in a column
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+If you really do need to apply title case to a value, the Apache Commons `WordUtils` class provides ready-made functions for this.  See: http://commons.apache.org/lang/[http://commons.apache.org/lang/].
+
+
+
+[[RandomValueColumn]]
+Store a Random Value in a Column
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
@@ -952,33 +1033,60 @@ Use `UniqueIdField`:
 
 [source,scala]
 --------------------------------------------
-val myColumn = new UniqueIdField(this,32) {}
+import net.liftweb.record.field.UniqueIdField
+
+val randomId = new UniqueIdField(this, 32) {}
 --------------------------------------------
-
-The size value, 32 in this example, controls the number of characters in
-the random field.
-
-Discussion
-^^^^^^^^^^
-
-The field is a kind of `StringField` and the default value for the field
-comes from `StringHelpers.randomString`.
 
 Note the `{}` in the example: this is required as `UniqueIdField` is an
 abstract class.
 
+The size value, 32, indicates how many random characters to create.
+
+Discussion
+^^^^^^^^^^
+
+The `UniqueIdField` field is a kind of `StringField` and the default value for the field
+comes from `StringHelpers.randomString`. The value is randomly generated, but not guaranteed to be unique in the database.
+
+The database column backing the `UniqueIdField` in this recipe will be a `varchar(32) not null` or similar and will hold a value like "GOJFGQRLS5GVYGPH3L3HRNXTATG3RM5M".
+
+As the value is made up of just letters and numbers, it makes it easy to use in URLs as there are no characters to escape. For example, it could be used in a link to allow a user to validate their account when sent the link over email, which is what `ProtoUser` uses it for.
+
+If you need to change the value, the `reset` method on the field will generate a new random string for the field.
+
+If you need an automatic value that is even more likely to be unique per-row, you can add a field that wraps a _universally unique identifier_ (UUID):
+
+[source,scala]
+--------------------------------------------
+import java.util.UUID
+
+val uuid = new StringField(this, 36) {
+  override def defaultValue = UUID.randomUUID().toString
+}
+--------------------------------------------
+
+This will automatically insert values of the form "6481a844-460a-a4e0-9191-c808e3051519" in records you create.
+
+
+
 See Also
 ^^^^^^^^
 
-* Source for https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/StringHelpers.scala[StringHelpers].
+Java's UUID support is described at http://docs.oracle.com/javase/7/docs/api/java/util/UUID.html[http://docs.oracle.com/javase/7/docs/api/java/util/UUID.html] and includes a link to RFC 4122 which defines UUIDs.
 
-Automatic created and updated timestamps for a Squeryl Record
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+[[SquerylUpdatedCreated]]
+Automatic Created and Updated Timestamps
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
 
-You want created and updated fields on your records and would like them
+You want created and updated timestamps on your records and would like them
 automatically updated when a row is added or updated.
 
 Solution
@@ -988,6 +1096,13 @@ Define the following traits:
 
 [source,scala]
 --------------------------------------------------------------
+package code.model
+
+import java.util.Calendar
+
+import net.liftweb.record.field.DateTimeField
+import net.liftweb.record.Record
+
 trait Created[T <: Created[T]] extends Record[T] {
   self: T =>
   val created: DateTimeField[T] = new DateTimeField(this) {
@@ -1012,14 +1127,15 @@ trait CreatedUpdated[T <: Updated[T] with Created[T]] extends
 }
 --------------------------------------------------------------
 
-Add to your model, for example:
+Add the trait to the model. For example, we can modify a `Planet` record to include
+the time the record was created and updated:
 
 [source,scala]
 ----------------------------------------------------------
-class YourRecord private () extends Record[YourRecord]
-  with KeyedRecord[Long] with CreatedUpdated[YourRecord] {
-    override def meta = YourRecord
-    //field entries ...
+class Planet private () extends Record[Planet]
+  with KeyedRecord[Long] with CreatedUpdated[Planet] {
+    override def meta = Planet
+    // field entries as normal...
 }
 ----------------------------------------------------------
 
@@ -1027,10 +1143,10 @@ Finally, arrange for the `updated` field to be updated:
 
 [source,scala]
 -----------------------------------------------
-class YourSchema extends Schema {
+class MySchema extends Schema {
   ...
   override def callbacks = Seq(
-    beforeUpdate[YourRecord] call {_.onUpdate}
+    beforeUpdate[Planet] call {_.onUpdate}
   )
   ...
 -----------------------------------------------
@@ -1038,9 +1154,7 @@ class YourSchema extends Schema {
 Discussion
 ^^^^^^^^^^
 
-_This recipe requires Lift 2.5 or later._
-
-Although there is a built in `net.lifetweb.record.LifecycleCallbacks`
+Although there is a built in `net.liftweb.record.LifecycleCallbacks`
 trait in which allows you trigger behaviour onUpdate, afterDelete and so
 on, it is only for use on individual Fields, rather than Records. As our
 goal is to update the `updated` field when any part of the Record
@@ -1050,6 +1164,26 @@ Instead, the `CreatedUpdated` trait simplifies adding an `updated` and
 `created` fields to a Record, but we do need to remember to add a hook
 into the schema to ensure the `updated` value is changed when a record
 is modified. This is why we set the `callbacks` on the Schema.
+
+The schema for records with `CreatedUpdated` mixed in will include two additional columns:
+
+[source,sql]
+-----------------------------------------------
+updated timestamp not null,
+created timestamp not null
+-----------------------------------------------
+
+The `timestamp` is used for the H2 database.  For other databases the type may be different.
+
+The values can be accessed like any other record field.  Using the example data from <<SquerylOneToMany>> we could run the following:
+
+[source,scala]
+-----------------------------------------------
+val updated : Calendar = mars.updated.id
+val created : Calendar = mars.created.is
+-----------------------------------------------
+
+If you only need create time, or updated time, just mix in the `Created[T]` or `Updaed[T]` trait instead of `CreatedUpdated[T]`.
 
 It should be noted that `onUpdate` is only called on full updates and
 not on partial updates with Squeryl. A full update is when the object is
@@ -1067,19 +1201,17 @@ callbacks also support other triggered behaviours:
 See Also
 ^^^^^^^^
 
-* http://squeryl.org/inserts-updates-delete.html[Explanation of full vs
-partial update in Squeryl].
-* Mailing list discussion
-https://groups.google.com/d/msg/liftweb/G4U14pQbZZ4/V24YvhUPvEEJ[regarding
-LifecycleCallbacks].
+For a discussion of the difference between partial and full updates in Squeryl, see : http://squeryl.org/inserts-updates-delete.html[http://squeryl.org/inserts-updates-delete.html].
 
+
+[[SquerylLogging]]
 Logging SQL
 ~~~~~~~~~~~
 
 Problem
 ^^^^^^^
 
-You want to see the SQL being executed by Record with Squeryl.
+You want to see the SQL being executed by Squeryl.
 
 Solution
 ^^^^^^^^
@@ -1099,16 +1231,71 @@ simply printing the SQL to the console.
 Discussion
 ^^^^^^^^^^
 
-This recipe is not specific to Lift, and will work wherever you use
-Squeryl.
+You'll probably want to use the logging facilities in Lift to capture SQL.  For example:
+
+[source,scala]
+---------------------------------------------------------------
+package code.snippet
+
+import net.liftweb.common.Loggable
+import org.squeryl.Session
+
+class MySnippet extends Loggable {
+
+  def render = {
+
+    Session.currentSession.setLogger( s => logger.info(s) )
+
+    // ...your snippet code here...
+  }
+}
+---------------------------------------------------------------
+
+This will log queries according to the settings for the logging system, typically the Logback project configured in `src/resources/logback.xml` or `src/resources/props/default.logback.xml`.
+
+It can be inconvenient to have to enable logging in each snippet during development.  To trigger logging for all snippets, you can modify the `addAround` call in `Boot.scala`.
+
+Recall from <<ConfiguringSqueryl>> that this is usually defined as:
+
+[source,scala]
+---------------------------------------------------------------
+S.addAround(new LoanWrapper {
+  override def apply[T](f: => T): T = inTransaction { f }
+})
+---------------------------------------------------------------
+
+To enable logging in each session, we can modify `Boot.scala` to mix in logging and enable logging on every session:
+
+[source,scala]
+---------------------------------------------------------------
+class Boot extends Loggable {
+
+  // ...boot as usual here...
+
+  S.addAround(new LoanWrapper {
+    override def apply[T](f: => T): T = inTransaction {
+      Session.currentSession.setLogger( s => logger.info(s) )
+      f
+    }
+  })
+
+}
+---------------------------------------------------------------
+
 
 See Also
 ^^^^^^^^
 
-* Squeryl http://squeryl.org/getting-started.html[getting started] page.
-* Squeryl page on http://squeryl.org/miscellaneous.html[logging the
-generated SQL]
+The setLogger is documented at: http://squeryl.org/miscellaneous.html[http://squeryl.org/miscellaneous.html].
 
+You can learn about logging in Lift from the Logging wiki page: https://www.assembla.com/spaces/liftweb/wiki/Logging[https://www.assembla.com/spaces/liftweb/wiki/Logging].
+
+
+
+
+
+
+[[SquerylMediumText]]
 Model a column with MySQL MEDIUMTEXT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1121,20 +1308,18 @@ doesn't have this option.
 Solution
 ^^^^^^^^
 
-Use Squeryl's `dbType`:
+Use Squeryl's `dbType` in your schema:
 
 [source,scala]
 ------------------------------------------
-on(mytable)(t => declare(
-  t.mycolumn defineAs dbType("MEDIUMTEXT")
-))
+object MySchema extends Schema {
+  on(mytable)(t => declare(
+    t.mycolumn defineAs dbType("MEDIUMTEXT")
+  ))
+}
 ------------------------------------------
 
-Discussion
-^^^^^^^^^^
-
-You can continue to use `StringField`, but regardless of the size you
-pass, the schema will be:
+This schema setting will give you the correct column type in MySQL:
 
 [source,sql]
 --------------------------------
@@ -1143,24 +1328,37 @@ create table mytable (
 );
 --------------------------------
 
-This recipe is not specific to Lift, and will work wherever you use
-Squeryl.
+On the record you can use `StringField` as usual.
+
+Discussion
+^^^^^^^^^^
+
+This recipe hints at the flexibility available with Squery's schema definition DSL.  The column attribute in this example is just one of a variety of adjustments you can make to the default choices that Squeryl uses.
+
+For example, you can use the syntax to chain column attributes for a single column, and also defined multiple columns at the same time:
+
+[source,scala]
+------------------------------------------
+object MySchema extends Schema {
+  on(mytable)(t => declare(
+    t.mycolumn defineAs(dbType("MEDIUMTEXT"),indexed),
+    t.id definedAs(unique, named("MY_ID"))
+  ))
+}
+------------------------------------------
+
 
 See Also
 ^^^^^^^^
 
-* Squeryl http://squeryl.org/schema-definition.html[schema defintion]
-page.
-* https://groups.google.com/forum/?fromgroups#!topic/liftweb/TXbDGdX54LQ[MySQL,
-Squeryl and MEDIUMTEXT with Record] mailing list discussion.
+The schema definition page for Squeryl gives examples of attributes you can apply to tables and columns: http://squeryl.org/schema-definition.html[http://squeryl.org/schema-definition.html].
 
 
 
 
-
-
-MySQL Unicode Charset Encoding
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[[MySQLCharSet]]
+MySQL Character Set Encoding
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
@@ -1170,18 +1368,41 @@ Some characters stored in your MySQL database are appearing as `???`.
 Solution
 ^^^^^^^^
 
-Ensure:
+Ensure that:
 
-* `Boot.scala` includes: `LiftRules.early.append(_.setCharacterEncoding("UTF-8"))`
+* `Boot.scala` includes `LiftRules.early.append(_.setCharacterEncoding("UTF-8"))`
 * Your JDBC connections URL includes `?useUnicode=true&characterEncoding=UTF-8`
 * Your MySQL database has been created using a UTF-8 character set.
+
+Discussion
+^^^^^^^^^^
+
+There are a number of interactions here which can impact characters going into, and coming out of, a MySQL database.  The basic problem is that bytes transferred across networks have no meaning unless you know the encoding.
+
+The `setCharacterEncoding("UTF-8")` call in `Boot.scala` is being applied to every `HTTPRequest` which ultimately, in a servlet container, is applied to a `ServletRequest`. This is how parameters in a request are going to be interpreted by the servlet container when received.
+
+The flip side of this is that responses from Lift are encoded as UTF-8.  You'll see this in a number of places. For example, `templates-hidden/default` includes:
+
+[source, html]
+-------------------------------------------
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+-------------------------------------------
+
+Also, the `LiftResponse` classes set the encoding as UTF-8.
+
+Another aspect is how character data from Lift is sent to the database over the network.  This is controlled by the parameters to the JDBC driver.  The default for MySQL is to detect the encoding, but it seems from experience that this is not a great option, so we force the UTF-8 encoding.
+
+Finally, the MySQL database itself needs to store the data as UTF-8.  The default character encoding is not UTF-8, so you'll need to specify the encoding when you create the database:
+
+[source, sql]
+-------------------------------------------
+CREATE DATABASE myDb CHARACTER SET utf8
+-------------------------------------------
 
 See Also
 ^^^^^^^^
 
-* https://groups.google.com/forum/?fromgroups#!topic/liftweb/DL9AFyU5y2k[EMail thread on the Lift mailing list]
-* https://github.com/d6y/mysql-lift-charset-test[MySQL UTF-8 test Lift app] - although it uses SBT 0.7 so is rather out of date.
-* http://dev.mysql.com/doc/refman/5.6/en/connector-j-reference-configuration-properties.html[MySQL JDBC COnfiguration reference]
+The MySQL JDBC configuration guide is at: http://dev.mysql.com/doc/refman/5.6/en/connector-j-reference-configuration-properties.html[http://dev.mysql.com/doc/refman/5.6/en/connector-j-reference-configuration-properties.html].
 
 
 

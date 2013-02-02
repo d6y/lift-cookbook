@@ -645,6 +645,7 @@ The properties of H2 are described at  http://www.h2database.com[http://www.h2da
 
 If you're using the console frequently, consider mapping it accessible from your Lift application in development node.  This is described by Diego Medina in a blog post at https://fmpwizard.telegr.am/blog/lift-and-h2[https://fmpwizard.telegr.am/blog/lift-and-h2].
 
+The example Lift project for <<Squeryl>> has the H2 console enabled. The source is: https://github.com/LiftCookbook/cookbook_squeryl[https://github.com/LiftCookbook/cookbook_squeryl].
 
 [[snapshot]]
 Using the Latest Lift build
