@@ -688,6 +688,7 @@ Foreign keys, cascading deletes, are described at: http://squeryl.org/relations.
 
 
 
+
 [[FieldValidation]]
 Adding Validation to a Field
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -700,36 +701,98 @@ You want to add validation to a field in your model, so that users are informed 
 Solution
 ^^^^^^^^
 
-Override `validations`. For example:
+Override the `validations` method on your field.  As an example, imagine we have a database of planets and we want to ensure any new planets entered by users have names of at least five characters.  We add this as a validation on our record:
 
 [source,scala]
 ------------------------------------------------------------------------
-val title = new StringField(this, 256) {
-  override def validations = valMinLen(1, "Title cannot be blank") _ ::
-    super.validations
-}
+ class Planet extends Record[Planet] with KeyedRecord[Long]   {
+    override def meta = Planet
+    override val idField = new LongField(this)
+
+    val name = new StringField(this, 256) {
+      override def validations =
+        valMinLen(5, "Name too short") _ :: super.validations
+    }
+
+  }
 ------------------------------------------------------------------------
 
-In your snippet you can check the validations:
+To check the validation, in our snippet we call `validate` on the record which will return all the errors for the record:
 
 [source,scala]
 ---------------------------------------------------------
-val thing = MyThing.createRecord.title(title)
-thing.validate match {
-  case Nil =>
-    // No validation problems
-    S.redirectTo("/success")
-  case xs => // One or more validation problems!
-    S.error(xs)
+package code
+package snippet
+
+import net.liftweb.http.{S,SHtml}
+import net.liftweb.util.Helpers._
+
+import model.MySchema._
+
+class ValidateSnippet {
+
+  def render = {
+
+    val newPlanet = Planet.createRecord
+
+    def validateAndSave() : Unit = newPlanet.validate match {
+      case Nil =>
+        planets.insert(newPlanet)
+        S.notice("Planet '%s' saved" format newPlanet.name.is)
+
+      case errors =>
+        S.error(errors)
+    }
+
+    "#planetName" #> newPlanet.name.toForm &
+    "type=submit" #> SHtml.onSubmitUnit(validateAndSave)
+  }
 }
 ---------------------------------------------------------
 
-In your template, you can reference the column to show any error:
+When the snippet renders we render the `Planet.name` field and wire up a submit button to call the `validateAndSave` method.
+
+If the `validate` call indicates there are no errors (`Nil`), we can save the record and inform the user via a notice.  If there are errors, we render all of them.
+
+The corresponding template could be:
 
 [source,html]
 -----------------------------------------------------------------------
-<p class="lift:Msg?id=title_id&errorClass=error">Msg to appear here</p>
+<html>
+<head>
+  <title>Planet Name Validation</title>
+</head>
+<body class="lift:content_id=main">
+<div id="main" class="lift:surround?with=default;at=content">
+  <h1>Add a planet</h1>
+
+  <div class="lift:Msgs?showAll=false">
+    <lift:notice_class>noticeBox</lift:notice_class>
+  </div>
+
+  <p>
+    Planet names need to be at least 5 characters long.
+  </p>
+
+  <form class="ValidateSnippet?form">
+
+    <div>
+      <label for="planetName">Planet name:</label>
+      <input id="planetName" type="text"></input>
+      <span class="lift:Msg?id=name_id&errorClass=error">Msg to appear here</span>
+    </div>
+
+    <input type="submit"></input>
+
+  </form>
+
+</div>
+</body>
+</html>
 -----------------------------------------------------------------------
+
+In this template the error message is shown next to the `input` field, styled with a CSS class of `errorClass`. The success notice
+is shown near the top of the page, just below the `<h1>` heading, using a styled called `noticeBox`.
 
 Discussion
 ^^^^^^^^^^
@@ -758,6 +821,8 @@ See Also
 ^^^^^^^^
 
 The `BaseField.scala` class in the Lift source code contains the definition of the built-in `StringValidators`. Find the source at: https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/BaseField.scala[https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/BaseField.scala].
+
+<<Forms>> describes form processing, notices and errors.
 
 
 
