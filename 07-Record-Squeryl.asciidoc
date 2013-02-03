@@ -1030,7 +1030,7 @@ Testing with Specs2
 Problem
 ^^^^^^^
 
-You want to write a Specs2 unit tests that access your database model with Squeryl and Record.
+You want to write Specs2 unit tests which access your database model with Squeryl and Record.
 
 Solution
 ^^^^^^^^
@@ -1048,7 +1048,7 @@ libraryDependencies += "com.h2database" % "h2" % "1.3.170"
 parallelExecution in Test := false
 --------------------------------------------
 
-Create a trait to initialise the database and ensure it is set up:
+Create a trait to initialise the database and create the schema:
 
 [source, scala]
 --------------------------------------------
@@ -1119,7 +1119,9 @@ trait DBTestKit extends Loggable {
 
 In summary, this trail provides an `InMemoryDB` _context_ for Specs2. This context ensures that the database is configured, the schema created and a transaction is supplied around your test.
 
-Finally, mix the trait into your test and execute in the scope of the `InMemoryDB` context.  As an example, using the schema from <<SquerylOneToMany>> we can test that the planet Mars has two moons:
+Finally, mix the trait into your test and execute in the scope of the `InMemoryDB` context.
+
+As an example, using the schema from <<SquerylOneToMany>> we can test that the planet Mars has two moons:
 
 [source, scala]
 --------------------------------------------
@@ -1149,7 +1151,7 @@ class PlanetsSpec extends Specification with DBTestKit {
 }
 --------------------------------------------
 
-Running this with SBT's `test` command would show a successful run:
+Running this with SBT's `test` command would show a success:
 
 ------------------------------------------
 > test
@@ -1171,7 +1173,9 @@ Running this with SBT's `test` command would show a successful run:
 Discussion
 ^^^^^^^^^^
 
-The `DBTestKit` trait has to do quite a lot of work for us.  At the lowest level, it loads the H2 driver and configures Squeryl with an in-memory connection. The `mem` part of the JDBC connection string (`jdbc:h2:mem:dbname;DB_CLOSE_DELAY=-1`) means that H2 won't try to persist the data to disk.  It resides in memory, meaning there are no files to maintain.  By default, when a connection is closed, the in memory database is destroyed. In this recipe we've disabled that by adding the `DB_CLOSE_DELAY=-1`, which will allow us to write unit tests that span connection if we want to.
+The `DBTestKit` trait has to do quite a lot of work for us.  At the lowest level, it loads the H2 driver and configures Squeryl with an in-memory connection. The `mem` part of the JDBC connection string (`jdbc:h2:mem:dbname;DB_CLOSE_DELAY=-1`) means that H2 won't try to persist the data to disk.  The database just resides in memory, so there are no files in disk to maintain, and it runs quickly.
+
+By default, when a connection is closed, the in memory database is destroyed. In this recipe we've disabled that by adding the `DB_CLOSE_DELAY=-1`, which will allow us to write unit tests that span connections if we want to.
 
 The next step up from connection management is the creation of the database schema in memory. We do this in `createDb` by throwing away the schema and any data when we start a test, and create it afresh.  If you have very common test datasets, this might be a good place to insert that data before your test runs.
 
@@ -1186,7 +1190,7 @@ We've used a database with an in-memory mode for the advantages of speed and no 
 See Also
 ^^^^^^^^
 
-H2's in-memory database settings: http://www.h2database.com/html/features.html#in_memory_databases[http://www.h2database.com/html/features.html#in_memory_databases].
+See http://www.h2database.com/html/features.html#in_memory_databases[http://www.h2database.com/html/features.html#in_memory_databases] for more about H2's in-memory database settings.
 
 <<MongoUnitTest>> discusses unit testing with MongoDB, but the comments on SBT's other testing commands and testing in an IDE would apply to this recipie too.
 
@@ -1208,7 +1212,6 @@ Use `UniqueIdField`:
 [source,scala]
 --------------------------------------------
 import net.liftweb.record.field.UniqueIdField
-
 val randomId = new UniqueIdField(this, 32) {}
 --------------------------------------------
 
@@ -1223,7 +1226,11 @@ Discussion
 The `UniqueIdField` field is a kind of `StringField` and the default value for the field
 comes from `StringHelpers.randomString`. The value is randomly generated, but not guaranteed to be unique in the database.
 
-The database column backing the `UniqueIdField` in this recipe will be a `varchar(32) not null` or similar.  The value stored will look like "GOJFGQRLS5GVYGPH3L3HRNXTATG3RM5M".
+The database column backing the `UniqueIdField` in this recipe will be a `varchar(32) not null` or similar.  The value stored will look like:
+
+----------------------
+GOJFGQRLS5GVYGPH3L3HRNXTATG3RM5M
+----------------------
 
 As the value is made up of just letters and numbers, it makes it easy to use in URLs as there are no characters to escape. For example, it could be used in a link to allow a user to validate their account when sent the link over email, which is one of the uses in `ProtoUser`.
 
