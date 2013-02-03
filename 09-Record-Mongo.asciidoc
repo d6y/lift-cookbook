@@ -48,16 +48,16 @@ If your database needs authentication, use `MongoDB.defineDbAuth`:
 
 [source,scala]
 --------------------------------------------------------------
-MongoDB.defineDbAuth(DefaultMongoIdentifier, new Mongo(server), 
+MongoDB.defineDbAuth(DefaultMongoIdentifier, new Mongo(server),
   "mydb", "username", "password")
 --------------------------------------------------------------
 
 Some cloud services will give you a URL to connect to, such as
 "mongodb://alex.mongohq.com:10050/fglvBskrsdsdsDaGNs1". In this case, the host and
 the port make up the first part, and the database name is the part after
-the `/`.  
+the `/`.
 
-If you need to turn a URL like this into a connection, you can do so by 
+If you need to turn a URL like this into a connection, you can do so by
 using `java.net.URI` to parse the URL and make a connection:
 
 [source,scala]
@@ -72,16 +72,16 @@ object MongoUrl {
     val server = new Mongo(new ServerAddress(uri.getHost, uri.getPort))
 
     Option(uri.getUserInfo).map(_.split(":")) match {
-      case Some(Array(user,pass)) => 
+      case Some(Array(user,pass)) =>
         MongoDB.defineDbAuth(id, server, db, user, pass)
-      case _ => 
+      case _ =>
         MongoDB.defineDb(id, server, db)
     }
   }
 
 }
 
-MongoUrl.defineDb(DefaultMongoIdentifier, 
+MongoUrl.defineDb(DefaultMongoIdentifier,
   "mongodb://user:pass@127.0.0.1:27017/myDb")
 --------------------------------------------------------------
 
@@ -154,7 +154,7 @@ We can use it in a snippet like this:
 [source,scala]
 -------------------------------------------------------------------------------
 class Places {
-  
+
   val uk = Country.find("uk") openOr {
     val info = Map(
       "Brighton" -> 134293,
@@ -230,7 +230,7 @@ object population extends MongoMapField[Country,Int](this) {
 }
 -------------------------------------------------------------------
 
-If you now write the document without a `population` set, the field will be omitted in Mongo: 
+If you now write the document without a `population` set, the field will be omitted in Mongo:
 
 -------------------------------------------------------------------
 > db.example.earth.find();
@@ -248,7 +248,7 @@ uk.population(uk.population.is + ("Westminster"->81766)).update
 Note that we are using `update` here, rather than `save`.  The `save` method is pretty smart and will either insert a new document into a Mongo collection or _replace_ an existing document based on the `_id`.  Update is different: it detects just the changed fields of the document and updates them. It will send this command to Mongo for the document:
 
 -------------------------------------------------------------------
-{ "$set" : { "population" : { "Brighton" : 134293 , "Liverpool" : 469017 , 
+{ "$set" : { "population" : { "Brighton" : 134293 , "Liverpool" : 469017 ,
   "Birmingham" : 970892 , "Westminster" : 81766} }
 -------------------------------------------------------------------
 
@@ -257,7 +257,7 @@ You'll probably want to use `update` over `save` for changes to existing records
 To access an individual element of the map, you can use `get` (or `value`):
 
 [source,scala]
----------------------------------------------- 
+----------------------------------------------
 uk.population.get("San Francisco")
 // will throw java.util.NoSuchElementException
 ----------------------------------------------
@@ -275,7 +275,7 @@ What a `MongoMapField` Can Contain
 You should be aware that `MongoMapField` supports only primitive types.
 
 The mapped field used in this recipe is typed `String => Int`, but of course
-Mongo will let you mix types such as putting a `String` or a `Boolean` as a population value. 
+Mongo will let you mix types such as putting a `String` or a `Boolean` as a population value.
 If you do modify the Mongo record in the database outside of Lift and mix types, you'll get a `java.lang.ClassCastException` at
 runtime.
 
@@ -335,7 +335,7 @@ To associate a value:
 
 [source,scala]
 -----------------------------------------------------------------------------
-val unionJack = 
+val unionJack =
   Image.createRecord.url("http://bit.ly/unionflag200").width(200).height(100)
 
 uk.createRecord.id("uk").flag(unionJack).save(true)
@@ -363,7 +363,7 @@ saved as:
 
 [source,javascript]
 ---------------------------------------------------
-"flag" : { "width" : 0, "height" : 0, "url" : "" } 
+"flag" : { "width" : 0, "height" : 0, "url" : "" }
 ---------------------------------------------------
 
 You can prevent this by making the image optional:
@@ -393,7 +393,7 @@ document:
 [source,scala]
 -----------------------------------------------------------------------------
 object image extends BsonRecordField(this, Image) {
- override def defaultValue = 
+ override def defaultValue =
   Image.createRecord.url("http://bit.ly/unionflag200").width(200).height(100)
 }
 -----------------------------------------------------------------------------
@@ -455,7 +455,7 @@ class HelloWorld {
     Country.createRecord.id("uk").planet(earth.id.is).save
   }
 
-  def facts = 
+  def facts =
     ".country *" #> uk.id &
     ".planet" #> uk.planet.obj.map { p =>
       ".name *" #> p.id &
@@ -479,7 +479,7 @@ Mongo driver. Do this by adding the following to the start of your
 `Boot.scala`:
 
 [source,scala]
------------------------------------------ 
+-----------------------------------------
 System.setProperty("DEBUG.MONGO", "true")
 System.setProperty("DB.TRACE", "true")
 -----------------------------------------
@@ -489,7 +489,7 @@ will include:
 
 ----------------------------------------------------------------------------
 INFO: find: cookbook.example.country { "_id" : "uk"}
-INFO: update: cookbook.example.planet { "_id" : "earth"} { "_id" : "earth" , 
+INFO: update: cookbook.example.planet { "_id" : "earth"} { "_id" : "earth" ,
     "review" : "Harmless"}
 INFO: update: cookbook.example.country { "_id" : "uk"} { "_id" : "uk" ,
     "planet" : "earth"}
@@ -605,7 +605,7 @@ You want to use Foursquare's type-safe domain specific language (DSL), Rogue, fo
 Solution
 ^^^^^^^^
 
-You need to include the Rogue dependency in your build and import Rogue into your code. 
+You need to include the Rogue dependency in your build and import Rogue into your code.
 
 For the first step, edit `build.sbt` and add:
 
@@ -625,7 +625,7 @@ scala> import code.model._
 import code.model._
 
 scala> Country.where(_.id eqs "uk").fetch
-res1: List[code.model.Country] = List(class code.model.Country={_id=uk, 
+res1: List[code.model.Country] = List(class code.model.Country={_id=uk,
   population=Map(Brighton->134293, Liverpool->469017, Birmingham->970892)})
 
 scala> Country.where(_.id eqs "uk").count
@@ -661,7 +661,7 @@ The DSL constructs a query which we then `fetch` to send the query to MongoDB. T
 
 * `fetch(limit: Int)` -- like `fetch` but returns at most `limit` results.
 
-* `updateOne`, `updateMulti`, `upsertOne` and `upsertMulti` -- modify a single document, or all documents, that match the query. 
+* `updateOne`, `updateMulti`, `upsertOne` and `upsertMulti` -- modify a single document, or all documents, that match the query.
 
 * `findAndDeleteOne` and `bulkDelete_!!` -- to delete records.
 
@@ -670,7 +670,7 @@ The query language itself is expressive, and the best place to explore the varie
 
 [NOTE]
 Rogue is working towards a v2 release which introduces a number of new concepts. If you want to give it a try, take a look at the
-instructions and comments on the Rogue 
+instructions and comments on the Rogue
 mailing list at: https://groups.google.com/d/topic/rogue-users/SdtFCU-w3ng/[https://groups.google.com/d/topic/rogue-users/SdtFCU-w3ng/].
 
 
@@ -747,7 +747,7 @@ This will produce data in Mongo that looks like this:
 Discussion
 ^^^^^^^^^^
 
-MongoDB supports _geospatial indexes_, and we're making use of this by doing two things.  First, 
+MongoDB supports _geospatial indexes_, and we're making use of this by doing two things.  First,
 we are storing the location information in one of MongoDB's permitted formats.  The format is
 an embedding document containing the coordinates. We could also have use a array of two values
 to represent the point.
@@ -755,25 +755,25 @@ to represent the point.
 Second, we're creating a index of type "2d", which allows us to use Mongo's geospatial functions such as `$near` and `$within`. The `unique=true` in the `ensureIndex` highlights that you can control
 whether locations needs to be unique (`true`, no duplications) or not (`false`).
 
-With regard to the unique index, you'll note that we're calling `save(true)` on the `City` in 
-this example, rather than the plain `save` in most other recipes.  We could use `save` here, and 
-it would work fine, but difference is that `save(true)` raises the _write concern_ level 
-from "normal" to "safe".  
+With regard to the unique index, you'll note that we're calling `save(true)` on the `City` in
+this example, rather than the plain `save` in most other recipes.  We could use `save` here, and
+it would work fine, but difference is that `save(true)` raises the _write concern_ level
+from "normal" to "safe".
 
 With the normal write concern, the call to `save` would return as soon
 as the request has gone down the wire to the Mongo server.  This gives a certain degree of reliability in that
 `save` would fail if the network had gone away. However, there's no indication that the server has
-processed the request.  For example, if we tried to insert a city at the exact same location as one that was already in the database, the index uniqueness rule would be violated and the record would not be saved.  With just `save` (or `save(false)`) our Lift application would not receive this error, and the call would fail silently. Raising the concern to "safe" causes `save(true)` to wait for an acknowledgment from the Mongo server, which means the application will receive exceptions for some kinds of errors.  
+processed the request.  For example, if we tried to insert a city at the exact same location as one that was already in the database, the index uniqueness rule would be violated and the record would not be saved.  With just `save` (or `save(false)`) our Lift application would not receive this error, and the call would fail silently. Raising the concern to "safe" causes `save(true)` to wait for an acknowledgment from the Mongo server, which means the application will receive exceptions for some kinds of errors.
 
 As an example, if we tried to insert a duplicate city, our call to `save(true)` would result in:
 
 [source,scala]
 -----------------------------------------------------------
-com.mongodb.MongoException$DuplicateKey: E11000 duplicate key 
-  error index: cookbook.example.city.$loc_2d 
+com.mongodb.MongoException$DuplicateKey: E11000 duplicate key
+  error index: cookbook.example.city.$loc_2d
 -----------------------------------------------------------
 
-There are other levels of write concern, available via another variant of `save` which takes a `WriteConcern` as an argument. 
+There are other levels of write concern, available via another variant of `save` which takes a `WriteConcern` as an argument.
 
 If you ever need to drop an index, the MongoDB command is:
 
@@ -820,7 +820,7 @@ This would query MongoDB with this clause...
 The form of the query is a centre point and a spherical radius.  Records falling
 inside that radius match the query and are returned closest first. We calculate
 the radius in radians: 500km divided by the radius of the Earth, approximately 6378km, gives
-us an angle in radians. We convert this to `Degrees` as required by Rogue.  
+us an angle in radians. We convert this to `Degrees` as required by Rogue.
 
 
 See Also
@@ -828,7 +828,7 @@ See Also
 
 The MongoDB manual discusses geospatial index at: http://docs.mongodb.org/manual/core/geospatial-indexes/[http://docs.mongodb.org/manual/core/geospatial-indexes/].
 
-You can learn more about write concerns at http://docs.mongodb.org/manual/core/write-operations/[http://docs.mongodb.org/manual/core/write-operations/], and 
+You can learn more about write concerns at http://docs.mongodb.org/manual/core/write-operations/[http://docs.mongodb.org/manual/core/write-operations/], and
 the various values to pass to `save` are described in the Java MongoDB driver: http://api.mongodb.org/java/current/[http://api.mongodb.org/java/current/].
 
 
@@ -848,7 +848,7 @@ You want to try out a few queries interactively from the Scala console.
 Solution
 ^^^^^^^^
 
-Start the console from your project, call `boot()`, and then interact with your model.  
+Start the console from your project, call `boot()`, and then interact with your model.
 
 For example, using the
 Mongo records developed as part of <<ConnectingToMongo>>, we can perform a basic query:
@@ -859,7 +859,7 @@ $ sbt
 > console
 [info] Compiling 1 Scala source to /cookbook_mongo/target/scala-2.9.1/classes...
 [info] Starting scala interpreter...
-[info] 
+[info]
 Welcome to Scala version 2.9.1.final ...
 Type in expressions to have them evaluated.
 Type :help for more information.
@@ -873,8 +873,8 @@ scala> import code.model._
 import code.model._
 
 scala> Country.findAll
-res2: List[code.model.Country] = List(class code.model.Country={_id=uk, 
-  population=Map(Brighton -> 134293, Liverpool -> 469017, 
+res2: List[code.model.Country] = List(class code.model.Country={_id=uk,
+  population=Map(Brighton -> 134293, Liverpool -> 469017,
   Birmingham -> 970892)})
 
 scala> :q
@@ -892,12 +892,12 @@ import bootstrap.liftweb._
 scala> import net.liftweb.mongodb._
 import net.liftweb.mongodb._
 
-scala> MongoUrl.defineDb(DefaultMongoIdentifier, 
+scala> MongoUrl.defineDb(DefaultMongoIdentifier,
   "mongodb://127.0.0.1:27017/cookbook")
 
 scala> Country.findAll
-res2: List[code.model.Country] = List(class code.model.Country={_id=uk, 
-  population=Map(Brighton -> 134293, Liverpool -> 469017, 
+res2: List[code.model.Country] = List(class code.model.Country={_id=uk,
+  population=Map(Brighton -> 134293, Liverpool -> 469017,
     Birmingham -> 970892)})
 ---------------------------------------------
 
@@ -923,7 +923,7 @@ Solution
 
 Using the Specs2 testing framework, surround your specification with a _context_ which creates and connects to a database for each test and destroys it after the test runs.
 
-Create a Scala trait to set up and destroy a connection to Mongo.  We'll be mixing this trait into your specifications: 
+Create a Scala trait to set up and destroy a connection to Mongo.  We'll be mixing this trait into your specifications:
 
 [source, scala]
 --------------------------------------------
@@ -980,7 +980,7 @@ To use this in a specification, mix in the trait and then add the context:
 --------------------------------------------
 import org.specs2.mutable._
 
-class MySpec extends Specification with MongoTestKit  {
+class MySpec extends Specification with MongoTestKit {
 
   sequential
 
@@ -1003,12 +1003,12 @@ You can now run the test in SBT by typing `test`:
 [info] Compiling 1 Scala source to target/scala-2.9.1/test-classes...
 [info] My Record should
 [info] + be able to create records
-[info]  
-[info]  
+[info]
+[info]
 [info] Total for specification MySpec
 [info] Finished in 1 second, 199 ms
 [info] 1 example, 0 failure, 0 error
-[info] 
+[info]
 [info] Passed: : Total 1, Failed 0, Errors 0, Passed 0, Skipped 0
 [success] Total time: 1 s, completed 03-Jan-2013 22:47:54
 -----------------------------------------------------------
@@ -1093,7 +1093,7 @@ See Also
 
 Specs2 is documented at: http://specs2.org/[http://specs2.org/].
 
-If you prefer to use the Scala Test framework (http://www.scalatest.org[http://www.scalatest.org]), take a look at Tim Nelson's _Mongo Auth_ Lift module at https://github.com/eltimn/lift-mongoauth[https://github.com/eltimn/lift-mongoauth]. It includes tests using that framework that run against Mongo.  Much of what Tim has written there has been used to produce this recipe for Specs2. 
+If you prefer to use the Scala Test framework (http://www.scalatest.org[http://www.scalatest.org]), take a look at Tim Nelson's _Mongo Auth_ Lift module at https://github.com/eltimn/lift-mongoauth[https://github.com/eltimn/lift-mongoauth]. It includes tests using that framework that run against Mongo.  Much of what Tim has written there has been used to produce this recipe for Specs2.
 
 The Lift Mongo Record library includes a variation on testing with Specs2, using just `Before` and `After` rather than the `around` example used in this recipe. If you prefer that approach, you'll find the code in: https://github.com/lift/framework/tree/master/persistence/mongodb-record/src/test/scala/net/liftweb/mongodb/record[https://github.com/lift/framework/tree/master/persistence/mongodb-record/src/test/scala/net/liftweb/mongodb/record].
 
