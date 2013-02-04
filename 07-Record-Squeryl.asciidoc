@@ -1430,7 +1430,7 @@ class MySnippet extends Loggable {
 }
 ---------------------------------------------------------------
 
-This will log queries according to the settings for the logging system, typically the Logback project configured in `src/resources/logback.xml` or `src/resources/props/default.logback.xml`.
+This will log queries according to the settings for the logging system, typically the Logback project configured in `src/resources/props/default.logback.xml`.
 
 It can be inconvenient to have to enable logging in each snippet during development.  To trigger logging for all snippets, you can modify the `addAround` call in `Boot.scala`.
 

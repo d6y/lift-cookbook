@@ -1,7 +1,10 @@
+[[HTML]]
 HTML
 ----
 
-Generating HTML is often a major component of web applications.  This chapter is concerned with Lift's _View First_ approach and use of _CSS Selectors_.  Later chapters focus on Form processing, REST web services, and JavaScript (Ajax and Comet).
+Generating HTML is often a major component of web applications.  This chapter is concerned with Lift's _View First_ approach and use of _CSS Selectors_.  Later chapters focus on dorm processing, REST web services, and JavaScript (Ajax and Comet).
+
+Code for this chapter is at: https://github.com/LiftCookbook/cookbook_html[https://github.com/LiftCookbook/cookbook_html].
 
 Testing and Debugging CSS Selectors
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -775,6 +778,121 @@ See Also
 ^^^^^^^^
 
 Lift notices are described on the Wiki: http://www.assembla.com/spaces/liftweb/wiki/Lift_Notices_and_Auto_Fadeout[http://www.assembla.com/spaces/liftweb/wiki/Lift_Notices_and_Auto_Fadeout].
+
+
+[[DownloadLink]]
+Link to Download Data
+~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want a button or a link which, which clicked, will trigger a download in the browser rather than visiting a page.
+
+Solution
+^^^^^^^^
+
+Create a link using `SHtml.link`, provide a function to return a `LiftResponse` and wrap the response in a `ResponseShortcutException`.
+
+As an example, we will create a snippet that shows the user a poem and provides a link to download the poem as a text file.  The template for this snippet will present each line of the poem separated by a `<br>`:
+
+[source, html]
+-------------------------------------------------------------
+<h1>A poem</h1>
+
+<div data-lift="DownloadLink">
+  <blockquote>
+    <span class="poem">
+        <span class="line">line goes here</span> <br />
+    </span>
+  </blockquote>
+  <a href="">download link here</a>
+</div>
+-------------------------------------------------------------
+
+The snippet itself will render the poem and replace the download link with one which will send a
+response that the browser will interpret as a file to download:
+
+[source, scala]
+-------------------------------------------------------------
+package code.snippet
+
+import net.liftweb.util.Helpers._
+import net.liftweb.http._
+import xml.Text
+
+class DownloadLink {
+
+  val poem =
+    "Roses are red," ::
+    "Violets are blue," ::
+    "Lift rocks!" ::
+    "And so do you." :: Nil
+
+  def render =
+    ".poem" #> poem.map(line => ".line" #> line) &
+    "a" #> downloadLink
+
+  def downloadLink =
+    SHtml.link("/notused",
+      () => throw new ResponseShortcutException(poemTextFile),
+      Text("Download") )
+
+  def poemTextFile : LiftResponse =
+    InMemoryResponse(
+      poem.mkString("\n").getBytes("UTF-8"),
+      "Content-Type" -> "text/plain; charset=utf8" ::
+      "Content-Disposition" -> "attachment; filename=\"poem.txt\"" :: Nil,
+      cookies=Nil, 200)
+}
+-------------------------------------------------------------
+
+Recall that `SHtml.link` generates a link and executes a function you supply before following the link.
+
+The trick here is that wrapping the `LiftResponse` in a `ResponseShortcutException` will indicate
+to Lift that the response is complete, so the page being linked to (`notused`) won't be processed. The browser is happy: it has a response to the link the user clicked on, and will render it how it wants to, which in this case will probably be by saving the file to disk.
+
+Discussion
+^^^^^^^^^^
+
+`SHtml.link` works by generating a URL which Lift associates with the function you give it. On a page called `downloadlink`, the URL will look something like:
+
+---------------------------------------------
+downloadlink?F845451240716XSXE3G=_#notused
+---------------------------------------------
+
+When that link is followed, Lift looks up the function and executes it, before processing the linked-to resource. However, in this case, we are short-cutting the Lift pipeline by throwing this particular exception.  This is caught by Lift and the response wrapped by the exception is taken as the final response from the request.
+
+This short-cutting is used by `S.redirectTo` via `ResponseShortcutException.redirect`. This companion object also defines `shortcutResponse` which you can use like this:
+
+[source, scala]
+----------------------------------------------------
+import net.liftweb.http.ResponseShortcutException._
+
+def downloadLink =
+  SHtml.link("/notused",
+    () => {
+      S.notice("The file was downloaded")
+      throw shortcutResponse(poemTextFile)
+    },
+    Text("Download") )
+----------------------------------------------------
+
+We've included a `S.notice` to highlight that `throw shortcutResponse` will process Lift notices when the page next loads, whereas `throw new ResponseShortcutException` does not.  In this case, the notice will not appear when the user downloads the file, but it will be included the next time notices are shown, such as when the user navigates to another page.  For many situations, the difference is immaterial.
+
+This recipe has used Lift's stateful features.  You can see how useful it is to be able to close over state (the poem), and offer the data for download from memory.  If you've created a report from a database, you can offer it as a download without having to re-generate the items from the database.
+
+However, in other situations you might want to avoid holding this data as a function on a link. In that case, you'll want to create a REST service that returns a `LiftResponse`.
+
+See Also
+^^^^^^^^
+
+<<REST>> looks at REST-based services in Lift.
+
+<<RestStreamContent>> discusses `InMemoryResponse` and similar responses to return content to the browser
+
+For reports, the Apache POI project, http://poi.apache.org/[http://poi.apache.org/], includes libraries for generating Excel files; and OpenCSV, http://opencsv.sourceforge.net[http://opencsv.sourceforge.net], is a library for generating CSV files.
+
 
 
 Rendering Textile Markup

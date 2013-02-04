@@ -1,3 +1,4 @@
+[[Pipeline]]
 Pipeline
 --------
 
@@ -9,6 +10,7 @@ _Exploring Lift_ at http://exploring.liftweb.net/master/index-9.html#toc-Section
 and also from from the Lift pipeline Wiki page at
 http://www.assembla.com/spaces/liftweb/wiki/HTTP_Pipeline[http://www.assembla.com/spaces/liftweb/wiki/HTTP_Pipeline].
 
+[[RestStreamContent]]
 Streaming Content
 ~~~~~~~~~~~~~~~~~
 

@@ -1,3 +1,4 @@
+[[REST]]
 REST
 ----
 
@@ -57,6 +58,7 @@ Solution
 Simply create a file (e.g. `sitemap.html`) in your `webapp` folder with
 a valid XML-Sitemap markup:
 
+[source, xml]
 ----
 <?xml version="1.0" encoding="utf-8" ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -81,17 +83,17 @@ Make a snippet to fill the required gaps:
 
 [source,scala]
 ----
-class MySitemapContent \{
+class MySitemapContent {
 
   lazy val entries = MyDBRecord.findAll(..)
 
-  def base: CssSel = 
-    "loc *" #> "http://%s/".format(S.hostName) & 
+  def base: CssSel =
+    "loc *" #> "http://%s/".format(S.hostName) &
     "lastmod *" #> someDate.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZZ")
 
-  def list: CssSel = 
-    "url *" #> entries.map(post => 
-    "loc *" #> "http://%s%s".format(S.hostName, post.url) & 
+  def list: CssSel =
+    "url *" #> entries.map(post =>
+    "loc *" #> "http://%s%s".format(S.hostName, post.url) &
     "lastmod *" #> post.date.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZZ"))
 
 }
@@ -114,7 +116,7 @@ import net.liftweb.http._
 object MySitemap extends RestHelper {
   serve {
     case Req("sitemap" :: Nil, _, GetRequest) =>
-      XmlResponse(S.render(<lift:embed what="sitemap" />, 
+      XmlResponse(S.render(<lift:embed what="sitemap" />,
        S.request.get.request).head)
     }
   }
@@ -125,14 +127,14 @@ Wire this into your application in `Boot.scala`, for example:
 
 [source,scala]
 ----
-LiftRules.statelessDispatchTable.append(code.lib.MySitemap) 
+LiftRules.statelessDispatchTable.append(code.lib.MySitemap)
 ----
 
 Test this service using a tool like cURL:
 
-[source,scala]
+[source,bash]
 ----
-\$ curl http://127.0.0.1:8080/sitemap
+$ curl http://127.0.0.1:8080/sitemap
 ----
 
 See Also
@@ -163,7 +165,7 @@ private def reunite(name: String, suffix: String) =
   if (suffix.isEmpty) name else name+"."+suffix
 
 serve {
-  case "download" :: name :: Nil Get req => 
+  case "download" :: name :: Nil Get req =>
     Text("You requested "+reunite(name, req.path.suffix))
 }
 ----
@@ -172,9 +174,9 @@ Requesting this URL with a command like cURL will show you the filename
 as expected:
 
 ----
-\$ curl http://127.0.0.1:8080/download/123.png
+$ curl http://127.0.0.1:8080/download/123.png
 <?xml version="1.0" encoding="UTF-8"?>
-You requested 123.png  
+You requested 123.png
 ----
 
 Discussion
@@ -258,7 +260,7 @@ would match with...
 
 [source,scala]
 ----
-case Req("reports" :: name :: Nil, "", GetRequest) => ... 
+case Req("reports" :: name :: Nil, "", GetRequest) => ...
 ----
 
 ...with `name` set to "foo.csv" not "foo".
@@ -297,7 +299,7 @@ import net.liftweb.http._
 
 object MyUpload extends RestHelper {
   serve {
-    case "upload" :: Nil Post req => 
+    case "upload" :: Nil Post req =>
       for {
         bodyBytes <- req.body ?~ "No Body Bytes"
       } yield <b>got an image of {bodyBytes.length} bytes</b>
@@ -309,17 +311,17 @@ Wire this into your application in `Boot.scala`, for example:
 
 [source,scala]
 ----
-LiftRules.statelessDispatchTable.append(code.lib.MyUpload) 
+LiftRules.statelessDispatchTable.append(code.lib.MyUpload)
 ----
 
 Test this service using a tool like cURL:
 
-[source,scala]
+[source]
 ----
 $ url -X POST --data-binary "@dog.jpg" \
   -H 'Content-Type: image/jpg' http://127.0.0.1:8080/upload
 <?xml version="1.0" encoding="UTF-8"?>
-<b>got an image of 43685 bytes</b> 
+<b>got an image of 43685 bytes</b>
 ----
 
 Discussion
@@ -372,8 +374,8 @@ import net.liftweb.json.JsonDSL._
 object QuotationAPI extends RestHelper {
 
  serve {
-  case "quotation" :: Nil JsonGet _ => 
-   ("text" -> "A beach house isn't just real estate. It's a state of mind.") ~ 
+  case "quotation" :: Nil JsonGet _ =>
+   ("text" -> "A beach house isn't just real estate. It's a state of mind.") ~
    ("by" -> "Douglas Adams") : JObject
  }
 
