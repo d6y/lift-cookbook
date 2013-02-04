@@ -1,16 +1,21 @@
+[[Around]]
 In and Around Lift
 ------------------
 
 This section gives examples of working with Lift and other systems, such
 as sending email or scheduling tasks.
 
-Sending plain text email
+Code for this chatper can be found at: https://github.com/LiftCookbook/cookbook_around[https://github.com/LiftCookbook/cookbook_around].
+
+
+[[SendTextEmail]]
+Sending Plain Text Email
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
 
-You want to send a plain email from your Lift application.
+You want to send a plain text email from your Lift application.
 
 Solution
 ^^^^^^^^
@@ -19,7 +24,9 @@ Use the `Mailer`:
 
 [source,scala]
 ----------------------------------------
+import net.liftweb.util.Mailer
 import net.liftweb.util.Mailer._
+
 Mailer.sendMail(
   From("you@example.org"),
   Subject("Hello"),
@@ -36,16 +43,31 @@ negotiating with an SMTP server. There's also a `blockingSendMail`
 method if you want to wait.
 
 By default, the SMTP server used will be `localhost`. You can change
-this by setting the `mail.smtp.host` property. For example, add the line
-`mail.smtp.host=smtp.example.org` to
-`src/mail/resources/props/default.props`. Mailer also supports JNDI as a
-source of email sessions.
+this by setting the `mail.smtp.host` property. For example, edit `src/mail/resources/props/default.props` and
+add the line:
+
+--------------------------------
+mail.smtp.host=smtp.example.org
+--------------------------------
+
+Mailer also supports JNDI as a source of email sessions.
 
 The signature of `sendMail` requires a `From`, `Subject` and then any
 number of `MailTypes`. In the example we added two: `PlainMailBodyType`
 and `To`. You can add others including `BCC`, `ReplyTo` and
 `MessageHeader` (a name and value pair), and you can add them multiple
-times.
+times:
+
+[source,scala]
+----------------------------------------
+Mailer.sendMail(
+  From("you@example.org"),
+  Subject("Hello"),
+  To("other@example.org"),
+  To("someone@example.org"),
+  MessageHeader("X-Ignore-This", "true"),
+  PlainMailBodyType("Hello from Lift") )
+----------------------------------------
 
 The default character set is UTF-8. If you need to change this replace
 the use of `PlainMailBodyType` with
@@ -54,8 +76,109 @@ the use of `PlainMailBodyType` with
 See Also
 ^^^^^^^^
 
-* http://exploring.liftweb.net/master/index-F.html#toc-Appendix-F[Exploring
-Lift], Appendix F.
+Appendix F of _Exploring Lift_ discusses the sending of email, including sending multiple formats of message.  Find it online at: http://exploring.liftweb.net/master/index-F.html#toc-Appendix-F[http://exploring.liftweb.net/master/index-F.html#toc-Appendix-F].
+
+
+[[LogEmail]]
+Logging Email Rather Than Sending
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You don't want email sent when developing your Lift application locally,
+but you do want to see what would have been sent.
+
+Solution
+^^^^^^^^
+
+Assign a logging function to `Mailer.devModeSend` in `Boot.scala`:
+
+[source,scala]
+---------------------------------------------------------
+import net.liftweb.util.Mailer._
+import javax.mail.internet.{MimeMessage,MimeMultipart}
+
+Mailer.devModeSend.default.set( (m: MimeMessage) =>
+  logger.info("Would have sent: "+m.getContent)
+)
+---------------------------------------------------------
+
+When you send an email with `Mailer`, no SMTP server will be contacted, and
+instead you'll see output to your log:
+
+---------------------------------------------------------
+Would have sent: Hello from Lift
+---------------------------------------------------------
+
+Discussion
+^^^^^^^^^^
+
+The Lift Mailer allows you to control how email is sent at each run mode:
+
+* `devModeSend` -- will send email by default.
+* `testModeSend` -- only log that a message would have been sent.
+* `stagingModeSend` -- will send email by default.
+* `productionModeSend` -- will send email by default.
+* `pilotModeSend` -- will send email by default.
+* `profileModeSend` -- will send email by default.
+
+The `testModeSend` logs a reference to the `MimeMessage`, meaning your log
+would show a message like:
+
+--------------------------------------
+Sending javax.mail.internet.MimeMessage@4a91a883
+--------------------------------------
+
+This recipe has changed just the behaviour of `Mailer` when your Lift
+application is in developer mode (which it is by default). We're logging
+just the body part of the message.
+
+It seems that `javax.mail` doesn't include a utility to display all the
+parts of an email, so if you want more information you'll need to
+roll your own function.  For example:
+
+[source,scala]
+---------------------------------------------------------
+def display(m: MimeMessage) : String = {
+
+  def from = "From: "+m.getFrom.map(_.toString).mkString(",")
+  def subj = "Subject: "+m.getSubject
+  def body = m.getContent.toString
+
+  def to = for {
+    rt <- List(RecipientType.TO, RecipientType.CC, RecipientType.BCC)
+    address <- Option(m.getRecipients(rt)) getOrElse Array()
+  } yield rt.toString + ": " + address.toString
+
+  val nl = System.getProperty("line.separator")
+
+  List(from, to.mkString(nl), subj, body) mkString nl
+
+}
+
+Mailer.devModeSend.default.set( (m: MimeMessage) =>
+  logger.info("Would have sent: "+display(m))
+)
+---------------------------------------------------------
+
+This would produce output of the form:
+
+---------------------------------------------------------
+Would have sent: From: you@example.org
+To: other@example.org
+To: someone@example.org
+Subject: Hello
+Hello from Lift
+---------------------------------------------------------
+
+The key part of this recipe is setting a
+`MimeMessage => Unit` function on `Mailer.devModeSend`.  We happen to be logging, but you can use this function to handle the email any way you want. Examples include logging and sending by triggering or recording the send in a database.
+
+debug flags?
+
+
+
 
 Sending HTML email
 ~~~~~~~~~~~~~~~~~~
@@ -101,6 +224,9 @@ HTML5 semantics.
 The character encoding for HTML email, UTF-8, can be changed by setting
 `mail.charset` in your Lift properties file.
 
+
+
+
 Sending authenticated email
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -123,12 +249,12 @@ Modify `Boot.scala` to include:
 import net.liftweb.util.Mailer._
 import javax.mail.{Authenticator,PasswordAuthentication}
 
-Mailer.authenticator = for { 
+Mailer.authenticator = for {
   user <- Props.get("mail.user")
-  pass <- Props.get("mail.password") 
+  pass <- Props.get("mail.password")
 } yield new Authenticator {
-  override def getPasswordAuthentication = 
-    new PasswordAuthentication(user,pass) 
+  override def getPasswordAuthentication =
+    new PasswordAuthentication(user,pass)
 }
 --------------------------------------------------------
 
@@ -163,6 +289,9 @@ See Also
 
 * The http://javamail.kenai.com/nonav/javadocs/com/sun/mail/smtp/package-summary.html[com.sun.mail.smtp description]
 
+
+
+
 Sending email with attachments
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -178,11 +307,11 @@ Use Mailer's `XHTMLPlusImages` body types:
 
 [source,scala]
 --------------------------------------------------------------
-val content = "Planet,Discoverer\r\n" + 
+val content = "Planet,Discoverer\r\n" +
   "HR 8799 c, Marois et al\r\n" +
   "Kepler-22b, Kepler Science Team\r\n"
 
-case class CSVFile(bytes: Array[Byte], 
+case class CSVFile(bytes: Array[Byte],
   filename: String = "file.csv",
   mime: String = "text/csv; charset=utf8; header=present" )
 
@@ -190,13 +319,13 @@ val attach = CSVFile(content.mkString.getBytes("utf8"))
 
 val body = <p>Please research the enclosed.</p>
 
-val msg = XHTMLPlusImages(body, 
+val msg = XHTMLPlusImages(body,
   PlusImageHolder(attach.filename, attach.mime, attach.bytes))
 
 Mailer.sendMail(
   From("me@example.org",
   Subject("Planets"),
-  To("you@example.org"), 
+  To("you@example.org"),
   msg)
 --------------------------------------------------------------
 
@@ -213,55 +342,12 @@ See Also
 ^^^^^^^^
 
 * Lift ticket 1197 to https://github.com/lift/framework/issues/1197[improve Mailer functionality for attachments]
-* Wikipedia entry on http://en.wikipedia.org/wiki/MIME[Multipurpose Internet Mail Extensions (MIME)] 
+* Wikipedia entry on http://en.wikipedia.org/wiki/MIME[Multipurpose Internet Mail Extensions (MIME)]
 
-Logging email rather than sending
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Problem
-^^^^^^^
 
-You don't want email sent when developing your Lift application locally,
-but you do want to see what would have been sent.
 
-Solution
-^^^^^^^^
 
-The solution is to use `Mailer.devModeSend` and here is an example for
-`Boot.scala`:
-
-[source,scala]
----------------------------------------------------------
-import net.liftweb.util.Mailer._
-import javax.mail.internet.{MimeMessage,MimeMultipart}
-  
-def stringify(m: Any) = m match {
-  case mm: MimeMultipart => mm.getBodyPart(0).getContent
-  case otherwise => otherwise.toString
-}
-
-Mailer.devModeSend.default.set( (m: MimeMessage) => 
-  logger.info("Would have sent "+stringify(m.getContent))
-)
----------------------------------------------------------
-
-This example is changing the behaviour of `Mailer` when your Lift
-application is in developer mode (which it is by default). We are
-logging a message only, and using a utility function to get the contents
-of the first body part of the message. The key part is setting a
-`MimeMessage => Unit` function on `Mailer.devModeSend`.
-
-Discussion
-^^^^^^^^^^
-
-When developing an application it is inconvenient to have to worry about
-setting up an SMTP server or inadvertently sending test messages to
-users. The above is a useful way to know what would have been sent.
-
-You can control how and if mail is sent using the `*ModeSend` functions
-available for the different Lift RunModes (dev, staging, production,
-profile, pilot and test). The default is to send email, except for
-`testModeSend`, which only logs the send.
 
 Run a task later
 ~~~~~~~~~~~~~~~~
@@ -326,18 +412,18 @@ import net.liftweb.actor.LiftActor
 import net.liftweb.util.Helpers._
 
 object MyScheduledTask extends LiftActor {
-  
+
   case class DoIt()
   case class Stop()
-  
+
   private var stopped = false
-  
-   def messageHandler = {  
-     case DoIt => 
-       if (!stopped) 
+
+   def messageHandler = {
+     case DoIt =>
+       if (!stopped)
         Schedule.schedule(this, DoIt, 10 minutes)
        // ... do useful work here
-     
+
      case Stop =>
        stopped = true
    }
@@ -428,10 +514,10 @@ The above produces:
 
 [source,scala]
 ----------------------------------------------------------------------------------------
-NodeSeq(<meta content="text/html; charset=utf-8" http-equiv="Content-Type"></meta>, 
+NodeSeq(<meta content="text/html; charset=utf-8" http-equiv="Content-Type"></meta>,
  <meta content="width=device-width" name="viewport"></meta>,
- <meta content="The World Wide Web Consortium (W3C) is an international community where 
-  Member organizations, a full-time staff, and the public work together to develop Web 
+ <meta content="The World Wide Web Consortium (W3C) is an international community where
+  Member organizations, a full-time staff, and the public work together to develop Web
   standards." name="description"></meta>)
 ----------------------------------------------------------------------------------------
 
