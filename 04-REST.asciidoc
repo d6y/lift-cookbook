@@ -293,7 +293,7 @@ Solution
 Access the request body in your rest helper:
 
 [source,scala]
-----
+----------------------
 import net.liftweb.http.rest._
 import net.liftweb.http._
 
@@ -305,24 +305,23 @@ object MyUpload extends RestHelper {
       } yield <b>got an image of {bodyBytes.length} bytes</b>
   }
 }
-----
+----------------------
 
 Wire this into your application in `Boot.scala`, for example:
 
 [source,scala]
-----
+----------------------
 LiftRules.statelessDispatchTable.append(code.lib.MyUpload)
-----
+----------------------
 
 Test this service using a tool like cURL:
 
-[source]
-----
-$ url -X POST --data-binary "@dog.jpg" \
+----------------------
+$ curl -X POST --data-binary "@dog.jpg"
   -H 'Content-Type: image/jpg' http://127.0.0.1:8080/upload
 <?xml version="1.0" encoding="UTF-8"?>
 <b>got an image of 43685 bytes</b>
-----
+----------------------
 
 Discussion
 ^^^^^^^^^^
