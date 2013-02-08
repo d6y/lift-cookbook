@@ -1,3 +1,4 @@
+[[Ajax]]
 Javascript, Ajax, Comet
 -----------------------
 
@@ -22,7 +23,7 @@ import net.liftweb.http.SHtml
 import net.liftweb.http.js.JsCmds
 
 class MySnippet {
-  
+
  def easy = "#myButton [onclick]" #> SHtml.ajaxInvoke( () => {
     println("click")
     JsCmds.Alert("Hi")
@@ -102,7 +103,7 @@ that we're setting up this binding in our server-side Lift code:
 [source,scala]
 ----
 class HelloWorld {
-  def buttonBind = 
+  def buttonBind =
     "#button [onclick]" #> "$('#button').fadeOut('slow')"
 }
 ----
@@ -121,7 +122,7 @@ Lift will render the page as:
 [source,html]
 ----
 <form>
-  <input onclick="$('#button').fadeOut('slow')" 
+  <input onclick="$('#button').fadeOut('slow')"
     value="Click me" type="button" id="button">
 </form>
 ----
@@ -135,7 +136,7 @@ combine basic commands:
 
 [source,scala]
 ----
-def buttonBind = 
+def buttonBind =
   "#button [onclick]" #> (
      Alert("Here we go...") & RedirectTo("http://liftweb.net")
     ).toJsCmd
@@ -159,7 +160,7 @@ like this:
 
 [source,scala]
 ----
-def buttonBind = 
+def buttonBind =
   "#button [onclick]" #> JE.Call("greet", "you").toJsCmd
 ----
 
@@ -277,7 +278,7 @@ on the page.
 
 [source,scala]
 ----
-package code.snippet 
+package code.snippet
 
 import net.liftweb.util._
 import Helpers._
