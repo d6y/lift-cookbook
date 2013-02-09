@@ -1068,15 +1068,19 @@ import net.liftweb.squerylrecord.RecordTypeMode._
 import org.specs2.mutable.Around
 import org.specs2.execute.Result
 
+trait TestLiftSession {
+  def session = new LiftSession("", StringHelpers.randomString(20), Empty)
+  def inSession[T](a: => T): T = S.init(Req.nil, session) { a }
+}
+
 trait DBTestKit extends Loggable {
 
   Class.forName("org.h2.Driver")
 
-  // Configure Lift's logging:
   Logger.setup = Full(net.liftweb.util.LoggingAutoConfigurer())
   Logger.setup.foreach { _.apply() }
 
-  private def configureH2() = {
+  def configureH2() = {
     SquerylRecord.initWithSquerylSession(
       Session.create(
         DriverManager.getConnection("jdbc:h2:mem:dbname;DB_CLOSE_DELAY=-1", "sa", ""),
@@ -1084,7 +1088,7 @@ trait DBTestKit extends Loggable {
     )
   }
 
-  private def createDb() {
+  def createDb() {
     inTransaction {
       try {
         MySchema.drop
@@ -1097,23 +1101,18 @@ trait DBTestKit extends Loggable {
     }
   }
 
-  trait TestLiftSession {
-    def session = new LiftSession("", StringHelpers.randomString(20), Empty)
-    def inSession[T](a: => T): T = S.init(Req.nil, session) { a }
-  }
+}
 
-  object InMemoryDB extends Around with TestLiftSession {
-    def around[T <% Result](testToRun: =>T) = {
-      configureH2
-      createDb
-      inSession {
-        inTransaction {
-          testToRun
-        }
+case class InMemoryDB() extends Around with DBTestKit with TestLiftSession {
+  def around[T <% Result](testToRun: =>T) = {
+    configureH2
+    createDb
+    inSession {
+      inTransaction {
+        testToRun
       }
     }
   }
-
 }
 --------------------------------------------
 
@@ -1137,7 +1136,7 @@ class PlanetsSpec extends Specification with DBTestKit {
 
   "Planets" >> {
 
-    "know that Mars has two moons" >> InMemoryDB {
+    "know that Mars has two moons" >> InMemoryDB() {
 
       val mars = planets.insert(Planet.createRecord.name("Mars"))
       Satellite.createRecord.name("Phobos").planetId(mars.idField.is).save
@@ -1179,11 +1178,46 @@ By default, when a connection is closed, the in memory database is destroyed. In
 
 The next step up from connection management is the creation of the database schema in memory. We do this in `createDb` by throwing away the schema and any data when we start a test, and create it afresh.  If you have very common test datasets, this might be a good place to insert that data before your test runs.
 
-These steps are brought together at the `InMemoryDB` object, which implements a Specs2 interface for code to run `Around` a test.  We've also wrapped the test around a `TestLiftSession`. This provides an empty session, which is useful if you are accessing state-related code (such as the `S` object).  It's not necessary for running tests against Record and Squeryl, but it has been included here because you may want to do that at some point.
+These steps are brought together at the `InMemoryDB` class, which implements a Specs2 interface for code to run `Around` a test.  We've also wrapped the test around a `TestLiftSession`. This provides an empty session, which is useful if you are accessing state-related code (such as the `S` object).  It's not necessary for running tests against Record and Squeryl, but it has been included here because you may want to do that at some point.
 
 In our specification itself, we mix in the `DBTestKit` and reference the `InMemoryDB` context on the tests that access the database.  You'll note that we've used `>>` rather than Specs2's `should` and `in` that you may have seen elsewhere. This is to avoid name conflicts between Specs2 and Squery that you might come across.
 
 As we disabled parallel execution with SBT, we also disable parallel execution in Specs2 with `sequential`.  We are doing this to prevent a situation where one test might be expecting data that another test is modifying at the same time.
+
+If all the tests in a specification are going to use the database, you can use the Specs2 `AroundContextExample[T]` to avoid having to mention `InMemoryDB` on every test.  To do that, mix in `AroundContextExample[InMemoryDB]` and define `aroundContext`:
+
+[source, scala]
+--------------------------------------------
+package code.model
+
+import MySchema._
+
+import org.specs2.mutable._
+import org.specs2.specification.AroundContextExample
+import net.liftweb.squerylrecord.RecordTypeMode._
+
+class AlternativePlanetsSpec extends Specification with
+  AroundContextExample[InMemoryDB] {
+
+  sequential
+
+  def aroundContext = new InMemoryDB()
+
+  "Solar System" >> {
+
+    "know that Mars has two moons" >> {
+
+      val mars = planets.insert(Planet.createRecord.name("Mars"))
+      Satellite.createRecord.name("Phobos").planetId(mars.idField.is).save
+      Satellite.createRecord.name("Deimos").planetId(mars.idField.is).save
+
+      mars.satellites.size must_== 2
+    }
+  }
+}
+--------------------------------------------
+
+All the tests in `AlternativePlanetsSpec` will now be run with an `InMemoryDB` around them.
 
 We've used a database with an in-memory mode for the advantages of speed and no files to clean up. However, you could use any regular database: you'd need to change the driver and connection string.
 
