@@ -1,8 +1,8 @@
 [[Around]]
-In and Around Lift
+Around Lift
 ------------------
 
-This section gives examples of working with Lift and other systems, such
+This chapter gives examples of working with Lift and other systems, such
 as sending email or scheduling tasks.
 
 Many of the recipes in this chapter have code examples in a project at Github: https://github.com/LiftCookbook/cookbook_around[https://github.com/LiftCookbook/cookbook_around].
@@ -54,13 +54,13 @@ The signature of `sendMail` requires a `From`, `Subject` and then any
 number of `MailTypes`:
 
 * `To` -- the recipient email address.
-* `CC`
-* `BCC`
-* `ReplyTo`
+* `CC` -- ditto
+* `BCC` -- ditto
+* `ReplyTo` -- the address mail clients should use for replies.
 * `MessageHeader` -- key/value pairs to include as headers in the message.
 * `PlainMailBodyType` -- a plain text email sent with UTF-8 encoding.
 * `PlainPlusBodyType` -- a plain text email, where you specify the encoding.
-* `XHTMLMailBodyType` -- for HTML email (<<HTMLEmail>>.
+* `XHTMLMailBodyType` -- for HTML email (<<HTMLEmail>>).
 * `XHTMLPlusImages` -- for attachments (<<EmailWithAttachments>>).
 
 In the example above we added two types:`PlainMailBodyType`
@@ -78,7 +78,7 @@ Mailer.sendMail(
 ----------------------------------------
 
 
-The address-like `MailTypes` (`To`, `CC` etc) can be given an optional "personal name":
+The address-like `MailTypes` (`To`, `CC`, `BCC`, `ReplyTo`) can be given an optional "personal name":
 
 [source,scala]
 ----------------------------------------
@@ -158,7 +158,7 @@ This recipe has changed just the behaviour of `Mailer` when your Lift
 application is in developer mode (which it is by default). We're logging
 just the body part of the message.
 
-It seems that Java Mail doesn't include a utility to display all the
+Java Mail doesn't include a utility to display all the
 parts of an email, so if you want more information you'll need to
 roll your own function.  For example:
 
@@ -166,7 +166,10 @@ roll your own function.  For example:
 ---------------------------------------------------------
 def display(m: MimeMessage) : String = {
 
+  val nl = System.getProperty("line.separator")
+
   val from = "From: "+m.getFrom.map(_.toString).mkString(",")
+
   val subj = "Subject: "+m.getSubject
 
   def parts(mm: MimeMultipart) = (0 until mm.getCount).map(mm.getBodyPart)
@@ -183,8 +186,6 @@ def display(m: MimeMessage) : String = {
     rt <- List(RecipientType.TO, RecipientType.CC, RecipientType.BCC)
     address <- Option(m.getRecipients(rt)) getOrElse Array()
   } yield rt.toString + ": " + address.toString
-
-  val nl = System.getProperty("line.separator")
 
   List(from, to.mkString(nl), subj, body) mkString nl
 }
@@ -207,9 +208,9 @@ Hello from Lift
 This example `display` function is mostly straight-forward. The `body` value handles multi-part messages by extracting the each body part.  This is triggered when sending more structured emails, such as the HTML emails described in <<HTMLEmail>>.
 
 The key part of this recipe is setting a
-`MimeMessage => Unit` function on `Mailer.devModeSend`.  We happen to be logging, but you can use this function to handle the email any way you want. Examples include logging and sending by triggering or recording the send in a database.
+`MimeMessage => Unit` function on `Mailer.devModeSend`.  We happen to be logging, but you can use this function to handle the email any way you want. Examples might include logging and then sending, or recording information about the send in a database.
 
-If you want to debug the mail system sending email, enable the Java Mail debug mode.  In `default.props` add:
+If you want to debug the mail system while it's actually sending the email, enable the Java Mail debug mode.  In `default.props` add:
 
 [source, properties]
 --------------------------------------
@@ -272,7 +273,7 @@ Discussion
 
 An implicit converts the `NodeSeq` into a `XHTMLMailBodyType`. This
 ensures the mime type of the email is "text/html". Despite the name of
-"XHTML", the message is to converted into a string for transmission using
+"XHTML", the message is to converted for transmission using
 HTML5 semantics.
 
 The character encoding for HTML email, UTF-8, can be changed by setting
@@ -333,7 +334,9 @@ When receiving a message with this content, it is up to the mail client to decid
 
 
 See Also
-~~~~~~~~
+^^^^^^^^
+
+For sending with attachments, see <<EmailWithAttachments>>.
 
 
 
@@ -351,7 +354,7 @@ Solution
 ^^^^^^^^
 
 Set the `Mailer.authenticator` in `Boot` with the credentials for your
-SMTP server and enable the `mail.smtp.auth` flag in your Lift props
+SMTP server, and enable the `mail.smtp.auth` flag in your Lift properties
 file.
 
 Modify `Boot.scala` to include:
@@ -402,7 +405,7 @@ However, some mail services such as SendGrid do require `mail.smtp.auth=true` to
 See Also
 ^^^^^^^^
 
-As well as `mail.smtp.auth` there are a range of settings to control the Java Mail API. For example, controlling port numbers and timeouts.  These are listed at: http://javamail.kenai.com/nonav/javadocs/com/sun/mail/smtp/package-summary.html[http://javamail.kenai.com/nonav/javadocs/com/sun/mail/smtp/package-summary.html].
+As well as `mail.smtp.auth` there are a range of settings to control the Java Mail API. examples include controlling port numbers and timeouts.  These are listed at: http://javamail.kenai.com/nonav/javadocs/com/sun/mail/smtp/package-summary.html[http://javamail.kenai.com/nonav/javadocs/com/sun/mail/smtp/package-summary.html].
 
 
 [[EmailWithAttachments]]
@@ -417,7 +420,9 @@ You want to send an email with one or more attachments.
 Solution
 ^^^^^^^^
 
-Use the `Mailer` `XHTMLPlusImages` to package a message with one or more attachments:
+Use the `Mailer` `XHTMLPlusImages` to package a message with one or more attachments.
+
+Suppose we want to construct a CSV file and send it via email:
 
 [source,scala]
 --------------------------------------------------------------
@@ -443,6 +448,10 @@ Mailer.sendMail(
   msg)
 --------------------------------------------------------------
 
+What's happening here is that our message is `XHTMLPlusImages` with accepts
+a body message and attachment.  The attachment, the `PlusImageHolder`, is an `Array[Byte]`, mime-type and a filename.
+
+
 Discussion
 ^^^^^^^^^^
 
@@ -459,7 +468,7 @@ PlusImageHolder(attach.filename, attach.mime, attach.bytes, attachment=true)
 In reality, the mail client will display the message how it wants to, but this extra parameter may give you a little more control.
 
 
-To attach a pre-made file, you can use `LiftRules.loadResource` to fetch content from the classpath.  As an example, if our project contained `Kepler-22b_System_Diagram.jpg` in the `src/main/resources/` folder, we could load and attach it like this:
+To attach a pre-made file, you can use `LiftRules.loadResource` to fetch content from the classpath.  As an example, if our project contained a file called `Kepler-22b_System_Diagram.jpg` in the `src/main/resources/` folder, we could load and attach it like this:
 
 [source,scala]
 --------------------------------------------------------------
@@ -484,7 +493,9 @@ msg match {
 }
 --------------------------------------------------------------
 
-As the contents of `src/main/resources` is included on the classpath, we pass the filename to `loadResource` with a leading `/` character so the file can be found.
+As the contents of `src/main/resources` is included on the classpath, we pass the filename to `loadResource` with a leading `/` character so the file can be found at the right place on the classpath.
+
+The `loadResource` returns a `Box[Array[Byte]]` as we have no guarantee the file will exist. We map this to a `Box[XHTMLPlusImages]` and match on that result to either send the email, or log that the file wasn't found.
 
 
 See Also
@@ -492,7 +503,7 @@ See Also
 
 Messages are sent using the "multipart/related" mime heading, with an "inline" disposition.  Lift ticket #1197 links to a discussion regarding "multipart/mixed" which may be preferable for working around issues with Microsoft Exchange. See: https://github.com/lift/framework/issues/1197[https://github.com/lift/framework/issues/1197].
 
-RFC 2183 describes the `Content-Disposition" header: http://www.ietf.org/rfc/rfc2183.txt[http://www.ietf.org/rfc/rfc2183.txt].
+RFC 2183 describes the "Content-Disposition" header: http://www.ietf.org/rfc/rfc2183.txt[http://www.ietf.org/rfc/rfc2183.txt].
 
 
 
@@ -524,7 +535,7 @@ seconds from now.
 Discussion
 ^^^^^^^^^^
 
-The signature for `Schedule` that we're using in the recipe expects a function to call of type `() => Unit`, which is the thing we want to happen in the future, and a `TimeSpan` from Lift's `TimeHelpers` which is when we want it to happen.  The `30 seconds` value gives us a `TimeSpan` via the `Helpers._` import, but there's a variation which accepts a `Long` millisecond value if you prefer that:
+The signature for `Schedule` used above expects a function of type `() => Unit`, which is the thing we want to happen in the future, and a `TimeSpan` from Lift's `TimeHelpers` which is when we want it to happen.  The `30 seconds` value gives us a `TimeSpan` via the `Helpers._` import, but there's a variation which accepts a `Long` millisecond value if you prefer that:
 
 [source,scala]
 ------------------------------------------------
@@ -557,13 +568,13 @@ Run Tasks Periodically
 Problem
 ^^^^^^^
 
-You want a scheduled task to run periodically (repeatedly.
+You want a scheduled task to run periodically (repeatedly).
 
 Solution
 ^^^^^^^^
 
 Use `net.liftweb.util.Schedule` ensuring that you call `schedule` again
-during your task to re-schedule it. For example:
+during your task to re-schedule it. For example, using an actor:
 
 [source,scala]
 -------------------------------------------------
@@ -628,8 +639,7 @@ library, which allows you to `cancel` the activity.
 See Also
 ^^^^^^^^
 
-Chapter 1 of _Lift in Action_ (Perrett, 2011, Manning Publications Co) includes a CometActor clock example that
-uses `Schedule`.
+Chapter 1 of _Lift in Action_ (Perrett, 2011, Manning Publications Co) includes a Comet Actor clock example that uses `Schedule`.
 
 
 
@@ -640,7 +650,7 @@ Fetching URLs
 Problem
 ^^^^^^^
 
-You want to fetch a URL from inside your Lift application.
+You want your Lift application to fetch a URL, and process it as text, JSON, XML or HTML.
 
 Solution
 ^^^^^^^^
@@ -665,7 +675,7 @@ val country : Promise[String] = Http(svc OK as.String)
 println(country())
 ------------------------------------------
 
-Note that the result `country` is not a `String` but a `Promise[String]`, and we resolve the value of with `country()`.
+Note that the result `country` is not a `String` but a `Promise[String]`, and we `apply` to wait for the resulting value.
 
 The result printed will be a country code such as `GB`, or `XX` if the country cannot be determined from your IP address.
 
@@ -683,14 +693,14 @@ We can ask for an `Option`:
 val result : Option[String] = country.option()
 ------------------------------------------
 
-...which as you'd expect will give a `None` or `Some[String]`. However, if you have debug level logging enabled in your application you'll see the request and response and error messages from the underlying Netty library.  You can tune these messages by adding a logger setting to `default.logback.xml` file:
+As you'd expect, this will give a `None` or `Some[String]`. However, if you have debug level logging enabled in your application you'll see the request and response and error messages from the underlying Netty library.  You can tune these messages by adding a logger setting to `default.logback.xml` file:
 
 [source, xml]
 ------------------------------------------
 <logger name="com.ning.http.client" level="WARN"/>
 ------------------------------------------
 
-A second possibility is to use `either` with the usual convention that the `Right` is the correct result and `Left` signifies a failure:
+A second possibility is to use `either` with the usual convention that the `Right` is the expected result and `Left` signifies a failure:
 
 [source,scala]
 ------------------------------------------
@@ -700,7 +710,7 @@ country.either() match {
 }
 ------------------------------------------
 
-This will print a result as we are forcing the evaluation with `either()`.
+This will print a result as we are forcing the evaluation with an apply via `either()`.
 
 `Promise[T]` implements `map`, `flatMap`, `filter`, `fold` and all the usual methods you'd expect to allow you to compose.  This means you can use the promise with a for comprehension:
 
@@ -709,7 +719,7 @@ This will print a result as we are forcing the evaluation with `either()`.
 val codeLength = for (cc <- country) yield cc.length
 ------------------------------------------
 
-Note that `codeLength` is a `Promise[Int]`.  To get the value you can evaluate `codeLength()` (and you'll get a result of 2).
+Note that `codeLength` is a `Promise[Int]`.  To get the value you can evaluate `codeLength()` and you'll get a result of `2`.
 
 As well as extracting string values with `as.String` there are other options, including...
 
@@ -729,6 +739,7 @@ println(country.map(_ \\ "description")())
 
 This example is parsing the XML response to the request, which returns a `Promise[scala.xml.Elem]`.  We're picking out the description node of the XML via a `map`, which will be a `Promise[NodeSeq]` which we then force to evaluate.  The output is something like:
 
+[source,xml]
 ------------------------------------------
 <gml:description
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -743,7 +754,7 @@ For example, to use JSoup, include the dependency:
 
 [source,scala]
 -------------------------------------------------
-libraryDependencies += "net.databinder.dispatch" %% "dispatch-core" % "0.9.5"
+libraryDependencies += "net.databinder.dispatch" %% "dispatch-jsoup" % "0.9.5"
 -------------------------------------------------
 
 You can then use the features of JSoup, such as picking out elements of a page using CSS selectors:
@@ -780,12 +791,13 @@ val hostInfo = json.map(_.extract[HostInfo])()
 -------------------------------------------------
 
 
-The URL we're calling returns a simple JSON representation of the IP address we've passed.
+The URL we're calling returns a JSON representation for location information for the IP address we've passed.
 
-By providing a `Response => JValue` to Dispatch we're able to pass the response body through to the JSON parser. We can then map on the `Promise[JValue]` to apply whatever Lift JSON functions we want to: in this case, we're extracting a simple case class.
+By providing a `Response => JValue` to Dispatch we're able to pass the response body through to the JSON parser. We can then map on the `Promise[JValue]` to apply whatever Lift JSON functions we want to. In this case, we're extracting a simple case class.
 
 The result from the above would show `hostInfo` as:
 
+[source,scala]
 -------------------------------------------------
 HostInfo(UNITED KINGDOM,GB)
 -------------------------------------------------
@@ -798,9 +810,9 @@ The Dispatch documentation is well-written and guides you through the way Dispat
 
 To see what's available on Dispatch's `Promise`, browse the source: https://github.com/dispatch/reboot/blob/master/core/src/main/scala/promise.scala[https://github.com/dispatch/reboot/blob/master/core/src/main/scala/promise.scala].
 
-The Dispatch Google Group is at: https://groups.google.com/forum/#!forum/dispatch-scala[https://groups.google.com/forum/#!forum/dispatch-scala].
+For questions about Dispatch, the best place is the Dispatch Google Group: https://groups.google.com/forum/#!forum/dispatch-scala[https://groups.google.com/forum/#!forum/dispatch-scala].
 
 The previous major version of Dispatch, 0.8.x ("Dispatch Classic"), is quite different from the "reboot" of the project as version 0.9.  Consequently, examples you may see that use 0.8.x will need some conversion to run with 0.9.x.  Nathan Hamblen's blog describes the change: http://code.technically.us/post/17038250904/fables-of-the-reconstruction-part-2-have-you-tried[http://code.technically.us/post/17038250904/fables-of-the-reconstruction-part-2-have-you-tried].
 
-There's a cookbook for JSoup: http://jsoup.org/cookbook/[http://jsoup.org/cookbook/].
+For working with JSoup, take a look at the JSoup Cookbook at: http://jsoup.org/cookbook/[http://jsoup.org/cookbook/].
 
