@@ -2,32 +2,70 @@
 REST
 ----
 
+This chapter looks at recipes around REST web services, via Lift's `RestHelper` trait. For an introduction, take a look at the Lift wiki page at https://www.assembla.com/spaces/liftweb/wiki/REST_Web_Services[https://www.assembla.com/spaces/liftweb/wiki/REST_Web_Services] and chapter 5 of _Simply Lift_ at http://simply.liftweb.net[http://simply.liftweb.net].
+
+The sample code from this chapter is at: https://github.com/LiftCookbook/cookbook_rest[https://github.com/LiftCookbook/cookbook_rest].
+
+
+[[DRYURLs]]
 DRY URLs
 ~~~~~~~~
 
 Problem
 ^^^^^^^
 
-You found yourself repeating parts of URL paths in your RestHelper, and
+You found yourself repeating parts of URL paths in your `RestHelper`, and
 you Don't want to Repeat Yourself.
 
 Solution
 ^^^^^^^^
 
-Use `prefix` in your RestHelper:
+Use `prefix` in your `RestHelper`:
 
 [source,scala]
 ----
-object RestAPI extends RestHelper {
+package code.rest
 
-  serve("bugs" / "by-state" prefix {
-    case "open" :: Nil JsonGet _ => <p>None open</p>
-    case "closed" :: Nil JsonGet _ => <p>None closed</p>
-    case state :: Nil JsonDelete _ => <p>All deleted</p>
+import net.liftweb.http.rest.RestHelper
+import net.liftweb.http.LiftRules
+
+object IssuesService extends RestHelper {
+
+  def init() : Unit = {
+    LiftRules.statelessDispatch.append(IssuesService)
+  }
+
+  serve("issues" / "by-state" prefix {
+    case "open" :: Nil XmlGet _ => <p>None open</p>
+    case "closed" :: Nil XmlGet _ => <p>None closed</p>
+    case "closed" :: Nil XmlDelete _ => <p>All deleted</p>
   })
 
 }
 ----
+
+This service responds to URLs of _/issues/by-state/open_ and _/issues/by-state/closed_ and we have
+factored out the common part as a `prefix`.
+
+Wire this into `Boot.scala` with:
+
+[source,scala]
+----
+import code.rest.IssuesService
+IssuesService.init()
+----
+
+We can test the service with cURL:
+
+------------------
+$ curl -H 'Content-Type: application/xml' http://localhost:8080/issues/by-state/open
+<?xml version="1.0" encoding="UTF-8"?>
+<p>None open</p>
+
+$ curl -X DELETE -H 'Content-Type: application/xml' http://localhost:8080/issues/by-state/closed
+<?xml version="1.0" encoding="UTF-8"?>
+<p>All deleted</p>
+------------------
 
 Discussion
 ^^^^^^^^^^
@@ -35,15 +73,439 @@ Discussion
 You can have many `serve` blocks in your `RestHelper`, which helps give
 your REST service structure.
 
+In this example we've arbitrarily decided to return XML and to match on an XML request using `XmlGet` and `XmlDelete`.  The test for an XML request requires a content-type of _text/xml_ or _application/xml_, a request for a path that ends with `.xml`.   This is why the cURL request includes a header with with the `-H` flag.  If we hadn't included that, the request would not match any of our patterns, and the result would be a 404 response.
+
+
+
 See Also
 ^^^^^^^^
 
-* http://simply.liftweb.net/index-5.3.html[RestHelper], section 5.3 of
-_Simply Lift_.
-* Wiki page on
-http://www.assembla.com/spaces/liftweb/wiki/REST_Web_Services[REST Web
-Services].
+<<JSONREST>> gives an example of accepting and returning JSON.
 
+
+
+
+
+[[MissingSuffix]]
+Missing File Suffix
+~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+Your `RestHelper` expects a filename as part of the URL, but the suffix
+(extension) is missing, and you need it.
+
+Solution
+^^^^^^^^
+
+Access `req.path.suffix` to recover the suffix.
+
+For example, when
+processing `/download/123.png` you want to be able reconstruct
+`123.png`:
+
+[source,scala]
+----
+package code.rest
+
+import net.liftweb.http.rest.RestHelper
+import net.liftweb.http.LiftRules
+import xml.Text
+
+object Reunite extends RestHelper  {
+
+  private def reunite(name: String, suffix: String) =
+    if (suffix.isEmpty) name else name+"."+suffix
+
+  serve {
+    case "download" :: file :: Nil Get req =>
+      Text("You requested "+reunite(file, req.path.suffix))
+  }
+
+  def init() : Unit = {
+    LiftRules.statelessDispatch.append(Reunite)
+  }
+
+}
+----
+
+We we are matching on `download` but rather than using the `file` value directly, we pass it through the `reunite` function first to attach the suffix back on (if any).
+
+Requesting this URL with a command like cURL will show you the filename
+as expected:
+
+----
+$ curl http://127.0.0.1:8080/download/123.png
+<?xml version="1.0" encoding="UTF-8"?>
+You requested 123.png
+----
+
+Discussion
+^^^^^^^^^^
+
+When Lift parses a request it splits the request into constituent parts
+(e.g., turning the path into a `List[String]`). This includes a
+separation of _some_ suffixes. This is good for pattern matching when you
+want to change behaviour based on the suffix, but a hindrance in this
+particular situation.
+
+Only those suffixes defined in `LiftRules.explicitlyParsedSuffixes` are
+split from the filename. This includes many of the common file suffixes
+(such as "png", "atom", "json") and also some you may not be so familiar
+with, such as "com".
+
+Note that if the suffix is not in `explicitlyParsedSuffixes`, the suffix
+will be an empty String and the `name` (in the above example) will be
+the file name with the suffix still attached.
+
+Rather than simply attaching the suffix back on, you could use this to negotiate the format to send back to the client. For example, if a browser or device supports the WebP image format, you might prefer to send that:
+
+[source, scala]
+-------
+package code.rest
+
+import net.liftweb.http.rest.RestHelper
+import net.liftweb.http.LiftRules
+import xml.Text
+
+object Reunite extends RestHelper  {
+
+  def init() : Unit = {
+    LiftRules.statelessDispatch.append(Reunite)
+  }
+
+  serve {
+    case "negotiate" :: file :: Nil Get req =>
+      val toSend =
+        if (req.header("Accept").exists(_ == "image/webp")) file+".webp"
+        else file+".png"
+
+      Text("You requested "+file+", would send "+toSend)
+  }
+
+}
+-------
+
+Calling this service would check the HTTP Accept header before deciding what resource to send:
+
+-------------------
+$ curl http://localhost:8080/negotiate/123
+<?xml version="1.0" encoding="UTF-8"?>
+You requested 123, would send 123.png
+
+$ curl http://localhost:8080/negotiate/123 -H "Accept: image/webp"
+<?xml version="1.0" encoding="UTF-8"?>
+You requested 123, would send 123.webp
+-------------------
+
+
+See Also
+^^^^^^^^
+
+<<MissingDotCom>> shows how to remove items from `explicitlyParsedSuffixes`.
+
+The source for `HttpHelpers.scala` contains the `explicitlyParsedSuffixes` list, which is the default list of suffixes that Lift parses from a URL:  https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/HttpHelpers.scala[https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/HttpHelpers.scala
+].
+
+
+
+[[MissingDotCom]]
+Missing .com from Email Addresses
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When submitting an email address to a REST service, a domain ending ".com" is stripped before your REST service can handle the request.
+
+Solution
+^^^^^^^^
+
+Modify `LiftRules.explicitlyParsedSuffixes` so that Lift doesn't change URLs that end with ".com".
+
+In `Boot.scala`:
+
+[source,scala]
+----
+import net.liftweb.util.Helpers
+LiftRules.explicitlyParsedSuffixes = Helpers.knownSuffixes &~ (Set("com"))
+----
+
+Discussion
+^^^^^^^^^^
+
+By default Lift will strip off file suffixes from URLs to make it easy to match on suffixes. An example would be needing to match on all requests ending in ".xml" or ".pdf".  However, ".com" is registered as one of those suffixes, but is inconvenient if you have URLs that end with email addresses.
+
+Note that this doesn't impact email addresses in the middle of URLs.  For example, consider the following REST service:
+
+[source,scala]
+----
+package code.rest
+
+import net.liftweb.http.rest.RestHelper
+import net.liftweb.http.LiftRules
+import xml.Text
+
+object Suffix extends RestHelper {
+
+  def init() : Unit = {
+    LiftRules.statelessDispatch.append(Suffix)
+  }
+
+  serve {
+    case "email" :: e :: "send" :: Nil Get req =>
+      Text("In middle: "+e)
+
+    case "email" :: e :: Nil Get req =>
+      Text("At end: "+e)
+  }
+
+}
+----
+
+With this service `init` method called in `Boot.scala` we could then make requests and observe the issue:
+
+----------------
+$ curl http://localhost:8080/email/you@example.com/send
+<?xml version="1.0" encoding="UTF-8"?>
+In middle: you@example.com
+
+$ curl http://localhost:8080/email/you@example.com
+<?xml version="1.0" encoding="UTF-8"?>
+At end: you@example
+----------------
+
+The ".com" is being treated as a file suffix, which is why the solution of removing it from the list of suffixes will resolve this problem.
+
+Note that because other top-level domains, such as ".uk", ".nl", ".gov", are not in `explicitlyParsedSuffixes`, those email addresses are left untouched.
+
+
+See Also
+^^^^^^^^
+
+<<MissingSuffix>> describes the suffix processing in more detail.
+
+
+
+
+[[SuffixMatchFail]]
+Failing to match on a file suffix
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You're trying to match on a file suffix (extension), but your match is
+failing.
+
+Solution
+^^^^^^^^
+
+Ensure the suffix you're matching on is included in
+`LiftRules.explicitlyParsedSuffixes`.
+
+As an example, perhaps you want to match anything ending in `.csv` at
+your `/reports/` URL:
+
+[source,scala]
+----
+case Req("reports" :: name :: Nil, "csv", GetRequest) =>
+  Text("Here's your CSV report for "+name)
+----
+
+You're expecting `/reports/foo.csv` to produce "Here's your CSV report
+for foo", but you get a 404.
+
+In `Boot.scala` add the following:
+
+[source,scala]
+----
+LiftRules.explicitlyParsedSuffixes += "csv"
+----
+
+Discussion
+^^^^^^^^^^
+
+This is the flip side of the _Missing file suffix_ recipe: Lift only
+splits out the suffixes it knows about in
+`LiftRules.explicitlyParsedSuffixes`.
+
+Without adding ".csv" to the `explicitlyParsedSuffixes`, the example URL
+would match with...
+
+[source,scala]
+----
+case Req("reports" :: name :: Nil, "", GetRequest) => ...
+----
+
+...with `name` set to "foo.csv" not "foo".
+
+See Also
+^^^^^^^^
+
+* link:Missing+file+suffix.html[Missing file suffix] recipe.
+* https://groups.google.com/d/topic/liftweb/UwZQ8f2MmLE/discussion[REST
+Requst suffix matching] mailing list discussion.
+* http://simply.liftweb.net/index-5.2.html[REST the hard way], section
+5.2 of _Simply Lift_.
+* http://simply.liftweb.net/index-5.3.html[Making it easier with
+RestHelper], section 5.3 of _Simply Lift_.
+
+
+
+
+
+
+[[RestBinaryData]]
+Accept binary data in a REST service
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to accept an image upload or other binary data in your RESTful
+service.
+
+Solution
+^^^^^^^^
+
+Access the request body in your rest helper:
+
+[source,scala]
+----------------------
+import net.liftweb.http.rest._
+import net.liftweb.http._
+
+object MyUpload extends RestHelper {
+  serve {
+    case "upload" :: Nil Post req =>
+      for {
+        bodyBytes <- req.body ?~ "No Body Bytes"
+      } yield <b>got an image of {bodyBytes.length} bytes</b>
+  }
+}
+----------------------
+
+Wire this into your application in `Boot.scala`, for example:
+
+[source,scala]
+----------------------
+LiftRules.statelessDispatchTable.append(code.lib.MyUpload)
+----------------------
+
+Test this service using a tool like cURL:
+
+----------------------
+$ curl -X POST --data-binary "@dog.jpg"
+  -H 'Content-Type: image/jpg' http://127.0.0.1:8080/upload
+<?xml version="1.0" encoding="UTF-8"?>
+<b>got an image of 43685 bytes</b>
+----------------------
+
+Discussion
+^^^^^^^^^^
+
+In the above example the binary data is accessed via the `req.body`,
+yielding a `Box[LiftResponse]` which in this case is XML.
+
+In the case where there is no body, a 404 would be returned with a text
+body of "No Body Bytes".
+
+Note that web containers, such as Jetty and Tomcat, may place limits on
+the size of an upload. You will recognise this situation by an error
+such as "java.lang.IllegalStateException: Form too large705784>200000".
+Check with documentation for the container for changing these limits.
+
+See Also
+^^^^^^^^
+
+* https://groups.google.com/forum/?fromgroups#!topic/liftweb/6MnWRPP3TcU[Mailing
+list discussion] including code for restricting a request based on mime
+type.
+
+* http://stackoverflow.com/questions/3861455/form-too-large-exception[Form
+too large in Jetty]
+
+<<FileUpload>> describes form-based (multi-part) file uploads
+
+
+
+
+
+
+[[JSONREST]]
+Returning JSON
+~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to return JSON from a REST call.
+
+Solution
+^^^^^^^^
+
+Use the JSON DSL. For example:
+
+[source,scala]
+----
+package code.lib
+
+import net.liftweb.http.rest._
+import net.liftweb.json.JObject
+import net.liftweb.json.JsonDSL._
+
+object QuotationAPI extends RestHelper {
+
+ serve {
+  case "quotation" :: Nil JsonGet _ =>
+   ("text" -> "A beach house isn't just real estate. It's a state of mind.") ~
+   ("by" -> "Douglas Adams") : JObject
+ }
+
+}
+----
+
+Wire this into `Boot.scala`:
+
+[source,scala]
+----
+LiftRules.statelessDispatch.append(code.lib.QuotationAPI)
+----
+
+Running this example produces:
+
+----
+$ curl -H 'Content-type: text/json' http://127.0.0.1:8080/quotation
+{
+  "text":"A beach house isn't just real estate. It's a state of mind.",
+  "by":"Douglas Adams"
+}
+----
+
+Discussion
+^^^^^^^^^^
+
+The "type ascription" at the end of the JSON expression (`: JObject`)
+tells the compiler that the expression is expected to be of type
+`JObject`. This is required to allow the DSL to work. If would not be
+required if, for example, you were calling a function that was defined
+to return a `JObject`.
+
+The JSON DSL allows you to created nested structures, lists and
+everything else you expect of JSON. The _Readme_ in the _See Also_
+section is a great place to read about the library.
+
+See Also
+^^^^^^^^
+
+* The https://github.com/lift/framework/tree/master/core/json[Lift JSON
+Readme] is a great source of documentation and examples of using the
+JSON package in Lift.
+
+
+
+
+
+[[GoogleSitemap]]
 Google Sitemap
 ~~~~~~~~~~~~~~
 
@@ -143,278 +605,4 @@ See Also
 * http://support.google.com/webmasters/bin/answer.py?hl=en&answer=156184[About
 Google Sitemaps].
 
-Missing file suffix
-~~~~~~~~~~~~~~~~~~~
-
-Problem
-^^^^^^^
-
-Your RestHelper expects a filename as part of the URL, but the suffix
-(extension) is missing, and you need it.
-
-Solution
-^^^^^^^^
-
-Access `req.path.suffix` to recover the suffix. For example, when
-processing `/download/123.png` you want to be able reconstruct
-`123.png`:
-
-[source,scala]
-----
-private def reunite(name: String, suffix: String) =
-  if (suffix.isEmpty) name else name+"."+suffix
-
-serve {
-  case "download" :: name :: Nil Get req =>
-    Text("You requested "+reunite(name, req.path.suffix))
-}
-----
-
-Requesting this URL with a command like cURL will show you the filename
-as expected:
-
-----
-$ curl http://127.0.0.1:8080/download/123.png
-<?xml version="1.0" encoding="UTF-8"?>
-You requested 123.png
-----
-
-Discussion
-^^^^^^^^^^
-
-When Lift parses a request it splits the request into constituent parts
-(e.g., turning the path into a `List[String]`), and this includes a
-separation of some suffixes. This is great for pattern matching when you
-want to change behaviour based on the suffix, but a hinderance in this
-particular situation.
-
-Only those suffixes defined in `LiftRules.explicitlyParsedSuffixes` are
-split from the filename. This includes many of the common file suffixes
-(such as "png", "atom", "json") and also some you may not be so familiar
-with, such as "com". That last one is the cause of URLs that contain
-email addresses being split from "user@example.org" into "user@example"
-and a suffix of "com".
-
-You can modify `LiftRules.explicitlyParsedSuffixes` to be whatever set
-of values you want.
-
-Note that if the suffix is not in `explicitlyParsedSuffixes`, the suffix
-will be an empty String and the `name` (in the above example) will be
-the file name with the suffix still attached.
-
-See Also
-^^^^^^^^
-
-* Source for
-https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/HttpHelpers.scala[HttpHelpers.scala]
-where you can find the default list of known suffixes.
-* Mailing list discussion
-https://groups.google.com/forum/?fromgroups#!topic/liftweb/zj8kazJPzmI[RestHelper
-GET strips off .com when GETting email as parameter with .com address].
-* https://groups.google.com/forum/?fromgroups#!topic/liftweb/h5-LdtRDfiw[REST
-helper: how to get file extension] mailing list discussion.
-
-Failing to match on a file suffix
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Problem
-^^^^^^^
-
-You're trying to match on a file suffix (extension), but your match is
-failing.
-
-Solution
-^^^^^^^^
-
-Ensure the suffix you're matching on is included in
-`LiftRules.explicitlyParsedSuffixes`.
-
-As an example, perhaps you want to match anything ending in `.csv` at
-your `/reports/` URL:
-
-[source,scala]
-----
-case Req("reports" :: name :: Nil, "csv", GetRequest) =>
-  Text("Here's your CSV report for "+name)
-----
-
-You're expecting `/reports/foo.csv` to produce "Here's your CSV report
-for foo", but you get a 404.
-
-In `Boot.scala` add the following:
-
-[source,scala]
-----
-LiftRules.explicitlyParsedSuffixes += "csv"
-----
-
-Discussion
-^^^^^^^^^^
-
-This is the flip side of the _Missing file suffix_ recipe: Lift only
-splits out the suffixes it knows about in
-`LiftRules.explicitlyParsedSuffixes`.
-
-Without adding ".csv" to the `explicitlyParsedSuffixes`, the example URL
-would match with...
-
-[source,scala]
-----
-case Req("reports" :: name :: Nil, "", GetRequest) => ...
-----
-
-...with `name` set to "foo.csv" not "foo".
-
-See Also
-^^^^^^^^
-
-* link:Missing+file+suffix.html[Missing file suffix] recipe.
-* https://groups.google.com/d/topic/liftweb/UwZQ8f2MmLE/discussion[REST
-Requst suffix matching] mailing list discussion.
-* http://simply.liftweb.net/index-5.2.html[REST the hard way], section
-5.2 of _Simply Lift_.
-* http://simply.liftweb.net/index-5.3.html[Making it easier with
-RestHelper], section 5.3 of _Simply Lift_.
-
-
-[[RestBinaryData]]
-Accept binary data in a REST service
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Problem
-^^^^^^^
-
-You want to accept an image upload or other binary data in your RESTful
-service.
-
-Solution
-^^^^^^^^
-
-Access the request body in your rest helper:
-
-[source,scala]
-----------------------
-import net.liftweb.http.rest._
-import net.liftweb.http._
-
-object MyUpload extends RestHelper {
-  serve {
-    case "upload" :: Nil Post req =>
-      for {
-        bodyBytes <- req.body ?~ "No Body Bytes"
-      } yield <b>got an image of {bodyBytes.length} bytes</b>
-  }
-}
-----------------------
-
-Wire this into your application in `Boot.scala`, for example:
-
-[source,scala]
-----------------------
-LiftRules.statelessDispatchTable.append(code.lib.MyUpload)
-----------------------
-
-Test this service using a tool like cURL:
-
-----------------------
-$ curl -X POST --data-binary "@dog.jpg"
-  -H 'Content-Type: image/jpg' http://127.0.0.1:8080/upload
-<?xml version="1.0" encoding="UTF-8"?>
-<b>got an image of 43685 bytes</b>
-----------------------
-
-Discussion
-^^^^^^^^^^
-
-In the above example the binary data is accessed via the `req.body`,
-yielding a `Box[LiftResponse]` which in this case is XML.
-
-In the case where there is no body, a 404 would be returned with a text
-body of "No Body Bytes".
-
-Note that web containers, such as Jetty and Tomcat, may place limits on
-the size of an upload. You will recognise this situation by an error
-such as "java.lang.IllegalStateException: Form too large705784>200000".
-Check with documentation for the container for changing these limits.
-
-See Also
-^^^^^^^^
-
-* https://groups.google.com/forum/?fromgroups#!topic/liftweb/6MnWRPP3TcU[Mailing
-list discussion] including code for restricting a request based on mime
-type.
-
-* http://stackoverflow.com/questions/3861455/form-too-large-exception[Form
-too large in Jetty]
-
-<<FileUpload>> describes form-based (multi-part) file uploads
-
-Returning JSON
-~~~~~~~~~~~~~~
-
-Problem
-^^^^^^^
-
-You want to return JSON from a REST call.
-
-Solution
-^^^^^^^^
-
-Use the JSON DSL. For example:
-
-[source,scala]
-----
-package code.lib
-
-import net.liftweb.http.rest._
-import net.liftweb.json.JObject
-import net.liftweb.json.JsonDSL._
-
-object QuotationAPI extends RestHelper {
-
- serve {
-  case "quotation" :: Nil JsonGet _ =>
-   ("text" -> "A beach house isn't just real estate. It's a state of mind.") ~
-   ("by" -> "Douglas Adams") : JObject
- }
-
-}
-----
-
-Wire this into `Boot.scala`:
-
-[source,scala]
-----
-LiftRules.statelessDispatch.append(code.lib.QuotationAPI)
-----
-
-Running this example produces:
-
-----
-$ curl -H 'Content-type: text/json' http://127.0.0.1:8080/quotation
-{
-  "text":"A beach house isn't just real estate. It's a state of mind.",
-  "by":"Douglas Adams"
-}
-----
-
-Discussion
-^^^^^^^^^^
-
-The "type ascription" at the end of the JSON expression (`: JObject`)
-tells the compiler that the expression is expected to be of type
-`JObject`. This is required to allow the DSL to work. If would not be
-required if, for example, you were calling a function that was defined
-to return a `JObject`.
-
-The JSON DSL allows you to created nested structures, lists and
-everything else you expect of JSON. The _Readme_ in the _See Also_
-section is a great place to read about the library.
-
-See Also
-^^^^^^^^
-
-* The https://github.com/lift/framework/tree/master/core/json[Lift JSON
-Readme] is a great source of documentation and examples of using the
-JSON package in Lift.
 
