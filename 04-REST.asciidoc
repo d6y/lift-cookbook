@@ -159,7 +159,15 @@ Note that if the suffix is not in `explicitlyParsedSuffixes`, the suffix
 will be an empty String and the `name` (in the above example) will be
 the file name with the suffix still attached.
 
-Rather than simply attaching the suffix back on, you could use this to negotiate the format to send back to the client. For example, if a browser or device supports the WebP image format, you might prefer to send that:
+Depending on your needs, you could alternatively add a guard condition to check for the file suffix:
+
+[source, scala]
+-------
+case "download" :: file :: Nil Get req if req.path.suffix == "png" =>
+  Text("You requested PNG file called "+file)
+-------
+
+Or rather than simply attaching the suffix back on, you could take the opportunity to negotiate the format to send back to the client. For example, if the client supports the WebP image format, you might prefer to send that:
 
 [source, scala]
 -------
@@ -287,7 +295,7 @@ See Also
 
 
 [[SuffixMatchFail]]
-Failing to match on a file suffix
+Failing to Match on a File Suffix
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -314,41 +322,34 @@ case Req("reports" :: name :: Nil, "csv", GetRequest) =>
 You're expecting `/reports/foo.csv` to produce "Here's your CSV report
 for foo", but you get a 404.
 
-In `Boot.scala` add the following:
+To resolve this, include "csv" as a file suffix that Lift knows to split from URLs.  In `Boot.scala` call:
 
 [source,scala]
 ----
 LiftRules.explicitlyParsedSuffixes += "csv"
 ----
 
+The pattern will now match.
+
 Discussion
 ^^^^^^^^^^
 
-This is the flip side of the _Missing file suffix_ recipe: Lift only
-splits out the suffixes it knows about in
-`LiftRules.explicitlyParsedSuffixes`.
-
 Without adding ".csv" to the `explicitlyParsedSuffixes`, the example URL
-would match with...
+would match with:
 
 [source,scala]
 ----
-case Req("reports" :: name :: Nil, "", GetRequest) => ...
+case Req("reports" :: name :: Nil, "", GetRequest) =>
+  Text("Here's your CSV report for "+name)
 ----
 
-...with `name` set to "foo.csv" not "foo".
+ In this case `name` would be set to "foo.csv".  This is because Lift separates file suffixes from the end of URLs only for file suffixes that are registered with `explicitlyParsedSuffixes`.  Because `csv` is not one of the default registered suffixes, "foo.csv" is not split. That's why `csv` in the suffix position of `Req` pattern match won't match the request, but an empty string in that position will.
+
 
 See Also
 ^^^^^^^^
 
-* link:Missing+file+suffix.html[Missing file suffix] recipe.
-* https://groups.google.com/d/topic/liftweb/UwZQ8f2MmLE/discussion[REST
-Requst suffix matching] mailing list discussion.
-* http://simply.liftweb.net/index-5.2.html[REST the hard way], section
-5.2 of _Simply Lift_.
-* http://simply.liftweb.net/index-5.3.html[Making it easier with
-RestHelper], section 5.3 of _Simply Lift_.
-
+<<MissingSuffix>> explains more about the suffix removal in Lift.
 
 
 
@@ -361,72 +362,93 @@ Accept binary data in a REST service
 Problem
 ^^^^^^^
 
-You want to accept an image upload or other binary data in your RESTful
+You want to accept an image upload, or other binary data, in your RESTful
 service.
 
 Solution
 ^^^^^^^^
 
-Access the request body in your rest helper:
+Access the request body in your REST helper:
 
 [source,scala]
 ----------------------
-import net.liftweb.http.rest._
-import net.liftweb.http._
+package code.rest
 
-object MyUpload extends RestHelper {
+import net.liftweb.http.rest.RestHelper
+import net.liftweb.http.LiftRules
+
+object Upload extends RestHelper {
+
+  def init() : Unit = {
+    LiftRules.statelessDispatch.append(Upload)
+  }
+
   serve {
     case "upload" :: Nil Post req =>
       for {
-        bodyBytes <- req.body ?~ "No Body Bytes"
-      } yield <b>got an image of {bodyBytes.length} bytes</b>
+        bodyBytes <- req.body
+      } yield <info>Received {bodyBytes.length} bytes</info>
   }
+
 }
 ----------------------
 
-Wire this into your application in `Boot.scala`, for example:
+Wire this into your application in `Boot.scala`:
 
 [source,scala]
 ----------------------
-LiftRules.statelessDispatchTable.append(code.lib.MyUpload)
+import code.rest.Upload
+Upload.init()
 ----------------------
 
 Test this service using a tool like cURL:
 
 ----------------------
-$ curl -X POST --data-binary "@dog.jpg"
-  -H 'Content-Type: image/jpg' http://127.0.0.1:8080/upload
+curl -X POST --data-binary "@dog.jpg" -H 'Content-Type: image/jpg' http://127.0.0.1:8080/upload
 <?xml version="1.0" encoding="UTF-8"?>
-<b>got an image of 43685 bytes</b>
+<info>Received 1365418 bytes</info>
 ----------------------
 
 Discussion
 ^^^^^^^^^^
 
-In the above example the binary data is accessed via the `req.body`,
-yielding a `Box[LiftResponse]` which in this case is XML.
-
-In the case where there is no body, a 404 would be returned with a text
-body of "No Body Bytes".
+In the above example the binary data is accessed via the `req.body`, which returns
+ a `Box[Array[Byte]]`.  We turn this into a `Box[Elem]` to send back to the client.
+ Implicits in `RestHelper` turn this into an `XmlResponse` for Lift to handle.
 
 Note that web containers, such as Jetty and Tomcat, may place limits on
 the size of an upload. You will recognise this situation by an error
 such as "java.lang.IllegalStateException: Form too large705784>200000".
 Check with documentation for the container for changing these limits.
 
+To restrict the type of image you accept, you could add a guard-condition on the match, but you may find you have more readable code by moving the logic into an `unapply` method on an object.  For example, to restrict an upload to just a JPEG you could say:
+
+
+[source,scala]
+----------------------
+serve {
+  case "jpg" :: Nil Post JPeg(req) =>
+    for {
+      bodyBytes <- req.body
+    } yield <info>Jpeg Received {bodyBytes.length} bytes</info>
+  }
+
+object JPeg {
+  def unapply(req: Req): Option[Req] =
+    req.contentType.filter(_ == "image/jpg").map(_ => req)
+}
+----------------------
+
+We have defined an extractor called `JPeg` which returns `Some[Req]` if the content type of the upload is "image/jpg"; otherwise the result will be `None`.  This is used in the REST pattern match as `JPeg(req)`.  Note that the `unapply` needs to return `Option[Req]` as this is what's expected by the `Post` extractor.
+
+
 See Also
 ^^^^^^^^
 
-* https://groups.google.com/forum/?fromgroups#!topic/liftweb/6MnWRPP3TcU[Mailing
-list discussion] including code for restricting a request based on mime
-type.
+Odersky _et al._, (2008), _Programming in Scala_, chapter 24, discusses extractors in detail: http://www.artima.com/pins1ed/extractors.html[http://www.artima.com/pins1ed/extractors.html].
 
-* http://stackoverflow.com/questions/3861455/form-too-large-exception[Form
-too large in Jetty]
 
 <<FileUpload>> describes form-based (multi-part) file uploads
-
-
 
 
 
@@ -443,23 +465,28 @@ You want to return JSON from a REST call.
 Solution
 ^^^^^^^^
 
-Use the JSON DSL. For example:
+Use the JSON domain specific language (DSL). For example:
 
 [source,scala]
 ----
-package code.lib
+package code.rest
 
-import net.liftweb.http.rest._
-import net.liftweb.json.JObject
+import net.liftweb.http.rest.RestHelper
+import net.liftweb.http.LiftRules
+import net.liftweb.json.JsonAST._
 import net.liftweb.json.JsonDSL._
 
-object QuotationAPI extends RestHelper {
+object QuotationsAPI extends RestHelper {
 
- serve {
-  case "quotation" :: Nil JsonGet _ =>
-   ("text" -> "A beach house isn't just real estate. It's a state of mind.") ~
-   ("by" -> "Douglas Adams") : JObject
- }
+  def init() : Unit = {
+    LiftRules.statelessDispatch.append(QuotationsAPI)
+  }
+
+  serve {
+    case "quotation" :: Nil JsonGet _ =>
+      ("text" -> "A beach house isn't just real estate. It's a state of mind.") ~
+        ("by" -> "Douglas Adams") : JValue
+  }
 
 }
 ----
@@ -468,7 +495,8 @@ Wire this into `Boot.scala`:
 
 [source,scala]
 ----
-LiftRules.statelessDispatch.append(code.lib.QuotationAPI)
+import code.rest.QuotationsAPI
+QuotationsAPI.init()
 ----
 
 Running this example produces:
@@ -484,23 +512,19 @@ $ curl -H 'Content-type: text/json' http://127.0.0.1:8080/quotation
 Discussion
 ^^^^^^^^^^
 
-The "type ascription" at the end of the JSON expression (`: JObject`)
+The _type ascription_ at the end of the JSON expression (`: JValue`)
 tells the compiler that the expression is expected to be of type
 `JObject`. This is required to allow the DSL to work. If would not be
 required if, for example, you were calling a function that was defined
-to return a `JObject`.
+to return a `JValue`.
 
 The JSON DSL allows you to created nested structures, lists and
-everything else you expect of JSON. The _Readme_ in the _See Also_
-section is a great place to read about the library.
+everything else you expect of JSON.
 
 See Also
 ^^^^^^^^
 
-* The https://github.com/lift/framework/tree/master/core/json[Lift JSON
-Readme] is a great source of documentation and examples of using the
-JSON package in Lift.
-
+The README file for the lift-json project is a great source of examples for using the JSON DSL: https://github.com/lift/framework/tree/master/core/json[https://github.com/lift/framework/tree/master/core/json].
 
 
 
@@ -517,27 +541,25 @@ You want to make a Google Sitemap using Lift's rendering capabilities.
 Solution
 ^^^^^^^^
 
-Simply create a file (e.g. `sitemap.html`) in your `webapp` folder with
+Create the sitemap structure, and bind to it as you would for any template in Lift.
+
+Create `sitemap.html` in your `webapp` folder with
 a valid XML-Sitemap markup:
 
 [source, xml]
 ----
 <?xml version="1.0" encoding="utf-8" ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<lift:MySitemapContent.base>
-    <url>
+    <url data-lift="SitemapContent.base">
         <loc></loc>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
         <lastmod></lastmod>
     </url>
-</lift:MySitemapContent.base>
-<lift:MySitemapContent.list>
-    <url>
+    <url data-lift="SitemapContent.list">
         <loc></loc>
         <lastmod></lastmod>
     </url>
-</lift:MySitemapContent.list>
 </urlset>
 ----
 
@@ -545,42 +567,51 @@ Make a snippet to fill the required gaps:
 
 [source,scala]
 ----
-class MySitemapContent {
+package code.snippet
 
-  lazy val entries = MyDBRecord.findAll(..)
+import org.joda.time.DateTime
+import net.liftweb.util.CssSel
+import net.liftweb.http.S
+import net.liftweb.util.Helpers._
+
+class SitemapContent {
+
+  case class Post(url: String, date: DateTime)
+
+  lazy val entries =
+    Post("/welcome", new DateTime) :: Post("/about", new DateTime) :: Nil
+
+  val siteLastUdated = new DateTime
 
   def base: CssSel =
     "loc *" #> "http://%s/".format(S.hostName) &
-    "lastmod *" #> someDate.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZZ")
+      "lastmod *" #> siteLastUdated.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZZ")
 
   def list: CssSel =
     "url *" #> entries.map(post =>
-    "loc *" #> "http://%s%s".format(S.hostName, post.url) &
-    "lastmod *" #> post.date.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZZ"))
+      "loc *" #> "http://%s%s".format(S.hostName, post.url) &
+        "lastmod *" #> post.date.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZZ"))
 
 }
 ----
 
-Note that Google Sitemaps need dates to be in ISO 8601 format. The built-in`java.text.SimpleDateFormat`does not support this format prior to Java 7. If you are using Java 6 you need to use`org.joda.time.DateTime`.
-With Java 7 "yyyy-MM-dd'T'HH:mmXXX" can be used as the pattern for the
-formatting.
+This example is using canned data for two pages.
 
-We could run this template through Lift's default HTML render engine and
-simply add it to Lift's own Sitemap, but we want our valid XML to be
-delivered as XML rather than HTML. So instead we will use `RestHelper`
-to return a `XmlResponse`:
+Apply the template and snippet in a REST service at `/sitemap`:
 
 [source,scala]
 ----
-import net.liftweb.http.rest._
-import net.liftweb.http._
+package code.rest
 
-object MySitemap extends RestHelper {
+import net.liftweb.http._
+import net.liftweb.http.rest.RestHelper
+
+object Sitemap extends RestHelper {
   serve {
     case Req("sitemap" :: Nil, _, GetRequest) =>
-      XmlResponse(S.render(<lift:embed what="sitemap" />,
-       S.request.get.request).head)
-    }
+      XmlResponse(
+        S.render(<lift:embed what="sitemap" />,
+        S.request.get.request).head)
   }
 }
 ----
@@ -589,7 +620,7 @@ Wire this into your application in `Boot.scala`, for example:
 
 [source,scala]
 ----
-LiftRules.statelessDispatchTable.append(code.lib.MySitemap)
+LiftRules.statelessDispatch.append(code.rest.Sitemap)
 ----
 
 Test this service using a tool like cURL:
@@ -597,12 +628,153 @@ Test this service using a tool like cURL:
 [source,bash]
 ----
 $ curl http://127.0.0.1:8080/sitemap
+
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>http://127.0.0.1/</loc>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+        <lastmod>2013-02-10T19:16:12.433+00:00</lastmod>
+    </url>
+    <url>
+        <loc>http://127.0.0.1/welcome</loc>
+        <lastmod>2013-02-10T19:16:12.434+00:00</lastmod>
+    </url><url>
+        <loc>http://127.0.0.1/about</loc>
+        <lastmod>2013-02-10T19:16:12.434+00:00</lastmod>
+    </url>
+</urlset>
 ----
+
+Discussion
+^^^^^^^^^^
+
+You may be wondering why we've used REST here, when we could have used a regular HTML template and snippet. The reason is that we want XML rather than HTML output.  We use the same mechanism, but invoke it and wrap it in an `XmlResponse`.  The `S.render` method takes a `NodeSeq` and a `HTTPRequst`. The first we supply by running the `sitemap.html` snippet; the second is simply the current request.  `XmlResponse` requires a `Node` rather than a `NodeSeq`, which is why we call `head`--as there's only one node in the response, this does what we need.
+
+Note that Google Sitemaps need dates to be in ISO 8601 format. The built-in `java.text.SimpleDateFormat` does not support this format prior to Java 7. If you are using Java 6 you need to use `org.joda.time.DateTime` as we are in this example.  With Java 7 "yyyy-MM-dd'T'HH:mmXXX" can be used as the pattern for the formatting.
+
 
 See Also
 ^^^^^^^^
 
-* http://support.google.com/webmasters/bin/answer.py?hl=en&answer=156184[About
-Google Sitemaps].
+Sitemaps are described at: http://support.google.com/webmasters/bin/answer.py?hl=en&answer=156184[http://support.google.com/webmasters/bin/answer.py?hl=en&answer=156184].
+
+
+
+
+[[iOSNativePost]]
+Calling REST Service from a Native iOS Application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to make a HTTP POST from a native iOS device to a Lift REST service.
+
+
+Solution
+^^^^^^^^
+
+One common and easiest way to do this is via AFNetworking. And another uncommon way is to use iOS native API, NSMutableURLRequest and NSURLConnection.
+
+A short example:
+
+[source,scala]
+---------------------------------------------------------
+ serve ("welcome"/ "cookbook" prefix {
+    case  Nil Post req => {
+      val returnValue: Box[JValue] =  for {
+           value <- req.param("key")
+       } yield {
+             println(value)
+             // do something and return JValue e.g. (("command"->"somevalue") ~("message"->("true"):JValue)
+          }
+      val jVar:JValue =  returnValue.openOr(  ("command"->"session") ~("message"->"false"): JValue)
+      jVar
+    }
+---------------------------------------------------------
+
+[source, objc]
+---------------------------------------------------------
+-(NSMutableURLRequest*)postMutableURLRequestFactory:(NSURL*)url fileNameWithExtension:(NSString*)fileNameWithExtension namesDict:(NSDictionary*)namesDict{
+
+    NSMutableURLRequest *request= [[NSMutableURLRequest alloc] init] ;
+    [request setURL:url];
+    [request setHTTPMethod:@"POST"];
+
+    NSData* jsonData = [NSJSONSerialization dataWithJSONObject:namesDict options:0 error:nil];
+
+    [request addValue:[NSString stringWithFormat:@"%i",[jsonData length] ] forHTTPHeaderField: @"Content-Length"];
+
+    NSString *boundary = @"---------------------------14737809831466499882746641449";
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
+    [request addValue:contentType forHTTPHeaderField: @"Content-Type"];
+    NSMutableData *postbody = [NSMutableData data];
+    [postbody appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+
+    __block NSInteger counter = [namesDict count];
+    [namesDict enumerateKeysAndObjectsUsingBlock:^(NSString* key, NSString *object, BOOL *shouldStop){
+        [postbody appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n",key] dataUsingEncoding:NSASCIIStringEncoding]];
+            [postbody appendData:[[NSString stringWithFormat:@"%@",object] dataUsingEncoding:NSASCIIStringEncoding]];
+
+        if(counter!=1 && counter!=0){
+            --counter;
+            [postbody appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSASCIIStringEncoding]];
+        }else{
+             [postbody appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSASCIIStringEncoding]];
+        }
+    }];
+    [request setHTTPBody:postbody];
+
+    return request;
+
+}
+
+
+//Usage
+
+     mutableURLRequest =  [self postMutableURLRequestFactory:[NSURL URLWithString:urlString] fileNameWithExtension:@"" namesDict:[NSDictionary dictionaryWithObjectsAndKeys:@"someValue", @"key", nil]]];
+
+     NSURLConnection *con = [[NSURLConnection alloc] initWithRequest:mutableURLRequest  delegate:self];
+---------------------------------------------------------
+
+[source, objc]
+---------------------------------------------------------
+
+//AFNetworking example
+
+  NSMutableDictionary* params =[NSMutableDictionary dictionaryWithObjectsAndKeys: @"somevalue", @"key", nil];
+
+     NSMutableURLRequest *request =  [self multipartFormRequestWithMethod:@"POST" path: "http://www.example.com/welcome/cookbook" ] parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+
+    }];
+
+       AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest: request];
+
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+  //completion block and do something after the request has been completed.
+  }
+
+---------------------------------------------------------
+
+Discussion
+^^^^^^^^^^
+
+There are many ways to do HTTP POST from iOS. However, it can be confusing to identify the correct way that works, especially without the aid of external library. This example also supports JSON post as illustrated as key and value in this example.
+
+
+The current example relies on multi-form construction for a simple JSON HTTP Post. This may benefit a JSON POST with  media data. If no media data on the POST, probably there is a way to do this without using multi-form.
+
+See Also
+^^^^^^^^
+
+http://simply.liftweb.net/index-5.4.html#prev[http://simply.liftweb.net/index-5.4.html#prev].
+
+
+
+
+
+
 
 
