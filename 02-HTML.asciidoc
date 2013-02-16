@@ -466,7 +466,7 @@ The resultant HTML might be:
 Discussion
 ^^^^^^^^^^
 
-The randome value that is appended to the resource is computed when your Lift application boots.  This means it should be stable between releases of your application.
+The random value that is appended to the resource is computed when your Lift application boots.  This means it should be stable between releases of your application.
 
 If you need some other behaviour from `with-resource-id` you can assign
 a new function of type `String => String` to
@@ -481,7 +481,7 @@ move the tags to be outside of the head section.
 
 Note that some proxies may choose not to cache resources with query
 parameters at all. If that impacts you, it's possible to code a custom resource id method
-to move the random resouce ID out of the query parameter and into the path.
+to move the random resource ID out of the query parameter and into the path.
 
 Here's one approach to doing this. Rather than generate JavaScript and CSS links that look like `/myscript.js?F61973`, we will generate `/cache/F61973/myscript.js`. We then will need to tell Lift to take requests
 that look like this new format, and render the correct content for the request.  This all happens in `Boot.scala`:

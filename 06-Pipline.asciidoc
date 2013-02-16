@@ -1,14 +1,362 @@
 [[Pipeline]]
-Pipeline
---------
+Request Pipeline
+----------------
 
-This chapter deals with solutions relating to the Lift processing
-pipeline.
+When a request reaches Lift there are a number of points where you can jump in an control what Lift does, or send back a different kind of response, or control access.  This chapter looks at the pipeline through examples of different kinds of `LiftResponse` and configurations.
 
-You can get a great overview of the pipeline, including diagrams, from
-_Exploring Lift_ at http://exploring.liftweb.net/master/index-9.html#toc-Section-9.2[http://exploring.liftweb.net/master/index-9.html#toc-Section-9.2]
-and also from from the Lift pipeline Wiki page at
+You can get a great overview of the pipeline, including diagrams, from the Lift pipeline Wiki page at
 http://www.assembla.com/spaces/liftweb/wiki/HTTP_Pipeline[http://www.assembla.com/spaces/liftweb/wiki/HTTP_Pipeline].
+
+
+[[DebugRequest]]
+Debugging a Request
+~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to debug a request and see what's arriving to your Lift application.
+
+Solution
+^^^^^^^^
+
+Add an `onBeginServicing` function in `Boot.scala` to log the request.
+For example:
+
+[source,scala]
+-----------------------------------
+LiftRules.onBeginServicing.append {
+  case r => println("Received: "+r)
+}
+-----------------------------------
+
+Discussion
+^^^^^^^^^^
+
+The `onBeginServicing` call is called quite early in the Lift pipeline, before
+`S` is set up, and before Lift has the chance to 404 your request.  The function signature it expects is `Req => Unit`.
+
+If you want to select only certain paths, you can. For example, to track
+all requests starting _/paypal_:
+
+[source,scala]
+-----------------------------------------------------
+LiftRules.onBeginServicing.append {
+  case r @ Req(List("paypal", _), _, _) => println(r)
+}
+-----------------------------------------------------
+
+There's also `LitRules.early` which is called before `onBeginServicing`.  It expects a `HTTPRequest => Unit` function, so is a little lower-level than a `Req`.  However, it will be called by all requests that pass through Lift. For example, you could mark a request as something that the container should handle by itself:
+
+[source,scala]
+-----------------------------------------------------
+LiftRules.liftRequest.append {
+  case Req("robots" :: _, _, _) => false
+}
+-----------------------------------------------------
+
+Which this in place a request for _robots.txt_ will be logged by `LiftRules.early` but won't make it to any of the other methods described in this recipe.
+
+If you need access to state (e.g., `S`), use `earlyInStateful`:
+
+[source,scala]
+-----------------------------------------------------
+LiftRules.earlyInStateful.append {
+  case Full(r) => // access S here
+  case _ =>
+}
+-----------------------------------------------------
+
+Note that the function is given a `Box[Req]` not a `Req`. It's possible for your `earlyInStateful` function to be called twice. This will happen when a new session is being set up.  You can prevent this by only matching on requests in a running Lift session:
+
+[source,scala]
+-----------------------------------------------------
+LiftRules.earlyInStateful.append {
+  case Full(r) if LiftRules.getLiftSession(r).running_? => // access S here
+  case _ =>
+}
+-----------------------------------------------------
+
+Finally, there's also `earlyInStateless` which like `earlyInStateful` works on a `Box[Req]` but in other respects is the same as `onBeginServicing`. It is triggered after `early` and before `earlyInStateful`.
+
+As a summary, the functions described in this recipe are called in this order:
+
+* `LiftRules.early`
+* `LiftRules.onBeginServicing`
+* `LiftRules.earlyInStateless`
+* `LiftRules.earlyInStateful`
+
+
+
+See Also
+^^^^^^^^
+
+If you need to catch the end of a request, there is also an `onEndServicing` which can be given functions of type
+`(Req, Box[LiftResponse]) => Unit`.
+
+<<RunningStateless>> describe show to force requests to be stateless.
+
+
+
+
+
+[[OnSession]]
+Running Code when Sessions are Created (or Destroyed)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to carry out actions when a session is created or destroyed.
+
+Solution
+^^^^^^^^
+
+Make use of the hooks in `LiftSession`. For example, in `Boot.scala`:
+
+[source,scala]
+------------------------------------------------------------
+LiftSession.afterSessionCreate ::=
+ ( (s:LiftSession, r:Req) => println("Session created") )
+
+LiftSession.onBeginServicing ::=
+ ( (s:LiftSession, r:Req) => println("Processing request") )
+
+LiftSession.onShutdownSession ::=
+ ( (s:LiftSession) => println("Session going away") )
+------------------------------------------------------------
+
+If the request path has been marked as being stateless via
+`LiftRules.statelessReqTest`, the above example would only execute the
+`onBeginServicing` functions.
+
+Discussion
+^^^^^^^^^^
+
+The hooks in `LiftSession` allow you to insert code at various points in
+the session lifecycle: when the session is created, at the start of
+servicing the request, after servicing, when the session is about to
+shutdown, at shutdown... the pipeline diagrams mentioned at the start of this chapter
+is a useful guide to these stages.
+
+Note that the Lift session is not the same as the HTTP Session. Lift bridges from the HTTP session to it's own session management.  This is described in some detail in _Exploring Lift_ (see _See Also_).
+
+The full list of session hooks is:
+
+* `onSetupSession` -- this will be the first hook called when a session is created.
+* `afterSessionCreate` -- called after all `onSetupSession` functions have been called.
+* `onBeginServicing` -- at the start of the request processing.
+* `onEndServicing` -- and the end of request processing.
+* `onAboutToShutdownSession` -- called just before a session is shutdown, for example when a session expires or the Lift application is being shutdown.
+* `onShutdownSession` -- called after all `onAboutToShutdownSession` functions have been run.
+
+If you are testing testing these hooks, you might want to make session expire faster than the 30 minutes of inactivity used by default in Lift.  To do this, supply a millisecond value to `LiftRules.sessionInactivityTimeout`:
+
+[source,scala]
+------------------------------------------------------------
+// 30 second inactivity timeout
+LiftRules.sessionInactivityTimeout.default.set(Full(1000L * 30))
+------------------------------------------------------------
+
+There are two other hooks in `LiftSession`: `onSessionActivate` and `onSessionPassivate`. These may be of use if you are working with a servlet container in distributed mode, and want to be notified when the servlet HTTP session is about to be serialized (passivated) and de-serialized (activated) between container instances. These hooks are rarely used.
+
+
+See Also
+^^^^^^^^
+
+Session management is discussed in section 9.5 of _Exploring Lift_: http://exploring.liftweb.net/[http://exploring.liftweb.net/].
+
+
+
+
+
+[[ShutdownHooks]]
+Run Code when Lift Shuts Down
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to have some code executed when your Lift application is
+shutting down.
+
+Solution
+^^^^^^^^
+
+Append to `LiftRules.unloadHooks`.
+
+[source,scala]
+--------------------------------------------------------------
+LiftRules.unloadHooks.append( () => println("Shutting down") )
+--------------------------------------------------------------
+
+Discussion
+^^^^^^^^^^
+
+You append functions of type `() => Unit` and these functions are run
+right at the end of the Lift handler, after sessions have been
+destroyed, Lift actors have been shutdown, and requests have finished
+being handled.
+
+This is triggered, in the words of the Java servlet
+specification, "by the web container to indicate to a filter that it is
+being taken out of service".
+
+See Also
+^^^^^^^^
+
+<<RunTasksPeriodically>> includes an example of using a unload hook.
+
+
+
+[[RunningStateless]]
+Running Stateless
+~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to force your application to be stateless at the HTTP level.
+
+Solution
+^^^^^^^^
+
+In `Boot.scala`:
+
+[source,scala]
+----------------------------------------------------
+LiftRules.enableContainerSessions = false
+LiftRules.statelessReqTest.append { case _ => true }
+----------------------------------------------------
+
+All requests will now be treated as stateless. Any attempt to use state,
+such as via `SessionVar` for example, will trigger a warning in
+developer mode: "Access to Lift's statefull features from Stateless mode.
+The operation on state will not complete."
+
+Discussion
+^^^^^^^^^^
+
+HTTP session creation is controlled via `enableContainerSessions`, and
+applies for all requests. Leaving this value at the default (`true`)
+allows more fine-grained control over which requests are stateless.
+
+Using `statelessReqTest` allows you to decide based on the
+`StatelessReqTest` if it should be stateless (`true`) or not (`false`).
+For example:
+
+[source,scala]
+-----------------------------------------------------------------
+def asset(file: String) =
+  List(".js", ".gif", ".css").exists(file.endsWith)
+
+LiftRules.statelessReqTest.append {
+  case StatelessReqTest("index" :: Nil, httpReq) => true
+  case StatelessReqTest(List(_, file),  _) if asset(file) => true
+}
+-----------------------------------------------------------------
+
+This example would only make the index page and any GIFs, JavaScript and
+CSS files stateless. The `httpReq` part is a `HTTPRequest` instance,
+allowing you to base the decision on the content of the request
+(cookies, user agent, etc).
+
+Another option is `LiftRules.statelessDispatch` which allows you to
+register a function which returns a `LiftResponse`. This will be
+executed without a session, and convenient for REST-based services.
+
+If you just need to mark an entry in Sitemap as being stateless, you can:
+
+[source,scala]
+-----------------------------------------------------------------
+Menu.i("Stateless Page") / "demo" >> Stateless
+-----------------------------------------------------------------
+
+A request for _/demo_ would be processed without state.
+
+
+See Also
+^^^^^^^^
+
+<<REST>> contains recipes for REST-based services in Lift.
+
+The Lift Wiki gives further details on the processing of stateless requests: http://www.assembla.com/wiki/show/liftweb/Stateless_Requests[http://www.assembla.com/wiki/show/liftweb/Stateless_Requests].
+
+This stateless request control was introduced in Lift 2.2.  The announcement on the mailing list gives more details: https://groups.google.com/d/msg/liftweb/2rVMCnWppSo/KoaUMHeQAEAJ[https://groups.google.com/d/msg/liftweb/2rVMCnWppSo/KoaUMHeQAEAJ].
+
+
+
+
+[[CatchException]]
+Catch Any Exception
+~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want a wrapper around all requests to catch exceptions and display
+something to the user.
+
+Solution
+^^^^^^^^
+
+Declare an exception handler in `Boot.scala`:
+
+[source,scala]
+--------------------------------------------------
+LiftRules.exceptionHandler.prepend {
+  case (runMode, request, exception) =>
+    logger.error("Failed at: "+request.uri)
+    InternalServerErrorResponse()
+}
+--------------------------------------------------
+
+In the above example, all exceptions for all requests at all run modes
+are being matched, causing an error to be logged and a 500 (internal
+server error) to be returned to the browser.
+
+Discussion
+^^^^^^^^^^
+
+The partial function you add to `exceptionHandler` needs to return a
+`LiftResponse` (i.e., something to send to the browser). The default
+behaviour is to return an `XhtmlResponse`, which in
+`Props.RunModes.Development` gives details of the exception, and in all
+other run modes simply says: "Something unexpected happened".
+
+You can return any kind of `LiftResponse`, including `RedirectResponse`,
+`JsonResponse`, `XmlResponse`, `JavaScriptResponse` and so on.
+
+This second example shows matching on Ajax POST requests only, and returning
+a JavaScript dialog to the browser:
+
+[source,scala]
+-----------------------------------------------------
+import net.liftweb.http.js.JsCmds._
+
+val ajax = LiftRules.ajaxPath
+
+LiftRules.exceptionHandler.prepend {
+  case (mode, Req(ajax :: _, _, PostRequest), ex) =>
+    logger.error("Error handing ajax")
+    JavaScriptResponse(Alert("Boom!"))
+}
+-----------------------------------------------------
+
+This Ajax example will jump in before Lift's default behaviour for Ajax
+errors. The default is to retry the Ajax command three times
+(`LiftRules.ajaxRetryCount`), and then execute
+`LiftRules.ajaxDefaultFailure`, which will pop up a dialog saying: "The
+server cannot be contacted at this time"
+
+See Also
+^^^^^^^^
+
+This recipe was derived from a mailing list discussion: http://groups.google.com/group/liftweb/browse_thread/thread/842954ffc333b0f9[http://groups.google.com/group/liftweb/browse_thread/thread/842954ffc333b0f9].
+
+
+
+
 
 [[RestStreamContent]]
 Streaming Content
@@ -25,26 +373,32 @@ Solution
 Use `OutputStreamResponse`, passing it a function that will write to the
 `OutputStream` that Lift supplies.
 
-In this example we'll stream all the integers from 1:
+In this example we'll stream all the integers from one, via a REST service:
 
 [source,scala]
 -------------------------------------------------------------------
+package code.rest
+
 import net.liftweb.http.{Req,OutputStreamResponse}
 import net.liftweb.http.rest._
 
 object Numbers extends RestHelper {
 
-  // Generate numbers, converted to Array[Byte]
-  def infinite = Stream.from(1).map(num2bytes)
-
+  // Convert a number to a String and then to bytes we can send
   def num2bytes(x: Int) = (x + "\n") getBytes("utf-8")
+
+  // Generate numbers using a Scala stream:
+  def infinite = Stream.from(1).map(num2bytes)
 
   serve {
     case Req("numbers" :: Nil, _, _) =>
-      OutputStreamResponse( (out) => infinite.foreach(out.write) )
+      OutputStreamResponse( out => infinite.foreach(out.write) )
   }
 }
 -------------------------------------------------------------------
+
+Scala's `Stream` class is a way to generate a sequence with lazy evaluation. The values being
+produced by `infinite` are used an example data to stream back to the client.
 
 Wire this into Lift in `Boot.scala`:
 
@@ -54,7 +408,24 @@ LiftRules.dispatch.append(Numbers)
 ----------------------------------
 
 Visiting _http://127.0.0.1:8080/numbers_ will generate a 200 status code
-and start producing the integers from 1.
+and start producing the integers from 1. The numbers are produced quite quickly, so you
+probably don't want to try that in your web browser, but instead from something that
+is easier to stop, such as cURL.
+
+Discussion
+^^^^^^^^^^
+
+`OutputStreamResponse` expects a function of type `OutputStream => Unit`. The
+`OutputStream` argument is the output stream to the client.  This means the bytes
+we write to the stream are written to the client. In the above example...
+
+[source,scala]
+-----------------------------------
+OutputStreamResponse(out => infinite.foreach(out.write))
+-----------------------------------
+
+...we are making use of the `write(byte[])` method on Java's `OutputStream`, and sending it
+the `Array[Byte]` being generated from our `infinite` stream.
 
 For more control over status codes, headers and cookies, there are a
 variety of signatures for the `OutputStreamResponse` object. For the
@@ -70,15 +441,8 @@ case class OutputStreamResponse(
   code: Int)
 -----------------------------------
 
-Discussion
-^^^^^^^^^^
-
-The function you give as the first argument to `OutputStreamResponse` is
-called with the output stream to the client. This means that the bytes
-you are writing to the `out` stream are being written to the client.
-
 Any headers you set (such as `Content-type`), or status code, may
-already have been set by the time your function is called. Note that
+already have been set by the time your output function is called. Note that
 setting `size` to `-1` causes the `Content-length` header to be skipped.
 
 There are two related types of response: `InMemoryResponse` and
@@ -98,6 +462,30 @@ case class InMemoryResponse(
   cookies: List[HTTPCookie],
   code: Int)
 -----------------------------------
+
+As an example, we can modify the recipe and force our `infinite` sequence of numbers to produce the first few numbers as a `Array[Byte]` in memory:
+
+[source,scala]
+-----------------------------------
+import net.liftweb.util.Helpers._
+
+serve {
+  case Req(AsInt(n) :: Nil, _, _) =>
+    InMemoryResponse(infinite.take(n).toArray.flatten, Nil, Nil, 200)
+}
+-----------------------------------
+
+We're not setting headers or cookies, and this request produces what you'd expect:
+
+-----------------------------------
+$ curl http://127.0.0.1:8080/3
+1
+2
+3
+-----------------------------------
+
+The `AsInt` helper in Lift matches on an integer, meaning that a request starting with a number matches and we'll return that many numbers from the infinite sequence.
+
 
 StreamingResponse
 +++++++++++++++++
@@ -133,6 +521,12 @@ See Also
 ^^^^^^^^
 
 The contract for Java IO is described at http://docs.oracle.com/javase/6/docs/api/java/io/InputStream.html[http://docs.oracle.com/javase/6/docs/api/java/io/InputStream.html].
+
+
+
+
+
+
 
 
 Serving a File with Access Control
@@ -253,6 +647,9 @@ This recipe comes from the _PHP's readfile equivalent for Lift_ discussion on th
 _Chatper 24: Extractors_ from _Programming in Scala_: http://www.artima.com/pins1ed/extractors.html[http://www.artima.com/pins1ed/extractors.html].
 
 
+
+
+
 Access Restriction by HTTP header
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -316,266 +713,8 @@ See Also
 This recipe is derived from the _Testing a Loc for a HTTP Header Value for Access Control_ mailing list discussion: https://groups.google.com/d/topic/liftweb/CtSGkPbgEVw/discussion[https://groups.google.com/d/topic/liftweb/CtSGkPbgEVw/discussion].
 
 
-Debugging a Request
-~~~~~~~~~~~~~~~~~~~
 
-Problem
-^^^^^^^
 
-You want to debug a request and see what's arriving to your Lift application.
-
-Solution
-^^^^^^^^
-
-Add an `onBeginServicing` function in `Boot.scala` to log the request.
-For example:
-
-[source,scala]
------------------------------------
-LiftRules.onBeginServicing.append {
-  case r => println("Received: "+r)
-}
------------------------------------
-
-Discussion
-^^^^^^^^^^
-
-The `onBeginServicing` call is called early in the Lift pipeline, before
-`S` is set up, and before Lift has the chance to 404 your request. The
-function signature it expects is `Req => Unit`.
-
-If you want to select only certain paths, you can. For example, to track
-all requests starting _/paypal_:
-
-[source,scala]
------------------------------------------------------
-LiftRules.onBeginServicing.append {
-  case r @ Req(List("paypal", _), _, _) => println(r)
-}
------------------------------------------------------
-
-There is also an `onEndServicing` which can be given functions of type
-`(Req, Box[LiftResponse]) => Unit`.
-
-See Also
-^^^^^^^^
-
-There are various hooks into the Lift pipeline, and further explanation on the mailing list.  For example, _What's the difference between LiftRules.early and LiftRules.onBeginServicing and when does S.locale get initialized?_ from the Lift mailing list: https://groups.google.com/d/topic/liftweb/K0S1rU0qtX0/discussion[https://groups.google.com/d/topic/liftweb/K0S1rU0qtX0/discussion].
-
-
-[[OnSession]]
-Running Code when Sessions are Created (or Destroyed)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Problem
-^^^^^^^
-
-You want to carry out actions when a session is created or destroyed.
-
-Solution
-^^^^^^^^
-
-Make use of the hooks in `LiftSession`. For example, in `Boot.scala`:
-
-[source,scala]
-------------------------------------------------------------
-LiftSession.afterSessionCreate ::=
- ( (s:LiftSession, r:Req) => println("Session created") )
-
-LiftSession.onBeginServicing ::=
- ( (s:LiftSession, r:Req) => println("Processing request") )
-
-LiftSession.onShutdownSession ::=
- ( (s:LiftSession) => println("Session going away") )
-------------------------------------------------------------
-
-Discussion
-^^^^^^^^^^
-
-The hooks in `LiftSession` allow you to insert code at various points in
-the session lifecycle: when the session is created, at the start of
-servicing the request, after servicing, when the session is about to
-shutdown, at shutdown... the pipeline diagrams from the start of this chapter
-is a useful guide to these stages.
-
-If the request path has been marked as being stateless via
-`LiftRules.statelessReqTest`, the above example would only execute the
-`onBeginServicing` functions.
-
-Note that the Lift session is not the same as the HTTP Session.
-
-See Also
-^^^^^^^^
-
-These hooks are used in an example application to demonstrate how you might log a user out of your web application if they login via another browser:  https://github.com/dpp/starting_point/commit/729f05f9010b80139440369c4e1d0889cac346cf[https://github.com/dpp/starting_point/commit/729f05f9010b80139440369c4e1d0889cac346cf].
-
-Session management is discussed in section 9.5 of _Exploring Lift_: http://exploring.liftweb.net/master/index-9.html#toc-Section-9.5[http://exploring.liftweb.net/master/index-9.html#toc-Section-9.5].
-
-
-[[ShutdownHooks]]
-Run Code when Lift Shuts Down
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Problem
-^^^^^^^
-
-You want to have some code executed when your Lift application is
-shutting down.
-
-Solution
-^^^^^^^^
-
-Append to `LiftRules.unloadHooks`.
-
-[source,scala]
---------------------------------------------------------------
-LiftRules.unloadHooks.append( () => println("Shutting down") )
---------------------------------------------------------------
-
-Discussion
-^^^^^^^^^^
-
-You append functions of type `() => Unit` and these functions are run
-right at the end of the Lift handler, after sessions have been
-destroyed, Lift actors have been shutdown, and requests have finished
-being handled. This is triggered, in the words of the Java servlet
-specification, "by the web container to indicate to a filter that it is
-being taken out of service".
-
-See Also
-^^^^^^^^
-
-<<RunTasksPeriodically>> includes an example of using a unload hook.
-
-[[RunningStateless]]
-Running Stateless
-~~~~~~~~~~~~~~~~~
-
-Problem
-^^^^^^^
-
-You want to force you application to be stateless at the HTTP level.
-
-Solution
-^^^^^^^^
-
-In `Boot.scala`:
-
-[source,scala]
-----------------------------------------------------
-LiftRules.enableContainerSessions = false
-LiftRules.statelessReqTest.append { case _ => true }
-----------------------------------------------------
-
-All requests will now be treated as stateless. Any attempt to use state,
-such as via `SessionVar` for example, will trigger a warning in
-developer mode: "Access to Lift's statefull features from Stateless mode.
-The operation on state will not complete."
-
-Discussion
-^^^^^^^^^^
-
-HTTP session creation is controlled via `enableContainerSessions`, and
-applies for all requests. Leaving this value at the default (`true`)
-allows more fine-grained control over which requests are stateless.
-
-Using `statelessReqTest` allows you to decide based on the
-`StatelessReqTest` if it should be stateless (`true`) or not (`false`).
-For example:
-
-[source,scala]
------------------------------------------------------------------
-def asset(file: String) =
-  List(".js", ".gif", ".css").exists(file.endsWith)
-
-LiftRules.statelessReqTest.append {
-  case StatelessReqTest("index" :: Nil, httpReq) =>  true
-  case StatelessReqTest(List(_, file),  _) if asset(file) => true
-}
------------------------------------------------------------------
-
-This example would only make the index page and any GIFs, JavaScript and
-CSS files stateless. The `httpReq` part is a `HTTPRequest` instance,
-allowing you to base the decision on the content of the request
-(cookies, user agent, etc).
-
-Another option is `LiftRules.statelessDispatch` which allows you to
-register a function which returns a `LiftResponse`. This will be
-executed without a session, and convenient for REST-based services.
-
-See Also
-^^^^^^^^
-
-This stateless request control was introduced in Lift 2.2.  The announcement on the mailing list gives more details: https://groups.google.com/d/topic/liftweb/2rVMCnWppSo/discussion[https://groups.google.com/d/topic/liftweb/2rVMCnWppSo/discussion].
-
-The Wiki page on stateless requests describes Lift's behaviour if statefull actions are attempted: http://www.assembla.com/wiki/show/liftweb/Stateless_Requests[http://www.assembla.com/wiki/show/liftweb/Stateless_Requests].
-
-[[CatchException]]
-Catch Any Exception
-~~~~~~~~~~~~~~~~~~~
-
-Problem
-^^^^^^^
-
-You want a wrapper around all requests to catch exceptions and display
-something to the user.
-
-Solution
-^^^^^^^^
-
-Declare an exception handler in `Boot.scala`:
-
-[source,scala]
---------------------------------------------------
-LiftRules.exceptionHandler.prepend {
-  case (runMode, request, exception) =>
-    logger.error("Boom! At "+request.uri)
-    InternalServerErrorResponse()
-}
---------------------------------------------------
-
-In the above example, all exceptions for all requests at all run modes
-are being matched, causing an error to be logged and a 500 (internal
-server error) to be returned to the browser.
-
-Discussion
-^^^^^^^^^^
-
-The partial function you add to `exceptionHandler` needs to return a
-`LiftResponse` (i.e., something to send to the browser). The default
-behaviour is to return an `XhtmlResponse`, which in
-`Props.RunModes.Development` gives details of the exception, and in all
-other run modes simply says "Something unexpected happened".
-
-You can return any kind of `LiftResponse`, including `RedirectResponse`,
-`JsonResponse`, `XmlResponse`, `JavaScriptResponse` and so on.
-
-This second example shows matching on Ajax requests only, and returning
-a JavaScript dialog to the browser:
-
-[source,scala]
------------------------------------------------------
-import net.liftweb.http.js.JsCmds._
-
-val ajax = LiftRules.ajaxPath
-
-LiftRules.exceptionHandler.prepend {
-  case (mode, Req(ajax :: _, _, PostRequest), ex) =>
-    logger.error("Error handing ajax")
-    JavaScriptResponse(Alert("Boom!"))
-}
------------------------------------------------------
-
-This Ajax example will jump in before Lift's default behaviour for Ajax
-errors. The default is to retry the Ajax command three times
-(`LiftRules.ajaxRetryCount`), and then execute
-`LiftRules.ajaxDefaultFailure`, which will pop up a dialog saying: "The
-server cannot be contacted at this time"
-
-See Also
-^^^^^^^^
-
-This recipe was derived from a mailing list discussion: http://groups.google.com/group/liftweb/browse_thread/thread/842954ffc333b0f9[http://groups.google.com/group/liftweb/browse_thread/thread/842954ffc333b0f9].
 
 
 [[HttpServletRequest]]
@@ -631,6 +770,9 @@ See Also
 ^^^^^^^^
 
 This recipe was created from the mailing list _HttpRequest conversion_ discussion: https://groups.google.com/d/topic/liftweb/67tQXSY9XS4/discussion[https://groups.google.com/d/topic/liftweb/67tQXSY9XS4/discussion].
+
+
+
 
 Secure Requests Only
 ~~~~~~~~~~~~~~~~~~~~
