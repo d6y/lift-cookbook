@@ -7,6 +7,8 @@ When a request reaches Lift there are a number of points where you can jump in a
 You can get a great overview of the pipeline, including diagrams, from the Lift pipeline Wiki page at
 http://www.assembla.com/spaces/liftweb/wiki/HTTP_Pipeline[http://www.assembla.com/spaces/liftweb/wiki/HTTP_Pipeline].
 
+See https://github.com/LiftCookbook/cookbook_pipeline[https://github.com/LiftCookbook/cookbook_pipeline] for the source code that accompanies this chapter.
+
 
 [[DebugRequest]]
 Debugging a Request
@@ -209,6 +211,8 @@ See Also
 
 
 
+
+
 [[RunningStateless]]
 Running Stateless
 ~~~~~~~~~~~~~~~~~
@@ -327,8 +331,42 @@ other run modes simply says: "Something unexpected happened".
 You can return any kind of `LiftResponse`, including `RedirectResponse`,
 `JsonResponse`, `XmlResponse`, `JavaScriptResponse` and so on.
 
-This second example shows matching on Ajax POST requests only, and returning
-a JavaScript dialog to the browser:
+The example above just sends a standard 500 error. That won't be very helpful to your users.
+An alternative is to render a custom message, but retain the 500 status code which will be
+useful for external site monitoring services if you use them:
+
+[source,scala]
+--------------------------------------------------
+LiftRules.exceptionHandler.prepend {
+  case (runMode, req, exception) =>
+    logger.error("Failed at: "+req.uri)
+    val content = S.render(<lift:embed what="500" />, req.request)
+    XmlResponse(content.head, 500, "text/html", req.cookies)
+}
+--------------------------------------------------
+
+Here we are sending back a response with a 500 status code, but the content is the
+`Node` that results from running `src/main/webapp/template-hidden/500.html`.  Create that
+file with the message you want to show to users:
+
+[source,html]
+--------------------------------------------------
+<html>
+<head>
+  <title>500</title>
+</head>
+<body class="lift:content_id=main">
+<div id="main" class="lift:surround?with=default;at=content">
+  <h1>Something is wrong!</h1>
+  <p>It's our fault - sorry</p>
+</div>
+</body>
+</html>
+--------------------------------------------------
+
+You can also control what to send to clients when processing Ajax requests.  In the
+following example, we're matching just on Ajax POST requests, and returning
+custom JavaScript to the browser:
 
 [source,scala]
 -----------------------------------------------------
@@ -343,6 +381,27 @@ LiftRules.exceptionHandler.prepend {
 }
 -----------------------------------------------------
 
+You could test out this handling code by creating an Ajax button that always produces
+an exception:
+
+
+[source,scala]
+-----------------------------------------------------
+package code.snippet
+
+import net.liftweb.util.Helpers._
+import net.liftweb.http.SHtml
+
+class ThrowsException {
+
+  private def fail = throw new Error("not implemented")
+
+  def render = "*" #> SHtml.ajaxButton("Press Me", () => fail)
+
+}
+-----------------------------------------------------
+
+
 This Ajax example will jump in before Lift's default behaviour for Ajax
 errors. The default is to retry the Ajax command three times
 (`LiftRules.ajaxRetryCount`), and then execute
@@ -352,7 +411,7 @@ server cannot be contacted at this time"
 See Also
 ^^^^^^^^
 
-This recipe was derived from a mailing list discussion: http://groups.google.com/group/liftweb/browse_thread/thread/842954ffc333b0f9[http://groups.google.com/group/liftweb/browse_thread/thread/842954ffc333b0f9].
+<<Custom404>> for how to create a custom 404 (not found) page.
 
 
 
@@ -525,10 +584,7 @@ The contract for Java IO is described at http://docs.oracle.com/javase/6/docs/ap
 
 
 
-
-
-
-
+[[DiskAccessControl]]
 Serving a File with Access Control
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -552,16 +608,22 @@ structure for that would be:
 
 [source,scala]
 -------------------------------------------------------
+package code.rest
+
+import net.liftweb.util.Helpers._
+import net.liftweb.http.rest.RestHelper
+import net.liftweb.http.{StreamingResponse, LiftResponse, RedirectResponse}
+import net.liftweb.common.{Box, Full}
+import java.io.{FileInputStream, File}
+
 object DownloadService extends RestHelper {
 
-  // Code explained below to go here
+  // (code explained below to go here)
 
   serve {
     case "download" :: Known(fileId) :: Nil Get req =>
-      if (permitted)
-        fileResponse(fileId)
-      else
-        Full(RedirectResponse("/sorry"))
+      if (permitted) fileResponse(fileId)
+      else Full(RedirectResponse("/sorry"))
   }
 }
 -------------------------------------------------------
@@ -595,8 +657,9 @@ private def fileResponse(fileId: String): Box[LiftResponse] = for {
  } yield StreamingResponse(input,
     () => input.close,
     file.length,
-    ("Content-Disposition" -> "attachment; filename="+fileId) :: Nil,
-    Nil, 200)
+    headers=Nil,
+    cookies=Nil,
+    200)
 ---------------------------------------------------------------------
 
 If no permission is given, the user is redirected to `/sorry.html`.
@@ -642,15 +705,13 @@ to best fit the way you want the code to look and work.
 See Also
 ^^^^^^^^
 
-This recipe comes from the _PHP's readfile equivalent for Lift_ discussion on the Lift mailing list: https://groups.google.com/d/topic/liftweb/7N2OUInltUE/discussion[https://groups.google.com/d/topic/liftweb/7N2OUInltUE/discussion].
-
 _Chatper 24: Extractors_ from _Programming in Scala_: http://www.artima.com/pins1ed/extractors.html[http://www.artima.com/pins1ed/extractors.html].
 
 
 
 
-
-Access Restriction by HTTP header
+[[RestrictByHeader]]
+Access Restriction by HTTP Header
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -673,45 +734,58 @@ val HeaderRequired = If(
 
 // Build SiteMap
 val entries = List(
-      Menu.i("Restricted") / "restricted" >> HeaderRequired
+      Menu.i("Header Required") / "header-required" >> HeaderRequired
 )
 ----
 
-In this example _restricted.html_ can only be viewed if the request
-includes a HTTP header called `ALLOWED` with a value of `Yes`. Any other
+In this example _header-required.html_ can only be viewed if the request
+includes a HTTP header called `ALLOWED` with a value of `YES`. Any other
 request for the page will be redirected with a Lift error notice of
 "Access not allowed".
 
 This can be tested from the command line using a tool like cURL:
 
 ----
-$ curl http://127.0.0.1:8080/restricted.html -H "ALLOWED:YES"
+$ curl http://127.0.0.1:8080/header-required.html -H "ALLOWED:YES"
 ----
 
 Discussion
 ^^^^^^^^^^
 
 The `If` test ensures the `() => Boolean` function you supply as a first
-argument returns `true` before the page it applies to is shown. The
-second argument is what Lift does if the test isn't true, and should be
-a `() => LiftResponse` function, meaning you can return whatever you
-like, including redirects to other pages.
+argument returns `true` before the page it applies to is shown. In this example
+we'll get true if the request contains a header called "ALLOWED", and the optional
+value of that header is `Full("YES")`.
 
-In the example we are making use of a convenient implicit conversation
+Note that without the header, the test will be false, and the page will not appear in the menu of pages.
+
+The second argument is what Lift does if the test isn't true when the user tries to access the page.  It's
+a `() => LiftResponse` function.  This means return whatever you
+like, including redirects to other pages.  In the example we are making use of a convenient implicit conversation
 from a `String` ("Access not allowed") to a redirection that will take
-the user to the home page (actually
-`LiftRules.siteMapFailRedirectLocation`) with a notice which shows the
-string.
+the user to the home page.
+
+If you visit the page without a header, you'll
+see a notice saying "Access not allowed".  This will be the home page of the site, but
+that's just the default.
+
+You can request that Lift show a different page by setting `LiftRules.siteMapFailRedirectLocation` in `Boot.scala`:
+
+[source,scala]
+----
+LiftRules.siteMapFailRedirectLocation = "static" :: "permission" :: Nil
+----
+
+If you then try to access _header-required.html_ without the header set, you'll be redirected to _/static/permission_ and shown the content of
+whatever you put in that page.
+
 
 See Also
 ^^^^^^^^
 
-* Chapter 7, "SiteMap and access control" in _Lift in Action_.
+The Lift wiki gives a summary of Lift's Site Map and the tests you can include in site map entries: https://www.assembla.com/wiki/show/liftweb/SiteMap[https://www.assembla.com/wiki/show/liftweb/SiteMap].
 
-* [Chapter 7 of _Exploring Lift_: http://exploring.liftweb.net/onepage/index.html#toc-Chapter-7[http://exploring.liftweb.net/onepage/index.html#toc-Chapter-7].
-
-This recipe is derived from the _Testing a Loc for a HTTP Header Value for Access Control_ mailing list discussion: https://groups.google.com/d/topic/liftweb/CtSGkPbgEVw/discussion[https://groups.google.com/d/topic/liftweb/CtSGkPbgEVw/discussion].
-
+There are further details in chapter 7 of _Exploring Lift_ at http://exploring.liftweb.net[http://exploring.liftweb.net], and "SiteMap and access control", chapter 7 of _Lift in Action_ (Perrett, 2012, Manning Publications Co.).
 
 
 
@@ -737,7 +811,7 @@ import net.liftweb.http.S
 import net.liftweb.http.provider.servlet.HTTPRequestServlet
 import javax.servlet.http.HttpServletRequest
 
-val servletRequest: Box[HttpServletRequest] = for {
+def servletRequest: Box[HttpServletRequest] = for {
   req <- S.request
   inner <- Box.asA[HTTPRequestServlet](req.request)
 } yield inner.req
@@ -753,7 +827,11 @@ servletRequest.foreach { r => yourApiCall(r) }
 Discussion
 ^^^^^^^^^^
 
-Note that the results is a `Box` because there might not be a request
+Lift abstracts away from the low-level HTTP request, and from the details of the
+servlet container your application is running in.  However, it's reassuring to know, if you
+absolutely need it, there is a way to get back down to the low-level.
+
+Note that the results of `servletRequest` is a `Box` because there might not be a request
 when you evaluate `servletRequest` -- or you might one day port to a
 different deployment environment and not be running on a standard Java
 servlet container.
@@ -769,12 +847,11 @@ you'll need to include this dependency in your SBT build:
 See Also
 ^^^^^^^^
 
-This recipe was created from the mailing list _HttpRequest conversion_ discussion: https://groups.google.com/d/topic/liftweb/67tQXSY9XS4/discussion[https://groups.google.com/d/topic/liftweb/67tQXSY9XS4/discussion].
 
 
 
-
-Secure Requests Only
+[[RewriteForHttps]]
+Force HTTPS Requests
 ~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -790,7 +867,7 @@ requests. For example:
 
 [source,scala]
 ---------------------------------------------------------------------------------------
-LiftRules.earlyResponse.append { (req: Req) ⇒ if (req.request.scheme != "https") {
+LiftRules.earlyResponse.append { (req: Req) => if (req.request.scheme != "https") {
   val uriAndQueryString = req.uri + (req.request.queryString.map(s => "?"+s) openOr "")
   val uri = "https://%s%s".format(req.request.serverName, uriAndQueryString)
   Full(PermRedirectResponse(uri, req, req.cookies: _*))
@@ -805,6 +882,14 @@ used to execute code before a request is handled and, if required, exit the
 pipeline and return a response. The function signature expected is
 `Req => Box[LiftResponse]`.
 
+In this example we are testing for a request that is not "https", and then
+formulating a new URL that starts "https" and appends to it the rest of the
+original URL and any query parameters. With this created, we return a redirections
+to the new URL, along with any cookies that were set.
+
+By evaluating to `Empty` for other (https) requests, Lift will continue passing the request
+through the pipeline as usual.
+
 The ideal method to ensure requests are served using the correct scheme
 would be via web server configuration, such as Apache or Nginx. This
 isn't possible in some cases, such as when your application is deployed
@@ -814,11 +899,13 @@ Amazon Load Balancer
 ++++++++++++++++++++
 
 For Amazon Elastic Load Balancer note that you need to use
-`X-Forwarded-Proto` header to detect HTTPs. As mentioned in their
+`X-Forwarded-Proto` header to detect HTTPS. As mentioned in their
 _Overview of Elastic Load Balancing_ document, "Your server access logs
 contain only the protocol used between the server and the load balancer;
 they contain no information about the protocol used between the client
-and the load balancer." In this situation modify the above test from
+and the load balancer."
+
+In this situation modify the above test from
 `req.request.scheme != "https"` to:
 
 

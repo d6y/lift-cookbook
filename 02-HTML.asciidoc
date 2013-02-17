@@ -629,7 +629,7 @@ See Also
 * The W3C HTML validator is a useful tool for tracking down HTML markup issues that may cause problems with content being moved into the head of your page. http://validator.w3.org/[http://validator.w3.org/].
 
 
-
+[[Custom404]]
 Custom 404 Page
 ~~~~~~~~~~~~~~~
 
@@ -675,6 +675,8 @@ slash.
 
 See Also
 ^^^^^^^^
+
+<<CatchException>> for how to catch any exception thrown from your code.
 
 The Wiki entry for this topic: http://www.assembla.com/spaces/liftweb/wiki/Custom_404_-_URI_not_found_page
 
