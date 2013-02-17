@@ -58,11 +58,13 @@ IssuesService.init()
 We can test the service with cURL:
 
 ------------------
-$ curl -H 'Content-Type: application/xml' http://localhost:8080/issues/by-state/open
+$ curl -H 'Content-Type: application/xml'
+    http://localhost:8080/issues/by-state/open
 <?xml version="1.0" encoding="UTF-8"?>
 <p>None open</p>
 
-$ curl -X DELETE -H 'Content-Type: application/xml' http://localhost:8080/issues/by-state/closed
+$ curl -X DELETE -H 'Content-Type: application/xml'
+    http://localhost:8080/issues/by-state/closed
 <?xml version="1.0" encoding="UTF-8"?>
 <p>All deleted</p>
 ------------------
@@ -343,7 +345,7 @@ case Req("reports" :: name :: Nil, "", GetRequest) =>
   Text("Here's your CSV report for "+name)
 ----
 
- In this case `name` would be set to "foo.csv".  This is because Lift separates file suffixes from the end of URLs only for file suffixes that are registered with `explicitlyParsedSuffixes`.  Because `csv` is not one of the default registered suffixes, "foo.csv" is not split. That's why `csv` in the suffix position of `Req` pattern match won't match the request, but an empty string in that position will.
+Here we're matching on no suffix (`""`). In this case `name` would be set to "foo.csv".  This is because Lift separates file suffixes from the end of URLs only for file suffixes that are registered with `explicitlyParsedSuffixes`.  Because `csv` is not one of the default registered suffixes, "foo.csv" is not split. That's why `csv` in the suffix position of `Req` pattern match won't match the request, but an empty string in that position will.
 
 
 See Also
@@ -404,7 +406,8 @@ Upload.init()
 Test this service using a tool like cURL:
 
 ----------------------
-curl -X POST --data-binary "@dog.jpg" -H 'Content-Type: image/jpg' http://127.0.0.1:8080/upload
+$ curl -X POST --data-binary "@dog.jpg" -H 'Content-Type: image/jpg'
+    http://127.0.0.1:8080/upload
 <?xml version="1.0" encoding="UTF-8"?>
 <info>Received 1365418 bytes</info>
 ----------------------
@@ -465,7 +468,7 @@ You want to return JSON from a REST call.
 Solution
 ^^^^^^^^
 
-Use the JSON domain specific language (DSL). For example:
+Use the Lift JSON domain specific language (DSL). For example:
 
 [source,scala]
 ----
@@ -483,7 +486,7 @@ object QuotationsAPI extends RestHelper {
   }
 
   serve {
-    case "quotation" :: Nil JsonGet _ =>
+    case "quotation" :: Nil JsonGet req =>
       ("text" -> "A beach house isn't just real estate. It's a state of mind.") ~
         ("by" -> "Douglas Adams") : JValue
   }
@@ -514,7 +517,7 @@ Discussion
 
 The _type ascription_ at the end of the JSON expression (`: JValue`)
 tells the compiler that the expression is expected to be of type
-`JObject`. This is required to allow the DSL to work. If would not be
+`JValue`. This is required to allow the DSL to apply. If would not be
 required if, for example, you were calling a function that was defined
 to return a `JValue`.
 
@@ -543,8 +546,7 @@ Solution
 
 Create the sitemap structure, and bind to it as you would for any template in Lift.
 
-Create `sitemap.html` in your `webapp` folder with
-a valid XML-Sitemap markup:
+Start with a `sitemap.html` in your `webapp` folder containing valid XML-Sitemap markup:
 
 [source, xml]
 ----
@@ -650,10 +652,11 @@ $ curl http://127.0.0.1:8080/sitemap
 Discussion
 ^^^^^^^^^^
 
-You may be wondering why we've used REST here, when we could have used a regular HTML template and snippet. The reason is that we want XML rather than HTML output.  We use the same mechanism, but invoke it and wrap it in an `XmlResponse`.  The `S.render` method takes a `NodeSeq` and a `HTTPRequst`. The first we supply by running the `sitemap.html` snippet; the second is simply the current request.  `XmlResponse` requires a `Node` rather than a `NodeSeq`, which is why we call `head`--as there's only one node in the response, this does what we need.
+You may be wondering why we've used REST here, when we could have used a regular HTML template and snippet. The reason is that we want XML rather than HTML output.  We use the same mechanism, but invoke it and wrap it in an `XmlResponse`.
 
-Note that Google Sitemaps need dates to be in ISO 8601 format. The built-in `java.text.SimpleDateFormat` does not support this format prior to Java 7. If you are using Java 6 you need to use `org.joda.time.DateTime` as we are in this example.  With Java 7 "yyyy-MM-dd'T'HH:mmXXX" can be used as the pattern for the formatting.
+The `S.render` method takes a `NodeSeq` and a `HTTPRequst`. The first we supply by running the `sitemap.html` snippet; the second is simply the current request.  `XmlResponse` requires a `Node` rather than a `NodeSeq`, which is why we call `head` -- as there's only one node in the response, this does what we need.
 
+Note that Google Sitemaps need dates to be in ISO 8601 format. The built-in `java.text.SimpleDateFormat` does not support this format prior to Java 7. If you are using Java 6 you need to use `org.joda.time.DateTime` as we are in this example.
 
 See Also
 ^^^^^^^^
@@ -676,100 +679,117 @@ You want to make a HTTP POST from a native iOS device to a Lift REST service.
 Solution
 ^^^^^^^^
 
-One common and easiest way to do this is via AFNetworking. And another uncommon way is to use iOS native API, NSMutableURLRequest and NSURLConnection.
+Use `NSURLConnection` ensuring you set the content-type to "application/json".
 
-A short example:
+For example, given this service:
 
 [source,scala]
 ---------------------------------------------------------
- serve ("welcome"/ "cookbook" prefix {
-    case  Nil Post req => {
-      val returnValue: Box[JValue] =  for {
-           value <- req.param("key")
-       } yield {
-             println(value)
-             // do something and return JValue e.g. (("command"->"somevalue") ~("message"->("true"):JValue)
-          }
-      val jVar:JValue =  returnValue.openOr(  ("command"->"session") ~("message"->"false"): JValue)
-      jVar
-    }
----------------------------------------------------------
-
-[source, objc]
----------------------------------------------------------
--(NSMutableURLRequest*)postMutableURLRequestFactory:(NSURL*)url fileNameWithExtension:(NSString*)fileNameWithExtension namesDict:(NSDictionary*)namesDict{
-
-    NSMutableURLRequest *request= [[NSMutableURLRequest alloc] init] ;
-    [request setURL:url];
-    [request setHTTPMethod:@"POST"];
-
-    NSData* jsonData = [NSJSONSerialization dataWithJSONObject:namesDict options:0 error:nil];
-
-    [request addValue:[NSString stringWithFormat:@"%i",[jsonData length] ] forHTTPHeaderField: @"Content-Length"];
-
-    NSString *boundary = @"---------------------------14737809831466499882746641449";
-    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
-    [request addValue:contentType forHTTPHeaderField: @"Content-Type"];
-    NSMutableData *postbody = [NSMutableData data];
-    [postbody appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-
-    __block NSInteger counter = [namesDict count];
-    [namesDict enumerateKeysAndObjectsUsingBlock:^(NSString* key, NSString *object, BOOL *shouldStop){
-        [postbody appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n",key] dataUsingEncoding:NSASCIIStringEncoding]];
-            [postbody appendData:[[NSString stringWithFormat:@"%@",object] dataUsingEncoding:NSASCIIStringEncoding]];
-
-        if(counter!=1 && counter!=0){
-            --counter;
-            [postbody appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSASCIIStringEncoding]];
-        }else{
-             [postbody appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSASCIIStringEncoding]];
+serve ("welcome"/ "cookbook" prefix {
+  case  Nil Post req => {
+    val returnValue: Box[JValue] =  for {
+         value <- req.param("key")
+     } yield {
+           println(value)
+           // do something and return JValue e.g. (("command"->"somevalue") ~("message"->("true"):JValue)
         }
-    }];
-    [request setHTTPBody:postbody];
-
-    return request;
-
-}
-
-
-//Usage
-
-     mutableURLRequest =  [self postMutableURLRequestFactory:[NSURL URLWithString:urlString] fileNameWithExtension:@"" namesDict:[NSDictionary dictionaryWithObjectsAndKeys:@"someValue", @"key", nil]]];
-
-     NSURLConnection *con = [[NSURLConnection alloc] initWithRequest:mutableURLRequest  delegate:self];
+    val jVar:JValue =  returnValue.openOr(  ("command"->"session") ~("message"->"false"): JValue)
+    jVar
+  }
 ---------------------------------------------------------
+
+The following code will call the service:
 
 [source, objc]
 ---------------------------------------------------------
+-(NSMutableURLRequest*)postMutableURLRequestFactory:(NSURL*)url
+  fileNameWithExtension:(NSString*)fileNameWithExtension namesDict:(NSDictionary*)namesDict{
 
-//AFNetworking example
+  NSMutableURLRequest *request= [[NSMutableURLRequest alloc] init] ;
+  [request setURL:url];
+  [request setHTTPMethod:@"POST"];
 
-  NSMutableDictionary* params =[NSMutableDictionary dictionaryWithObjectsAndKeys: @"somevalue", @"key", nil];
+  NSData* jsonData = [NSJSONSerialization dataWithJSONObject:namesDict options:0 error:nil];
 
-     NSMutableURLRequest *request =  [self multipartFormRequestWithMethod:@"POST" path: "http://www.example.com/welcome/cookbook" ] parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+  [request addValue:[NSString stringWithFormat:@"%i",[jsonData length] ] forHTTPHeaderField: @"Content-Length"];
 
-    }];
+  NSString *boundary = @"---------------------------14737809831466499882746641449";
+  NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
+  [request addValue:contentType forHTTPHeaderField: @"Content-Type"];
+  NSMutableData *postbody = [NSMutableData data];
+  [postbody appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
 
-       AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest: request];
+  __block NSInteger counter = [namesDict count];
+  [namesDict enumerateKeysAndObjectsUsingBlock:^(NSString* key, NSString *object, BOOL *shouldStop){
+      [postbody appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n",key] dataUsingEncoding:NSASCIIStringEncoding]];
+          [postbody appendData:[[NSString stringWithFormat:@"%@",object] dataUsingEncoding:NSASCIIStringEncoding]];
 
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-  //completion block and do something after the request has been completed.
-  }
+      if(counter!=1 && counter!=0){
+          --counter;
+          [postbody appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSASCIIStringEncoding]];
+      }else{
+           [postbody appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSASCIIStringEncoding]];
+      }
+  }];
+  [request setHTTPBody:postbody];
 
+  return request;
+}
 ---------------------------------------------------------
+
+To use:
+
+[source, objc]
+---------------------------------------------------------
+mutableURLRequest = [self postMutableURLRequestFactory:[NSURL URLWithString:urlString] fileNameWithExtension:@"" namesDict:[NSDictionary dictionaryWithObjectsAndKeys:@"someValue", @"key", nil]]];
+
+NSURLConnection *con = [[NSURLConnection alloc] initWithRequest:mutableURLRequest  delegate:self];
+---------------------------------------------------------
+
 
 Discussion
 ^^^^^^^^^^
 
-There are many ways to do HTTP POST from iOS. However, it can be confusing to identify the correct way that works, especially without the aid of external library. This example also supports JSON post as illustrated as key and value in this example.
+There are many ways to do HTTP POST from iOS. However, it can be confusing to identify the correct way that works, especially without the aid of external library. The example above uses the  iOS native API, NSMutableURLRequest and NSURLConnection.
+
+Another uncommon way is to use AFNetworking, ian external library for iOS development. It is well-respected by the Stackoverflow community and can cope with many scenarios and simple to use. However, there is chance that it maybe deprecated at some point and this method is comparatively less flexible than the native methods.
+
+[source, objc]
+---------------------------------------------------------
+//AFNetworking example
+
+NSMutableDictionary* params =[NSMutableDictionary dictionaryWithObjectsAndKeys: @"somevalue", @"key", nil];
+
+   NSMutableURLRequest *request =  [self multipartFormRequestWithMethod:@"POST" path: "http://www.example.com/welcome/cookbook" ] parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+
+  }];
+
+     AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest: request];
+
+  [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+//completion block and do something after the request has been completed.
+}
+---------------------------------------------------------
 
 
-The current example relies on multi-form construction for a simple JSON HTTP Post. This may benefit a JSON POST with  media data. If no media data on the POST, probably there is a way to do this without using multi-form.
+The iOS native method is more versatile and gives a starting point to developers to craft their own solution such as making the Content-Type more specific. The current solution works posting media file under 4MB along with few text JSON parameters or purely text-based JSON parameters and is not intended to cover all scenarios.
+
+Since AFNetworking is more of a standard and tested than the customized one and is designed to support many situations,
+
+The current example relies on multi-form construction for a simple JSON HTTP Post that follow RFC1867:
+
+"If multiple files are selected, they should be transferred together using the multipart/mixed format."
+
 
 See Also
 ^^^^^^^^
 
 http://simply.liftweb.net/index-5.4.html#prev[http://simply.liftweb.net/index-5.4.html#prev].
+
+see lines 178-188
+http://main.scala-tools.org/mvnsites/liftweb-2.0/framework/scaladocs/net/liftweb/http/Req.scala.html#Some(296)
+
+http://www.faqs.org/rfcs/rfc1867.html
 
 
 
