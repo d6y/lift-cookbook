@@ -2,10 +2,12 @@
 HTML
 ----
 
-Generating HTML is often a major component of web applications.  This chapter is concerned with Lift's _View First_ approach and use of _CSS Selectors_.  Later chapters focus on dorm processing, REST web services, and JavaScript (Ajax and Comet).
+Generating HTML is often a major component of web applications.  This chapter is concerned with Lift's _View First_ approach and use of _CSS Selectors_.  Later chapters focus more specifically on form processing, REST web services, JavaScript, Ajax and Comet.
 
 Code for this chapter is at: https://github.com/LiftCookbook/cookbook_html[https://github.com/LiftCookbook/cookbook_html].
 
+
+[[TestingAndDebuggingSelectors]]
 Testing and Debugging CSS Selectors
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -65,6 +67,8 @@ The syntax for selectors is best described in _Simply Lift_ at http://simply.lif
 Section 6.1.2 of _Lift in Action_ also describes selectors and gives examples.
 
 
+
+[[SequencingSelectorOps]]
 Sequencing CSS Selector Operations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -136,6 +140,7 @@ https://groups.google.com/forum/?fromgroups#!topic/liftweb/fz3Pmlhzhfg[https://g
 
 
 
+[[SetMetaTag]]
 Setting Meta Tag Contents
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -192,6 +197,8 @@ See Also
 The syntax for selectors is best described in _Simply Lift_ at http://simply.liftweb.net/index-7.10.html[http://simply.liftweb.net/index-7.10.html].
 
 
+
+[[SetPageTitle]]
 Setting the Page Title
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -267,6 +274,8 @@ See Also
 http://groups.google.com/group/liftweb/browse_thread/thread/e19bd2dda2b3159d[http://groups.google.com/group/liftweb/browse_thread/thread/e19bd2dda2b3159d].
 
 
+
+[[Html5Shiv]]
 Including HTML5 Shiv
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -324,6 +333,8 @@ suggestion from Antonio Salazar Cardozo for using a IE confitional comment snipp
 The html5shim project can be found at: http://code.google.com/p/html5shim/[http://code.google.com/p/html5shim/].
 
 
+
+[[PassThru]]
 Returning Snippet Markup Unchanged
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -383,6 +394,9 @@ to return the original markup associated with snippet invocation?_ mailing list 
 
 * Take a look at the source for `PassThru`, which is at https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/CssSel.scala[https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/CssSel.scala], to see how this and other similar functions are defined.
 
+
+
+
 [[SnippetNotFound]]
 Snippet Not Found when using HTML5
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -430,6 +444,7 @@ The key differences between the XHTML and HTML5 parser are outlined on the maili
 
 
 
+[[AvoidAssetCaching]]
 Avoiding CSS and JavaScript Caching
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -525,6 +540,7 @@ The source for `LiftRules` shows the default implementation of `attachResourceId
 Google's _Optimize caching_ notes are a good source of information about browser behaviour: https://developers.google.com/speed/docs/best-practices/caching[https://developers.google.com/speed/docs/best-practices/caching].
 
 
+[[AddToHead]]
 Adding to the Head of a Page
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -681,6 +697,8 @@ See Also
 The Wiki entry for this topic: http://www.assembla.com/spaces/liftweb/wiki/Custom_404_-_URI_not_found_page
 
 
+
+[[CustomStatusPage]]
 Other Custom Status Pages
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -749,6 +767,7 @@ http://exploring.liftweb.net/master/index-9.html#toc-Section-9.2[http://explorin
 ].
 
 
+[[LinksInNotice]]
 Links in Notices
 ~~~~~~~~~~~~~~~~
 
@@ -896,7 +915,7 @@ See Also
 For reports, the Apache POI project, http://poi.apache.org/[http://poi.apache.org/], includes libraries for generating Excel files; and OpenCSV, http://opencsv.sourceforge.net[http://opencsv.sourceforge.net], is a library for generating CSV files.
 
 
-
+[[Textile]]
 Rendering Textile Markup
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
