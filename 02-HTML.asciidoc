@@ -919,8 +919,8 @@ See Also
 For reports, the Apache POI project, http://poi.apache.org/[http://poi.apache.org/], includes libraries for generating Excel files; and OpenCSV, http://opencsv.sourceforge.net[http://opencsv.sourceforge.net], is a library for generating CSV files.
 
 [[TestingReq]]
-Test Involving a Request
-~~~~~~~~~~~~~~~~~~~~~~~~
+Test on a Req
+~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
@@ -930,16 +930,16 @@ You want to be able to test a function that needs a `Req`.
 Solution
 ^^^^^^^^
 
-Use `MockWeb.testReq` from Lift's TestKit with Specs2.
+Supply a mock request to Lift's `MockWeb.testReq`, and run your test in the context of the `Req` supplied by `testReq`.
 
-Add the dependency to your project in `build.sbt`:
+The first step is to add Lift's Test Kit as dependency to your project in `build.sbt`:
 
 [source, scala]
 -------
 libraryDependencies += "net.liftweb" %% "lift-testkit" % "2.5-M4" % "test"
 -------
 
-To illustrate this, we will test a function that detects a Google crawler. Google identifies
+To demonstrate how to use `testReq` we will test a function that detects a Google crawler. Google identifies
 crawlers via various "User-Agent" header on a request, so the function we want to test would look like this:
 
 [source, scala]
@@ -963,11 +963,11 @@ object RobotDetector {
 }
 -------
 
-We have the list of magic `botNames` that Google sends as a user agent, and we define a check, `known_?` that takes the user agent string, and looks to see if any robot satisfies the condition of being contained in the user agent string.
+We have the list of magic `botNames` that Google sends as a user agent, and we define a check, `known_?`, that takes the user agent string and looks to see if any robot satisfies the condition of being contained in that user agent string.
 
-The `googlebot_?` method is given a Lift `Req` object and from this we look up the header.  This evaluates to a `Box[String]` as it's possible there is no header.  So we see if there exists in the `Box` a value that satisfies the `known_?` condition.
+The `googlebot_?` method is given a Lift `Req` object and from this we look up the header.  This evaluates to a `Box[String]` as it's possible there is no header. We find the answer by seeing if there exists in the `Box` a value that satisfies the `known_?` condition.
 
-To test this, we create some a user agent string, prepare a `MockHttpServletRequest` with the header, and use Lift's `MockWeb` to turn the low-level request into a Lift `Req` for us to test with:
+To test this, we create a user agent string, prepare a `MockHttpServletRequest` with the header, and use Lift's `MockWeb` to turn the low-level request into a Lift `Req` for us to test with:
 
 [source, scala]
 -------
@@ -1021,11 +1021,14 @@ Although `MockWeb.testReq` is handling the creation of a `Req` for us, the envir
 Aside from HTTP headers, you can set cookies, content type, query parameters, the HTTP method, authentication type, and the body.  There are variations on the `body` assignment, which conveniently set the content type depending on the value you assign:
 
 * `JValue` will use content type of "application/json".
-* `NodeSeq` wil; use "text/xml" (or you can supply an alternative).
+* `NodeSeq` will use "text/xml" (or you can supply an alternative).
 * `String` uses "text/plain" (unless you supply an alternative).
 * `Array[Byte]` does not set the content type.
 
-In the example test above it would be tedious to have to set up the same code repeatedly for different user agents.  Specs2's Data Table provides a way to produce a compact to run different example values through the same test:
+Data Table
+++++++++++
+
+In the example test above it would be tedious to have to set up the same code repeatedly for different user agents.  Specs2's _Data Table_ provides a compact way to run different example values through the same test:
 
 [source, scala]
 -------
@@ -1060,9 +1063,7 @@ class RobotDetectorSpec extends Specification with DataTables {
 -------
 
 The core of this test is essentially unchanged: we create a mock, set the user agent, and check the result of `googlebot_?`.  The difference is that Specs2 is providing a neat way to list
-out the various scenarios we want to test against, and pipe them through a function.
-
-The symbols used (`^`, `||`, `!!`, `|>`) may seem quirky, but they do help minimize the test boilerplate code around the important stuff: the examples under test.
+out the various scenarios and pipe them through a function.
 
 The output from running this under SBT would be:
 
@@ -1080,7 +1081,7 @@ The output from running this under SBT would be:
 [info] 1 example, 0 failure, 0 error
 -------
 
-I've put the expected value first, but there's no requirement to do that.
+Although the expected value appears first in our table, there's no requirement to put it first.
 
 
 See Also
