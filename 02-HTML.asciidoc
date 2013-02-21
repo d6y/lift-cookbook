@@ -19,9 +19,10 @@ You want to explore or debug CSS selectors interactively.
 Solution
 ^^^^^^^^
 
-Use the Scala REPL to run your CSS selector. From withing SBT use the `console` command to get into the REPL. Here's an example were we test out a CSS selector which applies a href to a link:
+Use the Scala REPL to run your CSS selector. From withing SBT use the `console` command to get into the REPL.
 
-[source,scala]
+Here's an example were we test out a CSS selector which adds a href attribute to a link:
+
 ----
 > console
 [info] Starting scala interpreter...
@@ -29,29 +30,34 @@ Use the Scala REPL to run your CSS selector. From withing SBT use the `console` 
 Welcome to Scala version 2.9.1.final
 Type in expressions to have them evaluated.
 Type :help for more information.
+----
 
+[source,scala]
+----
 scala> import net.liftweb.util.Helpers._
 import net.liftweb.util.Helpers._
-
-scala> val in = <a>click me</a>
-in: scala.xml.Elem = <a>click me</a>
 
 scala> val f = "a [href]" #> "http://example.org"
 f: net.liftweb.util.CssSel =
   (Full(a [href]), Full(ElemSelector(a,Full(AttrSubNode(href)))))
+
+scala> val in = <a>click me</a>
+in: scala.xml.Elem = <a>click me</a>
 
 scala> f(in)
 res0: scala.xml.NodeSeq =
   NodeSeq(<a href="http://example.org">click me</a>)
 ----
 
+The `Helpers._` import brings in the CSS Selector functionality, which we then exercise by creating a selector, calling it with a (very simple) template and observing the result.
+
 Discussion
 ^^^^^^^^^^
 
-CSS selector transforms are one of the distinguishing features of Lift. They succinctly describe a node in your template (left-hand side) and give a replacement (right-hand side). They do take a little while to get use to, so being able to test them at the Scala REPL is useful.
+CSS selector transforms are one of the distinguishing features of Lift. They succinctly describe a node in your template (left-hand side) and give a replacement (operation, the right-hand side). They do take a little while to get use to, so being able to test them at the Scala REPL is useful.
 
 It may help to know that prior to CSS selectors Lift snippets were typically defined in terms
-of a function that took a `NodeSeq` and returned a `NodeSeq`, often via the `bind` method.  When Lift processes such a template it knows what the input `NodeSeq` is, so it's natural to supply a function that returns a `NodeSeq`.  You won't see that usage so often any more, but the principle is the same.
+of a function that took a `NodeSeq` and returned a `NodeSeq`, often via a method called `bind`. Lift would take your template, which would be the input `NodeSeq`, apply the function, and returns a new `NodeSeq`.  You won't see that usage so often any more, but the principle is the same.
 
 The CSS selector functionality in Lift gives you a `CssSel` function
 which is `NodeSeq => NodeSeq`. We exploit this in the above example by constructing an input
@@ -62,9 +68,7 @@ the `in` as a parameter, and this gives us the answer, `res0`.
 See Also
 ^^^^^^^^
 
-The syntax for selectors is best described in _Simply Lift_ at http://simply.liftweb.net/index-7.10.html#toc-Section-7.10[http://simply.liftweb.net/index-7.10.html#toc-Section-7.10].
-
-Section 6.1.2 of _Lift in Action_ also describes selectors and gives examples.
+The syntax for selectors is best described in _Simply Lift_ at http://simply.liftweb.net/[http://simply.liftweb.net/].
 
 
 
@@ -913,6 +917,177 @@ See Also
 <<RestStreamContent>> discusses `InMemoryResponse` and similar responses to return content to the browser
 
 For reports, the Apache POI project, http://poi.apache.org/[http://poi.apache.org/], includes libraries for generating Excel files; and OpenCSV, http://opencsv.sourceforge.net[http://opencsv.sourceforge.net], is a library for generating CSV files.
+
+[[TestingReq]]
+Test Involving a Request
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to be able to test a function that needs a `Req`.
+
+Solution
+^^^^^^^^
+
+Use `MockWeb.testReq` from Lift's TestKit with Specs2.
+
+Add the dependency to your project in `build.sbt`:
+
+[source, scala]
+-------
+libraryDependencies += "net.liftweb" %% "lift-testkit" % "2.5-M4" % "test"
+-------
+
+To illustrate this, we will test a function that detects a Google crawler. Google identifies
+crawlers via various "User-Agent" header on a request, so the function we want to test would look like this:
+
+[source, scala]
+-------
+package code.lib
+
+import net.liftweb.http.Req
+
+object RobotDetector {
+
+  val botNames =
+    "Googlebot" ::
+    "Mediapartners-Google" ::
+    "AdsBot-Google" :: Nil
+
+  def known_?(ua: String) =
+    botNames.exists(ua contains _)
+
+  def googlebot_?(r: Req) : Boolean =
+    r.header("User-Agent").exists(known_?)
+}
+-------
+
+We have the list of magic `botNames` that Google sends as a user agent, and we define a check, `known_?` that takes the user agent string, and looks to see if any robot satisfies the condition of being contained in the user agent string.
+
+The `googlebot_?` method is given a Lift `Req` object and from this we look up the header.  This evaluates to a `Box[String]` as it's possible there is no header.  So we see if there exists in the `Box` a value that satisfies the `known_?` condition.
+
+To test this, we create some a user agent string, prepare a `MockHttpServletRequest` with the header, and use Lift's `MockWeb` to turn the low-level request into a Lift `Req` for us to test with:
+
+[source, scala]
+-------
+package code.lib
+
+import org.specs2.mutable._
+import net.liftweb.mocks.MockHttpServletRequest
+import net.liftweb.mockweb.MockWeb
+
+class SingleRobotDetectorSpec extends Specification {
+
+  "Google Bot Detector" should {
+
+    "spot a web crawler" in {
+
+      val userAgent = "Mozilla/5.0 (compatible; Googlebot/2.1)"
+
+      // Mock a request with the right header:
+      val http = new MockHttpServletRequest()
+      http.headers = Map("User-Agent" -> List(userAgent))
+
+      // Test with a Lift Req:
+      MockWeb.testReq(http) { r =>
+        RobotDetector.googlebot_?(r) must beTrue
+      }
+    }
+
+  }
+
+}
+-------
+
+Running this from SBT with the "test" command would produce:
+
+-------
+[info] SingleRobotDetectorSpec
+[info]
+[info] Google Bot Detector should
+[info] + spot a web crawler
+[info]
+[info] Total for specification SingleRobotDetectorSpec
+[info] Finished in 18 ms
+[info] 1 example, 0 failure, 0 error
+-------
+
+Discussion
+^^^^^^^^^^
+
+Although `MockWeb.testReq` is handling the creation of a `Req` for us, the environment for that `Req` is supplied by the `MockHttpServletRequest`. To configure a request, create an instance of the mock and mutate the state of it as required before using it with `testReq`.
+
+Aside from HTTP headers, you can set cookies, content type, query parameters, the HTTP method, authentication type, and the body.  There are variations on the `body` assignment, which conveniently set the content type depending on the value you assign:
+
+* `JValue` will use content type of "application/json".
+* `NodeSeq` wil; use "text/xml" (or you can supply an alternative).
+* `String` uses "text/plain" (unless you supply an alternative).
+* `Array[Byte]` does not set the content type.
+
+In the example test above it would be tedious to have to set up the same code repeatedly for different user agents.  Specs2's Data Table provides a way to produce a compact to run different example values through the same test:
+
+[source, scala]
+-------
+package code.lib
+
+import org.specs2._
+import matcher._
+import net.liftweb.mocks.MockHttpServletRequest
+import net.liftweb.mockweb.MockWeb
+
+class RobotDetectorSpec extends Specification with DataTables {
+
+  def is = "Can detect Google robots" ^ {
+    "Bot?" || "User Agent" |
+    true   !! "Mozilla/5.0 (Googlebot/2.1)" |
+    true   !! "Googlebot-Video/1.0" |
+    true   !! "Mediapartners-Google" |
+    true   !! "AdsBot-Google" |
+    false  !! "Mozilla/5.0 (KHTML, like Gecko)" |> {
+    (expectedResult, userAgent) => {
+      val http = new MockHttpServletRequest()
+      http.headers = Map("User-Agent" -> List(userAgent))
+      MockWeb.testReq(http) { r =>
+        RobotDetector.googlebot_?(r) must_== expectedResult
+      }
+     }
+    }
+
+  }
+
+}
+-------
+
+The core of this test is essentially unchanged: we create a mock, set the user agent, and check the result of `googlebot_?`.  The difference is that Specs2 is providing a neat way to list
+out the various scenarios we want to test against, and pipe them through a function.
+
+The symbols used (`^`, `||`, `!!`, `|>`) may seem quirky, but they do help minimize the test boilerplate code around the important stuff: the examples under test.
+
+The output from running this under SBT would be:
+
+-------
+[info] Can detect Google robots
+[info] + Bot?  | User Agent
+[info]   true  | Mozilla/5.0 (Googlebot/2.1)
+[info]   true  | Googlebot-Video/1.0
+[info]   true  | Mediapartners-Google
+[info]   true  | AdsBot-Google
+[info]   false | Mozilla/5.0 (KHTML, like Gecko)
+[info]
+[info] Total for specification RobotDetectorSpec
+[info] Finished in 1 ms
+[info] 1 example, 0 failure, 0 error
+-------
+
+I've put the expected value first, but there's no requirement to do that.
+
+
+See Also
+^^^^^^^^
+
+The Lift wiki discusses this topic and also other approaches such as testing with Selenium. https://www.assembla.com/spaces/liftweb/wiki/Testing_Lift_Applications[https://www.assembla.com/spaces/liftweb/wiki/Testing_Lift_Applications].
+
 
 
 [[Textile]]
