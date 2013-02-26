@@ -281,6 +281,9 @@ Deimos orbits: Mars
 Moons of Mars are: List(Phobos, Deimos)
 -----------------------------------------------------------
 
+In this example code we're calling `deimos.planet.single` which returns one result or will thrown an exception if the associated planet was not found. `headOption` is the safer way if there's a chance the record will not be found, as it will evaluate to `None` or `Some[Planet]`.
+
+
 
 Discussion
 ^^^^^^^^^^
