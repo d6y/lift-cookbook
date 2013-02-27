@@ -943,7 +943,36 @@ LiftRules.responseTransformers.append {
 
 That will work just fine, with the only downside that the HTTP status code sent back to the web browser won't be a 403 code.
 
-One way to test the above example is to add the following to `Boot.scala` to
+A more general approach, if you're customising a number of pages, would be to define the status codes you want to
+customise, create a page for each, and then only match on those pages:
+
+[source,scala]
+----
+LiftRules.responseTransformers.append {
+  case Customised(resp) => resp
+  case resp => resp
+}
+
+object Customised {
+
+  // The pages we have customised: 403.html and 500.html
+  val definedPages = 403 :: 500 :: Nil
+
+  def unapply(resp: LiftResponse) : Option[LiftResponse] =
+    definedPages.find(_ == resp.toResponse.code).flatMap(toResponse)
+
+  def toResponse(status: Int) : Box[LiftResponse] =
+    for {
+      session <- S.session
+      req <- S.request
+      template = Templates(status.toString :: Nil)
+      response <- session.processTemplate(template, req, req.path, status)
+  } yield response
+
+}
+----
+
+One way to test the above examples is to add the following to `Boot.scala` to
 make all requests to _/secret_ return a 403:
 
 [source,scala]
@@ -960,10 +989,8 @@ val entries = List(
 If you request _/secret_, a 403 response will be triggered, which will match the response transformer showing you
 the contents of the _403.html_ template.
 
-
 [NOTE]
 In Lift 3 `responseTransformers` will be modified to be a partial function, meaning you'll be able to leave off the final `case r => r` part of this example.
-
 
 
 See Also
@@ -1003,6 +1030,13 @@ You might pair this with the following in your template:
 ---------------------------------------------------------
 <div class="lift:Msg?id=checkPrivacyPolicy"></div>
 ---------------------------------------------------------
+
+
+Discussion
+^^^^^^^^^^
+
+
+
 
 See Also
 ^^^^^^^^
