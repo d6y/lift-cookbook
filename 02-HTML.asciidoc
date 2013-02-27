@@ -812,7 +812,7 @@ Custom 404 Page
 Problem
 ^^^^^^^
 
-You want to show a customised "404" (page not found) page.
+You want to show a customised "404" (not found) page.
 
 Solution
 ^^^^^^^^
@@ -821,9 +821,12 @@ In `Boot.scala` add the following:
 
 [source,scala]
 ----
+import net.liftweb.util._
+import net.liftweb.http._
+
 LiftRules.uriNotFound.prepend(NamedPF("404handler"){
   case (req,failure) =>
-    NotFoundAsTemplate(ParsePath(List("404"),"html",false,false))
+    NotFoundAsTemplate(ParsePath(List("404"),"html",true,false))
 })
 ----
 
@@ -834,27 +837,42 @@ Discussion
 ^^^^^^^^^^
 
 The `uriNotFound` Lift rule needs to return a `NotFound` in reply to a
-`Req` (request) and optional `Failure`. This allows you to customise the
+`Req` and optional `Box[Failure]`. This allows you to customise the
 response based on the type of failure or the request that was made.
 
 There are three types of `NotFound`:
 
-* `NotFoundAsTemplate` is useful to invoke the Lift template processing
+* `NotFoundAsTemplate` -- useful to invoke the Lift template processing
 facilities from a `ParsePath`.
-* `NotFoundAsResponse` allows you to return a specific `LiftResponse`.
-* `NotFoundAsNode` wrappers a `NodeSeq` for Lift to translate into a 404
+* `NotFoundAsResponse` -- allows you to return a specific `LiftResponse`.
+* `NotFoundAsNode` -- wrappers a `NodeSeq` for Lift to translate into a 404
 response.
 
-In case you're wondering, the two `false` arguments to `ParsePath`
-indicates the path we've given isn't absolute, and doesn't end in a
-slash.
+In the example we're matching any not found situation, regardless of the request and the failure, and evaluating
+this as a resource identified by `ParsePath`.  The path we've used is `/404.html`.
+
+In case you're wondering, the last two `true` and `false` arguments to `ParsePath`
+indicates the path we've given is absolute, and doesn't end in a
+slash.  `ParsePath` is a representation for a URI path, and exposing
+if the path is absolute or ends in a slash are useful flags for matching on, but
+in this case, they're not relevant.
+
+Be aware that 404 pages, when rendered this way, won't have a location in the site map. That's because we've not included the `404.html` file in the site map, and we don't have to because we're rendering via `NotFoundAsTemplate` rather than sending a redirect to _/404.html_. However, this means that if you display an error page using a template that contains `lift:Menu.builder` or similar (as `templates-hidden/default.html` does), you'll see "No Navigation Defined".  In that case, you'll probably want to use a different template on your 404 page.
+
+As an alternative, you could include the 404 page in your site map but make it hidden when the site map is displayed via the `Menu.builder`:
+
+[source,scala]
+----
+Menu.i("404") / "404" >> Hidden
+----
+
 
 See Also
 ^^^^^^^^
 
 <<CatchException>> for how to catch any exception thrown from your code.
 
-The Wiki entry for this topic: http://www.assembla.com/spaces/liftweb/wiki/Custom_404_-_URI_not_found_page
+
 
 
 
@@ -873,58 +891,89 @@ Solution
 Use `LiftRules.responseTransformers` to match against the response and
 supply an alternative.
 
-For example, suppose we want to provide a customised page for 403
-("Forbidden") statuses created in your Lift application. In `Boot.scala`
-we could add the following:
+For example, suppose we want to provide a custom page for 403
+("Forbidden") statuses created in our Lift application.  Further suppose that
+this page might contain snippets so will need to pass through the Lift
+rendering flow.
+
+To do this in `Boot.scala` we define the `LiftResponse` we want to generate
+and use the response when a 403 status is about to be produced by Lift:
 
 [source,scala]
 ----
+def my403 : Box[LiftResponse] =
+  for {
+    session <- S.session
+    req <- S.request
+    template = Templates("403" :: Nil)
+    response <- session.processTemplate(template, req, req.path, 403)
+  } yield response
+
 LiftRules.responseTransformers.append {
-  case r if r.toResponse.code == 403 => RedirectResponse("/403.html")
-  case r => r
+  case resp if resp.toResponse.code == 403 => my403 openOr resp
+  case resp => resp
 }
 ----
 
 The file _src/main/webapp/403.html_ will now be served for requests that
-generate 403 status codes. Other, non 403, requests are left untransformed.
+generate 403 status codes. Other non-403 responses are left untouched.
 
 Discussion
 ^^^^^^^^^^
 
 `LiftRules.responseTransformers` allows you to supply
-`LiftResponse => LiftResponse` functions to change a response at the end
+`LiftResponse => LiftResponse` functions to change a response right at the end
 of the HTTP processing cycle. This is a very general mechanism: in this
 example we are matching on a status code, but we could match on anything
 exposed by `LiftResponse`.
 
-We've shown a `RedirectResponse` being
-returned but there are many different kinds of `LiftResponse` we could
-send to the client.
 
-One way to test the above example is to add the following to Boot to
+In the recipe we processes a template to give a response, but you may find
+situations where other kinds of response make sense, such as a `InMemoryResponse`.
+
+You could even simplify the example to just this:
+
+[source,scala]
+----
+LiftRules.responseTransformers.append {
+  case resp if resp.toResponse.code == 403 => RedirectResponse("/403.html")
+  case resp => resp
+}
+----
+
+That will work just fine, with the only downside that the HTTP status code sent back to the web browser won't be a 403 code.
+
+One way to test the above example is to add the following to `Boot.scala` to
 make all requests to _/secret_ return a 403:
 
 [source,scala]
 ----
-val Protected = If(() => false, () => ForbiddenResponse("no way"))
+val Protected = If(() => false, () => ForbiddenResponse("No!"))
 
 val entries = List(
   Menu.i("Home") / "index",
   Menu.i("secret") / "secret" >> Protected,
-  Menu.i("403") / "403" >> Hidden
   // rest of your site map here...
 )
 ----
 
 If you request _/secret_, a 403 response will be triggered, which will match the response transformer showing you
-the _403.html_ page.
+the contents of the _403.html_ template.
+
+
+[NOTE]
+In Lift 3 `responseTransformers` will be modified to be a partial function, meaning you'll be able to leave off the final `case r => r` part of this example.
+
+
 
 See Also
 ^^^^^^^^
 
-_The Request/Response Lifecycle_ section in _Exploring Lift_ in gives more details about the processing pipeline.
-http://exploring.liftweb.net/master/index-9.html#toc-Section-9.2[http://exploring.liftweb.net/master/index-9.html#toc-Section-9.2
-].
+<<Custom404>> explains the built-in support for custom 404 messages.
+
+<<CatchException>> for how to catch any exception thrown from your code.
+
+
 
 
 [[LinksInNotice]]
