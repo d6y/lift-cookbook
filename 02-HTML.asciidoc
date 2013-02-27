@@ -972,6 +972,10 @@ object Customised {
 }
 ----
 
+The convention in `Customised` is that we have a HTML file in `src/main/webapp` which matches
+the status code we want to show, but of course you can change that by using a different
+pattern in the argument to `Templates`.
+
 One way to test the above examples is to add the following to `Boot.scala` to
 make all requests to _/secret_ return a 403:
 
@@ -1002,7 +1006,6 @@ See Also
 
 
 
-
 [[LinksInNotice]]
 Links in Notices
 ~~~~~~~~~~~~~~~~
@@ -1024,7 +1027,7 @@ S.error("checkPrivacyPolicy",
   <span>See our <a href="/policy">privacy policy</a></span>)
 ----
 
-You might pair this with the following in your template:
+You might pair this with the following in your template...
 
 [source,html]
 ---------------------------------------------------------
@@ -1035,6 +1038,9 @@ You might pair this with the following in your template:
 Discussion
 ^^^^^^^^^^
 
+You may be more familiar with `S.error(String)`signature of the Lift notices than the versions
+that take a `NodeSeq` as an argument, but the `String` versions just convert the `String` argument
+to a `scala.xml.Text` type of `NodeSeq`.
 
 
 
