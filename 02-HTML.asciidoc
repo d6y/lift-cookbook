@@ -19,9 +19,10 @@ You want to explore or debug CSS selectors interactively.
 Solution
 ^^^^^^^^
 
-Use the Scala REPL to run your CSS selector. From withing SBT use the `console` command to get into the REPL.
+You can use the Scala REPL to run your CSS selectors.
 
-Here's an example were we test out a CSS selector which adds an href attribute to a link:
+Here's an example were we test out a CSS selector which adds an _href_ attribute to a link.
+Start from within SBT and use the `console` command to get into the REPL:
 
 ----
 > console
@@ -120,10 +121,10 @@ Discussion
 When using `&` think of the CSS selectors as always applying to the
 original template, no matter what other expressions you are combining.
 This is because `&` is aggregating the selectors together before applying them; whereas `andThen` is
-a method of all Scala functions that composes two functions together, with the fist being
+a method of all Scala functions that composes two functions together, with the first being
 called before the second.
 
-Compare the example above if we change the `andThen` with
+Compare the example above if we change the `andThen` to
 `&`:
 
 [source,scala]
@@ -177,7 +178,7 @@ attribute:
 Discussion
 ^^^^^^^^^^
 
-The `@` selector selects all elements with the given name. It's useful in this case to change `<meta name="keyword">` tag, but you may also see it used with elsewhere, for example with HTML forms to select input fields, such as `<input name="address">`.
+The `@` selector selects all elements with the given name. It's useful in this case to change `<meta name="keyword">` tag, but you may also see it used with elsewhere. For example, in an HTML form you can select input fields such as `<input name="address">` with `"@address"`.
 
 The `[content]` part is an example of a _replacement rule_ that can follow a selector. That's to say, it's not specific to the `@` selector and can be used with other selectors.  In this example it replaces the value of the attribute called "content".  If the meta tag had no "content" attribute, it would be added.
 
@@ -186,7 +187,7 @@ There are two other replacement rules useful for manipulating attributes:
 * `[content!]` -- to remove an attribute with a matching value.
 * `[content+]` -- to append to the value.
 
-Examples of these would be:
+Examples of these would be...
 
 [source,scala]
 ----
@@ -197,21 +198,24 @@ scala> val in = <meta name="keywords" content="words, here, please" />
 in: scala.xml.Elem = <meta name="keywords" content="words, here, please"></meta>
 
 scala> val remove = "@keywords [content!]" #> "words, here, please"
-remove: net.liftweb.util.CssSel = CssBind(Full(@keywords [content!]), Full(NameSelector(keywords,Full(AttrRemoveSubNode(content)))))
+remove: net.liftweb.util.CssSel = CssBind(Full(@keywords [content!]),
+  Full(NameSelector(keywords,Full(AttrRemoveSubNode(content)))))
 
 scala> remove(in)
 res0: scala.xml.NodeSeq = NodeSeq(<meta name="keywords"></meta>)
 ----
 
-and
+...and...
 
 [source,scala]
 ----
 scala> val add = "@keywords [content+]" #> ", thank you"
-add: net.liftweb.util.CssSel = CssBind(Full(@keywords [content+]), Full(NameSelector(keywords,Full(AttrAppendSubNode(content)))))
+add: net.liftweb.util.CssSel = CssBind(Full(@keywords [content+]),
+  Full(NameSelector(keywords,Full(AttrAppendSubNode(content)))))
 
 scala> add(in)
-res1: scala.xml.NodeSeq = NodeSeq(<meta content="words, here, please, thank you" name="keywords"></meta>)
+res1: scala.xml.NodeSeq = NodeSeq(<meta content="words, here, please, thank you"
+  name="keywords"></meta>)
 ----
 
 Appending to a `class` Attribute
@@ -221,7 +225,7 @@ Although not directly relevant to `meta` tags, you should be aware of there is o
 
 [source,scala]
 ---------------------------------------------------------------------
-scala> def render = "div [class+]" #> "funky"
+scala> def render = "div [class+]" #> "btn-primary"
 render: net.liftweb.util.CssSel
 
 scala> render(<div class="btn"/>)
@@ -234,6 +238,7 @@ See Also
 
 The syntax for selectors is best described in _Simply Lift_ at http://simply.liftweb.net/[http://simply.liftweb.net/].
 
+See <<TestingAndDebuggingSelectors>> for how to run selectors from the REPL.
 
 
 [[SetPageTitle]]
@@ -287,7 +292,7 @@ title followed by the page title:
 <title class="lift:Menu.title">Site Title - </title>
 ----
 
-If you need more control, you can of course bind on title using a
+If you need more control, you can of course bind on `<title>` using a
 regular snippet. This example uses a custom snippet to put the site
 title after the page title:
 
@@ -310,7 +315,7 @@ At https://www.assembla.com/spaces/liftweb/wiki/SiteMap[https://www.assembla.com
 
 
 
-[[ConditionalINcludes]]
+[[ConditionalIncludes]]
 HTML Conditional Comments
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -510,10 +515,6 @@ The pattern of converting one `NodeSeq` to another is simple, but also powerful 
 
 
 
-See Also
-^^^^^^^^
-
-
 
 
 
@@ -525,9 +526,8 @@ Snippet Not Found when using HTML5
 Problem
 ^^^^^^^
 
-You're using Lift with the HTML5 parser and one of your snippets,
-perhaps `<lift:HelloWorld.howdy />`, is rendering with a "Class Not
-Found" error.
+You're using Lift with the HTML5 parser and one of your snippets is rendering with a "Class Not
+Found" error. It even happens for `<lift:HelloWorld.howdy />`.
 
 Solution
 ^^^^^^^^
@@ -616,7 +616,7 @@ avoid doing this in the `<head>` of your page as the HTML5 parser will
 move the tags to be outside of the head section.
 
 Note that some proxies may choose not to cache resources with query
-parameters at all. If that impacts you, it's possible to code a custom resource id method
+parameters at all. If that impacts you, it's possible to code a custom resource-id method
 to move the random resource ID out of the query parameter and into the path.
 
 Here's one approach to doing this. Rather than generate JavaScript and CSS links that look like `/assets/style.css?F61973`, we will generate `/cache/F61973/assets/style.css`. We then will need to tell Lift to take requests
@@ -792,7 +792,7 @@ example as an alternative to `<lift:head>`.
 
 Another variant you may see is `data-lift="head"`, as an alternative to `class="lift:head"`.
 
-The `lift:head` snippet is a built-in snippet, and no different from a snippet you might write.  What the snippet does is emit a `<head>` block, containing the elements you want in the head.  These can be `<title>`, `<link>`, `<meta>`, `<style>`, `<script>` or `<base>` tags.  How does this `<head>` block produced by the `lift:head` snippet end up inside the main `<head>` section of the page?  When Lift processes your template, it automatically merges all `<head>` tags into the main `<head>` section of the page.
+The `lift:head` snippet is a built-in snippet, but otherwise no different from any snippet you might write.  What the snippet does is emit a `<head>` block, containing the elements you want in the head.  These can be `<title>`, `<link>`, `<meta>`, `<style>`, `<script>` or `<base>` tags.  How does this `<head>` block produced by the `lift:head` snippet end up inside the main `<head>` section of the page?  When Lift processes your template, it automatically merges all `<head>` tags into the main `<head>` section of the page.
 
 You might suspect you can therefore put a plain old `<head>` section anywhere on your template, but that would not necessarily be valid HTML5 mark up.
 
@@ -838,7 +838,7 @@ Discussion
 ^^^^^^^^^^
 
 The `uriNotFound` Lift rule needs to return a `NotFound` in reply to a
-`Req` and optional `Box[Failure]`. This allows you to customise the
+`Req` and `Box[Failure]`. This allows you to customise the
 response based on the type of failure or the request that was made.
 
 There are three types of `NotFound`:
@@ -1039,9 +1039,9 @@ You might pair this with the following in your template...
 Discussion
 ^^^^^^^^^^
 
-You may be more familiar with `S.error(String)`signature of the Lift notices than the versions
+You may be more familiar with the `S.error(String)` signature of the Lift notices than the versions
 that take a `NodeSeq` as an argument, but the `String` versions just convert the `String` argument
-to a `scala.xml.Text` type of `NodeSeq`.
+to a `scala.xml.Text` kind of `NodeSeq`.
 
 
 
@@ -1377,43 +1377,40 @@ scala> TextileParser.toHtml("""
  | The module in "Lift":http://www.liftweb.net for turning Textile markup
  | into HTML is pretty easy to use.
  |
- | * As you can see
- | * in this example.
+ | * As you can see.
+ | * In this example.
  | """)
 res0: scala.xml.NodeSeq =
 NodeSeq(, <h1>Hi!</h1>,
-, <p>The module in <a href="http://www.liftweb.net">Lift</a> for turning Textile markup<br></br>into HTML is pretty easy to use.</p>,
-, <ul><li> As you can see</li>
-<li> in this example.</li>
+, <p>The module in <a href="http://www.liftweb.net">Lift</a> for turning Textile
+  markup<br></br>into HTML is pretty easy to use.</p>,
+, <ul><li> As you can see.</li>
+<li> In this example.</li>
 </ul>,
 , )
+
 ---------------------------------------------------------
 
 It's a little easier to see the output if we pretty print it:
 
 [source,scala]
 ---------------------------------------------------------
-scala> val pp = new xml.PrettyPrinter(20,2)
+scala> val pp = new PrettyPrinter(width=35, step=2)
 pp: scala.xml.PrettyPrinter = scala.xml.PrettyPrinter@54c19de8
 
 scala> pp.formatNodes(res0)
 res1: String =
 <h1>Hi!</h1><p>
   The module in
-  <a
-  href="http://www.liftweb.net">
+  <a href="http://www.liftweb.net">
     Lift
-</a>
+  </a>
   for turning Textile markup
   <br></br>
   into HTML is pretty easy to use.
 </p><ul>
-  <li>
-    As you can see
-  </li>
-  <li>
-    in this example.
-  </li>
+  <li> As you can see.</li>
+  <li> In this example.</li>
 </ul>
 ---------------------------------------------------------
 
