@@ -73,7 +73,7 @@ You'll find a list of tickets at http://ticket.liftweb.net/[http://ticket.liftwe
 
 If you're asked to, or want to, post example code there's a guide at http://www.assembla.com/wiki/show/liftweb/Posting_example_code[http://www.assembla.com/wiki/show/liftweb/Posting_example_code].
 
-If you've found a bug, and you're asked to create a ticket, the main thing to do is to include a link to the mailing list discussion of the issue, as described at http://www.assembla.com/wiki/show/liftweb/Creating_tickets[http://www.assembla.com/wiki/show/liftweb/Creating_tickets]. 
+If you've found a bug, and you're asked to create a ticket, the main thing to do is to include a link to the mailing list discussion of the issue, as described at http://www.assembla.com/wiki/show/liftweb/Creating_tickets[http://www.assembla.com/wiki/show/liftweb/Creating_tickets].
 
 
 [[LiftCodeContributions]]
@@ -146,7 +146,7 @@ You'll need to sign in, or create a free account, with Assembla, the company tha
 Discussion
 ^^^^^^^^^^
 
-If you're unsure about a change you'd like to make, just ask for feedback on the Lift mailing list. 
+If you're unsure about a change you'd like to make, just ask for feedback on the Lift mailing list.
 
 
 One limitation of the watcher role on Assembla is that you cannot move pages. If you create a new page in the wrong section, or want to reorganise pages, you'll need to ask on the Lift mailing list for someone with permissions to do that for you.
@@ -173,7 +173,7 @@ If you're comfortable using Git, you can fork the repository and send a
 pull request.
 
 Alternatively, download a template file, write your recipe, and email
-to the Lift mailing list at https://groups.google.com/group/liftweb[https://groups.google.com/group/liftweb].  
+to the Lift mailing list at https://groups.google.com/group/liftweb[https://groups.google.com/group/liftweb].
 
 You can find the template file at: https://raw.github.com/d6y/lift-cookbook/master/template.asciidoc[https://raw.github.com/d6y/lift-cookbook/master/template.asciidoc].
 
@@ -184,7 +184,7 @@ Anything you've puzzled over, or things which have surprised you, impressed you 
 
 The cookbook is structured using a markup language called Asciidoc. If you're familiar with Markdown or Textile, you'll find similarities. For the cookbook you only need to know about section headings, source code formatting and links.  Examples of all of these are in the `template.asciidoc` file.
 
-To find out where to make a change you need to know that each chapter is a separate file, and each recipe is a section in that file.  
+To find out where to make a change you need to know that each chapter is a separate file, and each recipe is a section in that file.
 
 
 Licensing
@@ -226,7 +226,7 @@ Solution
 
 Create a Lift module, and then reference the module from your Lift projects.
 
-As an example, let's create a module to embed the Snowstorm snow fall effect on every page in your Lift web application (please don't do this). 
+As an example, let's create a module to embed the Snowstorm snow fall effect on every page in your Lift web application (please don't do this).
 
 There's nothing special about modules: they are code, packaged and used like any other dependency. What makes them possible is the exposure of extension points via `LiftRules`. The main convention is to have an `init` method that Lift applications can use to initialize your module.
 
@@ -245,7 +245,7 @@ package net.liftmodules.snowstorm
 import net.liftweb.http._
 
 object Snowstorm {
-	
+
  def init() : Unit = {
 
   ResourceServer.allow {
@@ -285,7 +285,7 @@ resolvers ++= Seq(
 scalacOptions ++= Seq("-deprecation", "-unchecked")
 
 libraryDependencies ++= {
-  val liftVersion = "2.5-M3"
+  val liftVersion = "2.5-RC2"
   Seq(
     "net.liftweb" %% "lift-webkit"  % liftVersion  % "compile"
   )
@@ -303,7 +303,7 @@ With our module built and published, we can now include it in our Lift applicati
 [source,scala]
 --------------------------------------------------------------
 libraryDependencies ++= {
-  val liftVersion = "2.5-M3"
+  val liftVersion = "2.5-RC2"
   Seq(
   ...
   "net.liftmodules" %% "snowstorm" % "1.0.0",
@@ -358,7 +358,7 @@ import sbt._
 import sbt.Keys._
 
 object LiftModuleBuild extends Build {
-  val liftVersion = SettingKey[String]("liftVersion", 
+  val liftVersion = SettingKey[String]("liftVersion",
     "Version number of the Lift Web Framework")
   val project = Project("LiftModule", file("."))
 }
@@ -401,7 +401,7 @@ object LocalModuleDev extends Build {
 }
 ------------------------------------
 
-We are assuming that the snowstorm source can be found at `../snowstorm` relative to the Lift application we are using. With this in place, when you build your Lift project, SBT will automatically compile and depend on changes in the local `snowstorm` module. 
+We are assuming that the snowstorm source can be found at `../snowstorm` relative to the Lift application we are using. With this in place, when you build your Lift project, SBT will automatically compile and depend on changes in the local `snowstorm` module.
 
 
 See Also
