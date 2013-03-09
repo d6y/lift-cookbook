@@ -485,7 +485,7 @@ To create the project files to allow Eclipse to load your Lift project, install 
 
 [source,scala]
 -----------------------------------------------------------------------
-addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.1.0")
+addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.1.2")
 -----------------------------------------------------------------------
 
 You can then create Eclipse project files (`.project` and `.classpath`) by entering the
@@ -534,7 +534,7 @@ create a `~/.sbt/plugins/plugins.sbt` file containing:
 ------------------------------------------------------------------------
 resolvers += Classpaths.typesafeResolver
 
-addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.1.0")
+addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.1.2")
 ------------------------------------------------------------------------
 
 Note the blank line between the `resolvers` and the `addSbtPlugin`.  In `.sbt` files, a blank line is required between statements.
@@ -544,7 +544,7 @@ Finally, set any global configurations (such as `withSource`) in `~/.sbt/global.
 See Also
 ^^^^^^^^
 
-There are other useful settings for sbteclipse, described at https://github.com/typesafehub/sbteclipse/wiki[https://github.com/typesafehub/sbteclipse/wiki].
+There are other useful settings for sbteclipse, described at https://github.com/typesafehub/sbteclipse/wiki[https://github.com/typesafehub/sbteclipse/wiki].  You'll also find the latest version number for the plugin on that site.
 
 The SBT `~/.sbt/` structure is described in the guide to using plugins at http://www.scala-sbt.org/release/docs/Getting-Started/Using-Plugins[http://www.scala-sbt.org/release/docs/Getting-Started/Using-Plugins] and in the wiki page for global configuration at http://www.scala-sbt.org/release/docs/Detailed-Topics/Global-Settings[http://www.scala-sbt.org/release/docs/Detailed-Topics/Global-Settings].
 
@@ -570,9 +570,7 @@ With the IDE configured, you now need to add the SBT plugin inside your Lift pro
 
 [source,scala]
 ------------------------------------------------------------------------
-resolvers += "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
-
-addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.3.0-SNAPSHOT")
+addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.3.0")
 ------------------------------------------------------------------------
 
 Start SBT and at the SBT prompt create the IDEA project files by typing:
@@ -597,6 +595,13 @@ Discussion
 ^^^^^^^^^^
 
 By default the `gen-idea` command will fetch source for dependent libraries. That means out-of-the-box you can click though to Lift source code to explore it and learn more about the framework.
+
+If you want to try the latest snapshot version of the plugin, you'll need to include the snapshot repository in your `plugin.sbt` file:
+
+[source,scala]
+------------------------------------------------------------------------
+resolvers += "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
+------------------------------------------------------------------------
 
 Setting up the SBT IDEA plugin globally, for all SBT projects, is the same pattern as described for Eclipse in <<eclipse>>.
 
