@@ -715,7 +715,8 @@ LiftRules.statelessDispatch.append(Shouty)
 ...and then call it from the command line:
 
 -----
-$ curl -d '{ "name" : "Richard" }' -X POST -H 'Content-type: application/json' http://127.0.0.1:8080/shout
+$ curl -d '{ "name" : "Richard" }' -X POST -H 'Content-type: application/json'
+   http://127.0.0.1:8080/shout
 {
   "greeting":"HELLO RICHARD"
 }
@@ -731,48 +732,45 @@ static NSString *url = @"http://localhost:8000/shout";
 -(void) postAction {
   // JSON data:
   NSDictionary* dic = @{@"name": @"Richard"};
-  NSData* jsonData = [NSJSONSerialization dataWithJSONObject:dic options:0 error:nil];
-  NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]
+  NSData* jsonData =
+    [NSJSONSerialization dataWithJSONObject:dic options:0 error:nil];
+  NSMutableURLRequest *request = [
+    NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]
     cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
 
   // Construct HTTP request:
   [request setHTTPMethod:@"POST"];
   [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-  [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+  [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]]
+    forHTTPHeaderField:@"Content-Length"];
   [request setHTTPBody: jsonData];
 
   // Send the request:
-  NSURLConnection *con = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+  NSURLConnection *con = [[NSURLConnection alloc]
+    initWithRequest:request delegate:self];
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
-  self.receivedJSONData = [NSMutableData data]; // start off with new, empty, response data
+- (void)connection:(NSURLConnection *)connection
+  didReceiveResponse:(NSURLResponse *)response {
+   // Start off with new, empty, response data
+   self.receivedJSONData = [NSMutableData data];
 }
 
-// -------------------------------------------------------------------------------
-//  connection:didReceiveData:data
-// -------------------------------------------------------------------------------
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-  [self.receivedJSONData appendData:data]; // append incoming data
+- (void)connection:(NSURLConnection *)connection
+  didReceiveData:(NSData *)data {
+   // append incoming data
+   [self.receivedJSONData appendData:data];
 }
 
-// -------------------------------------------------------------------------------
-//  connection:didFailWithError:error
-// -------------------------------------------------------------------------------
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-  NSLog(@"Error occurred ");
+- (void)connection:(NSURLConnection *)connection
+  didFailWithError:(NSError *)error {
+   NSLog(@"Error occurred ");
 }
 
-// -------------------------------------------------------------------------------
-//  connectionDidFinishLoading:connection
-// -------------------------------------------------------------------------------
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
   NSError *e = nil;
-  NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData: self.receivedJSONData
+  NSDictionary *JSON =
+    [NSJSONSerialization JSONObjectWithData: self.receivedJSONData
     options: NSJSONReadingMutableContainers error: &e];
   NSLog(@"Return result: %@", [JSON objectForKey:@"greeting"]);
 }
@@ -801,19 +799,24 @@ static NSString *url = @"http://localhost:8000/shout";
 -(void) postAction {
   // JSON data:
   NSDictionary* dic = @{@"name": @"Richard"};
-  NSData* jsonData = [NSJSONSerialization dataWithJSONObject:dic options:0 error:nil];
-  NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]
-    cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+  NSData* jsonData =
+   [NSJSONSerialization dataWithJSONObject:dic options:0 error:nil];
 
   // Construct HTTP request:
+  NSMutableURLRequest *request =
+   [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]
+    cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
   [request setHTTPMethod:@"POST"];
   [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-  [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+  [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]]
+    forHTTPHeaderField:@"Content-Length"];
   [request setHTTPBody: jsonData];
 
   // Send the request:
-  AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest: request];
-  [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject)
+  AFJSONRequestOperation *operation =
+    [[AFJSONRequestOperation alloc] initWithRequest: request];
+  [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation,
+    id responseObject)
   {
      NSString *response = [operation responseString];
 
