@@ -2,6 +2,9 @@
 Javascript, Ajax, Comet
 -----------------------
 
+This chapter's source code is: https://github.com/LiftCookbook/cookbook_ajax[https://github.com/LiftCookbook/cookbook_ajax].
+
+
 Trigger server-side code from a button press
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -83,6 +86,163 @@ way to trigger server-side Scala code].
 * https://groups.google.com/forum/?fromgroups#!topic/liftweb/uAgy21xOMRs[Bind
 a button click with SHtml.onEvent] mailing list thread.
 * https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/SHtml.scala[SHtml.scala source code].
+
+
+
+[[SelectOptionChange]]
+Call Server when Select Option Changes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Problem
+^^^^^^^
+
+When a HTML select option is selected, you want to trigger a function on the server.
+
+
+Solution
+^^^^^^^^
+
+Register a `String => JsCmd` function with `SHtml.ajaxSelect`.
+
+In this example we will lookup the distance from Earth to a planet the user selects.  This will
+happen on the server and update the browser with the result:
+
+[source, html]
+-----
+ <div data-lift="HtmlSelectSnippet">
+  <div>
+    <label for="dropdown">Planet:</label>
+    <select id="dropdown"></select>
+  </div>
+  <div id="distance">Distance will appear here</div>
+</div>
+-----
+
+[source, scala]
+-----
+package code.snippet
+
+import net.liftweb.common.Empty
+import net.liftweb.util.Helpers._
+import net.liftweb.http.SHtml.ajaxSelect
+import net.liftweb.http.js.JsCmd
+import net.liftweb.http.js.JsCmds.SetHtml
+import xml.Text
+
+class HtmlSelectSnippet {
+
+  // Our "database" maps planet names to distances:
+  type Planet = String
+  type LightYears = Double
+
+  val database = Map[Planet,LightYears](
+    "Alpha Centauri Bb" -> 4.23,
+    "Tau Ceti e" -> 11.90,
+    "Tau Ceti f" -> 11.90,
+    "Gliese 876 d" -> 15.00,
+    "82 G Eridani b" -> 19.71
+  )
+
+  def render = {
+
+    // To show the user a blank label and blank value option:
+    val blankOption = ("" -> "")
+
+    // The complete list of options includes everything in
+    // our database:
+    val options : List[(String,String)] =
+      blankOption ::
+      database.keys.map(p => (p,p)).toList
+
+    // Nothing is selected by default:
+    val default = Empty
+
+    // The function to call when an option is picked.
+    // Lookup the planet name, and return an update to the browser:
+    def handler(selected: String) : JsCmd = {
+      SetHtml("distance", Text(database(selected) + " light years"))
+    }
+
+    // Bind the <select> tag:
+    "select" #> ajaxSelect(options, default, handler)
+
+  }
+}
+-----
+
+The last line of the code is doing the work for us.  It is generating the options and binding
+the selection to a function called `handler`.  The handler function is called with the value
+of the selected item.
+
+We're using the same `String` (the planet name) for the option label and value, but they could be
+different.
+
+Discussion
+^^^^^^^^^^
+
+To understand what's going on here, take a look at the HTML that Lift produces:
+
+[source, html]
+-----
+<select id="dropdown"
+  onchange="liftAjax.lift_ajaxHandler('F470183993611Y15ZJU=' +
+    this.options[this.selectedIndex].value, null, null, null)">
+  <option value=""></option>
+  <option value="Tau Ceti e">Tau Ceti e</option>
+  ...
+</select>
+-----
+
+The `handler` function has been stored by Lift under the identifier of "F470183993611Y15ZJU" (in this particular rendering). An "onchange" event handler is attached to the select and the function is passed the value of the selected option. The `lift_ajaxHandler` JavaScript function is defined in `liftAjax.js` which is automatically added to your page.
+
+
+Collecting the Value on Form Submission
++++++++++++++++++++++++++++++++++++++++
+
+If you need to also capture the selected value on a regular form submission, you can make use of `SHtml.onEvents`.  This attaches event listeners to a `NodeSeq`, triggering a server-side function when the event occurs.  We can use this to create a regular form with a regular select box, but wire in server-side calls when the select changes.
+
+To make use of this, our snippet changes very little:
+
+[source, scala]
+----
+var selectedValue : String = ""
+
+"select" #> onEvents("onchange")(handler) {
+  select(options, default, selectedValue = _)
+} &
+"type=submit" #> onSubmitUnit( () => S.notice("Destination "+selectedValue))
+----
+
+We are arranging for the same `handler` function to be called when an "onchange" event is triggered.  This event binding is applied to a regular `SHtml.select`, which is storing the `selectedValue` when the form is submitted. We also bind a submit button to a function which generates a notice of which planet was selected.
+
+The corresponding HTML also changes little.  We need to add a button and make sure the form is marked as such:
+
+[source,html]
+----
+<div data-lift="HtmlSelectFormSnippet?form=post">
+
+  <div>
+    <label for="dropdown">Planet:</label>
+    <select id="dropdown"></select>
+  </div>
+
+  <div id="distance">Distance will appear here</div>
+
+  <input type="submit" value="Book Ticket"/>
+
+</div>
+----
+
+Now when you change a selected value you see the dynamically updated distance calculation, but pressing the "Book Ticket" button also delivers the value to the server.
+
+See Also
+^^^^^^^^
+
+<<MultiSelectBox>> describes how to use classes rather than `String` values for select boxes.
+
+
+
 
 Set up client-side actions from your Scala code
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -261,6 +421,7 @@ See Also
 * Mailing list on https://groups.google.com/forum/?fromgroups#!topic/liftweb/EEINT9t8Wd4[Attaching
 CSS class to ajax form using designer friendly template doesn't work].
 
+
 Show a template inside a page dynamically
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -320,4 +481,108 @@ See Also
 * http://scala-tools.org/mvnsites/liftweb-2.4/net/liftweb/http/js/JsCmds$$SetHtml.html[SetHtml]
 documentation.
 * https://groups.google.com/forum/?fromgroups#!topic/liftweb/C5UhQn5blHk[Loading Pages With Templates from Other Pages] mailing list discussion.
+
+
+[[JavaScriptTail]]
+Move JavaScript to End of Page
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want the JavaScript created in your snippet to be included at the end of the HTML page.
+
+Solution
+^^^^^^^^
+
+Use `S.appendJs` which places your JavaScript just before the closing `</body>` tag, along with other JavaScript produced by Lift.
+
+In this HTML we have placed a `<script>` tag in the middle of the page, and marked it with a snippet called `JavascriptTail`:
+
+[source,html]
+-----
+<!DOCTYPE html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+  <title>JavaScript in Tail</title>
+</head>
+<body data-lift-content-id="main">
+<div id="main" data-lift="surround?with=default;at=content">
+  <h2>Javascript in the tail of the page</h2>
+
+  <script type="text/javascript" data-lift="JavascriptTail">
+  </script>
+
+  <p>
+    The JavaScript about to be run will have been moved
+    to the end of this page, just before the closing
+    body tag.
+  </p>
+</div>
+</body>
+</html>
+-----
+
+The `<script>` content will be generated by a snippet.
+It doesn't need to be a `<script>` tag: the snippet just replaces the content with nothing, but
+hanging the snippet on the `<script>` tag is a reminder of the purpose of the snippet:
+
+[source, scala]
+-----
+package code.snippet
+
+import net.liftweb.util.Helpers._
+import net.liftweb.http.js.JsCmds.Alert
+import net.liftweb.http.S
+import xml.NodeSeq
+
+class JavascriptTail {
+  def render = {
+    S.appendJs(Alert("Hi"))
+    "*" #> NodeSeq.Empty
+  }
+}
+-----
+
+Although the snippet is rendering nothing, it calls `S.appendJs` with a `JsCmd`.  This will produce the following in the page just before the end of the body:
+
+[source, html]
+-----
+<script type="text/javascript">
+// <![CDATA[
+jQuery(document).ready(function() {
+  alert("Hi");
+});
+// ]]>
+</script>
+-----
+
+Although the snippet was in the middle of the page, the JavaScript appears at the
+end of the page.
+
+
+Discussion
+^^^^^^^^^^
+
+There are three other ways you could tackle this problem.  The first is to move your JavaScript to an external file, and simply include it on the page where you want it.  For substantial JavaScript code, this might make sense.
+
+The second is a variation on `S.appendJs`: `S.appendGlobalJs` works in the same way but does not include the jQuery `ready` around your JavaScript.  This means you have no guarantee the DOM has loaded when your function is called.
+
+A third option is wrap your JavaScript in a `<lift:tail>` snippet:
+
+[source, scala]
+-----
+class JavascriptTail {
+  def render =
+    "*" #> <lift:tail>{Script(OnLoad(Alert("Hi")))}</lift:tail>
+-----
+
+This is a general-purpose Lift snippet and be used to move various kinds of content to the end of the page, not just JavaScript.
+
+
+See Also
+^^^^^^^^
+
+<<AddToHead>> discusses a related Lift snippet for moving content to the head of the page.
+
 

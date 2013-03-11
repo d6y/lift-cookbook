@@ -801,6 +801,8 @@ There's also `lift:tail` which works in a similar way, except anything marked wi
 See Also
 ^^^^^^^^
 
+<<JavaScriptTail>> describes how to move JavaScript to the end of the page.
+
 The W3C HTML validator is a useful tool for tracking down HTML markup issues that may cause problems with content being moved into the head of your page. http://validator.w3.org/[http://validator.w3.org/].
 
 

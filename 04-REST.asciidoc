@@ -727,7 +727,7 @@ We can implement the POST request using `NSURLConnection`:
 
 [source, objc]
 ---------------------------------------------------------
-static NSString *url = @"http://localhost:8000/shout";
+static NSString *url = @"http://localhost:8080/shout";
 
 -(void) postAction {
   // JSON data:
@@ -786,7 +786,7 @@ Discussion
 
 There are many ways to do HTTP POST from iOS and it can be confusing to identify the correct way that works, especially without the aid of external library. The example above uses the iOS native API.
 
-Another way is to use _AFNetworking_. This is a popular external library for iOS development,  can cope with many scenarios and is simple to use:
+Another way is to use _AFNetworking_. This is a popular external library for iOS development, can cope with many scenarios and is simple to use:
 
 [source, objc]
 ---------------------------------------------------------
@@ -794,7 +794,7 @@ Another way is to use _AFNetworking_. This is a popular external library for iOS
 #import "AFNetworking.h"
 #import "JSONKit.h"
 
-static NSString *url = @"http://localhost:8000/shout";
+static NSString *url = @"http://localhost:8080/shout";
 
 -(void) postAction {
   // JSON data:
@@ -840,7 +840,7 @@ static NSString *url = @"http://localhost:8000/shout";
 }
 ---------------------------------------------------------
 
-The iOS native method is more versatile and gives you starting point to craft your own solution, such as by making the Content-Type more specific. However, AFNetworking is popular and you may prefer that route.
+The `NSURLConnection` approach is more versatile and gives you starting point to craft your own solution, such as by making the content type more specific. However, `AFNetworking` is popular and you may prefer that route.
 
 
 See Also

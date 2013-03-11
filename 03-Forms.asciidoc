@@ -377,6 +377,7 @@ conditionally mark a SHtml.checkbox as disabled].
 Selector Transforms].
 
 
+[[MultiSelectBox]]
 Use a Select Box with Multiple Options
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -537,6 +538,8 @@ def multi = "#opts *" #> SHtml.multiSelectObj[Item](options, current,
 
 See Also
 ^^^^^^^^
+
+<<SelectOptionChange>> describes how to trigger a server-side action when a selection changes in the browser.
 
 _Exploring Lift_, Chapter 6, "Forms in Lift", http://exploring.liftweb.net/[http://exploring.liftweb.net/].
 
