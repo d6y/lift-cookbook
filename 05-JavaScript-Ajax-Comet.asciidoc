@@ -1,12 +1,16 @@
 [[Ajax]]
-Javascript, Ajax, Comet
+JavaScript, Ajax, Comet
 -----------------------
 
 This chapter's source code is: https://github.com/LiftCookbook/cookbook_ajax[https://github.com/LiftCookbook/cookbook_ajax].
 
+For an introduction to Lift's Ajax and Comet features, read _Simply Lift_ at http://simply.liftweb.net[http://simply.liftweb.net
+] or chapter 9 of _Lift in Action_ (Perrett, 2012, Manning Publications Co.).
 
-Trigger server-side code from a button press
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[ButtonTriggerServerCode]]
+Trigger Server-Side Code from a Button
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
@@ -21,30 +25,33 @@ Use `ajaxInvoke`:
 
 [source,scala]
 ----
+package code.snippet
+
 import net.liftweb.util.Helpers._
 import net.liftweb.http.SHtml
-import net.liftweb.http.js.JsCmds
+import net.liftweb.http.js.{JsCmd, JsCmds}
+import net.liftweb.common.Loggable
 
-class MySnippet {
+object AjaxInvoke extends Loggable {
 
- def easy = "#myButton [onclick]" #> SHtml.ajaxInvoke( () => {
-    println("click")
-    JsCmds.Alert("Hi")
-    } )
+  def callback() : JsCmd = {
+    logger.info("The button was pressed")
+    JsCmds.Alert("You clicked it")
+  }
+
+  def button = "button [onclick]" #> SHtml.ajaxInvoke(callback)
 }
 ----
 
-In this snippet we are binding the click event of a button with the id
-of "myButton" to an `ajaxInvoke`: when the button is pressed, Lift
+In this snippet we are binding the click event of a button to an `ajaxInvoke`: when the button is pressed, Lift
 arranges for the function you gave `ajaxInvoke` to be executed.
 
-In this example, we are printing "click" to the console and returning a
-JavaScript alert dialog. The corresponding HTML might be:
+In this example, logging a message and returning a JavaScript alert to the browser. The corresponding HTML might include:
 
 [source,html]
 ----
-<div class="lift:MySnippet.easy">
-  <button id="myButton">Click me</button>
+<div data-lift="AjaxInvoke.button">
+  <button>Click Me</button>
 </div>
 ----
 
@@ -57,35 +64,201 @@ returning `Noop` if you want nothing to happen, through changing DOM
 element, all the way up to executing arbitrary JavaScript.
 
 The example above is using a button, but will work on any element that
-has an event you can bind to.
+has an event you can bind to.  We're binding on _onclick_ but it could be any event
+the DOM exposes.
 
 Related to `ajaxInvoke` are the following functions:
 
-* `SHtml.onEvent`, which has the signature `String => JsCmd` because it
+* `SHtml.onEvent` which calls a function with the signature `String => JsCmd` because it
 is passed the `value` of the node it is attached to. In the above
 example, this would be the empty string as the button has no value.
-* `SHtml.ajaxCall` which is more general than `onEvent`, as you give it
-the expression you want passed to your server-side code.
-* `SHtml.jsonCall` which is even more general: you give it a function
+* `SHtml.ajaxCall` which is, in a sense, more general than `onEvent`, as you give it the expression you want passed to your server-side code.
+* `SHtml.jsonCall` which is even more general still: you give it a function
 that will return a JSON object when executed on the client, and this
 object will be passed to your server-side function.
+
+Let's look at each of these in turn.
+
+onEvent -- Receiving the `value` of a DOM Element
++++++++++++++++++++++++++++++++++++++++++++++++++
+
+You can use `onEvent` with any element that has a `value` attribute and has responds to the event you choose to bind to. The function you supply to `onEvent` is called with the element's value. As an example, we can write a snippet which presents a challenge to the user, and validates the response:
+
+[source,scala]
+----
+package code.snippet
+
+import scala.util.Random
+import net.liftweb.util.Helpers._
+import net.liftweb.http.SHtml
+import net.liftweb.http.js.JsCmds.Alert
+
+object OnEvent {
+
+  def render = {
+    val x, y = Random.nextInt(10)
+    val sum = x + y
+
+    "p *" #> "What is %d + %d?".format(x,y) &
+    "input [onchange]" #> SHtml.onEvent( answer =>
+      if (answer == sum.toString) Alert("Correct!")
+      else Alert("Try again")
+     )
+  }
+
+}
+----
+
+This snippet prompts the user to add two random numbers in the `<p>` tag, and binds a validation function to the `<input>` on the page:
+
+[source,html]
+----
+<div data-lift="OnEvent">
+  <p>Problem appears here</p>
+  <input placeholder="Type your answer"></input>
+</div>
+----
+
+When `onchange` is triggered (by pressing return or the tab key, for example), the text entered is sent to the function as a `String`.
+
+
+ajaxCall -- Receiving an Arbitrary Client-Side String
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Where `onEvent` sends `this.value` to your server-side code, `ajaxCall` allows you to specify the client-side expression used to produce a value.
+
+To demonstrate this we can create a template that includes two elements: we'll bind our function to a button, but read a value from an input field:
+
+[source,html]
+----
+<div data-lift="AjaxCall">
+  <input id="num" value="41"></input>
+  <button>Increment</button>
+</div>
+----
+
+We want to arrange for the button to read the `num` field, increment it, and return it back to the input field:
+
+[source,scala]
+----
+package code.snippet
+
+import net.liftweb.util.Helpers._
+import net.liftweb.http.SHtml
+import net.liftweb.http.js.JE.ValById
+import net.liftweb.http.js.JsCmds._
+
+object AjaxCall {
+
+ def increment(in: String) : String =
+  asInt(in).map(_ + 1).map(_.toString) openOr in
+
+ def render = "button [onclick]" #>
+   SHtml.ajaxCall(ValById("num"), s => SetValById("num", increment(s)) )
+
+ }
+----
+
+The first argument to `ajaxCall` is the expression that will produce a value for our function. It can be any `JsExp`, and we've
+used `ValById` which looks up the value of an element by the id attribute.  We could have used a regular JQuery expression to achieve the same effect with: `JsRaw("$('#num').val()")`.
+
+Our second argument to `ajaxCall` takes the value of the `JsExp` expression as a `String`. We're using one of Lift's JavaScript command to replaces the value with a new value. The new value is the result of incrementing the number (providing it is a number).
+
+The end result is that you press the button, and the number updates. It should go without saying that these are simple illustrations, and you probably don't want a server round-trip to add one to a number. The techniques come into their own when there is some action of value to perform on the server.
+
+You may have guessed that `onEvent` is implemented as an `ajaxCall` for `JsRaw("this.value")`.
+
+
+jsonCall -- Receiving a JSON Value
+++++++++++++++++++++++++++++++++++
+
+Both `ajaxCall` and `onEvent` end up evaluating a `String => JsCmd` function. With `jsonCall` the signature is `JValue => JsCmd`, meaning you can pass more complex data structures from JavaScript to your Lift application.
+
+To demonstrate this, we'll create a template that asks for input, has a function to convert the input into JSON, and a button to send the JSON to the server:
+
+
+[source,html]
+----
+<div data-lift="JsonCall">
+  <p>Enter an addition question:</p>
+  <div>
+    <input id="x"> + <input id="y"> = <input id="z">.
+  </div>
+  <button>Check</button>
+</div>
+
+<script type="text/javascript">
+// <![CDATA[
+function currentQuestion() {
+  return {
+    first:  parseInt($('#x').val()),
+    second: parseInt($('#y').val()),
+    answer: parseInt($('#z').val())
+  };
+}
+// ]]>
+----
+
+On the server we'll check that the JSON represents a valid integer addition problem:
+
+[source,scala]
+----
+package code.snippet
+
+import net.liftweb.util.Helpers._
+import net.liftweb.http.SHtml
+import net.liftweb.http.js.{JsCmd, JE}
+import net.liftweb.common.Loggable
+import net.liftweb.json.JsonAST._
+import net.liftweb.http.js.JsCmds.Alert
+import net.liftweb.json.DefaultFormats
+
+object JsonCall extends Loggable {
+
+ def render = {
+
+  implicit val formats = DefaultFormats
+
+  case class Question(first: Int, second: Int, answer: Int) {
+   def valid_? = first + second == answer
+  }
+
+ def validate(value: JValue) : JsCmd = {
+  logger.info(value)
+  value.extractOpt[Question].map(_.valid_?) match {
+   case Some(true) => Alert("Looks good")
+   case Some(false) => Alert("That doesn't add up")
+   case None => Alert("That doesn't make sense")
+  }
+ }
+
+ "button [onclick]" #>
+  SHtml.jsonCall( JE.Call("currentQuestion"), validate _ )
+ }
+}
+----
+
+Working from the bottom of this snippet up, we see a binding of the `<button>` to the `jsonCall`. The value we'll be working on is the value provided by the JavaScript function called `currentQuestion`.  This was defined on the template page.  When the button is clicked the JavaScript function is called and the resulting value will be presented to `validate`, which is our `JValue => JsCmd` function.
+
+All `validate` does is log the JSON data and alert back if the question looks correct or not.  To do this we use the Lift JSON ability to extract JSON to a case class and call the `valid_?` test to see if the numbers add up.  This will evaluate to `Some(true)` if the addition works, `Some(false)` if the addition isn't correct or `None` if the input is missing or not a valid integer.
+
+Running the code and entering 1, 2 and 3 into the text fields will produce the following in the server log:
+
+[source,scala]
+----
+JObject(List(JField(first,JInt(1)), JField(second,JInt(2)), JField(answer,JInt(3))))
+----
+
+This is the `JValue` representation of the JSON.
 
 See Also
 ^^^^^^^^
 
-* The "http://blog.fmpwizard.com/scala-lift-custom-wizard[Call Scala
-code from JavaScript]" section of a blog post from Diego Medina.
-* http://exploring.liftweb.net/onepage/index.html#toc-Section-11[AJAX
-and Comment in Lift] in _Exploring Lift_.
-* Chapter 9 of _Lift in Action_.
-* _Simply Lift_ on
-http://simply.liftweb.net/index-4.8.html#toc-Section-4.8[Ajax].
-* Mailing list discussion on the
-https://groups.google.com/forum/?fromgroups#!topic/liftweb/N7ttFlumvuk[easiest
-way to trigger server-side Scala code].
-* https://groups.google.com/forum/?fromgroups#!topic/liftweb/uAgy21xOMRs[Bind
-a button click with SHtml.onEvent] mailing list thread.
-* https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/SHtml.scala[SHtml.scala source code].
+<<SelectOptionChange>> includes an example of `SHtml.onEvents` which will bind a function to a number of events on a `NodeSeq`.
+
+For another example of `AjaxInvoke` take a look at the _Call Scala code from JavaScript_ section of Diego Medina's blog at: http://blog.fmpwizard.com/scala-lift-custom-wizard[http://blog.fmpwizard.com/scala-lift-custom-wizard].
+
+_Exploring Lift_, chapter 10, lists various `JsExp` classes you can use for `ajaxCall`: http://exploring.liftweb.net/master/index-10.html[http://exploring.liftweb.net/master/index-10.html].
 
 
 
