@@ -579,7 +579,8 @@ See Also
 The source for `FocusOnLoad` is worth checking out to understand how it, and related commands, are constructed.  This may help you package your own JavaScript functionality up into commands that can be used in CSS binding expressions: https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/js/JsCommands.scala[https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/js/JsCommands.scala].
 
 
-Add CSS class to an Ajax Form
+[[CSSClassOnAjaxForm]]
+Add CSS Class to an Ajax Form
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -594,7 +595,7 @@ Name the class via `?class=` query parameter:
 
 [source,html]
 ----
-<form class="lift:form.ajax?class=myClass">
+<form data-lift="form.ajax?class=boxed">
 ...
 </form>
 ----
@@ -603,24 +604,27 @@ Discussion
 ^^^^^^^^^^
 
 If you need to set multiple CSS classes, encode a space between the
-class names, e.g., `class=myClass%20anotherClass`.
+class names, e.g., `class=boxed+primary`.
+
+The `form.ajax` construction is a regular snippet call: the snippet is one of the handful of built-in snippets, 'Form', and in this case we're calling the `ajax` method on that object.  However, normally snippet calls do not copy attributes into the resulting markup, but this snippet specifically does.
 
 See Also
 ^^^^^^^^
 
-* _Simply Lift_ on http://simply.liftweb.net/index-4.8.html[Ajax].
-* Mailing list on https://groups.google.com/forum/?fromgroups#!topic/liftweb/EEINT9t8Wd4[Attaching
-CSS class to ajax form using designer friendly template doesn't work].
+For an example of accessing these query parameters in your own snippets, see <<ConditionalIncludes>>.
+
+_Simply Lift_, chapter 4, introduces Ajax forms at http://simply.liftweb.net/[http://simply.liftweb.net/].
 
 
-Show a template inside a page dynamically
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[DynamicTemplateLoading]]
+Running a Template via JavaScript
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
 
-You want to load an entire page with template and snippets inside of
-another template on the fly (i.e., without a browser refresh).
+You want to load an entire page, with template and snippets executed, inside of the current page (i.e., without a browser refresh).
 
 Solution
 ^^^^^^^^
