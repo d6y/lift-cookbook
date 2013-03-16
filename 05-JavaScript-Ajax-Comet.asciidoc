@@ -535,51 +535,48 @@ input focus from the user's keyboard.
 Solution
 ^^^^^^^^
 
-Wrap your snippet with `FocusOnLoad`:
+Wrap the input with a `FocusOnLoad` command:
 
 [source,scala]
 ----
-import net.liftweb.http.js.JsCmds._
-...
-"name=username" #> FocusOnLoad(SHtml.text(username, username = _))
+package code.snippet
+
+import net.liftweb.util.Helpers._
+import net.liftweb.http.js.JsCmds.FocusOnLoad
+
+class Focus {
+  def render = "name=username" #> FocusOnLoad(<input type="text"/>)
+}
 ----
 
 The above will match against `name="username"` element in the HTML and
 replace it with a text input field that will be focused on automatically
 when the page loads.
 
+Although we're focusing on in-line HTML, this could be any `NodeSeq`, for example the one produced by `SHtml.text`.
+
 Discussion
 ^^^^^^^^^^
 
-`FocusOnLoad` is an example of a `NodeSeq => NodeSeq` transformation. In
-this case, it takes the result of `SHtml.text` and appends it with the
+`FocusOnLoad` is an example of a `NodeSeq => NodeSeq` transformation. It appends to the `NodeSeq` with the
 JavasScript required to set focus on that field. The example uses
 `SHtml.text` but it could be any `NodeSeq`.
 
-Related classes are:
+The JavaScript to do that simply looks up the node in the DOM by ID and calls `focus` on it. Although the example code above doesn't specify an ID, the `FocusOn` command is smart enough to add one automatically for us.
 
-* `Focus`, which takes an element id and sets focus on the element via a
-`JsCmd`.
-* `SetValueAndFocus` which is like `Focus` but takes an additional
-`String` value to set on the element.
+There are two related `JsCmd`:
+
+* `Focus` -- takes an element ID and sets focus on the element.
+* `SetValueAndFocus` -- which is like `Focus` but takes an additional
+`String` value to populate the element with.
 
 These two are useful if you need to set focus from Ajax or Comet
-components, or any JavaScript Lift response.
+components dynamically.
 
 See Also
 ^^^^^^^^
 
-* http://exploring.liftweb.net/master/index-10.html#toc-Chapter-10[Lift
-and JavaScript], _Exploring Lift_, chapter 10.
-* http://groups.google.com/group/liftweb/browse_thread/thread/c513317f7b01b40a/a95a0426c7e17a46?lnk=gst&q=FocusOnLoad#[FocusOnLoad
-for fields you're creating in a snippet]
-* http://groups.google.com/group/liftweb/browse_thread/thread/541e6f3a156ccc47/fc501899e7537290?lnk=gst&q=FocusOnLoad#fc501899e7537290[FocusOnLoad
-in LiftScreen]
-* http://stackoverflow.com/questions/3852122/how-do-i-keep-focus-on-a-textbox-using-lift-the-scala-framework[How
-do I keep focus on a textbox?]
-* https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/js/JsCommands.scala[JsCommands.scala
-source]
-
+The source for `FocusOnLoad` is worth checking out to understand how it, and related commands, are constructed.  This may help you package your own JavaScript functionality up into commands that can be used in CSS binding expressions: https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/js/JsCommands.scala[https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/js/JsCommands.scala].
 
 
 Add CSS class to an Ajax Form
