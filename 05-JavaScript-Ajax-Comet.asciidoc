@@ -632,50 +632,49 @@ Solution
 Use `Template` to load the template, and `SetHtml` to place the content
 on the page.
 
+Let's populate a `<div>` with the site home page when a button is pressed:
+
+[source,html]
+----
+<div data-lift="TemplateLoad">
+  <div id="inject">Content will appear here</div>
+  <button>Load Template</button>
+</div>
+----
+
+The corresponding snippet would be:
+
 [source,scala]
 ----
 package code.snippet
 
-import net.liftweb.util._
-import Helpers._
-import net.liftweb.http._
-import js.JsCmds._
+import net.liftweb.util.Helpers._
+import net.liftweb.http.{SHtml, Templates}
+import net.liftweb.http.js.JsCmds.{SetHtml, Noop}
+import net.liftweb.http.js.JsCmd
 
-class MySnippet {
+object TemplateLoad {
 
-  def sendContent = Templates("some" :: "page" :: Nil).
-    map(ns => SetHtml("here", ns)) openOr Noop
+  def content : JsCmd =
+    Templates("index" :: Nil).map(ns => SetHtml("inject", ns)) openOr Noop
 
-  def render = "name=clickme [onclick]" #> SHtml.ajaxInvoke(sendContent _)
+  def render = "button [onclick]" #> SHtml.ajaxInvoke(content _)
 }
 ----
 
-Combine this with:
-
-[source,html]
-----
-<div class="lift:MySnippet">
-  <button name="clickme">Click Me</button>
-  <div id="here">Content will appear here</div>
-</div>
-----
-
-Clicking the button will cause the content of `/some/page.html` to be
-loaded into the `here` div.
+Clicking the button will cause the content of `/index.html` to be
+loaded into the `inject` element.
 
 Discussion
 ^^^^^^^^^^
 
-`Templates` produces a `Box[NodeSeq]`, the contents of which are mapped
-to a `JsCmd` which is sent back to the browser to put the contents of
-the page into the div.
+`Templates` produces a `Box[NodeSeq]`.  In the example above, we map this content into a `JsCmd` which will populate the `inject` div.
+
 
 See Also
 ^^^^^^^^
 
-* http://scala-tools.org/mvnsites/liftweb-2.4/net/liftweb/http/js/JsCmds$$SetHtml.html[SetHtml]
-documentation.
-* https://groups.google.com/forum/?fromgroups#!topic/liftweb/C5UhQn5blHk[Loading Pages With Templates from Other Pages] mailing list discussion.
+<<ButtonTriggerServerCode>> describes `ajaxInvoke` and related methods.
 
 
 [[JavaScriptTail]]
