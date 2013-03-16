@@ -416,9 +416,9 @@ See Also
 
 
 
-
-Set up client-side actions from your Scala code
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[[ClientSideOnlyActions]]
+Creating Client-Side Actions from your Scala Code
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
@@ -429,15 +429,19 @@ client-side JavaScript.
 Solution
 ^^^^^^^^
 
-Bind the appropriate event hander with Javascript. Here's an example
-where we make a button slowly fade away when you press it, but notice
+Bid your JavaScript directly to the event handler you want to run.
+
+Here's an example where we make a button slowly fade away when you press it, but notice
 that we're setting up this binding in our server-side Lift code:
 
 [source,scala]
 ----
-class HelloWorld {
-  def buttonBind =
-    "#button [onclick]" #> "$('#button').fadeOut('slow')"
+package code.snippet
+
+import net.liftweb.util.Helpers._
+
+object ClientSide {
+  def render = "button [onclick]" #> "$('button').fadeOut()"
 }
 ----
 
@@ -445,19 +449,16 @@ In the template we'd perhaps say:
 
 [source,html]
 ----
-<form class="lift:HelloWorld.buttonBind">
-  <input id="button" type="button" value="Click me" />
-</form>
+<div data-lift="ClientSide">
+  <button>Click Me</button>
+</div>
 ----
 
 Lift will render the page as:
 
 [source,html]
 ----
-<form>
-  <input onclick="$('#button').fadeOut('slow')"
-    value="Click me" type="button" id="button">
-</form>
+<button onclick="$('button').fadeOut()">Click Me</button>
 ----
 
 Discussion
@@ -465,26 +466,32 @@ Discussion
 
 Lift includes a JavaScript abstraction which you can use to build up
 more elaborate expressions for the client-side. For example you can
-combine basic commands:
+combine basic commands...
 
 [source,scala]
 ----
-def buttonBind =
-  "#button [onclick]" #> (
-     Alert("Here we go...") & RedirectTo("http://liftweb.net")
-    ).toJsCmd
+import net.liftweb.http.js.JsCmds.{Alert, RedirectTo}
+
+def render = "button [onclick]" #>
+  (Alert("Here we go...") & RedirectTo("http://liftweb.net"))
 ----
 
-...which pops up an alert dialog and then sends you to liftweb.net.
-_Exploring Lift_ gives a good summary of the commands available to you.
+...which pops up an alert dialog and then sends you to _http://liftweb.net_. The HTML would be rendered as:
 
-Another option is to use `JE.Call` to execute a Javascript function with
+[source,html]
+----
+<button onclick="alert(&quot;Here we go...&quot;);
+window.location = &quot;http://liftweb.net&quot;;">Click Me</button>
+----
+
+Another option is to use `JE.Call` to execute a JavaScript function with
 parameters. Suppose we have this function defined:
 
 [source,javascript]
 ----
-function greet(who) {
-  alert("Hello "+who)
+function greet(who, times) {
+  for(i=0; i<times; i++)
+    alert("Hello "+who);
 }
 ----
 
@@ -493,18 +500,30 @@ like this:
 
 [source,scala]
 ----
-def buttonBind =
-  "#button [onclick]" #> JE.Call("greet", "you").toJsCmd
+import net.liftweb.http.js.JE
+
+def render =
+  "#button [onclick]" #> JE.Call("greet", "you")
 ----
+
+On the client-side, we'd see:
+
+[source,html]
+----
+<button onclick="greet(&quot;World!&quot;,3)">Click Me For Greeting</button>
+----
+
+Note that the types `String` and `Int` have been preserved in the JavaScript syntax of the call. This has happened because `JE.Call` takes a variable number of `JsExp` arguments after the JavaScript function name. There are wrappers for JavaScript primitive types (`JE.Str`, `JE.Num`, `JsTrue`, `JsFalse`) and implicit conversions to save you having to wrap the Scala values yourself.
+
 
 See Also
 ^^^^^^^^
 
-* The https://groups.google.com/d/msg/liftweb/uAgy21xOMRs/bDjS69VWpp4J[mailing list discussion] that suggested this.
-* http://exploring.liftweb.net/master/index-10.html#toc-Chapter-10[Chapter 10] of _Exploring Lift_.
+Chapter 10 of _Exploring Lift_ at http://exploring.liftweb.net/[http://exploring.liftweb.net/] gives a list of `JsCmds` and `JE` expressions.
 
 
-Focus on a field on page load
+[[FocusOnLoad]]
+Focus on a Field on Page Load
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -560,6 +579,8 @@ in LiftScreen]
 do I keep focus on a textbox?]
 * https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/js/JsCommands.scala[JsCommands.scala
 source]
+
+
 
 Add CSS class to an Ajax Form
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
