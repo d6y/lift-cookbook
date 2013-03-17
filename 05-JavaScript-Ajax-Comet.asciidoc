@@ -4,8 +4,7 @@ JavaScript, Ajax, Comet
 
 This chapter's source code is: https://github.com/LiftCookbook/cookbook_ajax[https://github.com/LiftCookbook/cookbook_ajax].
 
-For an introduction to Lift's Ajax and Comet features, read _Simply Lift_ at http://simply.liftweb.net[http://simply.liftweb.net
-] or chapter 9 of _Lift in Action_ (Perrett, 2012, Manning Publications Co.).
+For an introduction to Lift's Ajax and Comet features, read _Simply Lift_ at http://simply.liftweb.net[http://simply.liftweb.net] or chapter 9 of _Lift in Action_ (Perrett, 2012, Manning Publications Co.).
 
 
 [[ButtonTriggerServerCode]]
@@ -769,6 +768,7 @@ A third option is wrap your JavaScript in a `<lift:tail>` snippet:
 class JavascriptTail {
   def render =
     "*" #> <lift:tail>{Script(OnLoad(Alert("Hi")))}</lift:tail>
+}
 -----
 
 This is a general-purpose Lift snippet and be used to move various kinds of content to the end of the page, not just JavaScript.
@@ -778,5 +778,94 @@ See Also
 ^^^^^^^^
 
 <<AddToHead>> discusses a related Lift snippet for moving content to the head of the page.
+
+
+[[CometSessionLossJS]]
+Run JavaScript on Comet Session Loss
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You're using a comet actor and you want to arrange for some JavaScript to be executed in the event of the comet action session being lost.
+
+Solution
+^^^^^^^^
+
+Configure your JavaScript via `LiftRules.noCometSessionCmd`.
+
+As an example we can modify the standard Lift chat demo to save the message being typed in the event of the session loss.  In the style of the demo we would have a Ajax form for entering a message and the comet chat area for displaying messages received:
+
+[source, html]
+-----
+<form data-lift="form.ajax">
+  <input type="text" data-lift="ChatSnippet" id="message" placeholder="Type a message" />
+</form>
+
+<div data-lift="comet?type=ChatClient">
+  <ul>
+    <li>A message</li>
+  </ul>
+</div>
+-----
+
+To this we can add a function, `stash`, which we want to be called in the event of a comet session being lost:
+
+[source, html]
+-----
+<script type="text/javascript">
+// <![CDATA[
+function stash() {
+  saveCookie("stashed", $('#message').val());
+  location.reload();
+}
+
+jQuery(document).ready(function() {
+  var stashedValue = readCookie("stashed") || "";
+  $('#message').val(stashedValue);
+  deleteCookie("stashed");
+});
+
+// Definition of saveCookie, readCookie, deleteCookie omitted.
+
+</script>
+-----
+
+Our `stash` function will save the current value of the input field in a cookie called "stashed".  We arrange, on page load, to check for that cookie and insert the value into our message field.
+
+The final part is to modify `Boot.scala` to register our `stash` function:
+
+[source, scala]
+-----
+import net.liftweb.http.js.JsCmds.Run
+
+LiftRules.noCometSessionCmd.default.set( () => Run("stash()") )
+-----
+
+In this way, if a session is lost while composing a chat message, the browser will stash the message, and when the page re-loads the message will be recovered.
+
+To test the example, type a message into the message field, then restart your Lift application.  Wait 10 seconds, and you'll see the effect.
+
+Discussion
+^^^^^^^^^^
+
+Without changing `noCometSessionCmd`, the default behavior of Lift is to arrange for the browser to load the page `LiftRules.noCometSessionPage` -- which will be `/` unless you change it.  This is carried out via the JavaScript function `lift_sessionLost` in `cometAjax.js`.
+
+.Factory
+****
+The `noCometSessionCmd.default.set` call is making use of Lift's dependency injection. Specifically, it's setting up the "supply side" of the dependency. Although we're setting a default here, it's possible in Lift to supply different behaviours with different scopes: request or session.  See http://lift.la/blog/lift-and-dependency-injection[http://lift.la/blog/lift-and-dependency-injection]
+****
+
+By providing our own `() => JsCmd` function to `LiftRules.noCometSessionCmd`, Lift arranges to call this function and deliver the `JsCmd`  to the browser, rather than just calling `lift_sessionLost`.  If you watch the HTTP traffic between your browser and Lift, you'll see the `stash` function call being returned in response to a comet request.
+
+
+Being able to debug HTTP traffic is a useful way to understand how your Comet or Ajax application is performing.  There are many plugins and products to help with this, such as the _HttpFox_ plugin for Firefox.
+
+For Ajax, there's a corresponding `LiftRules.noAjaxSessionCmd` setting.
+
+See Also
+^^^^^^^^
+
+
 
 
