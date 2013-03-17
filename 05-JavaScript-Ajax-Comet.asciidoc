@@ -2,9 +2,9 @@
 JavaScript, Ajax, Comet
 -----------------------
 
-This chapter's source code is: https://github.com/LiftCookbook/cookbook_ajax[https://github.com/LiftCookbook/cookbook_ajax].
+For an introduction to Lift's Ajax and Comet features, read _Simply Lift_ at http://simply.liftweb.net[http://simply.liftweb.net], chapter 9 of _Lift in Action_ (Perrett, 2012, Manning Publications Co.), or watch Diego Medina's video presentation at https://fmpwizard.telegr.am/blog/comet-actors-presentation[https://fmpwizard.telegr.am/blog/comet-actors-presentation].
 
-For an introduction to Lift's Ajax and Comet features, read _Simply Lift_ at http://simply.liftweb.net[http://simply.liftweb.net] or chapter 9 of _Lift in Action_ (Perrett, 2012, Manning Publications Co.).
+This chapter's source code is: https://github.com/LiftCookbook/cookbook_ajax[https://github.com/LiftCookbook/cookbook_ajax].
 
 
 [[ButtonTriggerServerCode]]
@@ -45,7 +45,7 @@ object AjaxInvoke extends Loggable {
 In this snippet we are binding the click event of a button to an `ajaxInvoke`: when the button is pressed, Lift
 arranges for the function you gave `ajaxInvoke` to be executed.
 
-In this example, logging a message and returning a JavaScript alert to the browser. The corresponding HTML might include:
+That function, `callback`, is just logging a message and returning a JavaScript alert to the browser. The corresponding HTML might include:
 
 [source,html]
 ----
@@ -63,7 +63,7 @@ returning `Noop` if you want nothing to happen, through changing DOM
 element, all the way up to executing arbitrary JavaScript.
 
 The example above is using a button, but will work on any element that
-has an event you can bind to.  We're binding on _onclick_ but it could be any event
+has an event you can bind to.  We're binding to _onclick_ but it could be any event
 the DOM exposes.
 
 Related to `ajaxInvoke` are the following functions:
@@ -81,7 +81,7 @@ Let's look at each of these in turn.
 onEvent -- Receiving the `value` of a DOM Element
 +++++++++++++++++++++++++++++++++++++++++++++++++
 
-You can use `onEvent` with any element that has a `value` attribute and has responds to the event you choose to bind to. The function you supply to `onEvent` is called with the element's value. As an example, we can write a snippet which presents a challenge to the user, and validates the response:
+You can use `onEvent` with any element that has a `value` attribute and responds to the event you choose to bind to. The function you supply to `onEvent` is called with the element's value. As an example, we can write a snippet which presents a challenge to the user, and validates the response:
 
 [source,scala]
 ----
@@ -118,7 +118,7 @@ This snippet prompts the user to add two random numbers in the `<p>` tag, and bi
 </div>
 ----
 
-When `onchange` is triggered (by pressing return or the tab key, for example), the text entered is sent to the function as a `String`.
+When `onchange` is triggered (by pressing return or the tab key, for example), the text entered is sent to our `onEvent` function as a `String`.
 
 
 ajaxCall -- Receiving an Arbitrary Client-Side String
@@ -126,7 +126,7 @@ ajaxCall -- Receiving an Arbitrary Client-Side String
 
 Where `onEvent` sends `this.value` to your server-side code, `ajaxCall` allows you to specify the client-side expression used to produce a value.
 
-To demonstrate this we can create a template that includes two elements: we'll bind our function to a button, but read a value from an input field:
+To demonstrate this we can create a template that includes two elements: a button and a text field.  We'll bind our function to the button, but read a value from the input field:
 
 [source,html]
 ----
@@ -171,7 +171,7 @@ You may have guessed that `onEvent` is implemented as an `ajaxCall` for `JsRaw("
 jsonCall -- Receiving a JSON Value
 ++++++++++++++++++++++++++++++++++
 
-Both `ajaxCall` and `onEvent` end up evaluating a `String => JsCmd` function. With `jsonCall` the signature is `JValue => JsCmd`, meaning you can pass more complex data structures from JavaScript to your Lift application.
+Both `ajaxCall` and `onEvent` end up evaluating a `String => JsCmd` function. By contrast, `jsonCall` has the signature `JValue => JsCmd`, meaning you can pass more complex data structures from JavaScript to your Lift application.
 
 To demonstrate this, we'll create a template that asks for input, has a function to convert the input into JSON, and a button to send the JSON to the server:
 
@@ -214,26 +214,26 @@ import net.liftweb.json.DefaultFormats
 
 object JsonCall extends Loggable {
 
- def render = {
-
   implicit val formats = DefaultFormats
 
   case class Question(first: Int, second: Int, answer: Int) {
-   def valid_? = first + second == answer
+    def valid_? = first + second == answer
   }
 
- def validate(value: JValue) : JsCmd = {
-  logger.info(value)
-  value.extractOpt[Question].map(_.valid_?) match {
-   case Some(true) => Alert("Looks good")
-   case Some(false) => Alert("That doesn't add up")
-   case None => Alert("That doesn't make sense")
-  }
- }
+  def render = {
 
- "button [onclick]" #>
-  SHtml.jsonCall( JE.Call("currentQuestion"), validate _ )
- }
+    def validate(value: JValue) : JsCmd = {
+      logger.info(value)
+      value.extractOpt[Question].map(_.valid_?) match {
+        case Some(true) => Alert("Looks good")
+        case Some(false) => Alert("That doesn't add up")
+        case None => Alert("That doesn't make sense")
+      }
+    }
+
+    "button [onclick]" #>
+      SHtml.jsonCall( JE.Call("currentQuestion"), validate _ )
+  }
 }
 ----
 
@@ -245,7 +245,8 @@ Running the code and entering 1, 2 and 3 into the text fields will produce the f
 
 [source,scala]
 ----
-JObject(List(JField(first,JInt(1)), JField(second,JInt(2)), JField(answer,JInt(3))))
+JObject(List(JField(first,JInt(1)), JField(second,JInt(2)),
+  JField(answer,JInt(3))))
 ----
 
 This is the `JValue` representation of the JSON.
@@ -265,7 +266,6 @@ _Exploring Lift_, chapter 10, lists various `JsExp` classes you can use for `aja
 Call Server when Select Option Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
 Problem
 ^^^^^^^
 
@@ -277,12 +277,12 @@ Solution
 
 Register a `String => JsCmd` function with `SHtml.ajaxSelect`.
 
-In this example we will lookup the distance from Earth to a planet the user selects.  This will
+In this example we will lookup the distance from Earth to the planet a user selects.  This lookup will
 happen on the server and update the browser with the result:
 
 [source, html]
 -----
- <div data-lift="HtmlSelectSnippet">
+<div data-lift="HtmlSelectSnippet">
   <div>
     <label for="dropdown">Planet:</label>
     <select id="dropdown"></select>
@@ -321,8 +321,7 @@ class HtmlSelectSnippet {
     // To show the user a blank label and blank value option:
     val blankOption = ("" -> "")
 
-    // The complete list of options includes everything in
-    // our database:
+    // The complete list of options includes everything in our database:
     val options : List[(String,String)] =
       blankOption ::
       database.keys.map(p => (p,p)).toList
@@ -330,15 +329,13 @@ class HtmlSelectSnippet {
     // Nothing is selected by default:
     val default = Empty
 
-    // The function to call when an option is picked.
-    // Lookup the planet name, and return an update to the browser:
+    // The function to call when an option is picked:
     def handler(selected: String) : JsCmd = {
       SetHtml("distance", Text(database(selected) + " light years"))
     }
 
     // Bind the <select> tag:
     "select" #> ajaxSelect(options, default, handler)
-
   }
 }
 -----
@@ -372,7 +369,7 @@ The `handler` function has been stored by Lift under the identifier of "F4701839
 Collecting the Value on Form Submission
 +++++++++++++++++++++++++++++++++++++++
 
-If you need to also capture the selected value on a regular form submission, you can make use of `SHtml.onEvents`.  This attaches event listeners to a `NodeSeq`, triggering a server-side function when the event occurs.  We can use this to create a regular form with a regular select box, but wire in server-side calls when the select changes.
+If you need to additionally capture the selected value on a regular form submission, you can make use of `SHtml.onEvents`.  This attaches event listeners to a `NodeSeq`, triggering a server-side function when the event occurs.  We can use this with a regular form with a regular select box, but wire in Ajax calls to the server when the select changes.
 
 To make use of this, our snippet changes very little:
 
@@ -428,7 +425,7 @@ client-side JavaScript.
 Solution
 ^^^^^^^^
 
-Bid your JavaScript directly to the event handler you want to run.
+Bind your JavaScript directly to the event handler you want to run.
 
 Here's an example where we make a button slowly fade away when you press it, but notice
 that we're setting up this binding in our server-side Lift code:
@@ -440,7 +437,7 @@ package code.snippet
 import net.liftweb.util.Helpers._
 
 object ClientSide {
-  def render = "button [onclick]" #> "$('button').fadeOut()"
+  def render = "button [onclick]" #> "$(this).fadeOut()"
 }
 ----
 
@@ -457,7 +454,7 @@ Lift will render the page as:
 
 [source,html]
 ----
-<button onclick="$('button').fadeOut()">Click Me</button>
+<button onclick="$(this).fadeOut()">Click Me</button>
 ----
 
 Discussion
@@ -502,7 +499,7 @@ like this:
 import net.liftweb.http.js.JE
 
 def render =
-  "#button [onclick]" #> JE.Call("greet", "you")
+  "button [onclick]" #> JE.Call("greet", "World!", 3)
 ----
 
 On the client-side, we'd see:
@@ -548,20 +545,19 @@ class Focus {
 }
 ----
 
-The above will match against `name="username"` element in the HTML and
+The CSS transform in `render` will match against `name="username"` element in the HTML and
 replace it with a text input field that will be focused on automatically
 when the page loads.
 
-Although we're focusing on in-line HTML, this could be any `NodeSeq`, for example the one produced by `SHtml.text`.
+Although we're focusing on in-line HTML, this could be any `NodeSeq`, such as the one produced by `SHtml.text`.
 
 Discussion
 ^^^^^^^^^^
 
 `FocusOnLoad` is an example of a `NodeSeq => NodeSeq` transformation. It appends to the `NodeSeq` with the
-JavasScript required to set focus on that field. The example uses
-`SHtml.text` but it could be any `NodeSeq`.
+JavaScript required to set focus on that field.
 
-The JavaScript to do that simply looks up the node in the DOM by ID and calls `focus` on it. Although the example code above doesn't specify an ID, the `FocusOn` command is smart enough to add one automatically for us.
+The JavaScript that performs the focus simply looks up the node in the DOM by ID and calls `focus` on it. Although the example code above doesn't specify an ID, the `FocusOn` command is smart enough to add one automatically for us.
 
 There are two related `JsCmd`:
 
@@ -605,7 +601,7 @@ Discussion
 If you need to set multiple CSS classes, encode a space between the
 class names, e.g., `class=boxed+primary`.
 
-The `form.ajax` construction is a regular snippet call: the snippet is one of the handful of built-in snippets, 'Form', and in this case we're calling the `ajax` method on that object.  However, normally snippet calls do not copy attributes into the resulting markup, but this snippet specifically does.
+The `form.ajax` construction is a regular snippet call: the `Form` snippet is one of the handful of built-in snippets, and in this case we're calling the `ajax` method on that object.  However, normally snippet calls do not copy attributes into the resulting markup, but this snippet is implemented to do exactly that.
 
 See Also
 ^^^^^^^^
@@ -669,6 +665,14 @@ Discussion
 
 `Templates` produces a `Box[NodeSeq]`.  In the example above, we map this content into a `JsCmd` which will populate the `inject` div.
 
+If you write unit tests to access templates, be aware that you may need to modify your development or testing environment to include the `webapps` folder.  To do this for SBT, add the following to `build.sbt`:
+
+[source,scala]
+----
+unmanagedResourceDirectories in Test <+= (baseDirectory) { _ / "src/main/webapp" }
+----
+
+For your IDE you'll need to add `webapp` as a source folder, if your running tests that try to locate templates.
 
 See Also
 ^^^^^^^^
@@ -771,7 +775,7 @@ class JavascriptTail {
 }
 -----
 
-This is a general-purpose Lift snippet and be used to move various kinds of content to the end of the page, not just JavaScript.
+Note that `lift:tail` is a general-purpose Lift snippet and be used to move various kinds of content to the end of the page, not just JavaScript.
 
 
 See Also
@@ -787,7 +791,7 @@ Run JavaScript on Comet Session Loss
 Problem
 ^^^^^^^
 
-You're using a comet actor and you want to arrange for some JavaScript to be executed in the event of the comet action session being lost.
+You're using a comet actor and you want to arrange for some JavaScript to be executed in the event of the session being lost.
 
 Solution
 ^^^^^^^^
@@ -799,7 +803,8 @@ As an example we can modify the standard Lift chat demo to save the message bein
 [source, html]
 -----
 <form data-lift="form.ajax">
-  <input type="text" data-lift="ChatSnippet" id="message" placeholder="Type a message" />
+  <input type="text" data-lift="ChatSnippet" id="message"
+    placeholder="Type a message" />
 </form>
 
 <div data-lift="comet?type=ChatClient">
@@ -851,21 +856,19 @@ Discussion
 
 Without changing `noCometSessionCmd`, the default behavior of Lift is to arrange for the browser to load the page `LiftRules.noCometSessionPage` -- which will be `/` unless you change it.  This is carried out via the JavaScript function `lift_sessionLost` in `cometAjax.js`.
 
+By providing our own `() => JsCmd` function to `LiftRules.noCometSessionCmd`, Lift arranges to call this function and deliver the `JsCmd`  to the browser, rather than `lift_sessionLost`.  If you watch the HTTP traffic between your browser and Lift, you'll see the `stash` function call being returned in response to a comet request.
+
 .Factory
 ****
-The `noCometSessionCmd.default.set` call is making use of Lift's dependency injection. Specifically, it's setting up the "supply side" of the dependency. Although we're setting a default here, it's possible in Lift to supply different behaviours with different scopes: request or session.  See http://lift.la/blog/lift-and-dependency-injection[http://lift.la/blog/lift-and-dependency-injection]
+The `noCometSessionCmd.default.set` call is making use of Lift's dependency injection. Specifically, it's setting up the "supply side" of the dependency. Although we're setting a default here, it's possible in Lift to supply different behaviours with different scopes: request or session.  See https://www.assembla.com/spaces/liftweb/wiki/Dependency_Injection[https://www.assembla.com/spaces/liftweb/wiki/Dependency_Injection].
 ****
 
-By providing our own `() => JsCmd` function to `LiftRules.noCometSessionCmd`, Lift arranges to call this function and deliver the `JsCmd`  to the browser, rather than just calling `lift_sessionLost`.  If you watch the HTTP traffic between your browser and Lift, you'll see the `stash` function call being returned in response to a comet request.
-
-
-Being able to debug HTTP traffic is a useful way to understand how your Comet or Ajax application is performing.  There are many plugins and products to help with this, such as the _HttpFox_ plugin for Firefox.
-
-For Ajax, there's a corresponding `LiftRules.noAjaxSessionCmd` setting.
+This recipe has focused on the handling of loss of session for Comet, and for Ajax, there's a corresponding `LiftRules.noAjaxSessionCmd` setting.
 
 See Also
 ^^^^^^^^
 
+You'll find the _The ubiquitous Chat app_ in _Simply Lift_: http://simply.liftweb.net/[http://simply.liftweb.net/].
 
-
+Being able to debug HTTP traffic is a useful way to understand how your Comet or Ajax application is performing.  There are many plugins and products to help with this, such as the _HttpFox_ plugin for Firefox: https://addons.mozilla.org/en-us/firefox/addon/httpfox/[https://addons.mozilla.org/en-us/firefox/addon/httpfox/].
 
