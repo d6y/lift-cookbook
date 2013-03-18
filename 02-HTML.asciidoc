@@ -1,0 +1,1441 @@
+[[HTML]]
+HTML
+----
+
+Generating HTML is often a major component of web applications.  This chapter is concerned with Lift's _View First_ approach and use of _CSS Selectors_.  Later chapters focus more specifically on form processing, REST web services, JavaScript, Ajax and Comet.
+
+Code for this chapter is at: https://github.com/LiftCookbook/cookbook_html[https://github.com/LiftCookbook/cookbook_html].
+
+
+[[TestingAndDebuggingSelectors]]
+Testing and Debugging CSS Selectors
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to explore or debug CSS selectors interactively.
+
+Solution
+^^^^^^^^
+
+You can use the Scala REPL to run your CSS selectors.
+
+Here's an example were we test out a CSS selector which adds an _href_ attribute to a link.
+Start from within SBT and use the `console` command to get into the REPL:
+
+----
+> console
+[info] Starting scala interpreter...
+[info]
+Welcome to Scala version 2.9.1.final
+Type in expressions to have them evaluated.
+Type :help for more information.
+----
+
+[source,scala]
+----
+scala> import net.liftweb.util.Helpers._
+import net.liftweb.util.Helpers._
+
+scala> val f = "a [href]" #> "http://example.org"
+f: net.liftweb.util.CssSel =
+  (Full(a [href]), Full(ElemSelector(a,Full(AttrSubNode(href)))))
+
+scala> val in = <a>click me</a>
+in: scala.xml.Elem = <a>click me</a>
+
+scala> f(in)
+res0: scala.xml.NodeSeq =
+  NodeSeq(<a href="http://example.org">click me</a>)
+----
+
+The `Helpers._` import brings in the CSS Selector functionality, which we then exercise by creating a selector, calling it with a (very simple) template and observing the result.
+
+Discussion
+^^^^^^^^^^
+
+CSS selector transforms are one of the distinguishing features of Lift. They succinctly describe a node in your template (left-hand side) and give a replacement (operation, the right-hand side). They do take a little while to get use to, so being able to test them at the Scala REPL is useful.
+
+It may help to know that prior to CSS selectors Lift snippets were typically defined in terms
+of a function that took a `NodeSeq` and returned a `NodeSeq`, often via a method called `bind`. Lift would take your template, which would be the input `NodeSeq`, apply the function, and returns a new `NodeSeq`.  You won't see that usage so often any more, but the principle is the same.
+
+The CSS selector functionality in Lift gives you a `CssSel` function
+which is `NodeSeq => NodeSeq`. We exploit this in the above example by constructing an input
+`NodeSeq` (called `in`), then creating a CSS function (called `f`).  Because we know that `CssSel`
+is defined as a `NodeSeq => NodeSeq` the natural way to execute the selector is to supply
+the `in` as a parameter, and this gives us the answer, `res0`.
+
+If you use an IDE that supports a _worksheet_, which both Eclipse and IntelliJ IDEA do, then you can also run transformations in a worksheet.
+
+See Also
+^^^^^^^^
+
+The syntax for selectors is best described in _Simply Lift_ at http://simply.liftweb.net/[http://simply.liftweb.net/].
+
+
+
+[[SequencingSelectorOps]]
+Sequencing CSS Selector Operations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want your CSS selector binding to apply to the results of earlier
+binding expressions.
+
+Solution
+^^^^^^^^
+
+Use `andThen` rather than `&` to compose your selector expressions.
+
+For example, suppose we want to replace `<div id="foo"/>` with
+`<div id="bar">bar content</div>` but for some reason we needed to
+generate the `bar` div as a separate step in the selector expression:
+
+----
+sbt> console
+[info] Starting scala interpreter...
+[info]
+Welcome to Scala version 2.9.1.final (Java 1.7.0_05).
+Type in expressions to have them evaluated.
+Type :help for more information.
+----
+
+[source,scala]
+----
+scala> import net.liftweb.util.Helpers._
+import net.liftweb.util.Helpers._
+
+scala> def render = "#foo" #> <div id="bar"/> andThen "#bar *" #> "bar content"
+render: scala.xml.NodeSeq => scala.xml.NodeSeq
+
+scala> render(<div id="foo"/>)
+res0: scala.xml.NodeSeq = NodeSeq(<div id="bar">bar content</div>)
+----
+
+Discussion
+^^^^^^^^^^
+
+When using `&` think of the CSS selectors as always applying to the
+original template, no matter what other expressions you are combining.
+This is because `&` is aggregating the selectors together before applying them; whereas `andThen` is
+a method of all Scala functions that composes two functions together, with the first being
+called before the second.
+
+Compare the example above if we change the `andThen` to
+`&`:
+
+[source,scala]
+----
+scala> def render = "#foo" #> <div id="bar" /> & "#bar *" #> "bar content"
+render: net.liftweb.util.CssSel
+
+scala> render(<div id="foo"/>)
+res1: scala.xml.NodeSeq = NodeSeq(<div id="bar"></div>)
+----
+
+The second expression will not match as it is applied to the original
+input of `<div id="foo"/>`. The selector of `#bar` won't match on that,
+and adds nothing to the results of `render`.
+
+See Also
+^^^^^^^^
+
+The Lift Wiki page for CSS Selectors also describes this use of `andThen`: https://www.assembla.com/spaces/liftweb/wiki/Binding_via_CSS_Selectors[https://www.assembla.com/spaces/liftweb/wiki/Binding_via_CSS_Selectors].
+
+
+
+
+[[SetMetaTag]]
+Setting Meta Tag Contents
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to set the content of an HTML meta tag using Lift.
+
+Solution
+^^^^^^^^
+
+Use the `@` CSS binding name selector. For example, given:
+
+[source,html]
+----
+<meta name="keywords" content="words, here, please" />
+----
+
+The following snippet code will update the value of the contents
+attribute:
+
+[source,scala]
+----
+"@keywords [content]" #> "words, we, really, want"
+----
+
+Discussion
+^^^^^^^^^^
+
+The `@` selector selects all elements with the given name. It's useful in this case to change `<meta name="keyword">` tag, but you may also see it used with elsewhere. For example, in an HTML form you can select input fields such as `<input name="address">` with `"@address"`.
+
+The `[content]` part is an example of a _replacement rule_ that can follow a selector. That's to say, it's not specific to the `@` selector and can be used with other selectors.  In this example it replaces the value of the attribute called "content".  If the meta tag had no "content" attribute, it would be added.
+
+There are two other replacement rules useful for manipulating attributes:
+
+* `[content!]` -- to remove an attribute with a matching value.
+* `[content+]` -- to append to the value.
+
+Examples of these would be...
+
+[source,scala]
+----
+scala> import net.liftweb.util.Helpers._
+import net.liftweb.util.Helpers._
+
+scala> val in = <meta name="keywords" content="words, here, please" />
+in: scala.xml.Elem = <meta name="keywords" content="words, here, please"></meta>
+
+scala> val remove = "@keywords [content!]" #> "words, here, please"
+remove: net.liftweb.util.CssSel = CssBind(Full(@keywords [content!]),
+  Full(NameSelector(keywords,Full(AttrRemoveSubNode(content)))))
+
+scala> remove(in)
+res0: scala.xml.NodeSeq = NodeSeq(<meta name="keywords"></meta>)
+----
+
+...and...
+
+[source,scala]
+----
+scala> val add = "@keywords [content+]" #> ", thank you"
+add: net.liftweb.util.CssSel = CssBind(Full(@keywords [content+]),
+  Full(NameSelector(keywords,Full(AttrAppendSubNode(content)))))
+
+scala> add(in)
+res1: scala.xml.NodeSeq = NodeSeq(<meta content="words, here, please, thank you"
+  name="keywords"></meta>)
+----
+
+Appending to a `class` Attribute
+++++++++++++++++++++++++++++++++
+
+Although not directly relevant to `meta` tags, you should be aware of there is one convenient special case for appending to an attribute. If the attribute is `class`, a space is added together with your class value. As a demonstration of that, here's an example of appending a class called "btn-primary" to a `div`:
+
+[source,scala]
+---------------------------------------------------------------------
+scala> def render = "div [class+]" #> "btn-primary"
+render: net.liftweb.util.CssSel
+
+scala> render(<div class="btn"/>)
+res0: scala.xml.NodeSeq = NodeSeq(<div class="btn btn-primary"></div>)
+---------------------------------------------------------------------
+
+
+See Also
+^^^^^^^^
+
+The syntax for selectors is best described in _Simply Lift_ at http://simply.liftweb.net/[http://simply.liftweb.net/].
+
+See <<TestingAndDebuggingSelectors>> for how to run selectors from the REPL.
+
+
+[[SetPageTitle]]
+Setting the Page Title
+~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to set the `<title>` of the page from a Lift snippet.
+
+Solution
+^^^^^^^^
+
+Select all the elements of the `title` element and replace them with the
+text you want:
+
+[source,scala]
+----
+"title *" #> "I am different"
+----
+
+Assuming you have a `<title>` tag in your template, the above will
+result in:
+
+[source,html]
+----
+<title>I am different</title>
+----
+
+Discussion
+^^^^^^^^^^
+
+This example uses a element selector, which picks out tags in the HTML template, and replaces the content.
+
+As an alternative, it is also possible to set the page title from the contents of `SiteMap`,
+meaning the title used will be the title you've assigned to the page in
+the site map.  To do that, make use of `Menu.title` in your template directly:
+
+[source,html]
+----
+<title class="lift:Menu.title"></title>
+----
+
+The `lift:Menu.title` code appends to any existing text in the title.
+This means the following will have the phrase "Site Title - " in the
+title followed by the page title:
+
+[source,html]
+----
+<title class="lift:Menu.title">Site Title - </title>
+----
+
+If you need more control, you can of course bind on `<title>` using a
+regular snippet. This example uses a custom snippet to put the site
+title after the page title:
+
+[source,html]
+----
+<title class="lift:MyTitle"></title>
+-----
+
+[source,scala]
+----
+object MyTitle {
+  def render = <title><lift:Menu.title /> - Site Title</title>
+}
+----
+
+See Also
+^^^^^^^^
+
+At https://www.assembla.com/spaces/liftweb/wiki/SiteMap[https://www.assembla.com/spaces/liftweb/wiki/SiteMap] there's more about Site Map and the `Lift:Menu` snippets.
+
+
+
+[[ConditionalIncludes]]
+HTML Conditional Comments
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to make use of Internet Explorer HTML conditional comments in your templates.
+
+Solution
+^^^^^^^^
+
+Put the markup in a snippet and include the snippet in your page or
+template.
+
+For example, suppose we want to include the HTML5 Shiv (a.k.a. HTML5 Shim) JavaScript so we can use HTML5
+elements with legacy IE browsers.  To do that our snippet would be:
+
+[source,scala]
+----
+package code.snippet
+
+import scala.xml.Unparsed
+
+object Html5Shiv {
+  def render = Unparsed("""<!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js">
+    </script><![endif]-->""")
+}
+----
+
+We would then reference the snippet in the `<head>` of a page, perhaps even in
+all pages via `templates-hidden/default.html`:
+
+[source,html]
+----
+<script class="lift:Html5Shiv"></script>
+----
+
+Discussion
+^^^^^^^^^^
+
+The HTML5 parser used by Lift does not carry comments from the source
+through to the rendered page. If you just tried to paste the _html5shim_ markup into
+your template you'd find it missing from the rendered page.
+
+We deal with this by generating unparsed markup from a snippet. If you're looking at
+`Unparsed` and worried, your instincts are correct.  Normally Lift would cause the
+markup to be escaped, but in this case we really do want
+unparsed XML content (the comment tag) included in the output.
+
+If you find you're using IE conditional comments frequently, you may want to create a more general version of the snippet.
+For example:
+
+[source,scala]
+----
+package code.snippet
+
+import xml.{NodeSeq, Unparsed}
+import net.liftweb.http.S
+
+object IEOnly {
+
+  private def condition : String =
+    S.attr("cond") openOr "IE"
+
+  def render(ns: NodeSeq) : NodeSeq =
+    Unparsed("<!--[if " + condition + "]>") ++ ns ++ Unparsed("<![endif]-->")
+}
+----
+
+It would be used like this...
+
+[source,html]
+----
+<div class="lift:IEOnly">
+  A div just for IE
+</div>
+----
+
+...and produces output like this:
+
+[source,html]
+----
+<!--[if IE]><div>
+  A div just for IE
+</div><![endif]-->
+----
+
+Notice that the `condition` test defaults to "IE", but first tries to look for an attribute called "cond".  This allows you to write:
+
+[source,html]
+----
+<div class="lift:IEOnly?cond=lt+IE+9">
+  You're using IE 8 or earlier
+</div>
+----
+
+The `+` symbol is the the URL encoding for a space, resulting in:
+
+[source,html]
+----
+<!--[if lt IE 9]><div>
+  You're using IE 8 or earlier
+</div><![endif]-->
+----
+
+
+See Also
+^^^^^^^^
+
+The `IEOnly` example is derived from a posting on the mailing list from Antonio Salazar Cardozo: https://groups.google.com/d/msg/liftweb/kLzcJwfIqHQ/K91MdtoNz0MJ[https://groups.google.com/d/msg/liftweb/kLzcJwfIqHQ/K91MdtoNz0MJ].
+
+The html5shim project can be found at: http://code.google.com/p/html5shim/[http://code.google.com/p/html5shim/].
+
+
+
+
+[[PassThru]]
+Returning Snippet Markup Unchanged
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want a snippet to return the original markup associated with the
+snippet invocation.
+
+Solution
+^^^^^^^^
+
+Use the `PassThru` transform.
+
+For
+example, suppose you have a snippet which performs a transforms when some
+condition is met, but if the condition is not met, you want the snippet
+return the original markup.
+
+Starting with the original markup...
+
+[source,html]
+----
+<h2>Pass Thru Example</h2>
+
+<p>There's a 50:50 chance of seeing "Try again" or "Congratulations!":</p>
+
+<div class="lift:PassThruSnippet">
+  Try again - this is the template content.
+</div>
+----
+
+...we could leave it alone or change it with this snippet:
+
+[source,scala]
+----
+package code.snippet
+
+import net.liftweb.util.Helpers._
+import net.liftweb.util.PassThru
+
+import scala.util.Random
+import xml.Text
+
+class PassThruSnippet {
+
+  private def fiftyFifty = Random.nextBoolean
+
+  def render =
+    if (fiftyFifty) "*" #> Text("Congratulations! The content was changed")
+    else PassThru
+
+}
+----
+
+Discussion
+^^^^^^^^^^
+
+`PassThru` is an _identity function_ of type `NodeSeq => NodeSeq`. It returns the input it
+is given:
+
+[source, scala]
+-----
+object PassThru extends Function1[NodeSeq, NodeSeq] {
+  def apply(in: NodeSeq): NodeSeq = in
+}
+-----
+
+A related example is `ClearNodes`, defined as:
+
+[source, scala]
+-----
+object ClearNodes extends Function1[NodeSeq, NodeSeq] {
+  def apply(in: NodeSeq): NodeSeq = NodeSeq.Empty
+}
+-----
+
+The pattern of converting one `NodeSeq` to another is simple, but also powerful enough to get you out of most situations as you can always arbitrarily re-write the `NodeSeq`.
+
+
+
+
+
+
+
+[[SnippetNotFound]]
+Snippet Not Found when using HTML5
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You're using Lift with the HTML5 parser and one of your snippets is rendering with a "Class Not
+Found" error. It even happens for `<lift:HelloWorld.howdy />`.
+
+Solution
+^^^^^^^^
+
+Switch to the designer-friendly snippet invocation mechanism. E.g.,
+
+[source,html]
+----
+<div class="lift:HellowWorld.howdy">...</div>
+----
+
+Discussion
+^^^^^^^^^^
+
+The HTML5 parser and the traditional Lift XHTML parser have different
+behaviours. In particular the HTML5 parser converts elements and attribute names to lower
+case when looking up snippets. This means Lift would take `<lift:HelloWorld.howdy />` and look for a class called "helloworld" rather than "HelloWorld", which would be the cause of the "Class Not Found Error".
+
+Switching to the designer-friendly mechanism is the solution here, and you gain validating HTML as a bonus.
+
+In this Cookbook we use the HTML5 parser, which is set in `Boot.scala`:
+
+[source,scala]
+-----
+// Use HTML5 for rendering
+LiftRules.htmlProperties.default.set( (r: Req) =>
+  new Html5Properties(r.userAgent) )
+----
+
+
+See Also
+^^^^^^^^
+
+The key differences between the XHTML and HTML5 parser are outlined on the mailing list at https://groups.google.com/d/msg/liftweb/H-xe1uRLW1c/B60UH8P54VAJ[https://groups.google.com/d/msg/liftweb/H-xe1uRLW1c/B60UH8P54VAJ].
+
+
+
+[[AvoidAssetCaching]]
+Avoiding CSS and JavaScript Caching
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You've modified CSS or JavaScript in your application, but web browsers
+have cached your resources and are using the older versions. You'd like
+to avoid this browser caching.
+
+Solution
+^^^^^^^^
+
+Add the `lift:with-resource-id` class attribute to script or link tags:
+
+[source,html]
+----
+<script class="lift:with-resource-id" src="/myscript.js"
+ type="text/javascript"></script>
+----
+
+The addition of this class will cause Lift to append a "resource id" to
+your `src` (or `href`), and as this resource id changes each time Lift
+starts, it defeats browser caching.
+
+The resultant HTML might be:
+
+[source,html]
+----
+<script src="/myscript.js?F619732897824GUCAAN=_"
+  type="text/javascript" ></script>
+----
+
+Discussion
+^^^^^^^^^^
+
+The random value that is appended to the resource is computed when your Lift application boots.  This means it should be stable between releases of your application.
+
+If you need some other behaviour from `with-resource-id` you can assign
+a new function of type `String => String` to
+`LiftRules.attachResourceId`. The default implementation, shown above,
+takes the resource name, "/myscript.js" in the example, and returns the
+resource name with an id appended.
+
+You can also wrap a number of tags inside a
+`<lift:with-resource-id>...<lift:with-resource-id>` block. However,
+avoid doing this in the `<head>` of your page as the HTML5 parser will
+move the tags to be outside of the head section.
+
+Note that some proxies may choose not to cache resources with query
+parameters at all. If that impacts you, it's possible to code a custom resource-id method
+to move the random resource ID out of the query parameter and into the path.
+
+Here's one approach to doing this. Rather than generate JavaScript and CSS links that look like `/assets/style.css?F61973`, we will generate `/cache/F61973/assets/style.css`. We then will need to tell Lift to take requests
+that look like this new format, and render the correct content for the request.  The code for this is:
+
+[source, scala]
+-----------
+package code.lib
+
+import net.liftweb.util._
+import net.liftweb.http._
+
+object CustomResourceId {
+
+ def init() : Unit = {
+  // The random number we're using to avoid caching
+  val resourceId = Helpers.nextFuncName
+
+  // Prefix lift:with-resource-id links with "/cache/{resouceId}"
+  LiftRules.attachResourceId = (path: String) => {
+   "/cache/" + resourceId + path
+  }
+
+  // Remove the cache/{resourceId} from the request if there is one
+  LiftRules.statelessRewrite.prepend( NamedPF("BrowserCacheAssist") {
+   case RewriteRequest(ParsePath("cache" :: id :: file, suffix, _, _), _, _) =>
+    RewriteResponse(file, suffix)
+  })
+
+ }
+}
+-----------
+
+This would be initialised in `Boot.scala`...
+
+[source, scala]
+-----------
+CustomResourceId.init()
+-----------
+
+...or you could just paste all the code into `Boot.scala`, if you prefer.
+
+With the code in place, we can, for example, modify `templates-hidden/default.html` and add a resource ID class to jQuery:
+
+[source, html]
+-----------
+<script id="jquery" class="lift:with-resource-id"
+  src="/classpath/jquery.js" type="text/javascript"></script>
+-----------
+
+At run-time this would be rendered in HTML as:
+
+[source, html]
+-----------
+<script type="text/javascript" id="jquery"
+  src="/cache/F352555437877UHCNRW/classpath/jquery.js"></script>
+-----------
+
+Most of the work for this is happening in the `statelessRewrite`, which is working at a low-level inside Lift. The two parts to it are:
+
+* A `RewriteRequest` which is the pattern we're matching on; and
+* A `RewriteResponse` which is the result we want if the request matches.
+
+Looking at the `RewriteRequest` first, this expects three arguments: the path, which we care about, and then the method (e.g., `GetRequest`, `PutRequest`, etc) and the `HTTPRequest` itself, neither of which concern us in this instance.  In the path part we're match on patterns that start with "cache", followed by something (we don't care what), and then the rest of the path, represented by the name `file`.  In that situation, we rewrite to the original path, which is just the `file` with the `suffix`, effectively removing the `/cache/F352555437877UHCNRW` part.  This is the content that Lift will serve.
+
+
+See Also
+^^^^^^^^
+
+The source for `LiftRules` shows the default implementation of `attachResourceId`: https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/LiftRules.scala[https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/LiftRules.scala].
+
+Google's _Optimize caching_ notes are a good source of information about browser behaviour: https://developers.google.com/speed/docs/best-practices/caching[https://developers.google.com/speed/docs/best-practices/caching].
+
+You can learn more about URL re-writing at the Lift wiki: https://www.assembla.com/spaces/liftweb/wiki/URL_Rewriting[https://www.assembla.com/spaces/liftweb/wiki/URL_Rewriting].
+
+
+
+
+[[AddToHead]]
+Adding to the Head of a Page
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You use a template for layout, but on one specific page you need to add
+something to the `<head>` section.
+
+Solution
+^^^^^^^^
+
+Use the `lift:head` snippet or CSS class so Lift knows to merge the
+contents with the `<head>` of your page. For example, suppose you have
+the following contents in `templates-hidden/default.html`:
+
+[source,html]
+----
+<html lang="en" xmlns:lift="http://liftweb.net/">
+  <head>
+    <meta charset="utf-8"></meta>
+    <title class="lift:Menu.title">App: </title>
+    <script id="jquery" src="/classpath/jquery.js"
+      type="text/javascript"></script>
+    <script id="json" src="/classpath/json.js"
+      type="text/javascript"></script>
+ </head>
+ <body>
+     <div id="content">The main content will get bound here</div>
+ </body>
+</html>
+----
+
+Also suppose you have `index.html` on which you want to include `red-titles.css` to just change the style of just this page.
+
+Do so by including the CSS in the part of the page that will get processed and mark it for the head with `lift:head`:
+
+[source,html]
+-----
+<!DOCTYPE html>
+<html>
+ <head>
+   <title>Special</title>
+ </head>
+ <body class="lift:content_id=main">
+  <div id="main" class="lift:surround?with=default;at=content">
+    <link class="lift:head" rel="stylesheet"
+       href="red-titles.css" type="text/css" />
+    <h2>Hello</h2>
+  </div>
+ </body>
+</html>
+-----
+
+Note that this `index.html` page is validated HTML5, and will produce a
+result with the custom CSS inside the `<head>` tag, something like this:
+
+[source,html]
+----
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8">
+  <title>App:  Home</title>
+  <script type="text/javascript"
+    src="/classpath/jquery.js" id="jquery"></script>
+  <script type="text/javascript"
+    src="/classpath/json.js" id="json"></script>
+  <link rel="stylesheet" href="red-titles.css" type="text/css">
+ </head>
+ <body>
+   <div id="main">
+     <h2>Hello</h2>
+   </div>
+  <script type="text/javascript" src="/ajax_request/liftAjax.js"></script>
+  <script type="text/javascript">
+  // <![CDATA[
+  var lift_page = "F557573613430HI02U4";
+  // ]]>
+  </script>
+ </body>
+</html>
+----
+
+Discussion
+^^^^^^^^^^
+
+If you find your tags not appearing the the `<head>` section, check that
+the HTML in your template and page is valid HTML5.
+
+You can also use `<lift:head>...</lift:head>` to wrap a number of
+expressions, and will see `<head_merge>...</head_merge>` used in code
+example as an alternative to `<lift:head>`.
+
+Another variant you may see is `data-lift="head"`, as an alternative to `class="lift:head"`.
+
+The `lift:head` snippet is a built-in snippet, but otherwise no different from any snippet you might write.  What the snippet does is emit a `<head>` block, containing the elements you want in the head.  These can be `<title>`, `<link>`, `<meta>`, `<style>`, `<script>` or `<base>` tags.  How does this `<head>` block produced by the `lift:head` snippet end up inside the main `<head>` section of the page?  When Lift processes your template, it automatically merges all `<head>` tags into the main `<head>` section of the page.
+
+You might suspect you can therefore put a plain old `<head>` section anywhere on your template, but that would not necessarily be valid HTML5 mark up.
+
+There's also `lift:tail` which works in a similar way, except anything marked with this snippet is moved to be just before the close of the body tag.
+
+See Also
+^^^^^^^^
+
+<<JavaScriptTail>> describes how to move JavaScript to the end of the page.
+
+The W3C HTML validator is a useful tool for tracking down HTML markup issues that may cause problems with content being moved into the head of your page. http://validator.w3.org/[http://validator.w3.org/].
+
+
+
+
+[[Custom404]]
+Custom 404 Page
+~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to show a customised "404" (not found) page.
+
+Solution
+^^^^^^^^
+
+In `Boot.scala` add the following:
+
+[source,scala]
+----
+import net.liftweb.util._
+import net.liftweb.http._
+
+LiftRules.uriNotFound.prepend(NamedPF("404handler"){
+  case (req,failure) =>
+    NotFoundAsTemplate(ParsePath(List("404"),"html",true,false))
+})
+----
+
+The file `src/main/webapp/404.html` will now be served for requests to
+unknown resources.
+
+Discussion
+^^^^^^^^^^
+
+The `uriNotFound` Lift rule needs to return a `NotFound` in reply to a
+`Req` and `Box[Failure]`. This allows you to customise the
+response based on the type of failure or the request that was made.
+
+There are three types of `NotFound`:
+
+* `NotFoundAsTemplate` -- useful to invoke the Lift template processing
+facilities from a `ParsePath`.
+* `NotFoundAsResponse` -- allows you to return a specific `LiftResponse`.
+* `NotFoundAsNode` -- wrappers a `NodeSeq` for Lift to translate into a 404
+response.
+
+In the example we're matching any not found situation, regardless of the request and the failure, and evaluating
+this as a resource identified by `ParsePath`.  The path we've used is `/404.html`.
+
+In case you're wondering, the last two `true` and `false` arguments to `ParsePath`
+indicates the path we've given is absolute, and doesn't end in a
+slash.  `ParsePath` is a representation for a URI path, and exposing
+if the path is absolute or ends in a slash are useful flags for matching on, but
+in this case, they're not relevant.
+
+Be aware that 404 pages, when rendered this way, won't have a location in the site map. That's because we've not included the `404.html` file in the site map, and we don't have to because we're rendering via `NotFoundAsTemplate` rather than sending a redirect to _/404.html_. However, this means that if you display an error page using a template that contains `lift:Menu.builder` or similar (as `templates-hidden/default.html` does), you'll see "No Navigation Defined".  In that case, you'll probably want to use a different template on your 404 page.
+
+As an alternative, you could include the 404 page in your site map but make it hidden when the site map is displayed via the `Menu.builder`:
+
+[source,scala]
+----
+Menu.i("404") / "404" >> Hidden
+----
+
+
+See Also
+^^^^^^^^
+
+<<CatchException>> for how to catch any exception thrown from your code.
+
+
+
+
+
+[[CustomStatusPage]]
+Other Custom Status Pages
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to show a customised page for certain HTTP status codes.
+
+Solution
+^^^^^^^^
+
+Use `LiftRules.responseTransformers` to match against the response and
+supply an alternative.
+
+For example, suppose we want to provide a custom page for 403
+("Forbidden") statuses created in our Lift application.  Further suppose that
+this page might contain snippets so will need to pass through the Lift
+rendering flow.
+
+To do this in `Boot.scala` we define the `LiftResponse` we want to generate
+and use the response when a 403 status is about to be produced by Lift:
+
+[source,scala]
+----
+def my403 : Box[LiftResponse] =
+  for {
+    session <- S.session
+    req <- S.request
+    template = Templates("403" :: Nil)
+    response <- session.processTemplate(template, req, req.path, 403)
+  } yield response
+
+LiftRules.responseTransformers.append {
+  case resp if resp.toResponse.code == 403 => my403 openOr resp
+  case resp => resp
+}
+----
+
+The file _src/main/webapp/403.html_ will now be served for requests that
+generate 403 status codes. Other non-403 responses are left untouched.
+
+Discussion
+^^^^^^^^^^
+
+`LiftRules.responseTransformers` allows you to supply
+`LiftResponse => LiftResponse` functions to change a response right at the end
+of the HTTP processing cycle. This is a very general mechanism: in this
+example we are matching on a status code, but we could match on anything
+exposed by `LiftResponse`.
+
+
+In the recipe we processes a template to give a response, but you may find
+situations where other kinds of response make sense, such as a `InMemoryResponse`.
+
+You could even simplify the example to just this:
+
+[source,scala]
+----
+LiftRules.responseTransformers.append {
+  case resp if resp.toResponse.code == 403 => RedirectResponse("/403.html")
+  case resp => resp
+}
+----
+
+That will work just fine, with the only downside that the HTTP status code sent back to the web browser won't be a 403 code.
+
+A more general approach, if you're customising a number of pages, would be to define the status codes you want to
+customise, create a page for each, and then only match on those pages:
+
+[source,scala]
+----
+LiftRules.responseTransformers.append {
+  case Customised(resp) => resp
+  case resp => resp
+}
+
+object Customised {
+
+  // The pages we have customised: 403.html and 500.html
+  val definedPages = 403 :: 500 :: Nil
+
+  def unapply(resp: LiftResponse) : Option[LiftResponse] =
+    definedPages.find(_ == resp.toResponse.code).flatMap(toResponse)
+
+  def toResponse(status: Int) : Box[LiftResponse] =
+    for {
+      session <- S.session
+      req <- S.request
+      template = Templates(status.toString :: Nil)
+      response <- session.processTemplate(template, req, req.path, status)
+  } yield response
+
+}
+----
+
+The convention in `Customised` is that we have a HTML file in `src/main/webapp` which matches
+the status code we want to show, but of course you can change that by using a different
+pattern in the argument to `Templates`.
+
+One way to test the above examples is to add the following to `Boot.scala` to
+make all requests to _/secret_ return a 403:
+
+[source,scala]
+----
+val Protected = If(() => false, () => ForbiddenResponse("No!"))
+
+val entries = List(
+  Menu.i("Home") / "index",
+  Menu.i("secret") / "secret" >> Protected,
+  // rest of your site map here...
+)
+----
+
+If you request _/secret_, a 403 response will be triggered, which will match the response transformer showing you
+the contents of the _403.html_ template.
+
+[NOTE]
+In Lift 3 `responseTransformers` will be modified to be a partial function, meaning you'll be able to leave off the final `case r => r` part of this example.
+
+
+See Also
+^^^^^^^^
+
+<<Custom404>> explains the built-in support for custom 404 messages.
+
+<<CatchException>> for how to catch any exception thrown from your code.
+
+
+
+[[LinksInNotice]]
+Links in Notices
+~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to include a clickable link in your `S.error`, `S.notice` or
+`S.warning` messages.
+
+Solution
+^^^^^^^^
+
+Include a `NodeSeq` containing a link in your notice:
+
+[source,scala]
+----
+S.error("checkPrivacyPolicy",
+  <span>See our <a href="/policy">privacy policy</a></span>)
+----
+
+You might pair this with the following in your template...
+
+[source,html]
+---------------------------------------------------------
+<div class="lift:Msg?id=checkPrivacyPolicy"></div>
+---------------------------------------------------------
+
+
+Discussion
+^^^^^^^^^^
+
+You may be more familiar with the `S.error(String)` signature of the Lift notices than the versions
+that take a `NodeSeq` as an argument, but the `String` versions just convert the `String` argument
+to a `scala.xml.Text` kind of `NodeSeq`.
+
+
+
+See Also
+^^^^^^^^
+
+Lift notices are described on the Wiki: http://www.assembla.com/spaces/liftweb/wiki/Lift_Notices_and_Auto_Fadeout[http://www.assembla.com/spaces/liftweb/wiki/Lift_Notices_and_Auto_Fadeout].
+
+
+
+
+[[DownloadLink]]
+Link to Download Data
+~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want a button or a link which, which clicked, will trigger a download in the browser rather than visiting a page.
+
+Solution
+^^^^^^^^
+
+Create a link using `SHtml.link`, provide a function to return a `LiftResponse` and wrap the response in a `ResponseShortcutException`.
+
+As an example, we will create a snippet that shows the user a poem and provides a link to download the poem as a text file.  The template for this snippet will present each line of the poem separated by a `<br>`:
+
+[source, html]
+-------------------------------------------------------------
+<h1>A poem</h1>
+
+<div data-lift="DownloadLink">
+  <blockquote>
+    <span class="poem">
+        <span class="line">line goes here</span> <br />
+    </span>
+  </blockquote>
+  <a href="">download link here</a>
+</div>
+-------------------------------------------------------------
+
+The snippet itself will render the poem and replace the download link with one which will send a
+response that the browser will interpret as a file to download:
+
+[source, scala]
+-------------------------------------------------------------
+package code.snippet
+
+import net.liftweb.util.Helpers._
+import net.liftweb.http._
+import xml.Text
+
+class DownloadLink {
+
+  val poem =
+    "Roses are red," ::
+    "Violets are blue," ::
+    "Lift rocks!" ::
+    "And so do you." :: Nil
+
+  def render =
+    ".poem" #> poem.map(line => ".line" #> line) &
+    "a" #> downloadLink
+
+  def downloadLink =
+    SHtml.link("/notused",
+      () => throw new ResponseShortcutException(poemTextFile),
+      Text("Download") )
+
+  def poemTextFile : LiftResponse =
+    InMemoryResponse(
+      poem.mkString("\n").getBytes("UTF-8"),
+      "Content-Type" -> "text/plain; charset=utf8" ::
+      "Content-Disposition" -> "attachment; filename=\"poem.txt\"" :: Nil,
+      cookies=Nil, 200)
+}
+-------------------------------------------------------------
+
+Recall that `SHtml.link` generates a link and executes a function you supply before following the link.
+
+The trick here is that wrapping the `LiftResponse` in a `ResponseShortcutException` will indicate
+to Lift that the response is complete, so the page being linked to (`notused`) won't be processed. The browser is happy: it has a response to the link the user clicked on, and will render it how it wants to, which in this case will probably be by saving the file to disk.
+
+Discussion
+^^^^^^^^^^
+
+`SHtml.link` works by generating a URL which Lift associates with the function you give it. On a page called `downloadlink`, the URL will look something like:
+
+---------------------------------------------
+downloadlink?F845451240716XSXE3G=_#notused
+---------------------------------------------
+
+When that link is followed, Lift looks up the function and executes it, before processing the linked-to resource. However, in this case, we are short-cutting the Lift pipeline by throwing this particular exception.  This is caught by Lift and the response wrapped by the exception is taken as the final response from the request.
+
+This short-cutting is used by `S.redirectTo` via `ResponseShortcutException.redirect`. This companion object also defines `shortcutResponse` which you can use like this:
+
+[source, scala]
+----------------------------------------------------
+import net.liftweb.http.ResponseShortcutException._
+
+def downloadLink =
+  SHtml.link("/notused",
+    () => {
+      S.notice("The file was downloaded")
+      throw shortcutResponse(poemTextFile)
+    },
+    Text("Download") )
+----------------------------------------------------
+
+We've included a `S.notice` to highlight that `throw shortcutResponse` will process Lift notices when the page next loads, whereas `throw new ResponseShortcutException` does not.  In this case, the notice will not appear when the user downloads the file, but it will be included the next time notices are shown, such as when the user navigates to another page.  For many situations, the difference is immaterial.
+
+This recipe has used Lift's stateful features.  You can see how useful it is to be able to close over state (the poem), and offer the data for download from memory.  If you've created a report from a database, you can offer it as a download without having to re-generate the items from the database.
+
+However, in other situations you might want to avoid holding this data as a function on a link. In that case, you'll want to create a REST service that returns a `LiftResponse`.
+
+See Also
+^^^^^^^^
+
+<<REST>> looks at REST-based services in Lift.
+
+<<RestStreamContent>> discusses `InMemoryResponse` and similar responses to return content to the browser
+
+For reports, the Apache POI project, http://poi.apache.org/[http://poi.apache.org/], includes libraries for generating Excel files; and OpenCSV, http://opencsv.sourceforge.net[http://opencsv.sourceforge.net], is a library for generating CSV files.
+
+
+
+
+[[TestingReq]]
+Test on a Req
+~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to be able to test a function that needs a `Req`.
+
+Solution
+^^^^^^^^
+
+Supply a mock request to Lift's `MockWeb.testReq`, and run your test in the context of the `Req` supplied by `testReq`.
+
+The first step is to add Lift's Test Kit as dependency to your project in `build.sbt`:
+
+[source, scala]
+-------
+libraryDependencies += "net.liftweb" %% "lift-testkit" % "2.5-RC2" % "test"
+-------
+
+To demonstrate how to use `testReq` we will test a function that detects a Google crawler. Google identifies
+crawlers via various "User-Agent" header on a request, so the function we want to test would look like this:
+
+[source, scala]
+-------
+package code.lib
+
+import net.liftweb.http.Req
+
+object RobotDetector {
+
+  val botNames =
+    "Googlebot" ::
+    "Mediapartners-Google" ::
+    "AdsBot-Google" :: Nil
+
+  def known_?(ua: String) =
+    botNames.exists(ua contains _)
+
+  def googlebot_?(r: Req) : Boolean =
+    r.header("User-Agent").exists(known_?)
+}
+-------
+
+We have the list of magic `botNames` that Google sends as a user agent, and we define a check, `known_?`, that takes the user agent string and looks to see if any robot satisfies the condition of being contained in that user agent string.
+
+The `googlebot_?` method is given a Lift `Req` object and from this we look up the header.  This evaluates to a `Box[String]` as it's possible there is no header. We find the answer by seeing if there exists in the `Box` a value that satisfies the `known_?` condition.
+
+To test this, we create a user agent string, prepare a `MockHttpServletRequest` with the header, and use Lift's `MockWeb` to turn the low-level request into a Lift `Req` for us to test with:
+
+[source, scala]
+-------
+package code.lib
+
+import org.specs2.mutable._
+import net.liftweb.mocks.MockHttpServletRequest
+import net.liftweb.mockweb.MockWeb
+
+class SingleRobotDetectorSpec extends Specification {
+
+  "Google Bot Detector" should {
+
+    "spot a web crawler" in {
+
+      val userAgent = "Mozilla/5.0 (compatible; Googlebot/2.1)"
+
+      // Mock a request with the right header:
+      val http = new MockHttpServletRequest()
+      http.headers = Map("User-Agent" -> List(userAgent))
+
+      // Test with a Lift Req:
+      MockWeb.testReq(http) { r =>
+        RobotDetector.googlebot_?(r) must beTrue
+      }
+    }
+
+  }
+
+}
+-------
+
+Running this from SBT with the "test" command would produce:
+
+-------
+[info] SingleRobotDetectorSpec
+[info]
+[info] Google Bot Detector should
+[info] + spot a web crawler
+[info]
+[info] Total for specification SingleRobotDetectorSpec
+[info] Finished in 18 ms
+[info] 1 example, 0 failure, 0 error
+-------
+
+Discussion
+^^^^^^^^^^
+
+Although `MockWeb.testReq` is handling the creation of a `Req` for us, the environment for that `Req` is supplied by the `MockHttpServletRequest`. To configure a request, create an instance of the mock and mutate the state of it as required before using it with `testReq`.
+
+Aside from HTTP headers, you can set cookies, content type, query parameters, the HTTP method, authentication type, and the body.  There are variations on the `body` assignment, which conveniently set the content type depending on the value you assign:
+
+* `JValue` will use content type of "application/json".
+* `NodeSeq` will use "text/xml" (or you can supply an alternative).
+* `String` uses "text/plain" (unless you supply an alternative).
+* `Array[Byte]` does not set the content type.
+
+Data Table
+++++++++++
+
+In the example test above it would be tedious to have to set up the same code repeatedly for different user agents.  Specs2's _Data Table_ provides a compact way to run different example values through the same test:
+
+[source, scala]
+-------
+package code.lib
+
+import org.specs2._
+import matcher._
+import net.liftweb.mocks.MockHttpServletRequest
+import net.liftweb.mockweb.MockWeb
+
+class RobotDetectorSpec extends Specification with DataTables {
+
+  def is = "Can detect Google robots" ^ {
+    "Bot?" || "User Agent" |
+    true   !! "Mozilla/5.0 (Googlebot/2.1)" |
+    true   !! "Googlebot-Video/1.0" |
+    true   !! "Mediapartners-Google" |
+    true   !! "AdsBot-Google" |
+    false  !! "Mozilla/5.0 (KHTML, like Gecko)" |> {
+    (expectedResult, userAgent) => {
+      val http = new MockHttpServletRequest()
+      http.headers = Map("User-Agent" -> List(userAgent))
+      MockWeb.testReq(http) { r =>
+        RobotDetector.googlebot_?(r) must_== expectedResult
+      }
+     }
+    }
+
+  }
+
+}
+-------
+
+The core of this test is essentially unchanged: we create a mock, set the user agent, and check the result of `googlebot_?`.  The difference is that Specs2 is providing a neat way to list
+out the various scenarios and pipe them through a function.
+
+The output from running this under SBT would be:
+
+-------
+[info] Can detect Google robots
+[info] + Bot?  | User Agent
+[info]   true  | Mozilla/5.0 (Googlebot/2.1)
+[info]   true  | Googlebot-Video/1.0
+[info]   true  | Mediapartners-Google
+[info]   true  | AdsBot-Google
+[info]   false | Mozilla/5.0 (KHTML, like Gecko)
+[info]
+[info] Total for specification RobotDetectorSpec
+[info] Finished in 1 ms
+[info] 1 example, 0 failure, 0 error
+-------
+
+Although the expected value appears first in our table, there's no requirement to put it first.
+
+
+See Also
+^^^^^^^^
+
+The Lift wiki discusses this topic and also other approaches such as testing with Selenium. https://www.assembla.com/spaces/liftweb/wiki/Testing_Lift_Applications[https://www.assembla.com/spaces/liftweb/wiki/Testing_Lift_Applications].
+
+
+
+[[Textile]]
+Rendering Textile Markup
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to render Textile markup in your web application.
+
+Solution
+^^^^^^^^
+
+Install the Lift Textile module in your `build.sbt` file by adding the
+following to the list of dependencies:
+
+[source,scala]
+----
+"net.liftmodules" %% "textile" % (liftVersion + "1.3")
+----
+
+You can then use the module to render Textile using the `toHtml` method.
+
+For example, starting SBT after adding the module and running the SBT _console_ command allows you to try out the module:
+
+[source,scala]
+---------------------------------------------------------
+scala> import net.liftmodules.textile._
+import net.liftmodules.textile._
+
+scala> TextileParser.toHtml("""
+ | h1. Hi!
+ |
+ | The module in "Lift":http://www.liftweb.net for turning Textile markup
+ | into HTML is pretty easy to use.
+ |
+ | * As you can see.
+ | * In this example.
+ | """)
+res0: scala.xml.NodeSeq =
+NodeSeq(, <h1>Hi!</h1>,
+, <p>The module in <a href="http://www.liftweb.net">Lift</a> for turning Textile
+  markup<br></br>into HTML is pretty easy to use.</p>,
+, <ul><li> As you can see.</li>
+<li> In this example.</li>
+</ul>,
+, )
+
+---------------------------------------------------------
+
+It's a little easier to see the output if we pretty print it:
+
+[source,scala]
+---------------------------------------------------------
+scala> val pp = new PrettyPrinter(width=35, step=2)
+pp: scala.xml.PrettyPrinter = scala.xml.PrettyPrinter@54c19de8
+
+scala> pp.formatNodes(res0)
+res1: String =
+<h1>Hi!</h1><p>
+  The module in
+  <a href="http://www.liftweb.net">
+    Lift
+  </a>
+  for turning Textile markup
+  <br></br>
+  into HTML is pretty easy to use.
+</p><ul>
+  <li> As you can see.</li>
+  <li> In this example.</li>
+</ul>
+---------------------------------------------------------
+
+Discussion
+^^^^^^^^^^
+
+There's nothing special code has to do to become a Lift module, although there are common conventions: they typically are packaged as _net.liftmodules_, but don't have to be; they usually depend on a version of Lift; they sometimes use the hooks provided by `LiftRules` to provide a particular behaviour.  Anyone can create and publish a Lift module, and anyone can contribute to existing modules. In the end, they are declared as dependencies in SBT, and pulled into your code just like any other dependency.
+
+The dependency version is made up of two elements: the Lift version, and the module version, as shown in <<ModuleVersioning>>. This is because modules have their own release cycle, so you could have versions 1.1, 1.2 and 1.3 all for the same version of Lift. However, they may also depend on certain features of Lift, hence the combined version number.
+
+[[ModuleVersioning]]
+.The structure of a module version.
+image::images/moduleversioning.png[]
+
+
+See Also
+^^^^^^^^
+
+There's no real specification of what Textile is, but there are references available which cover the typical kinds of mark up to enter and what HTML you can expect to see: http://redcloth.org/hobix.com/textile/[http://redcloth.org/hobix.com/textile/].
+
+The home of the Textile module: https://github.com/liftmodules/textile[https://github.com/liftmodules/textile].
+
+The unit tests for the Textile module give you a good set of examples of what is supported: https://github.com/liftmodules/textile/blob/master/src/test/scala/net/liftmodules/textile/TextileSpec.scala[https://github.com/liftmodules/textile/blob/master/src/test/scala/net/liftmodules/textile/TextileSpec.scala].
+
+<<modules>> describes how to create modules.
+

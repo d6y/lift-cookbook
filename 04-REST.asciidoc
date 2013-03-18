@@ -1,0 +1,858 @@
+[[REST]]
+REST
+----
+
+This chapter looks at recipes around REST web services, via Lift's `RestHelper` trait. For an introduction, take a look at the Lift wiki page at https://www.assembla.com/spaces/liftweb/wiki/REST_Web_Services[https://www.assembla.com/spaces/liftweb/wiki/REST_Web_Services] and chapter 5 of _Simply Lift_ at http://simply.liftweb.net[http://simply.liftweb.net].
+
+The sample code from this chapter is at: https://github.com/LiftCookbook/cookbook_rest[https://github.com/LiftCookbook/cookbook_rest].
+
+
+[[DRYURLs]]
+DRY URLs
+~~~~~~~~
+
+Problem
+^^^^^^^
+
+You found yourself repeating parts of URL paths in your `RestHelper`, and
+you Don't want to Repeat Yourself.
+
+Solution
+^^^^^^^^
+
+Use `prefix` in your `RestHelper`:
+
+[source,scala]
+----
+package code.rest
+
+import net.liftweb.http.rest.RestHelper
+import net.liftweb.http.LiftRules
+
+object IssuesService extends RestHelper {
+
+  def init() : Unit = {
+    LiftRules.statelessDispatch.append(IssuesService)
+  }
+
+  serve("issues" / "by-state" prefix {
+    case "open" :: Nil XmlGet _ => <p>None open</p>
+    case "closed" :: Nil XmlGet _ => <p>None closed</p>
+    case "closed" :: Nil XmlDelete _ => <p>All deleted</p>
+  })
+
+}
+----
+
+This service responds to URLs of _/issues/by-state/open_ and _/issues/by-state/closed_ and we have
+factored out the common part as a `prefix`.
+
+Wire this into `Boot.scala` with:
+
+[source,scala]
+----
+import code.rest.IssuesService
+IssuesService.init()
+----
+
+We can test the service with cURL:
+
+------------------
+$ curl -H 'Content-Type: application/xml'
+    http://localhost:8080/issues/by-state/open
+<?xml version="1.0" encoding="UTF-8"?>
+<p>None open</p>
+
+$ curl -X DELETE -H 'Content-Type: application/xml'
+    http://localhost:8080/issues/by-state/closed
+<?xml version="1.0" encoding="UTF-8"?>
+<p>All deleted</p>
+------------------
+
+Discussion
+^^^^^^^^^^
+
+You can have many `serve` blocks in your `RestHelper`, which helps give
+your REST service structure.
+
+In this example we've arbitrarily decided to return XML and to match on an XML request using `XmlGet` and `XmlDelete`.  The test for an XML request requires a content-type of _text/xml_ or _application/xml_, a request for a path that ends with `.xml`.   This is why the cURL request includes a header with with the `-H` flag.  If we hadn't included that, the request would not match any of our patterns, and the result would be a 404 response.
+
+
+
+See Also
+^^^^^^^^
+
+<<JSONREST>> gives an example of accepting and returning JSON.
+
+
+
+
+
+[[MissingSuffix]]
+Missing File Suffix
+~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+Your `RestHelper` expects a filename as part of the URL, but the suffix
+(extension) is missing, and you need it.
+
+Solution
+^^^^^^^^
+
+Access `req.path.suffix` to recover the suffix.
+
+For example, when
+processing `/download/123.png` you want to be able reconstruct
+`123.png`:
+
+[source,scala]
+----
+package code.rest
+
+import net.liftweb.http.rest.RestHelper
+import net.liftweb.http.LiftRules
+import xml.Text
+
+object Reunite extends RestHelper  {
+
+  private def reunite(name: String, suffix: String) =
+    if (suffix.isEmpty) name else name+"."+suffix
+
+  serve {
+    case "download" :: file :: Nil Get req =>
+      Text("You requested "+reunite(file, req.path.suffix))
+  }
+
+  def init() : Unit = {
+    LiftRules.statelessDispatch.append(Reunite)
+  }
+
+}
+----
+
+We we are matching on `download` but rather than using the `file` value directly, we pass it through the `reunite` function first to attach the suffix back on (if any).
+
+Requesting this URL with a command like cURL will show you the filename
+as expected:
+
+----
+$ curl http://127.0.0.1:8080/download/123.png
+<?xml version="1.0" encoding="UTF-8"?>
+You requested 123.png
+----
+
+Discussion
+^^^^^^^^^^
+
+When Lift parses a request it splits the request into constituent parts
+(e.g., turning the path into a `List[String]`). This includes a
+separation of _some_ suffixes. This is good for pattern matching when you
+want to change behaviour based on the suffix, but a hindrance in this
+particular situation.
+
+Only those suffixes defined in `LiftRules.explicitlyParsedSuffixes` are
+split from the filename. This includes many of the common file suffixes
+(such as "png", "atom", "json") and also some you may not be so familiar
+with, such as "com".
+
+Note that if the suffix is not in `explicitlyParsedSuffixes`, the suffix
+will be an empty String and the `name` (in the above example) will be
+the file name with the suffix still attached.
+
+Depending on your needs, you could alternatively add a guard condition to check for the file suffix:
+
+[source, scala]
+-------
+case "download" :: file :: Nil Get req if req.path.suffix == "png" =>
+  Text("You requested PNG file called "+file)
+-------
+
+Or rather than simply attaching the suffix back on, you could take the opportunity to negotiate the format to send back to the client. For example, if the client supports the WebP image format, you might prefer to send that:
+
+[source, scala]
+-------
+package code.rest
+
+import net.liftweb.http.rest.RestHelper
+import net.liftweb.http.LiftRules
+import xml.Text
+
+object Reunite extends RestHelper  {
+
+  def init() : Unit = {
+    LiftRules.statelessDispatch.append(Reunite)
+  }
+
+  serve {
+    case "negotiate" :: file :: Nil Get req =>
+      val toSend =
+        if (req.header("Accept").exists(_ == "image/webp")) file+".webp"
+        else file+".png"
+
+      Text("You requested "+file+", would send "+toSend)
+  }
+
+}
+-------
+
+Calling this service would check the HTTP Accept header before deciding what resource to send:
+
+-------------------
+$ curl http://localhost:8080/negotiate/123
+<?xml version="1.0" encoding="UTF-8"?>
+You requested 123, would send 123.png
+
+$ curl http://localhost:8080/negotiate/123 -H "Accept: image/webp"
+<?xml version="1.0" encoding="UTF-8"?>
+You requested 123, would send 123.webp
+-------------------
+
+
+See Also
+^^^^^^^^
+
+<<MissingDotCom>> shows how to remove items from `explicitlyParsedSuffixes`.
+
+The source for `HttpHelpers.scala` contains the `explicitlyParsedSuffixes` list, which is the default list of suffixes that Lift parses from a URL:  https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/HttpHelpers.scala[https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/HttpHelpers.scala
+].
+
+
+
+[[MissingDotCom]]
+Missing .com from Email Addresses
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When submitting an email address to a REST service, a domain ending ".com" is stripped before your REST service can handle the request.
+
+Solution
+^^^^^^^^
+
+Modify `LiftRules.explicitlyParsedSuffixes` so that Lift doesn't change URLs that end with ".com".
+
+In `Boot.scala`:
+
+[source,scala]
+----
+import net.liftweb.util.Helpers
+LiftRules.explicitlyParsedSuffixes = Helpers.knownSuffixes &~ (Set("com"))
+----
+
+Discussion
+^^^^^^^^^^
+
+By default Lift will strip off file suffixes from URLs to make it easy to match on suffixes. An example would be needing to match on all requests ending in ".xml" or ".pdf".  However, ".com" is registered as one of those suffixes, but is inconvenient if you have URLs that end with email addresses.
+
+Note that this doesn't impact email addresses in the middle of URLs.  For example, consider the following REST service:
+
+[source,scala]
+----
+package code.rest
+
+import net.liftweb.http.rest.RestHelper
+import net.liftweb.http.LiftRules
+import xml.Text
+
+object Suffix extends RestHelper {
+
+  def init() : Unit = {
+    LiftRules.statelessDispatch.append(Suffix)
+  }
+
+  serve {
+    case "email" :: e :: "send" :: Nil Get req =>
+      Text("In middle: "+e)
+
+    case "email" :: e :: Nil Get req =>
+      Text("At end: "+e)
+  }
+
+}
+----
+
+With this service `init` method called in `Boot.scala` we could then make requests and observe the issue:
+
+----------------
+$ curl http://localhost:8080/email/you@example.com/send
+<?xml version="1.0" encoding="UTF-8"?>
+In middle: you@example.com
+
+$ curl http://localhost:8080/email/you@example.com
+<?xml version="1.0" encoding="UTF-8"?>
+At end: you@example
+----------------
+
+The ".com" is being treated as a file suffix, which is why the solution of removing it from the list of suffixes will resolve this problem.
+
+Note that because other top-level domains, such as ".uk", ".nl", ".gov", are not in `explicitlyParsedSuffixes`, those email addresses are left untouched.
+
+
+See Also
+^^^^^^^^
+
+<<MissingSuffix>> describes the suffix processing in more detail.
+
+
+
+
+[[SuffixMatchFail]]
+Failing to Match on a File Suffix
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You're trying to match on a file suffix (extension), but your match is
+failing.
+
+Solution
+^^^^^^^^
+
+Ensure the suffix you're matching on is included in
+`LiftRules.explicitlyParsedSuffixes`.
+
+As an example, perhaps you want to match anything ending in `.csv` at
+your `/reports/` URL:
+
+[source,scala]
+----
+case Req("reports" :: name :: Nil, "csv", GetRequest) =>
+  Text("Here's your CSV report for "+name)
+----
+
+You're expecting `/reports/foo.csv` to produce "Here's your CSV report
+for foo", but you get a 404.
+
+To resolve this, include "csv" as a file suffix that Lift knows to split from URLs.  In `Boot.scala` call:
+
+[source,scala]
+----
+LiftRules.explicitlyParsedSuffixes += "csv"
+----
+
+The pattern will now match.
+
+Discussion
+^^^^^^^^^^
+
+Without adding ".csv" to the `explicitlyParsedSuffixes`, the example URL
+would match with:
+
+[source,scala]
+----
+case Req("reports" :: name :: Nil, "", GetRequest) =>
+  Text("Here's your CSV report for "+name)
+----
+
+Here we're matching on no suffix (`""`). In this case `name` would be set to "foo.csv".  This is because Lift separates file suffixes from the end of URLs only for file suffixes that are registered with `explicitlyParsedSuffixes`.  Because `csv` is not one of the default registered suffixes, "foo.csv" is not split. That's why `csv` in the suffix position of `Req` pattern match won't match the request, but an empty string in that position will.
+
+
+See Also
+^^^^^^^^
+
+<<MissingSuffix>> explains more about the suffix removal in Lift.
+
+
+
+
+
+[[RestBinaryData]]
+Accept binary data in a REST service
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to accept an image upload, or other binary data, in your RESTful
+service.
+
+Solution
+^^^^^^^^
+
+Access the request body in your REST helper:
+
+[source,scala]
+----------------------
+package code.rest
+
+import net.liftweb.http.rest.RestHelper
+import net.liftweb.http.LiftRules
+
+object Upload extends RestHelper {
+
+  def init() : Unit = {
+    LiftRules.statelessDispatch.append(Upload)
+  }
+
+  serve {
+    case "upload" :: Nil Post req =>
+      for {
+        bodyBytes <- req.body
+      } yield <info>Received {bodyBytes.length} bytes</info>
+  }
+
+}
+----------------------
+
+Wire this into your application in `Boot.scala`:
+
+[source,scala]
+----------------------
+import code.rest.Upload
+Upload.init()
+----------------------
+
+Test this service using a tool like cURL:
+
+----------------------
+$ curl -X POST --data-binary "@dog.jpg" -H 'Content-Type: image/jpg'
+    http://127.0.0.1:8080/upload
+<?xml version="1.0" encoding="UTF-8"?>
+<info>Received 1365418 bytes</info>
+----------------------
+
+Discussion
+^^^^^^^^^^
+
+In the above example the binary data is accessed via the `req.body`, which returns
+ a `Box[Array[Byte]]`.  We turn this into a `Box[Elem]` to send back to the client.
+ Implicits in `RestHelper` turn this into an `XmlResponse` for Lift to handle.
+
+Note that web containers, such as Jetty and Tomcat, may place limits on
+the size of an upload. You will recognise this situation by an error
+such as "java.lang.IllegalStateException: Form too large705784>200000".
+Check with documentation for the container for changing these limits.
+
+To restrict the type of image you accept, you could add a guard-condition on the match, but you may find you have more readable code by moving the logic into an `unapply` method on an object.  For example, to restrict an upload to just a JPEG you could say:
+
+
+[source,scala]
+----------------------
+serve {
+  case "jpg" :: Nil Post JPeg(req) =>
+    for {
+      bodyBytes <- req.body
+    } yield <info>Jpeg Received {bodyBytes.length} bytes</info>
+  }
+
+object JPeg {
+  def unapply(req: Req): Option[Req] =
+    req.contentType.filter(_ == "image/jpg").map(_ => req)
+}
+----------------------
+
+We have defined an extractor called `JPeg` which returns `Some[Req]` if the content type of the upload is "image/jpg"; otherwise the result will be `None`.  This is used in the REST pattern match as `JPeg(req)`.  Note that the `unapply` needs to return `Option[Req]` as this is what's expected by the `Post` extractor.
+
+
+See Also
+^^^^^^^^
+
+Odersky _et al._, (2008), _Programming in Scala_, chapter 24, discusses extractors in detail: http://www.artima.com/pins1ed/extractors.html[http://www.artima.com/pins1ed/extractors.html].
+
+
+<<FileUpload>> describes form-based (multi-part) file uploads
+
+
+
+
+[[JSONREST]]
+Returning JSON
+~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to return JSON from a REST call.
+
+Solution
+^^^^^^^^
+
+Use the Lift JSON domain specific language (DSL). For example:
+
+[source,scala]
+----
+package code.rest
+
+import net.liftweb.http.rest.RestHelper
+import net.liftweb.http.LiftRules
+import net.liftweb.json.JsonAST._
+import net.liftweb.json.JsonDSL._
+
+object QuotationsAPI extends RestHelper {
+
+  def init() : Unit = {
+    LiftRules.statelessDispatch.append(QuotationsAPI)
+  }
+
+  serve {
+    case "quotation" :: Nil JsonGet req =>
+      ("text" -> "A beach house isn't just real estate. It's a state of mind.") ~
+        ("by" -> "Douglas Adams") : JValue
+  }
+
+}
+----
+
+Wire this into `Boot.scala`:
+
+[source,scala]
+----
+import code.rest.QuotationsAPI
+QuotationsAPI.init()
+----
+
+Running this example produces:
+
+----
+$ curl -H 'Content-type: text/json' http://127.0.0.1:8080/quotation
+{
+  "text":"A beach house isn't just real estate. It's a state of mind.",
+  "by":"Douglas Adams"
+}
+----
+
+Discussion
+^^^^^^^^^^
+
+The _type ascription_ at the end of the JSON expression (`: JValue`)
+tells the compiler that the expression is expected to be of type
+`JValue`. This is required to allow the DSL to apply. If would not be
+required if, for example, you were calling a function that was defined
+to return a `JValue`.
+
+The JSON DSL allows you to created nested structures, lists and
+everything else you expect of JSON.
+
+See Also
+^^^^^^^^
+
+The README file for the lift-json project is a great source of examples for using the JSON DSL: https://github.com/lift/framework/tree/master/core/json[https://github.com/lift/framework/tree/master/core/json].
+
+
+
+
+[[GoogleSitemap]]
+Google Sitemap
+~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to make a Google Sitemap using Lift's rendering capabilities.
+
+Solution
+^^^^^^^^
+
+Create the sitemap structure, and bind to it as you would for any template in Lift.
+
+Start with a `sitemap.html` in your `webapp` folder containing valid XML-Sitemap markup:
+
+[source, xml]
+----
+<?xml version="1.0" encoding="utf-8" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url data-lift="SitemapContent.base">
+        <loc></loc>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+        <lastmod></lastmod>
+    </url>
+    <url data-lift="SitemapContent.list">
+        <loc></loc>
+        <lastmod></lastmod>
+    </url>
+</urlset>
+----
+
+Make a snippet to fill the required gaps:
+
+[source,scala]
+----
+package code.snippet
+
+import org.joda.time.DateTime
+import net.liftweb.util.CssSel
+import net.liftweb.http.S
+import net.liftweb.util.Helpers._
+
+class SitemapContent {
+
+  case class Post(url: String, date: DateTime)
+
+  lazy val entries =
+    Post("/welcome", new DateTime) :: Post("/about", new DateTime) :: Nil
+
+  val siteLastUdated = new DateTime
+
+  def base: CssSel =
+    "loc *" #> "http://%s/".format(S.hostName) &
+      "lastmod *" #> siteLastUdated.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZZ")
+
+  def list: CssSel =
+    "url *" #> entries.map(post =>
+      "loc *" #> "http://%s%s".format(S.hostName, post.url) &
+        "lastmod *" #> post.date.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZZ"))
+
+}
+----
+
+This example is using canned data for two pages.
+
+Apply the template and snippet in a REST service at `/sitemap`:
+
+[source,scala]
+----
+package code.rest
+
+import net.liftweb.http._
+import net.liftweb.http.rest.RestHelper
+
+object Sitemap extends RestHelper {
+  serve {
+    case Req("sitemap" :: Nil, _, GetRequest) =>
+      XmlResponse(
+        S.render(<lift:embed what="sitemap" />,
+        S.request.get.request).head)
+  }
+}
+----
+
+Wire this into your application in `Boot.scala`, for example:
+
+[source,scala]
+----
+LiftRules.statelessDispatch.append(code.rest.Sitemap)
+----
+
+Test this service using a tool like cURL:
+
+[source,bash]
+----
+$ curl http://127.0.0.1:8080/sitemap
+
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>http://127.0.0.1/</loc>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+        <lastmod>2013-02-10T19:16:12.433+00:00</lastmod>
+    </url>
+    <url>
+        <loc>http://127.0.0.1/welcome</loc>
+        <lastmod>2013-02-10T19:16:12.434+00:00</lastmod>
+    </url><url>
+        <loc>http://127.0.0.1/about</loc>
+        <lastmod>2013-02-10T19:16:12.434+00:00</lastmod>
+    </url>
+</urlset>
+----
+
+Discussion
+^^^^^^^^^^
+
+You may be wondering why we've used REST here, when we could have used a regular HTML template and snippet. The reason is that we want XML rather than HTML output.  We use the same mechanism, but invoke it and wrap it in an `XmlResponse`.
+
+The `S.render` method takes a `NodeSeq` and a `HTTPRequst`. The first we supply by running the `sitemap.html` snippet; the second is simply the current request.  `XmlResponse` requires a `Node` rather than a `NodeSeq`, which is why we call `head` -- as there's only one node in the response, this does what we need.
+
+Note that Google Sitemaps need dates to be in ISO 8601 format. The built-in `java.text.SimpleDateFormat` does not support this format prior to Java 7. If you are using Java 6 you need to use `org.joda.time.DateTime` as we are in this example.
+
+See Also
+^^^^^^^^
+
+Sitemaps are described at: http://support.google.com/webmasters/bin/answer.py?hl=en&answer=156184[http://support.google.com/webmasters/bin/answer.py?hl=en&answer=156184].
+
+
+
+
+[[iOSNativePost]]
+Calling REST Service from a Native iOS Application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to make a HTTP POST from a native iOS device to a Lift REST service.
+
+
+Solution
+^^^^^^^^
+
+Use `NSURLConnection` ensuring you set the content-type to "application/json".
+
+For example, suppose we want to call this service:
+
+[source,scala]
+---------------------------------------------------------
+package code.rest
+
+import net.liftweb.http.rest.RestHelper
+import net.liftweb.json.JsonDSL._
+import net.liftweb.json.JsonAST._
+
+object Shouty extends RestHelper {
+
+  def greet(name: String) : JValue =
+    "greeting" -> ("HELLO "+name.toUpperCase)
+
+  serve {
+    case "shout" :: Nil JsonPost json->request =>
+      for { JString(name) <- (json \\ "name").toOpt }
+      yield greet(name)
+  }
+
+}
+---------------------------------------------------------
+
+The service expects a JSON post with a parameter of "name", and it returns a greeting as a JSON object.  To demonstrate the data to and from the service, we can include the service in `Boot.scala`...
+
+[source,scala]
+---------------------------------------------------------
+LiftRules.statelessDispatch.append(Shouty)
+---------------------------------------------------------
+
+...and then call it from the command line:
+
+-----
+$ curl -d '{ "name" : "Richard" }' -X POST -H 'Content-type: application/json'
+   http://127.0.0.1:8080/shout
+{
+  "greeting":"HELLO RICHARD"
+}
+-----
+
+
+We can implement the POST request using `NSURLConnection`:
+
+[source, objc]
+---------------------------------------------------------
+static NSString *url = @"http://localhost:8080/shout";
+
+-(void) postAction {
+  // JSON data:
+  NSDictionary* dic = @{@"name": @"Richard"};
+  NSData* jsonData =
+    [NSJSONSerialization dataWithJSONObject:dic options:0 error:nil];
+  NSMutableURLRequest *request = [
+    NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]
+    cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+
+  // Construct HTTP request:
+  [request setHTTPMethod:@"POST"];
+  [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+  [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]]
+    forHTTPHeaderField:@"Content-Length"];
+  [request setHTTPBody: jsonData];
+
+  // Send the request:
+  NSURLConnection *con = [[NSURLConnection alloc]
+    initWithRequest:request delegate:self];
+}
+
+- (void)connection:(NSURLConnection *)connection
+  didReceiveResponse:(NSURLResponse *)response {
+   // Start off with new, empty, response data
+   self.receivedJSONData = [NSMutableData data];
+}
+
+- (void)connection:(NSURLConnection *)connection
+  didReceiveData:(NSData *)data {
+   // append incoming data
+   [self.receivedJSONData appendData:data];
+}
+
+- (void)connection:(NSURLConnection *)connection
+  didFailWithError:(NSError *)error {
+   NSLog(@"Error occurred ");
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+  NSError *e = nil;
+  NSDictionary *JSON =
+    [NSJSONSerialization JSONObjectWithData: self.receivedJSONData
+    options: NSJSONReadingMutableContainers error: &e];
+  NSLog(@"Return result: %@", [JSON objectForKey:@"greeting"]);
+}
+---------------------------------------------------------
+
+Obviously in this example we've used hard-coded values and URLs, but this will hopefully
+be a starting point for use in your application.
+
+
+
+Discussion
+^^^^^^^^^^
+
+There are many ways to do HTTP POST from iOS and it can be confusing to identify the correct way that works, especially without the aid of external library. The example above uses the iOS native API.
+
+Another way is to use _AFNetworking_. This is a popular external library for iOS development, can cope with many scenarios and is simple to use:
+
+[source, objc]
+---------------------------------------------------------
+#import "AFHTTPClient.h"
+#import "AFNetworking.h"
+#import "JSONKit.h"
+
+static NSString *url = @"http://localhost:8080/shout";
+
+-(void) postAction {
+  // JSON data:
+  NSDictionary* dic = @{@"name": @"Richard"};
+  NSData* jsonData =
+   [NSJSONSerialization dataWithJSONObject:dic options:0 error:nil];
+
+  // Construct HTTP request:
+  NSMutableURLRequest *request =
+   [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]
+    cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+  [request setHTTPMethod:@"POST"];
+  [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+  [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]]
+    forHTTPHeaderField:@"Content-Length"];
+  [request setHTTPBody: jsonData];
+
+  // Send the request:
+  AFJSONRequestOperation *operation =
+    [[AFJSONRequestOperation alloc] initWithRequest: request];
+  [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation,
+    id responseObject)
+  {
+     NSString *response = [operation responseString];
+
+     // Use JSONKit to deserialize the response into NSDictionary
+     NSDictionary *deserializedJSON = [response objectFromJSONString];
+     [deserializedJSON count];
+
+     // The response object can be a NSDicionary or a NSArray:
+      if([deserializedJSON count]> 0) {
+         NSLog(@"Return value: %@",[deserializedJSON objectForKey:@"greeting"]);
+      }
+      else {
+        NSArray *deserializedJSONArray = [response objectFromJSONString];
+        NSLog(@"Return array value: %@", deserializedJSONArray );
+      }
+  }failure:^(AFHTTPRequestOperation *operation, NSError *error)
+  {
+    NSLog(@"Error: %@",error);
+  }];
+  [operation start];
+}
+---------------------------------------------------------
+
+The `NSURLConnection` approach is more versatile and gives you starting point to craft your own solution, such as by making the content type more specific. However, `AFNetworking` is popular and you may prefer that route.
+
+
+See Also
+^^^^^^^^
+
+You may find the "Complete REST Example" in _Simply Lift_ to be a good test ground for your calls to Lift. http://simply.liftweb.net/index-5.4.html[http://simply.liftweb.net/index-5.4.html].
+
+
+
+
+
+
+
+
+

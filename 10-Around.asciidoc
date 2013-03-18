@@ -1,0 +1,818 @@
+[[Around]]
+Around Lift
+-----------
+
+This chapter gives examples of working with Lift and other systems, such
+as sending email or scheduling tasks.
+
+Many of the recipes in this chapter have code examples in a project at Github: https://github.com/LiftCookbook/cookbook_around[https://github.com/LiftCookbook/cookbook_around].
+
+
+[[SendTextEmail]]
+Sending Plain Text Email
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to send a plain text email from your Lift application.
+
+Solution
+^^^^^^^^
+
+Use the `Mailer`:
+
+[source,scala]
+----------------------------------------
+import net.liftweb.util.Mailer
+import net.liftweb.util.Mailer._
+
+Mailer.sendMail(
+  From("you@example.org"),
+  Subject("Hello"),
+  To("other@example.org"),
+  PlainMailBodyType("Hello from Lift") )
+----------------------------------------
+
+Discussion
+^^^^^^^^^^
+
+`Mailer` sends the message asynchronously, meaning `sendMail` will
+return immediately, so you don't have to worry about the time costs of
+negotiating with an SMTP server. There's also a `blockingSendMail`
+method if you want to wait.
+
+By default, the SMTP server used will be `localhost`. You can change
+this by setting the `mail.smtp.host` property.
+For example, edit `src/mail/resources/props/default.props` and add the line:
+
+--------------------------------
+mail.smtp.host=smtp.example.org
+--------------------------------
+
+The signature of `sendMail` requires a `From`, `Subject` and then any
+number of `MailTypes`:
+
+* `To` -- the recipient email address.
+* `CC` -- ditto
+* `BCC` -- ditto
+* `ReplyTo` -- the address mail clients should use for replies.
+* `MessageHeader` -- key/value pairs to include as headers in the message.
+* `PlainMailBodyType` -- a plain text email sent with UTF-8 encoding.
+* `PlainPlusBodyType` -- a plain text email, where you specify the encoding.
+* `XHTMLMailBodyType` -- for HTML email (<<HTMLEmail>>).
+* `XHTMLPlusImages` -- for attachments (<<EmailWithAttachments>>).
+
+In the example above we added two types:`PlainMailBodyType`
+and `To`.  Adding more as as you'd expect:
+
+[source,scala]
+----------------------------------------
+Mailer.sendMail(
+  From("you@example.org"),
+  Subject("Hello"),
+  To("other@example.org"),
+  To("someone@example.org"),
+  MessageHeader("X-Ignore-This", "true"),
+  PlainMailBodyType("Hello from Lift") )
+----------------------------------------
+
+
+The address-like `MailTypes` (`To`, `CC`, `BCC`, `ReplyTo`) can be given an optional "personal name":
+
+[source,scala]
+----------------------------------------
+From("you@example.org", Full("Example Corporation"))
+----------------------------------------
+
+This would appear in your mailbox as:
+
+----------------------------------------
+From: Example Corporation <you@example.org>
+----------------------------------------
+
+The default character set is UTF-8. If you need to change this replace
+the use of `PlainMailBodyType` with
+`PlainPlusBodyType("Hello from Lift", "ISO8859_1")`.
+
+See Also
+^^^^^^^^
+
+<<EmailWithAttachments>> describes email with attachments.
+
+For HTML email, see <<HTMLEmail>>.
+
+
+[[LogEmail]]
+Logging Email Rather Than Sending
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You don't want email sent when developing your Lift application locally,
+but you do want to see what would have been sent.
+
+Solution
+^^^^^^^^
+
+Assign a logging function to `Mailer.devModeSend` in `Boot.scala`:
+
+[source,scala]
+---------------------------------------------------------
+import net.liftweb.util.Mailer._
+import javax.mail.internet.{MimeMessage,MimeMultipart}
+
+Mailer.devModeSend.default.set( (m: MimeMessage) =>
+  logger.info("Would have sent: "+m.getContent)
+)
+---------------------------------------------------------
+
+When you send an email with `Mailer`, no SMTP server will be contacted, and
+instead you'll see output to your log:
+
+---------------------------------------------------------
+Would have sent: Hello from Lift
+---------------------------------------------------------
+
+Discussion
+^^^^^^^^^^
+
+The Lift Mailer allows you to control how email is sent at each run mode:
+
+* `devModeSend` -- will send email by default.
+* `testModeSend` -- only log that a message would have been sent.
+* `stagingModeSend` -- will send email by default.
+* `productionModeSend` -- will send email by default.
+* `pilotModeSend` -- will send email by default.
+* `profileModeSend` -- will send email by default.
+
+The `testModeSend` logs a reference to the `MimeMessage`, meaning your log
+would show a message like:
+
+--------------------------------------
+Sending javax.mail.internet.MimeMessage@4a91a883
+--------------------------------------
+
+This recipe has changed just the behaviour of `Mailer` when your Lift
+application is in developer mode (which it is by default). We're logging
+just the body part of the message.
+
+Java Mail doesn't include a utility to display all the
+parts of an email, so if you want more information you'll need to
+roll your own function.  For example:
+
+[source,scala]
+---------------------------------------------------------
+def display(m: MimeMessage) : String = {
+
+  val nl = System.getProperty("line.separator")
+
+  val from = "From: "+m.getFrom.map(_.toString).mkString(",")
+
+  val subj = "Subject: "+m.getSubject
+
+  def parts(mm: MimeMultipart) = (0 until mm.getCount).map(mm.getBodyPart)
+
+  val body = m.getContent match {
+    case mm: MimeMultipart =>
+      val bodyParts = for (part <- parts(mm)) yield part.getContent.toString
+      bodyParts.mkString(nl)
+
+    case otherwise => otherwise.toString
+  }
+
+  val to = for {
+    rt <- List(RecipientType.TO, RecipientType.CC, RecipientType.BCC)
+    address <- Option(m.getRecipients(rt)) getOrElse Array()
+  } yield rt.toString + ": " + address.toString
+
+  List(from, to.mkString(nl), subj, body) mkString nl
+}
+
+Mailer.devModeSend.default.set( (m: MimeMessage) =>
+  logger.info("Would have sent: "+display(m))
+)
+---------------------------------------------------------
+
+This would produce output of the form:
+
+---------------------------------------------------------
+Would have sent: From: you@example.org
+To: other@example.org
+To: someone@example.org
+Subject: Hello
+Hello from Lift
+---------------------------------------------------------
+
+This example `display` function is mostly straight-forward. The `body` value handles multi-part messages by extracting the each body part.  This is triggered when sending more structured emails, such as the HTML emails described in <<HTMLEmail>>.
+
+The key part of this recipe is setting a
+`MimeMessage => Unit` function on `Mailer.devModeSend`.  We happen to be logging, but you can use this function to handle the email any way you want. Examples might include logging and then sending, or recording information about the send in a database.
+
+If you want to debug the mail system while it's actually sending the email, enable the Java Mail debug mode.  In `default.props` add:
+
+[source, properties]
+--------------------------------------
+mail.debug=true
+--------------------------------------
+
+This produces low-level output from the `javax.mail` system when email is sent:
+
+--------------------------------------
+DEBUG: JavaMail version 1.4.4
+DEBUG: successfully loaded resource: /META-INF/javamail.default.providers
+DEBUG SMTP: useEhlo true, useAuth false
+DEBUG SMTP: trying to connect to host "localhost", port 25, isSSL false
+...
+--------------------------------------
+
+See Also
+^^^^^^^^
+
+Run modes are described at: https://www.assembla.com/spaces/liftweb/wiki/Run_Modes[https://www.assembla.com/spaces/liftweb/wiki/Run_Modes].
+
+
+[[HTMLEmail]]
+Sending HTML email
+~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to send an HTML email from your Lift application.
+
+Solution
+^^^^^^^^
+
+Give `Mailer` a `NodeSeq` containing your HTML message:
+
+[source,scala]
+----------------------------------
+import net.liftweb.util.Mailer
+import net.liftweb.util.Mailer._
+
+val msg = <html>
+   <head>
+     <title>Hello</title>
+   </head>
+   <body>
+    <h1>Hello</h1>
+   </body>
+  </html>
+
+Mailer.sendMail(
+  From("me@example.org"),
+  Subject("Hello"),
+  To("you@example.org"),
+  msg)
+----------------------------------
+
+Discussion
+^^^^^^^^^^
+
+An implicit converts the `NodeSeq` into a `XHTMLMailBodyType`. This
+ensures the mime type of the email is "text/html". Despite the name of
+"XHTML", the message is to converted for transmission using
+HTML5 semantics.
+
+The character encoding for HTML email, UTF-8, can be changed by setting
+`mail.charset` in your Lift properties file.
+
+If you want to set both the text and HTML version of a message, supply each body wrapped in the appropriate `BodyType` class:
+
+[source, scala]
+---------------------------------------------------
+val html = <html>
+  <head>
+    <title>Hello</title>
+  </head>
+  <body>
+    <h1>Hello!</h1>
+  </body>
+</html>
+
+var text = "Hello!"
+
+Mailer.sendMail(
+  From("me@example.org"),
+  Subject("Hello"),
+  To("you@example.org"),
+  PlainMailBodyType(text),
+  XHTMLMailBodyType(html)
+)
+---------------------------------------------------
+
+This message would be sent as a "multipart/alternative":
+
+------------------------------------------
+Content-Type: multipart/alternative;
+  boundary="----=_Part_1_1197390963.1360226660982"
+Date: Thu, 07 Feb 2013 02:44:22 -0600 (CST)
+
+------=_Part_1_1197390963.1360226660982
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Hello!
+------=_Part_1_1197390963.1360226660982
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<html>
+      <head>
+        <title>Hello</title>
+      </head>
+      <body>
+        <h1>Hello!</h1>
+      </body>
+    </html>
+------=_Part_1_1197390963.1360226660982--
+------------------------------------------
+
+When receiving a message with this content, it is up to the mail client to decide which version to show (text or HTML).
+
+
+See Also
+^^^^^^^^
+
+For sending with attachments, see <<EmailWithAttachments>>.
+
+
+
+
+[[AuthEmail]]
+Sending Authenticated Email
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You need to authenticate with an SMTP server to send email.
+
+Solution
+^^^^^^^^
+
+Set the `Mailer.authenticator` in `Boot` with the credentials for your
+SMTP server, and enable the `mail.smtp.auth` flag in your Lift properties
+file.
+
+Modify `Boot.scala` to include:
+
+[source,scala]
+--------------------------------------------------------
+import net.liftweb.util.{Props, Mailer}
+import javax.mail.{Authenticator,PasswordAuthentication}
+
+Mailer.authenticator = for {
+  user <- Props.get("mail.user")
+  pass <- Props.get("mail.password")
+} yield new Authenticator {
+  override def getPasswordAuthentication =
+    new PasswordAuthentication(user,pass)
+}
+--------------------------------------------------------
+
+In this example we expect the username and password to come from Lift
+properties, so we need to modify
+`src/main/resources/props/default.props` to include them:
+
+[source,scala]
+------------------------------------------
+mail.smtp.auth=true
+mail.user=me@example.org
+mail.password=correct horse battery staple
+mail.smtp.host=smtp.sendgrid.net
+------------------------------------------
+
+When you send email, the credentials in `default.props` will be used to authenticate with the SMTP server.
+
+Discussion
+^^^^^^^^^^
+
+We've used Lift properties as a way to configure SMTP authentication.
+This has the benefit of allowing us to enable authentication for just
+some run modes. For example, if our `default.props` did not contain
+authentication settings, but our `production.default.props` did, then no
+authentication would happen in development mode, ensuring we can't
+accidentally send email outside of a production environment.
+
+You don't have to use a properties file for this: the Lift Mailer
+also supports JNDI, or you could lookup a username and password some other way and set `Mailer.authenticator` when you have the values.
+
+However, some mail services such as SendGrid do require `mail.smtp.auth=true` to be set, and that should go into your Lift properties file or set as a JVM argument: `-Dmail.smtp.auth=true`.
+
+See Also
+^^^^^^^^
+
+As well as `mail.smtp.auth` there are a range of settings to control the Java Mail API. examples include controlling port numbers and timeouts.  These are listed at: http://javamail.kenai.com/nonav/javadocs/com/sun/mail/smtp/package-summary.html[http://javamail.kenai.com/nonav/javadocs/com/sun/mail/smtp/package-summary.html].
+
+
+[[EmailWithAttachments]]
+Sending Email with Attachments
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to send an email with one or more attachments.
+
+Solution
+^^^^^^^^
+
+Use the `Mailer` `XHTMLPlusImages` to package a message with one or more attachments.
+
+Suppose we want to construct a CSV file and send it via email:
+
+[source,scala]
+--------------------------------------------------------------
+val content = "Planet,Discoverer\r\n" +
+  "HR 8799 c, Marois et al\r\n" +
+  "Kepler-22b, Kepler Science Team\r\n"
+
+case class CSVFile(bytes: Array[Byte],
+  filename: String = "file.csv",
+  mime: String = "text/csv; charset=utf8; header=present" )
+
+val attach = CSVFile(content.mkString.getBytes("utf8"))
+
+val body = <p>Please research the enclosed.</p>
+
+val msg = XHTMLPlusImages(body,
+  PlusImageHolder(attach.filename, attach.mime, attach.bytes))
+
+Mailer.sendMail(
+  From("me@example.org",
+  Subject("Planets"),
+  To("you@example.org"),
+  msg)
+--------------------------------------------------------------
+
+What's happening here is that our message is `XHTMLPlusImages` with accepts
+a body message and attachment.  The attachment, the `PlusImageHolder`, is an `Array[Byte]`, mime-type and a filename.
+
+
+Discussion
+^^^^^^^^^^
+
+`XHTMLPlusImages` can also accept more than one `PlusImageHolder` if you
+have more than one file to attach.  Although the name `PlusImageHolder` may suggest it is for attachment images, you can attach any kind of data as an `Array[Byte]` with an appropriate mime type.
+
+By default the attachment is sent with an "inline" disposition. This controls the `Content-Disposition` header in the message, and "inline" means the content is intended for display automatically when the message is shown.  The alternative is "attachment", and this can be indicated with a option final parameter to `PlusImageHolder`:
+
+[source,scala]
+--------------------------------------------------------------
+PlusImageHolder(attach.filename, attach.mime, attach.bytes, attachment=true)
+--------------------------------------------------------------
+
+In reality, the mail client will display the message how it wants to, but this extra parameter may give you a little more control.
+
+
+To attach a pre-made file, you can use `LiftRules.loadResource` to fetch content from the classpath.  As an example, if our project contained a file called `Kepler-22b_System_Diagram.jpg` in the `src/main/resources/` folder, we could load and attach it like this:
+
+[source,scala]
+--------------------------------------------------------------
+val filename = "Kepler-22b_System_Diagram.jpg"
+
+val msg =
+  for ( bytes <- LiftRules.loadResource("/"+filename) )
+  yield XHTMLPlusImages(
+    <p>Please research this planet.</p>,
+    PlusImageHolder(filename, "image/jpg", bytes) )
+
+msg match {
+  case Full(m) =>
+    Mailer.sendMail(
+      From("me@example.org"),
+      Subject("Planet attachment"),
+      To("you@example.org"),
+      m)
+
+  case _ =>
+    logger.error("Planet file not found")
+}
+--------------------------------------------------------------
+
+As the contents of `src/main/resources` is included on the classpath, we pass the filename to `loadResource` with a leading `/` character so the file can be found at the right place on the classpath.
+
+The `loadResource` returns a `Box[Array[Byte]]` as we have no guarantee the file will exist. We map this to a `Box[XHTMLPlusImages]` and match on that result to either send the email, or log that the file wasn't found.
+
+
+See Also
+^^^^^^^^
+
+Messages are sent using the "multipart/related" mime heading, with an "inline" disposition.  Lift ticket #1197 links to a discussion regarding "multipart/mixed" which may be preferable for working around issues with Microsoft Exchange. See: https://github.com/lift/framework/issues/1197[https://github.com/lift/framework/issues/1197].
+
+RFC 2183 describes the "Content-Disposition" header: http://www.ietf.org/rfc/rfc2183.txt[http://www.ietf.org/rfc/rfc2183.txt].
+
+
+
+[[RunLater]]
+Run a Task Later
+~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to schedule code to run at some future time.
+
+Solution
+^^^^^^^^
+
+Use `net.liftweb.util.Schedule`:
+
+[source,scala]
+------------------------------------------------
+import net.liftweb.util.Schedule
+import net.liftweb.util.Helpers._
+
+Schedule(() => println("doing it"), 30 seconds)
+------------------------------------------------
+
+This would cause "doing it" to be printed on the console 30
+seconds from now.
+
+Discussion
+^^^^^^^^^^
+
+The signature for `Schedule` used above expects a function of type `() => Unit`, which is the thing we want to happen in the future, and a `TimeSpan` from Lift's `TimeHelpers` which is when we want it to happen.  The `30 seconds` value gives us a `TimeSpan` via the `Helpers._` import, but there's a variation which accepts a `Long` millisecond value if you prefer that:
+
+[source,scala]
+------------------------------------------------
+Schedule.perform(() => println("doing it"), 30*1000L)
+------------------------------------------------
+
+Behind the scenes, Lift is making use of the `ScheduledExecutorService` from `java.util.concurrent`, and as such returns a `ScheduledFuture[Unit]`.  You can use this future to `cancel` the operation before it runs.
+
+It may be a surprise to find that you can call `Schedule` with just a function as an argument, and not a delay value.  This version runs the function immediately, but on a worker thread.  This is a convenient way to asynchronously run other tasks without going to the trouble of creating an actor for the purpose.
+
+There is also a `Schedule.schedule` method which will send a specified
+actor a specified message after a given delay.  This takes a `TimeSpan` delay, but again there's also a `Schedule.perform` version that accepts a `Long` as a delay.
+
+
+See Also
+^^^^^^^^
+
+<<RunTasksPeriodically>> includes an example of scheduling with actors.
+
+`ScheduledFuture` is documented via the Java Doc for `Future` at: http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html[http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html].  If you're building complex, low-level, cancellable concurrency functions, it's advisable to have a copy of _Java Concurrency in Practice_ close by (Goetz _et al._, 2006, Addison-Wesley Professional).
+
+
+
+
+
+[[RunTasksPeriodically]]
+Run Tasks Periodically
+~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want a scheduled task to run periodically (repeatedly).
+
+Solution
+^^^^^^^^
+
+Use `net.liftweb.util.Schedule` ensuring that you call `schedule` again
+during your task to re-schedule it. For example, using an actor:
+
+[source,scala]
+-------------------------------------------------
+import net.liftweb.util.Schedule
+import net.liftweb.actor.LiftActor
+import net.liftweb.util.Helpers._
+
+object MyScheduledTask extends LiftActor {
+
+  case class DoIt()
+  case class Stop()
+
+  private var stopped = false
+
+   def messageHandler = {
+     case DoIt if !stopped =>
+        Schedule.schedule(this, DoIt, 10 minutes)
+       // ... do useful work here
+
+     case Stop =>
+       stopped = true
+   }
+}
+-------------------------------------------------
+
+The example creates a `LiftActor` for the work to be done. On receipt of
+a `DoIt` message, the actor re-schedules itself before doing whatever
+useful work needs to be done. In this way, the actor will be called
+every 10 minutes.
+
+Discussion
+^^^^^^^^^^
+
+The `Schedule.schedule` call is ensuring that `this` actor is sent the
+`DoIt` message after 10 minutes.
+
+To start this process off, possibly in `Boot.scala`, just send the
+`DoIt` message to the actor:
+
+[source,scala]
+----------------------------------------------------------------------------
+MyScheduledTask ! MyScheduledTask.DoIt
+----------------------------------------------------------------------------
+
+To ensure the process stops correctly when Lift shuts down, we register
+a shutdown hook in `Boot.scala` to send the `Stop` message to prevent
+future re-schedules:
+
+[source,scala]
+----------------------------------------------------------------------------
+LiftRules.unloadHooks.append( () => MyScheduledTask ! MyScheduledTask.Stop )
+----------------------------------------------------------------------------
+
+Without the `Stop` message the actor would continue to be rescheduled
+until the JVM exits. This may be acceptable, but note that during
+development with SBT, without the `Stop` message, you will continue to
+schedule tasks after issuing the `container:stop` command.
+
+Schedule returns a `ScheduledFuture[Unit]` from the Java concurrency
+library, which allows you to `cancel` the activity.
+
+See Also
+^^^^^^^^
+
+Chapter 1 of _Lift in Action_ (Perrett, 2011, Manning Publications Co) includes a Comet Actor clock example that uses `Schedule`.
+
+
+
+[[FetchURLs]]
+Fetching URLs
+~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want your Lift application to fetch a URL, and process it as text, JSON, XML or HTML.
+
+Solution
+^^^^^^^^
+
+Use _Dispatch_, "a library for asynchronous HTTP interaction".
+
+Before you start, include Dispatch dependency in your `build.sbt` file:
+
+[source,scala]
+-------------------------------------------------
+libraryDependencies += "net.databinder.dispatch" %% "dispatch-core" % "0.9.5"
+-------------------------------------------------
+
+Using the example from the Dispatch documentation, we can make a HTTP request to try to determine the country from the service at http://www.hostip.info/use.html[http://www.hostip.info/use.html]:
+
+[source,scala]
+------------------------------------------
+import dispatch._
+val svc = url("http://api.hostip.info/country.php")
+val country : Promise[String] = Http(svc OK as.String)
+
+println(country())
+------------------------------------------
+
+Note that the result `country` is not a `String` but a `Promise[String]`, and we `apply` to wait for the resulting value.
+
+The result printed will be a country code such as `GB`, or `XX` if the country cannot be determined from your IP address.
+
+Discussion
+^^^^^^^^^^
+
+This short example expects a 200 (OK) status result and turns the result into a `String`, but that a tiny part of what Dispatch is capable of.  We'll explore further in this section.
+
+What if the request doesn't return a 200? In that case, with the code we have, we'd get an exception such as: "Unexpected response status: 404". There are a few ways to change that.
+
+We can ask for an `Option`:
+
+[source,scala]
+------------------------------------------
+val result : Option[String] = country.option()
+------------------------------------------
+
+As you'd expect, this will give a `None` or `Some[String]`. However, if you have debug level logging enabled in your application you'll see the request and response and error messages from the underlying Netty library.  You can tune these messages by adding a logger setting to `default.logback.xml` file:
+
+[source, xml]
+------------------------------------------
+<logger name="com.ning.http.client" level="WARN"/>
+------------------------------------------
+
+A second possibility is to use `either` with the usual convention that the `Right` is the expected result and `Left` signifies a failure:
+
+[source,scala]
+------------------------------------------
+country.either() match {
+  case Left(status) => println(status.getMessage)
+  case Right(cc) => println(cc)
+}
+------------------------------------------
+
+This will print a result as we are forcing the evaluation with an apply via `either()`.
+
+`Promise[T]` implements `map`, `flatMap`, `filter`, `fold` and all the usual methods you'd expect to allow you to compose.  This means you can use the promise with a for comprehension:
+
+[source,scala]
+------------------------------------------
+val codeLength = for (cc <- country) yield cc.length
+------------------------------------------
+
+Note that `codeLength` is a `Promise[Int]`.  To get the value you can evaluate `codeLength()` and you'll get a result of `2`.
+
+As well as extracting string values with `as.String` there are other options, including...
+
+* `as.Bytes` -- to work with `Promise[Array[Byte]]`.
+* `as.File` -- to write to a file, as in `Http(svc > as.File(new File("/tmp/cc")) )`.
+* `as.Response` -- to allow you to provide a `client.Response => T` function to use on the response.
+* `as.xml.Elem` -- to parse XML response.
+
+As an example of `as.xml.Elem`:
+
+[source,scala]
+------------------------------------------
+val svc = url("http://api.hostip.info/?ip=12.215.42.19")
+val country  = Http(svc > as.xml.Elem)
+println(country.map(_ \\ "description")())
+------------------------------------------
+
+This example is parsing the XML response to the request, which returns a `Promise[scala.xml.Elem]`.  We're picking out the description node of the XML via a `map`, which will be a `Promise[NodeSeq]` which we then force to evaluate.  The output is something like:
+
+[source,xml]
+------------------------------------------
+<gml:description
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:gml="http://www.opengis.net/gml">
+     This is the Hostip Lookup Service
+</gml:description>
+------------------------------------------
+
+That example assumes the request is going to be well-formed. In addition to the core Databinder library, there are extensions for JSoup and TagSoup to assist in parsing HTML that isn't necessarily well-formed.
+
+For example, to use JSoup, include the dependency:
+
+[source,scala]
+-------------------------------------------------
+libraryDependencies += "net.databinder.dispatch" %% "dispatch-jsoup" % "0.9.5"
+-------------------------------------------------
+
+You can then use the features of JSoup, such as picking out elements of a page using CSS selectors:
+
+[source,scala]
+-------------------------------------------------
+import org.jsoup.nodes.Document
+
+val svc = url("http://www.example.org").setFollowRedirects(true)
+val title = Http(svc > as.jsoup.Document).map(_.select("h1").text).option
+println( title() getOrElse "unknown title" )
+-------------------------------------------------
+
+He we are applying JSoup's `select` function to pick out the `<h1>` element on the page, taking the text of the element which we turn into a `Promise[Option[String]]`.  The result, unless _example.org_ has changed, will be "Example Domain".
+
+As a final example of using Dispatch, we can pipe a request into Lift's JSON library:
+
+[source,scala]
+-------------------------------------------------
+import net.liftweb.json._
+import com.ning.http.client
+
+object asJson extends (client.Response => JValue) {
+  def apply(r: client.Response) = JsonParser.parse(r.getResponseBody)
+}
+
+val svc = url("http://api.hostip.info/get_json.php?ip=212.58.241.131")
+val json : Promise[JValue] = Http(svc > asJson)
+
+case class HostInfo(country_name: String, country_code: String)
+implicit val formats = DefaultFormats
+
+val hostInfo = json.map(_.extract[HostInfo])()
+-------------------------------------------------
+
+
+The URL we're calling returns a JSON representation for location information for the IP address we've passed.
+
+By providing a `Response => JValue` to Dispatch we're able to pass the response body through to the JSON parser. We can then map on the `Promise[JValue]` to apply whatever Lift JSON functions we want to. In this case, we're extracting a simple case class.
+
+The result from the above would show `hostInfo` as:
+
+[source,scala]
+-------------------------------------------------
+HostInfo(UNITED KINGDOM,GB)
+-------------------------------------------------
+
+
+See Also
+^^^^^^^^
+
+The Dispatch documentation is well-written and guides you through the way Dispatch approaches HTTP.  Do spend some time with it at: http://dispatch.databinder.net/Dispatch.html[http://dispatch.databinder.net/Dispatch.html].
+
+To see what's available on Dispatch's `Promise`, browse the source: https://github.com/dispatch/reboot/blob/master/core/src/main/scala/promise.scala[https://github.com/dispatch/reboot/blob/master/core/src/main/scala/promise.scala].
+
+For questions about Dispatch, the best place is the Dispatch Google Group: https://groups.google.com/forum/#!forum/dispatch-scala[https://groups.google.com/forum/#!forum/dispatch-scala].
+
+The previous major version of Dispatch, 0.8.x ("Dispatch Classic"), is quite different from the "reboot" of the project as version 0.9.  Consequently, examples you may see that use 0.8.x will need some conversion to run with 0.9.x.  Nathan Hamblen's blog describes the change: http://code.technically.us/post/17038250904/fables-of-the-reconstruction-part-2-have-you-tried[http://code.technically.us/post/17038250904/fables-of-the-reconstruction-part-2-have-you-tried].
+
+For working with JSoup, take a look at the JSoup Cookbook at: http://jsoup.org/cookbook/[http://jsoup.org/cookbook/].
+

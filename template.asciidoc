@@ -1,0 +1,49 @@
+Chapter Title if Relevant
+-------------------------
+
+The Title for this Recipe
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to do X.
+
+Solution
+^^^^^^^^
+
+Use Y.
+
+A short example:
+
+[source,scala]
+---------------------------------------------------------
+val x = 42
+---------------------------------------------------------
+
+You might use this in a tempplate like this:
+
+[source,html]
+---------------------------------------------------------
+<html>
+  <body>
+    <h1>Uses two spaces, not tabs</h1> 
+   </body>
+</html>
+---------------------------------------------------------
+
+
+Discussion
+^^^^^^^^^^
+
+Further details on the example, description of related concepts or similar issues.
+
+Longer example could be here, along with alternatives.
+
+
+See Also
+^^^^^^^^
+
+Provide links to relevant web pages, using a style like this: http://liftweb.net[http://liftweb.net].
+
+

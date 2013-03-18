@@ -1,0 +1,1625 @@
+[[Squeryl]]
+Relational Database Persistence with Record and Squeryl
+-------------------------------------------------------
+
+Squeryl is an object-relational mapping library.  It converts Scala classes into tables, rows and columns in a relational database, and provides a way to write SQL-like queries that are type-checked by the Scala compiler. The Lift Squeryl Record module integrates Squeryl with Record, meaning your Lift application and use Squeryl to store and fetch data while making use of the features of record, such as data validation.
+
+The code in this chapter can be found at: https://github.com/LiftCookbook/cookbook_squeryl[https://github.com/LiftCookbook/cookbook_squeryl].
+
+[[ConfiguringSqueryl]]
+Configuring Squeryl and Record
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to configure your Lift application to use Squeryl and Record.
+
+Solution
+^^^^^^^^
+
+Include the Squeryl-Record dependency in your build, and in `Boot.scala` provide a database connection function to `SquerylRecord.initWithSquerylSession`.
+
+For example, to configure Squeryl with PostgreSQL, modify `build.sbt` to add two dependencies, one for Squeryl-Record and one for the database driver:
+
+[source, scala]
+---------------------------------------------------------------
+libraryDependencies ++= {
+  val liftVersion = "2.5-RC2"
+  Seq(
+    "net.liftweb" %% "lift-webkit" % liftVersion,
+    "net.liftweb" %% "lift-squeryl-record" % liftVersion,
+    "postgresql" % "postgresql" % "9.1-901.jdbc4"
+    ...
+    )
+}
+---------------------------------------------------------------
+
+This will give you access to Squeryl version 0.9.5-6.
+
+In `Boot.scala` we define a connection and register it with Squeryl:
+
+[source, scala]
+---------------------------------------------------------------
+Class.forName("org.postgresql.Driver")
+
+def connection = DriverManager.getConnection(
+  "jdbc:postgresql://localhost/mydb",
+  "username", "password")
+
+SquerylRecord.initWithSquerylSession(
+  Session.create(connection, new PostgreSqlAdapter) )
+
+---------------------------------------------------------------
+
+All Squeryl queries need to run in the context of a transaction.  One way to provide a transaction is to configure
+a transaction around all HTTP requests. This is also configured in `Boot.scala`:
+
+[source, scala]
+---------------------------------------------------------------
+S.addAround(new LoanWrapper {
+  override def apply[T](f: => T): T = inTransaction { f }
+})
+---------------------------------------------------------------
+
+
+Discussion
+^^^^^^^^^^
+
+You can use any JVM persistence mechanism with Lift. What Lift Record provides is a light interface around persistence with bindings to Lift's CSS transforms, screens and wizards. Squeryl-Record is a concrete implementation to connect Record with Squeryl.  This means you can use standard Record objects, which are effectively your schema, with Squeryl and write queries which are validated at compile time.
+
+Plugging into Squeryl means initializing Squeryl's session management, which allows us to wrap queries in Squeryl's `transaction` and `inTransaction` functions.  The difference between these two calls is that `inTransaction` will start a new transaction if one doesn't exist, whereas `transaction` always creates a new transaction.
+
+By ensuring a transaction is available for all HTTP requests via `addAround`, we can write queries in Lift and for the most part not have to establish transactions ourselves unless we want to.  For example:
+
+[source,scala]
+------------------------------------------------------------
+import net.liftweb.squerylrecord.RecordTypeMode._
+val r = myTable.insert(MyRecord.createRecord.myField(aValue))
+------------------------------------------------------------
+
+In this recipe, the `PostgreSqlAdapter` is being used. Squeryl also supports: `OracleAdapter`, `MySQLInnoDBAdapter` and `MySQLAdapter`, `MSSQLServer`, `H2Adapter`, `DB2Adapter` and `DerbyAdapter`.
+
+
+See Also
+^^^^^^^^
+
+The Squeryl _Getting Started Guide_ links to more information about session management and configuration: http://squeryl.org/getting-started.html[http://squeryl.org/getting-started.html].
+
+See <<SquerylJNDI>> for configuring connections via Java Naming and Directory Interface (JNDI).
+
+
+
+[[SquerylJNDI]]
+Using a JNDI Datasource
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to use a JNDI data source for your Record+Squeryl Lift
+application.
+
+Solution
+^^^^^^^^
+
+In `Boot.scala` call `initWithSquerylSession` with a `DataSource` looked up from the JDNI context:
+
+[source,scala]
+------------------------------------------------------------
+import javax.sql.DataSource
+val ds = new InitialContext().
+  lookup("java:comp/env/jdbc/mydb").asInstanceOf[DataSource]
+
+SquerylRecord.initWithSquerylSession(
+  Session.create(ds.getConnection(), new MySQLAdapter) )
+------------------------------------------------------------
+
+...replacing `mydb` with the name given to your database in your JNDI
+configuration, and replacing `MySQLAdapter` with the appropriate adapter
+for the database you are using.
+
+Discussion
+^^^^^^^^^^
+
+The Java Naming and Directory Interface (JNDI) is service provided by
+the web container (e.g., Jetty, Tomcat) which allows you to
+configure a database connection in the container and then refer the
+connection by name in your application. One advantage of this is that
+you can avoid including database credentials to your Lift source base.
+
+The configuration of JNDI is different for each container, and may vary
+with versions of the container you use. The _See Also_ section includes
+links to the documentation pages for popular containers.
+
+Some environments may also require that you to reference the JNDI resource
+in your `src/main/webapp/WEB-INF/web.xml` file:
+
+[source,xml]
+------------------------------------------
+<resource-ref>
+ <res-ref-name>jdbc/mydb</res-ref-name>
+ <res-type>javax.sql.DataSource</res-type>
+ <res-auth>Container</res-auth>
+</resource-ref>
+------------------------------------------
+
+
+See Also
+^^^^^^^^
+
+Resources for JDNI configuration include:
+
+* An example on the Lift Wiki for Apache and Jetty configuration at:http://www.assembla.com/spaces/liftweb/wiki/Apache_and_Jetty_Configuration[http://www.assembla.com/spaces/liftweb/wiki/Apache_and_Jetty_Configuration].
+
+* The documentation for Jetty gives examples for various databases: http://www.eclipse.org/jetty/documentation/current/jndi-datasource-examples.html[http://www.eclipse.org/jetty/documentation/current/jndi-datasource-examples.html].
+
+* For Tomcat, the JNDI configuration guide is: http://tomcat.apache.org/tomcat-7.0-doc/jndi-resources-howto.html#JDBC_Data_Sources[http://tomcat.apache.org/tomcat-7.0-doc/jndi-resources-howto.html#JDBC_Data_Sources].
+
+
+[[SquerylOneToMany]]
+One-to-Many Relationship
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to model a one-to-many relationship, such as a satellite belonging to a single planet, but a planet possibly having many satellites.
+
+Solution
+^^^^^^^^
+
+Use Squeryl's `oneToManyRelation` in your schema, and on your Lift model include a reference from the satellite to the planet.
+
+The objective is to model the relationship as shown in <<SquerylPlanetOneToManyFigure>>.
+
+[[SquerylPlanetOneToManyFigure]]
+.One planet may have many satellites, but a satellite orbits just one planet.
+image::images/planets.png[width=640]
+
+In code:
+
+[source, scala]
+-----------------------------------------------------------
+package code.model
+
+import org.squeryl.Schema
+import net.liftweb.record.{MetaRecord, Record}
+import net.liftweb.squerylrecord.KeyedRecord
+import net.liftweb.record.field.{StringField, LongField}
+import net.liftweb.squerylrecord.RecordTypeMode._
+
+object MySchema extends Schema {
+
+  val planets = table[Planet]
+  val satellites = table[Satellite]
+
+  val planetToSatellites = oneToManyRelation(planets, satellites).
+    via((p,s) => p.id === s.planetId)
+
+  on(satellites) { s =>
+    declare(s.planetId defineAs indexed("planet_idx"))
+  }
+
+  class Planet extends Record[Planet] with KeyedRecord[Long] {
+    override def meta = Planet
+    override val idField = new LongField(this)
+    val name = new StringField(this, 256)
+    lazy val satellites = MySchema.planetToSatellites.left(this)
+  }
+
+  object Planet extends Planet with MetaRecord[Planet]
+
+  class Satellite extends Record[Satellite] with KeyedRecord[Long] {
+     override def meta = Satellite
+     override val idField = new LongField(this)
+     val name = new StringField(this, 256)
+     val planetId = new LongField(this)
+     lazy val planet = MySchema.planetToSatellites.right(this)
+  }
+
+  object Satellite extends Satellite with MetaRecord[Satellite]
+
+}
+-----------------------------------------------------------
+
+This schema defines the two tables based on the Record classes, as `table[Planet]` and `table[Satellite]`. It establishes a `oneToManyRelation` based on (`via`) the `planetId` in the satellite table.
+
+This gives Squeryl the information it needs to produce a foreign key to constrain the `planetId` to reference an existing record in the planet table. This can be seen in the schema generated by Squeryl:
+
+[source, sql]
+-----------------------------------------------------------
+-- table declarations :
+create table Planet (
+    name varchar(256) not null,
+    idField bigint not null primary key auto_increment
+  );
+create table Satellite (
+    name varchar(256) not null,
+    idField bigint not null primary key auto_increment,
+    planetId bigint not null
+  );
+-- indexes on Satellite
+create index planet_idx on Satellite (planetId);
+-- foreign key constraints :
+alter table Satellite add constraint SatelliteFK1 foreign key (planetId)
+  references Planet(idField);
+-----------------------------------------------------------
+
+An index called `planet_idx` is declared on the `planetId` field to improve query performance during joins.
+
+Finally we make use of the `planetToSatellites.left` and `right` methods to establish lookup queries as `Planet.satellites` and `Satellite.planet`.  We can demonstrate their use by inserting example data and running the queries:
+
+[source, scala]
+-----------------------------------------------------------
+inTransaction {
+  code.model.MySchema.create
+
+  import code.model.MySchema._
+
+  val earth = planets.insert(Planet.createRecord.name("Earth"))
+  val mars = planets.insert(Planet.createRecord.name("Mars"))
+
+  // .save as a short-hand for satellite.insert when we don't need
+  // to immediately reference the record (save returns Unit).
+  Satellite.createRecord.name("The Moon").planetId(earth.idField.is).save
+  Satellite.createRecord.name("Phobos").planetId(mars.idField.is).save
+
+  val deimos = satellites.insert(
+    Satellite.createRecord.name("Deimos").planetId(mars.idField.is) )
+
+  println("Deimos orbits: "+deimos.planet.single.name.is)
+  println("Moons of Mars are: "+mars.satellites.map(_.name.is))
+
+}
+-----------------------------------------------------------
+
+Running this code produce the output:
+
+-----------------------------------------------------------
+Deimos orbits: Mars
+Moons of Mars are: List(Phobos, Deimos)
+-----------------------------------------------------------
+
+In this example code we're calling `deimos.planet.single` which returns one result or will thrown an exception if the associated planet was not found. `headOption` is the safer way if there's a chance the record will not be found, as it will evaluate to `None` or `Some[Planet]`.
+
+
+
+Discussion
+^^^^^^^^^^
+
+The `planetToSatellites.left` method is not a simple collection of `Satellite` objects.  It's a Squeryl `Query[Satellite]`, meaning you can treat it like any other kind of `Queryable[Satellite]`.  For example we could ask for those satellites of a planet that are alphabetically after "E", which for Mars would match "Phobos":
+
+[source, scala]
+-----------------------------------------------------------
+mars.satellites.where(s => s.name gt "E").map(_.name)
+-----------------------------------------------------------
+
+The `left` method result is also a `OneToMany[Satellite]` which adds the following methods:
+
+* `assign` -- adds a new relationship, but does not update the database.
+* `associate` -- which is like `assign` but does update the database.
+* `deleteAll` -- to remove the relationships.
+
+The `assign` call gives the satellite the relationship to the planet:
+
+[source, scala]
+-----------------------------------------------------------
+val express = Satellite.createRecord.name("Mars Express")
+mars.satellites.assign(express)
+express.save
+-----------------------------------------------------------
+
+The next time we query `mars.satellites` we will find the Mars Express orbiter.
+
+A call to `associate` would go one step further for us, making Squeryl insert or update the satellite automatically:
+
+[source, scala]
+-----------------------------------------------------------
+val express = Satellite.createRecord.name("Mars Express")
+mars.satellites.associate(express)
+-----------------------------------------------------------
+
+The third method, `deleteAll` does what it sounds like it should do. It would execute the following and return the number of rows removed:
+
+[source, sql]
+-----------------------------------------------------------
+delete from Satellite
+-----------------------------------------------------------
+
+The right side of the one-to-many also has additional methods added by `ManyToOne[Planet]` of `assign` and `delete`.  Be aware that to delete the "one" side of a many-to-one, anything assigned to record will need to have been deleted already to avoid a database constraint error that would arise from, for example, leaving satellites referencing non-existent planets.
+
+As `left` and `right` are queries, it means each time you use them you'll be sending a new query to the database.  Squeryl refer to these forms as _stateless relations_.
+
+The _stateful_ versions of `left` and `right` look like this:
+
+[source, scala]
+-----------------------------------------------------------
+class Planet extends Record[Planet] with KeyedRecord[Long] {
+ ...
+ lazy val satellites : StatefulOneToMany[Satellite] =
+   MySchema.planetToSatellites.leftStateful(this)
+}
+
+class Satellite extends Record[Satellite] with KeyedRecord[Long] {
+  ...
+  lazy val planet : StatefulManyToOne[Planet] =
+    MySchema.planetToSatellites.rightStateful(this)
+}
+-----------------------------------------------------------
+
+This change means the results of `mars.satellites` will be cached. Subsequent calls on that instance of a `Planet` won't trigger a round trip to the database. You can still `associate` new records or `deleteAll` records which will work as you expect, but if a relationship is added or changed elsewhere you'll need to call `refresh` on the relation to see the change.
+
+Which version should you use? That will depend on your application, but you can use both in the same record if you need to.
+
+
+See Also
+^^^^^^^^
+
+Squeryl relations are documented at http://squeryl.org/relations.html[http://squeryl.org/relations.html].
+
+
+
+
+
+[[SquerylManyToMany]]
+Many-to-Many Relationship
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to model a many-to-many relationship, such as a planet being visted by many space probes, but a space probe also visiting many planets.
+
+Solution
+^^^^^^^^
+
+Use Squeryl's `manyToManyRelation` in your schema, and implement a record to hold the join between the two sides of the relationship. <<SquerylPlanetManyToManyFigure>> shows the structure we will create in this recipe, where `Visit` is the record that will connect each many to the other many.
+
+[[SquerylPlanetManyToManyFigure]]
+.Many-to-many: Jupiter was visited by Juno and Voyager 1; Saturn was visited by Voyager.
+image::images/visits.png[width=640]
+
+The schema is defined in terms of two tables, one for planets and one for space probes, plus a relationship between the two based on a third class, called `Visit`:
+
+[source, scala]
+-----------------------------------------------------------
+package code.model
+
+import org.squeryl.Schema
+import net.liftweb.record.{MetaRecord, Record}
+import net.liftweb.squerylrecord.KeyedRecord
+import net.liftweb.record.field.{IntField, StringField, LongField}
+import net.liftweb.squerylrecord.RecordTypeMode._
+import org.squeryl.dsl.ManyToMany
+
+object MySchema extends Schema {
+
+  val planets = table[Planet]
+  val probes = table[Probe]
+
+  val probeVisits = manyToManyRelation(probes, planets).via[Visit] {
+    (probe, planet, visit) =>
+      (visit.probeId === probe.id, visit.planetId === planet.id)
+  }
+
+  class Planet extends Record[Planet] with KeyedRecord[Long] {
+    override def meta = Planet
+    override val idField = new LongField(this)
+    val name = new StringField(this, 256)
+    lazy val probes : ManyToMany[Probe,Visit] =
+      MySchema.probeVisits.right(this)
+  }
+
+  object Planet extends Planet with MetaRecord[Planet]
+
+  class Probe extends Record[Probe] with KeyedRecord[Long] {
+    override def meta = Probe
+    override val idField = new LongField(this)
+    val name = new StringField(this, 256)
+    lazy val planets : ManyToMany[Planet,Visit] =
+      MySchema.probeVisits.left(this)
+  }
+
+  object Probe extends Probe with MetaRecord[Probe]
+
+  class Visit extends Record[Visit] with KeyedRecord[Long] {
+    override def meta = Visit
+    override val idField = new LongField(this)
+    val planetId = new LongField(this)
+    val probeId = new LongField(this)
+  }
+
+  object Visit extends Visit with MetaRecord[Visit]
+}
+-----------------------------------------------------------
+
+In `Boot.scala` we can print out the schema...
+
+[source, scala]
+-----------------------------------------------------------
+inTransaction {
+  code.model.MySchema.printDdl
+}
+-----------------------------------------------------------
+
+...which will produce something like this, depending on the database in use:
+
+[source, sql]
+-----------------------------------------------------------
+-- table declarations :
+create table Planet (
+    name varchar(256) not null,
+    idField bigint not null primary key auto_increment
+  );
+create table Probe (
+    name varchar(256) not null,
+    idField bigint not null primary key auto_increment
+  );
+create table Visit (
+    idField bigint not null primary key auto_increment,
+    planetId bigint not null,
+    probeId bigint not null
+  );
+-- foreign key constraints :
+alter table Visit add constraint VisitFK1 foreign key (probeId)
+  references Probe(idField);
+alter table Visit add constraint VisitFK2 foreign key (planetId)
+  references Planet(idField);
+-----------------------------------------------------------
+
+Notice that the `visit` table will hold a row for each relationship between a `planetId` and `probeId`.
+
+`Planet.probes` and `Probe.planets` provide an `associate` method to establish a new relationship. For example, we can establish a set of planets and probes...
+
+[source, scala]
+-----------------------------------------------------------
+val jupiter = planets.insert(Planet.createRecord.name("Jupiter"))
+val saturn = planets.insert(Planet.createRecord.name("Saturn"))
+val juno = probes.insert(Probe.createRecord.name("Juno"))
+val voyager1 = probes.insert(Probe.createRecord.name("Voyager 1"))
+-----------------------------------------------------------
+
+...and then connect them:
+
+[source, scala]
+-----------------------------------------------------------
+juno.planets.associate(jupiter)
+voyager1.planets.associate(jupiter)
+voyager1.planets.associate(saturn)
+-----------------------------------------------------------
+
+We can also use `Probe.planets` and `Planet.probes` as a query to look up the associations.  To access all the probes that had visited each planet in a snippet, we can write this:
+
+[source, scala]
+-----------------------------------------------------------
+package code.snippet
+
+class ManyToManySnippet {
+  def render =
+    "#planet-visits" #> planets.map { planet =>
+      ".planet-name *" #> planet.name.is &
+      ".probe-name *" #> planet.probes.map(_.name.is)
+    }
+}
+-----------------------------------------------------------
+
+The snippet could be combined with a template like this:
+
+[source, html]
+-----------------------------------------------------------
+<div data-lift="ManyToManySnippet">
+  <h1>Planet facts</h1>
+  <div id="planet-visits">
+    <p>
+      <span class="planet-name">Name will be here</span> was visited by:
+    </p>
+    <ul>
+      <li class="probe-name">Probe name goes here</li>
+    </ul>
+  </div>
+</div>
+-----------------------------------------------------------
+
+The top half of <<SquerylManyToManyScreengrab>> gives an example of the output from this snippet and template.
+
+Discussion
+^^^^^^^^^^
+
+The Squeryl DSL `manyToManyRelation(probes, planets).via[Visit]` is the core element here connecting our `Planet`, `Probe` and `Visit` records together. It allows us to access the "left" and "right" sides of the relationship in our model as `Probe.planets` and `Planet.probes`.
+
+As with <<SquerylOneToMany>> for one-to-many relationships, the left and right sides are queries. When you ask for `Planet.probes` the database is queried appropriately with a join on the `Visit` records:
+
+[source, sql]
+-----------------------------------------------------------
+Select
+  Probe.name,
+  Probe.idField
+From
+  Visit,
+  Probe
+Where
+  (Visit.probeId = Probe.idField) and (Visit.planetId = ?)
+-----------------------------------------------------------
+
+Also as described in <<SquerylOneToMany>> there are stateful variants of `left` and `right` to cache the query results.
+
+In the data we inserted into the database, we did not have to mention `Visit`. The Squeryl `manyToManyRelation` has enough information to know how to insert a visit as the relationship.  Incidentally, it doesn't matter which way round we make the calls in a many-to-many relationship.  The following two expressions are equivalent and result in the same database structure:
+
+[source, scala]
+-----------------------------------------------------------
+juno.planets.associate(jupiter)
+// ..or..
+jupiter.probes.associate(juno)
+-----------------------------------------------------------
+
+You might even wonder why we had to bother with defining a `Visit` record at all, but there are benefits in doing so. For example, you can attach additional information onto the join table, such as the year the probe visited a planet.
+
+To do this, we modify the record to include the additional field:
+
+[source, scala]
+-----------------------------------------------------------
+class Visit extends Record[Visit] with KeyedRecord[Long] {
+  override def meta = Visit
+  override val idField = new LongField(this)
+  val planetId = new LongField(this)
+  val probeId = new LongField(this)
+  val year = new IntField(this)
+}
+-----------------------------------------------------------
+
+`Visit` is still a container for the `planetId` and `probeId` references, but we also have a plain integer holder for the year of the visit.
+
+To record a visit year, we need the `assign` method provided by `ManyToMany[T]`.  This will establish the relationship, but not change the database. Instead, it returns the `Visit` instance which we can change and then store in the database:
+
+[source, scala]
+-----------------------------------------------------------
+probeVisits.insert(voyager1.planets.assign(saturn).year(1980))
+-----------------------------------------------------------
+
+The return type of `assign` in this case is `Visit`, and `Visit` has a `year` field. Inserting the `Visit` record via `probeVisits` will create a row in the table for visits.
+
+
+To access this extra information on the `Visit` object, you can make use of a couple of methods provided by `ManyToMany[T]`:
+
+* `associations` -- a query returning the `Visit` objects related to the `Planet.probes` or `Probe.planets`.
+
+* `associationMap` -- a query returning pairs of `(Planet,Visit)` or `(Probe,Visit)` depending on which side of the join you call it on (probes or planets).
+
+For example, in a snippet we could list all the space probes, and for each probe show the planet it visited and what year it was there.  The snippet would look like this:
+
+[source, scala]
+-----------------------------------------------------------
+"#probe-visits" #> probes.map { probe =>
+  ".probe-name *" #> probe.name.is &
+  ".visit" #> probe.planets.associationMap.collect {
+    case (planet, visit) =>
+      ".planet-name *" #> planet.name.is &
+      ".year" #> visit.year.is
+    }
+}
+-----------------------------------------------------------
+
+We are using `collect` here rather than `map` just to match the `(Planet,Visit)` tuple and give the values meaningful names. You could also use `(for { (planet, visit) <- probe.planets.associationMap } yield ...)` if you prefer.
+
+The lower-half of <<SquerylManyToManyScreengrab>> demonstrates how this snippet would render when combined with the following template:
+
+[source, html]
+-----------------------------------------------------------
+<h1>Probe facts</h1>
+
+<div id="probe-visits">
+  <p><span class="probe-name">Space craft name</span> visited:</p>
+  <ul>
+    <li class="visit">
+      <span class="planet-name">Name here</span> in <span class="year">n</span>
+    </li>
+  </ul>
+</div>
+-----------------------------------------------------------
+
+[[SquerylManyToManyScreengrab]]
+.Example output from using the many-to-many features in this recipe.
+image::images/visitsscreengrab.png[width=640]
+
+To remove an association you have access to `dissociate` and `dissociateAll` on the `left` and `right` queries.  To remove a single association:
+
+
+[source, scala]
+-----------------------------------------------------------
+val numRowsChanged = juno.planets.dissociate(jupiter)
+-----------------------------------------------------------
+
+This would be executed in SQL as:
+
+[source, sql]
+-----------------------------------------------------------
+delete from Visit
+where
+  probeId = ? and planetId = ?
+-----------------------------------------------------------
+
+To remove all the associations:
+
+
+[source, scala]
+-----------------------------------------------------------
+val numRowsChanged = jupiter.probes.dissociateAll
+-----------------------------------------------------------
+
+The SQL for this is:
+
+[source, sql]
+-----------------------------------------------------------
+delete from Visit
+where
+  Visit.planetId = ?
+-----------------------------------------------------------
+
+What you cannot do is delete a `Planet` or `Probe` if that record still has associations in the `Visit` relationship.  What you'd get is a referential integrity exception thrown.  Instead, you'll need to `dissociatateAll` first:
+
+[source, scala]
+-----------------------------------------------------------
+jupiter.probes.dissociateAll
+planets.delete(jupiter.id)
+-----------------------------------------------------------
+
+However, if you do want _cascading deletes_ you can achieve this by overriding the default behaviour in your schema:
+
+[source, scala]
+-----------------------------------------------------------
+// To automatically remove probes when we remove planets:
+probeVisits.rightForeignKeyDeclaration.constrainReference(onDelete cascade)
+
+// To automatically remove planets when we remove probes:
+probeVisits.leftForeignKeyDeclaration.constrainReference(onDelete cascade)
+-----------------------------------------------------------
+
+This is part of the schema, in that it will change the table constraints, with `printDdl` producing this (depending on the database you use):
+
+[source, sql]
+-----------------------------------------------------------
+alter table Visit add constraint VisitFK1 foreign key (probeId)
+  references Probe(idField) on delete cascade;
+
+alter table Visit add constraint VisitFK2 foreign key (planetId)
+  references Planet(idField) on delete cascade;
+-----------------------------------------------------------
+
+See Also
+^^^^^^^^
+
+<<SquerylOneToMany>>, on one-to-many relationships, discusses `leftStateful` and `rightStaeful` relations, which are also applicable for many-to-many relationships.
+
+Foreign keys, cascading deletes, are described at: http://squeryl.org/relations.html[http://squeryl.org/relations.html].
+
+
+
+
+
+[[FieldValidation]]
+Adding Validation to a Field
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to add validation to a field in your model, so that users are informed of missing fields or fields that aren't acceptable to your application.
+
+Solution
+^^^^^^^^
+
+Override the `validations` method on your field and provide one re more validation functions.
+
+As an example, imagine we have a database of planets and we want to ensure any new planets entered by users have names of at least five characters.  We add this as a validation on our record:
+
+[source,scala]
+------------------------------------------------------------------------
+ class Planet extends Record[Planet] with KeyedRecord[Long]   {
+    override def meta = Planet
+    override val idField = new LongField(this)
+
+    val name = new StringField(this, 256) {
+      override def validations =
+        valMinLen(5, "Name too short") _ :: super.validations
+    }
+
+  }
+------------------------------------------------------------------------
+
+To check the validation, in our snippet we call `validate` on the record which will return all the errors for the record:
+
+[source,scala]
+---------------------------------------------------------
+package code
+package snippet
+
+import net.liftweb.http.{S,SHtml}
+import net.liftweb.util.Helpers._
+
+import model.MySchema._
+
+class ValidateSnippet {
+
+  def render = {
+
+    val newPlanet = Planet.createRecord
+
+    def validateAndSave() : Unit = newPlanet.validate match {
+      case Nil =>
+        planets.insert(newPlanet)
+        S.notice("Planet '%s' saved" format newPlanet.name.is)
+
+      case errors =>
+        S.error(errors)
+    }
+
+    "#planetName" #> newPlanet.name.toForm &
+    "type=submit" #> SHtml.onSubmitUnit(validateAndSave)
+  }
+}
+---------------------------------------------------------
+
+When the snippet runs we render the `Planet.name` field and wire up a submit button to call the `validateAndSave` method.
+
+If the `validate` call indicates there are no errors (`Nil`), we can save the record and inform the user via a notice.  If there are errors, we render all of them with `S.error`.
+
+The corresponding template could be:
+
+[source,html]
+-----------------------------------------------------------------------
+<html>
+<head>
+  <title>Planet Name Validation</title>
+</head>
+<body class="lift:content_id=main">
+<div id="main" class="lift:surround?with=default;at=content">
+  <h1>Add a planet</h1>
+
+  <div class="lift:Msgs?showAll=false">
+    <lift:notice_class>noticeBox</lift:notice_class>
+  </div>
+
+  <p>
+    Planet names need to be at least 5 characters long.
+  </p>
+
+  <form class="ValidateSnippet?form">
+
+    <div>
+      <label for="planetName">Planet name:</label>
+      <input id="planetName" type="text"></input>
+      <span class="lift:Msg?id=name_id&errorClass=error">
+        Msg to appear here
+      </span>
+    </div>
+
+    <input type="submit"></input>
+
+  </form>
+
+</div>
+</body>
+</html>
+-----------------------------------------------------------------------
+
+In this template the error message is shown next to the `input` field, styled with a CSS class of `errorClass`. The success notice
+is shown near the top of the page, just below the `<h1>` heading, using a styled called `noticeBox`.
+
+Discussion
+^^^^^^^^^^
+
+The built-in validations are:
+
+* `valMinLen` -- validate a string is at least a given length, as shown above.
+* `valMaxLen` -- validate that a string is not above a given length.
+* `valRegex` -- validate a string matches the given pattern.
+
+An example of regular expression validation on a field would be:
+
+[source,scala]
+------------------------------------------------------------
+import java.util.regex.Pattern
+
+val url = new StringField(this, 1024) {
+  override def validations =
+    valRegex( Pattern.compile("^https?://.*"),
+              "URLs should start http:// or https://") _ ::
+    super.validations
+}
+------------------------------------------------------------
+
+The list of errors from `validate` are of type `List[FieldError]`.  The `S.error` method accepts this list and registered each validation error message so it can be shown on the page.  It does this by associating the message with an ID for the field, allowing you to pick out just the errors for an individual field, as we do in this recipe.  The ID is stored on the field, and in the case of `Planet.name` it is available as `Planet.name.uniqueFieldId`.  It's a `Box[String]` with a value of `Full("name_id")`.  It is this `name_id` value that we used in the `lift:Msg?id=name_id&errorClass=error` markup to pick out just the error for this field.
+
+You don't have to use `S.error` to display validation messages.  You can roll your own display code, making use of the `FieldError` directly.  As you can see from the source for `FieldError`, the error is available as a `msg` property:
+
+[source,scala]
+------------------------------------------------------------
+case class FieldError(field: FieldIdentifier, msg: NodeSeq) {
+  override def toString = field.uniqueFieldId + " : " + msg
+}
+------------------------------------------------------------
+
+
+See Also
+^^^^^^^^
+
+The `BaseField.scala` class in the Lift source code contains the definition of the built-in `StringValidators`. Find the source at: https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/BaseField.scala[https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/BaseField.scala].
+
+<<Forms>> describes form processing, notices and errors.
+
+
+
+[[CustomValidation]]
+Custom Validation Logic
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to provide your own validation logic and apply it to a field in
+a record.
+
+Solution
+^^^^^^^^
+
+Implement a function from the type of the field to
+`List[FieldError]`, and reference the function in the `validations` on the field.
+
+Here's an example: we have a database of planets, and when a user
+enters a new planet, we want the name to be unique.  The name of the planet
+is a `String`, so we need to provide a function from `String => List[FieldError]`.
+
+With the validation function defined (`valUnique`, below), we include it in the list of `validations` on the
+`name` field:
+
+[source,scala]
+-------------------------------------------------------------------------
+import net.liftweb.util.FieldError
+
+class Planet extends Record[Planet] with KeyedRecord[Long] {
+  override def meta = Planet
+  override val idField = new LongField(this)
+
+  val name = new StringField(this, 256) {
+    override def validations =
+      valUnique("Planet already exists") _ ::
+      super.validations
+  }
+
+  private def valUnique(errorMsg: => String)(name: String): List[FieldError] =
+    Planet.unique_?(name) match {
+      case true => FieldError(this.name, errorMsg) :: Nil
+      case false => Nil
+    }
+}
+
+object Planet extends Planet with MetaRecord[Planet] {
+  def unique_?(name: String) = from(planets) { p =>
+    where(lower(p.name) === lower(name)) select(p)
+  }.isEmpty
+}
+-------------------------------------------------------------------------
+
+The validation is triggered just like any other validation, as described in <<FieldValidation>>.
+
+Discussion
+^^^^^^^^^^
+
+By convention validation functions have two argument lists: the first
+for the error message; the second to receive the value to validate. This
+allows you to easily re-use your validation function on other fields.  For example,
+if you wanted to validate that satellites have a unique name, you could use
+exactly the same function but provide a different error message.
+
+The `FieldError` you return needs to know the field it applies to as
+well as the message to display. In the example the field is `name`, but
+we've used `this.name` to avoid confusion with the `name` parameter passed
+into the `valUnique` function.
+
+The example code has used text for the error message, but there is a variation of `FieldError` that
+accepts `NodeSeq`.  This allows you to produce safe markup as part of the error if you need to.  For example:
+
+[source,scala]
+-------------------------------------------------------------------------
+FieldError(this.name, <p>Please see <a href="/policy">our name policy</a></p>)
+-------------------------------------------------------------------------
+
+For internationalisation, you may prefer to pass in a key to the validation function, and
+resolve it via `S.?`:
+
+[source,scala]
+-------------------------------------------------------------------------
+val name = new StringField(this, 256) {
+    override def validations =
+      valUnique("validation.planet") _ ::
+      super.validations
+  }
+
+// ...combined with...
+
+private def valUnique(errorKey: => String)(name: String): List[FieldError] =
+  Planet.unique_?(name) match {
+    case false => FieldError(this.name, S ? errorKey) :: Nil
+    case true => Nil
+  }
+-------------------------------------------------------------------------
+
+
+See Also
+^^^^^^^^
+
+<<FieldValidation>> discusses field validation and the built-in validations.
+
+Text localisation is discussed on the Lift wiki at: https://www.assembla.com/wiki/show/liftweb/Localization[https://www.assembla.com/wiki/show/liftweb/Localization].
+
+
+[[SquerylFilter]]
+Modify a Field Value Before it is Set
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to modify the value of a field, so the value in your model is
+the modified version.  For example, to clean a value by removing leading and trailing whitespace.
+
+Solution
+^^^^^^^^
+
+Override `setFilter` and provide a list of functions to apply to a field.
+
+To remove leading and trailing whitespace entered by the user, the field would use the `trim` filter:
+
+[source,scala]
+-----------------------------------------------------
+val name = new StringField(this, 256) {
+   override def setFilter = trim _ :: super.setFilter
+}
+-----------------------------------------------------
+
+Discussion
+^^^^^^^^^^
+
+The built-in filters are:
+
+* `crop` -- enforces the field's min and max length by truncation.
+* `trim` -- applies `String.trim` to the field value.
+* `toUpper` and `toLower` -- change the case of the field value.
+* `removeRegExChars` -- removes matching regular expression characters.
+* `notNull` -- coverts null values to an empty string.
+
+Filters are run before validation. This means if you have a minimum length validation and the trim filter, for example, users cannot pass the validation test by just including spaces on the end of the value they enter.
+
+A filter for a `String` field would be of type `String => String`, and the `setFilter` function expects a `List` of these.  Knowing this, it's straight-forward to write custom filters. For example, here's is a filter that applies a simple form of title case on our `name` field:
+
+[source,scala]
+-----------------------------------------------------
+ def titleCase(in: String) =
+  in.split("\\s").
+  map(_.toList).
+  collect {
+    case x :: xs  => (Character.toUpperCase(x).toString :: xs).mkString
+  }.mkString(" ")
+-----------------------------------------------------
+
+This function is splitting the input string on spaces, converting each word into a list of characters, converting the first character into upper case, and then gluing the strings back together.
+
+When installed as a filter...
+
+[source,scala]
+-----------------------------------------------------
+val name = new StringField(this, 256) {
+   override def setFilter =
+    trim _ :: titleCase _ :: super.setFilter
+}
+-----------------------------------------------------
+
+...a user entering "jaglan beta" as a planet name would see it stored in the database as "Jaglan Beta".
+
+
+See Also
+^^^^^^^^
+
+The best place to understand the filters is the trait `StringValidators` in the source for `BaseField`: https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/BaseField.scala[https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/BaseField.scala].
+
+If you really do need to apply title case to a value, the Apache Commons `WordUtils` class provides ready-made functions for this.  See: http://commons.apache.org/lang/[http://commons.apache.org/lang/].
+
+
+[[SquerylUnitTest]]
+Testing with Specs2
+~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to write Specs2 unit tests which access your database model with Squeryl and Record.
+
+Solution
+^^^^^^^^
+
+Use an in-memory database, and arrange for it to be set up around your test.
+
+There are three parts to this: including a database in your project and connect to it in an in-memory mode; creating a re-usable trait to set up the database; and then using the trait in your test.
+
+The H2 database has an in memory mode, meaning it won't save data to disk. It needs to be included in `build.sbt` as a dependency. Whilst you are editing `build.sbt` also disable SBT's parallel test execution to prevent database tests from influencing each other:
+
+[source, scala]
+--------------------------------------------
+libraryDependencies += "com.h2database" % "h2" % "1.3.170"
+
+parallelExecution in Test := false
+--------------------------------------------
+
+Create a trait to initialise the database and create the schema:
+
+[source, scala]
+--------------------------------------------
+package code.model
+
+import java.sql.DriverManager
+
+import org.squeryl.Session
+import org.squeryl.adapters.H2Adapter
+
+import net.liftweb.util.StringHelpers
+import net.liftweb.common._
+import net.liftweb.http.{S, Req, LiftSession }
+import net.liftweb.squerylrecord.SquerylRecord
+import net.liftweb.squerylrecord.RecordTypeMode._
+
+import org.specs2.mutable.Around
+import org.specs2.execute.Result
+
+trait TestLiftSession {
+  def session = new LiftSession("", StringHelpers.randomString(20), Empty)
+  def inSession[T](a: => T): T = S.init(Req.nil, session) { a }
+}
+
+trait DBTestKit extends Loggable {
+
+  Class.forName("org.h2.Driver")
+
+  Logger.setup = Full(net.liftweb.util.LoggingAutoConfigurer())
+  Logger.setup.foreach { _.apply() }
+
+  def configureH2() = {
+    SquerylRecord.initWithSquerylSession(
+      Session.create(
+        DriverManager.getConnection("jdbc:h2:mem:dbname;DB_CLOSE_DELAY=-1", "sa", ""),
+        new H2Adapter)
+    )
+  }
+
+  def createDb() {
+    inTransaction {
+      try {
+        MySchema.drop
+        MySchema.create
+      } catch {
+        case e : Throwable =>
+          logger.error("DB Schema error", e)
+          throw e
+      }
+    }
+  }
+
+}
+
+case class InMemoryDB() extends Around with DBTestKit with TestLiftSession {
+  def around[T <% Result](testToRun: =>T) = {
+    configureH2
+    createDb
+    inSession {
+      inTransaction {
+        testToRun
+      }
+    }
+  }
+}
+--------------------------------------------
+
+In summary, this trail provides an `InMemoryDB` _context_ for Specs2. This context ensures that the database is configured, the schema created and a transaction is supplied around your test.
+
+Finally, mix the trait into your test and execute in the scope of the `InMemoryDB` context.
+
+As an example, using the schema from <<SquerylOneToMany>> we can test that the planet Mars has two moons:
+
+[source, scala]
+--------------------------------------------
+package code.model
+
+import org.specs2.mutable._
+import net.liftweb.squerylrecord.RecordTypeMode._
+import MySchema._
+
+class PlanetsSpec extends Specification with DBTestKit {
+
+  sequential
+
+  "Planets" >> {
+
+    "know that Mars has two moons" >> InMemoryDB() {
+
+      val mars = planets.insert(Planet.createRecord.name("Mars"))
+      Satellite.createRecord.name("Phobos").planetId(mars.idField.is).save
+      Satellite.createRecord.name("Deimos").planetId(mars.idField.is).save
+
+      mars.satellites.size must_== 2
+    }
+
+  }
+
+}
+--------------------------------------------
+
+Running this with SBT's `test` command would show a success:
+
+------------------------------------------
+> test
+[info] PlanetsSpec
+[info]
+[info] Planets
+[info] + know that Mars has two moons
+[info]
+[info]
+[info] Total for specification PlanetsSpec
+[info] Finished in 1 second, 274 ms
+[info] 1 example, 0 failure, 0 error
+[info]
+[info] Passed: : Total 1, Failed 0, Errors 0, Passed 1, Skipped 0
+[success] Total time: 3 s, completed 03-Feb-2013 11:31:16
+------------------------------------------
+
+
+Discussion
+^^^^^^^^^^
+
+The `DBTestKit` trait has to do quite a lot of work for us.  At the lowest level, it loads the H2 driver and configures Squeryl with an in-memory connection. The `mem` part of the JDBC connection string (`jdbc:h2:mem:dbname;DB_CLOSE_DELAY=-1`) means that H2 won't try to persist the data to disk.  The database just resides in memory, so there are no files in disk to maintain, and it runs quickly.
+
+By default, when a connection is closed, the in memory database is destroyed. In this recipe we've disabled that by adding the `DB_CLOSE_DELAY=-1`, which will allow us to write unit tests that span connections if we want to.
+
+The next step up from connection management is the creation of the database schema in memory. We do this in `createDb` by throwing away the schema and any data when we start a test, and create it afresh.  If you have very common test datasets, this might be a good place to insert that data before your test runs.
+
+These steps are brought together at the `InMemoryDB` class, which implements a Specs2 interface for code to run `Around` a test.  We've also wrapped the test around a `TestLiftSession`. This provides an empty session, which is useful if you are accessing state-related code (such as the `S` object).  It's not necessary for running tests against Record and Squeryl, but it has been included here because you may want to do that at some point.
+
+In our specification itself, we mix in the `DBTestKit` and reference the `InMemoryDB` context on the tests that access the database.  You'll note that we've used `>>` rather than Specs2's `should` and `in` that you may have seen elsewhere. This is to avoid name conflicts between Specs2 and Squery that you might come across.
+
+As we disabled parallel execution with SBT, we also disable parallel execution in Specs2 with `sequential`.  We are doing this to prevent a situation where one test might be expecting data that another test is modifying at the same time.
+
+If all the tests in a specification are going to use the database, you can use the Specs2 `AroundContextExample[T]` to avoid having to mention `InMemoryDB` on every test.  To do that, mix in `AroundContextExample[InMemoryDB]` and define `aroundContext`:
+
+[source, scala]
+--------------------------------------------
+package code.model
+
+import MySchema._
+
+import org.specs2.mutable._
+import org.specs2.specification.AroundContextExample
+import net.liftweb.squerylrecord.RecordTypeMode._
+
+class AlternativePlanetsSpec extends Specification with
+  AroundContextExample[InMemoryDB] {
+
+  sequential
+
+  def aroundContext = new InMemoryDB()
+
+  "Solar System" >> {
+
+    "know that Mars has two moons" >> {
+
+      val mars = planets.insert(Planet.createRecord.name("Mars"))
+      Satellite.createRecord.name("Phobos").planetId(mars.idField.is).save
+      Satellite.createRecord.name("Deimos").planetId(mars.idField.is).save
+
+      mars.satellites.size must_== 2
+    }
+  }
+}
+--------------------------------------------
+
+All the tests in `AlternativePlanetsSpec` will now be run with an `InMemoryDB` around them.
+
+We've used a database with an in-memory mode for the advantages of speed and no files to clean up. However, you could use any regular database: you'd need to change the driver and connection string.
+
+See Also
+^^^^^^^^
+
+See http://www.h2database.com/html/features.html#in_memory_databases[http://www.h2database.com/html/features.html#in_memory_databases] for more about H2's in-memory database settings.
+
+<<MongoUnitTest>> discusses unit testing with MongoDB, but the comments on SBT's other testing commands and testing in an IDE would apply to this recipie too.
+
+
+[[RandomValueColumn]]
+Store a Random Value in a Column
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You need a column to hold a random value.
+
+Solution
+^^^^^^^^
+
+Use `UniqueIdField`:
+
+[source,scala]
+--------------------------------------------
+import net.liftweb.record.field.UniqueIdField
+val randomId = new UniqueIdField(this, 32) {}
+--------------------------------------------
+
+Note the `{}` in the example: this is required as `UniqueIdField` is an
+abstract class.
+
+The size value, 32, indicates how many random characters to create.
+
+Discussion
+^^^^^^^^^^
+
+The `UniqueIdField` field is a kind of `StringField` and the default value for the field
+comes from `StringHelpers.randomString`. The value is randomly generated, but not guaranteed to be unique in the database.
+
+The database column backing the `UniqueIdField` in this recipe will be a `varchar(32) not null` or similar.  The value stored will look like:
+
+----------------------
+GOJFGQRLS5GVYGPH3L3HRNXTATG3RM5M
+----------------------
+
+As the value is made up of just letters and numbers, it makes it easy to use in URLs as there are no characters to escape. For example, it could be used in a link to allow a user to validate their account when sent the link over email, which is one of the uses in `ProtoUser`.
+
+If you need to change the value, the `reset` method on the field will generate a new random string for the field.
+
+If you need an automatic value that is even more likely to be unique per-row, you can add a field that wraps a _universally unique identifier_ (UUID):
+
+[source,scala]
+--------------------------------------------
+import java.util.UUID
+
+val uuid = new StringField(this, 36) {
+  override def defaultValue = UUID.randomUUID().toString
+}
+--------------------------------------------
+
+This will automatically insert values of the form "6481a844-460a-a4e0-9191-c808e3051519" in records you create.
+
+
+
+See Also
+^^^^^^^^
+
+Java's UUID support is described at http://docs.oracle.com/javase/7/docs/api/java/util/UUID.html[http://docs.oracle.com/javase/7/docs/api/java/util/UUID.html] and includes a link to RFC 4122 which defines UUIDs.
+
+
+
+
+
+[[SquerylUpdatedCreated]]
+Automatic Created and Updated Timestamps
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want created and updated timestamps on your records and would like them
+automatically updated when a row is added or updated.
+
+Solution
+^^^^^^^^
+
+Define the following traits:
+
+[source,scala]
+--------------------------------------------------------------
+package code.model
+
+import java.util.Calendar
+
+import net.liftweb.record.field.DateTimeField
+import net.liftweb.record.Record
+
+trait Created[T <: Created[T]] extends Record[T] {
+  self: T =>
+  val created: DateTimeField[T] = new DateTimeField(this) {
+    override def defaultValue = Calendar.getInstance
+  }
+}
+
+trait Updated[T <: Updated[T]] extends Record[T] {
+  self: T =>
+
+  val updated = new DateTimeField(this) {
+    override def defaultValue = Calendar.getInstance
+  }
+
+  def onUpdate = this.updated(Calendar.getInstance)
+
+}
+
+trait CreatedUpdated[T <: Updated[T] with Created[T]] extends
+  Updated[T] with Created[T] {
+    self: T =>
+}
+--------------------------------------------------------------
+
+Add the trait to the model. For example, we can modify a `Planet` record to include
+the time the record was created and updated:
+
+[source,scala]
+----------------------------------------------------------
+class Planet private () extends Record[Planet]
+  with KeyedRecord[Long] with CreatedUpdated[Planet] {
+    override def meta = Planet
+    // field entries as normal...
+}
+----------------------------------------------------------
+
+Finally, arrange for the `updated` field to be updated:
+
+[source,scala]
+-----------------------------------------------
+class MySchema extends Schema {
+  ...
+  override def callbacks = Seq(
+    beforeUpdate[Planet] call {_.onUpdate}
+  )
+  ...
+-----------------------------------------------
+
+Discussion
+^^^^^^^^^^
+
+Although there is a built in `net.liftweb.record.LifecycleCallbacks`
+trait in which allows you trigger behaviour onUpdate, afterDelete and so
+on, it is only for use on individual fields, rather than records. As our
+goal is to update the `updated` field when any part of the Record
+changes, we can't use the `LiftcycleCallbacks` here.
+
+Instead, the `CreatedUpdated` trait simplifies adding an `updated` and
+`created` fields to a Record, but we do need to remember to add a hook
+into the schema to ensure the `updated` value is changed when a record
+is modified. This is why we set the `callbacks` on the Schema.
+
+The schema for records with `CreatedUpdated` mixed in will include two additional columns:
+
+[source,sql]
+-----------------------------------------------
+updated timestamp not null,
+created timestamp not null
+-----------------------------------------------
+
+The `timestamp` is used for the H2 database.  For other databases the type may be different.
+
+The values can be accessed like any other record field.  Using the example data from <<SquerylOneToMany>> we could run the following:
+
+[source,scala]
+-----------------------------------------------
+val updated : Calendar = mars.updated.id
+val created : Calendar = mars.created.is
+-----------------------------------------------
+
+If you only need created time, or updated time, just mix in the `Created[T]` or `Updaed[T]` trait instead of `CreatedUpdated[T]`.
+
+It should be noted that `onUpdate` is only called on full updates and
+not on partial updates with Squeryl. A full update is when the object is
+altered and then saved; a partial update is where you attempt to alter
+many objects via a query.
+
+If you're interested in other automations for Record, the Squery schema
+callbacks also support other triggered behaviours:
+
+* `beforeInsert` and `afterInsert`
+* `afterSelect`
+* `beforeUpdate` and `afterUpdate`
+* `beforeDelete` and `afterDelete`
+
+See Also
+^^^^^^^^
+
+For a discussion of the difference between partial and full updates in Squeryl, see : http://squeryl.org/inserts-updates-delete.html[http://squeryl.org/inserts-updates-delete.html].
+
+
+[[SquerylLogging]]
+Logging SQL
+~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to see the SQL being executed by Squeryl.
+
+Solution
+^^^^^^^^
+
+Add the following anytime you have a Squeryl season, such as just before
+your query:
+
+[source,scala]
+---------------------------------------------------------------
+org.squeryl.Session.currentSession.setLogger( s => println(s) )
+---------------------------------------------------------------
+
+By providing a `String => Unit` function to `setLogger`, Squeryl will
+execute that function with the SQL it runs. In this example, we are
+simply printing the SQL to the console.
+
+Discussion
+^^^^^^^^^^
+
+You'll probably want to use the logging facilities in Lift to capture SQL.  For example:
+
+[source,scala]
+---------------------------------------------------------------
+package code.snippet
+
+import net.liftweb.common.Loggable
+import org.squeryl.Session
+
+class MySnippet extends Loggable {
+
+  def render = {
+    Session.currentSession.setLogger( s => logger.info(s) )
+    // ...your snippet code here...
+  }
+}
+---------------------------------------------------------------
+
+This will log queries according to the settings for the logging system, typically the Logback project configured in `src/resources/props/default.logback.xml`.
+
+It can be inconvenient to have to enable logging in each snippet during development.  To trigger logging for all snippets, you can modify the `addAround` call in `Boot.scala`.
+
+Recall from <<ConfiguringSqueryl>> that this is usually defined as:
+
+[source,scala]
+---------------------------------------------------------------
+S.addAround(new LoanWrapper {
+  override def apply[T](f: => T): T = inTransaction { f }
+})
+---------------------------------------------------------------
+
+To enable logging in each session, we can modify `Boot.scala` to mix in logging and enable logging on every session:
+
+[source,scala]
+---------------------------------------------------------------
+class Boot extends Loggable {
+
+  // ...boot as usual here...
+
+  S.addAround(new LoanWrapper {
+    override def apply[T](f: => T): T = inTransaction {
+      Session.currentSession.setLogger( s => logger.info(s) )
+      f
+    }
+  })
+
+}
+---------------------------------------------------------------
+
+
+See Also
+^^^^^^^^
+
+Squeryl `setLogger` is documented at: http://squeryl.org/miscellaneous.html[http://squeryl.org/miscellaneous.html].
+
+You can learn about logging in Lift from the Logging wiki page: https://www.assembla.com/spaces/liftweb/wiki/Logging[https://www.assembla.com/spaces/liftweb/wiki/Logging].
+
+
+
+
+
+
+[[SquerylMediumText]]
+Model a Column with MySQL MEDIUMTEXT
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to use MySQL's `MEDIUMTEXT` for a column, but `StringField`
+doesn't have this option.
+
+Solution
+^^^^^^^^
+
+Use Squeryl's `dbType` in your schema:
+
+[source,scala]
+------------------------------------------
+object MySchema extends Schema {
+  on(mytable)(t => declare(
+    t.mycolumn defineAs dbType("MEDIUMTEXT")
+  ))
+}
+------------------------------------------
+
+This schema setting will give you the correct column type in MySQL:
+
+[source,sql]
+--------------------------------
+create table mytable (
+    mycolumn MEDIUMTEXT not null
+);
+--------------------------------
+
+On the record you can use `StringField` as usual.
+
+Discussion
+^^^^^^^^^^
+
+This recipe hints at the flexibility available with Squery's schema definition DSL.  The column attribute in this example is just one of a variety of adjustments you can make to the default choices that Squeryl uses.
+
+For example, you can use the syntax to chain column attributes for a single column, and also defined multiple columns at the same time:
+
+[source,scala]
+------------------------------------------
+object MySchema extends Schema {
+  on(mytable)(t => declare(
+    t.mycolumn defineAs(dbType("MEDIUMTEXT"),indexed),
+    t.id definedAs(unique, named("MY_ID"))
+  ))
+}
+------------------------------------------
+
+
+See Also
+^^^^^^^^
+
+The schema definition page for Squeryl gives examples of attributes you can apply to tables and columns: http://squeryl.org/schema-definition.html[http://squeryl.org/schema-definition.html].
+
+
+
+
+[[MySQLCharSet]]
+MySQL Character Set Encoding
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+Some characters stored in your MySQL database are appearing as `???`.
+
+Solution
+^^^^^^^^
+
+Ensure that:
+
+* `LiftRules.early.append(_.setCharacterEncoding("UTF-8"))` is included in `Boot.scala`.
+* `?useUnicode=true&characterEncoding=UTF-8` is included in your JDBC connections URL.
+* Your MySQL database has been created using a UTF-8 character set.
+
+Discussion
+^^^^^^^^^^
+
+There are a number of interactions here which can impact characters going into, and coming out of, a MySQL database.  The basic problem is that bytes transferred across networks have no meaning unless you know the encoding.
+
+The `setCharacterEncoding("UTF-8")` call in `Boot.scala` is being applied to every `HTTPRequest` which ultimately, in a servlet container, is applied to a `ServletRequest`. This is how parameters in a request are going to be interpreted by the servlet container when received.
+
+The flip side of this is that responses from Lift are encoded as UTF-8.  You'll see this in a number of places. For example, `templates-hidden/default` includes:
+
+[source, html]
+-------------------------------------------
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+-------------------------------------------
+
+Also, the `LiftResponse` classes set the encoding as UTF-8.
+
+Another aspect is how character data from Lift is sent to the database over the network.  This is controlled by the parameters to the JDBC driver.  The default for MySQL is to detect the encoding, but it seems from experience that this is not a great option, so we force the UTF-8 encoding.
+
+Finally, the MySQL database itself needs to store the data as UTF-8.  The default character encoding is not UTF-8, so you'll need to specify the encoding when you create the database:
+
+[source, sql]
+-------------------------------------------
+CREATE DATABASE myDb CHARACTER SET utf8
+-------------------------------------------
+
+See Also
+^^^^^^^^
+
+The MySQL JDBC configuration guide is at: http://dev.mysql.com/doc/refman/5.6/en/connector-j-reference-configuration-properties.html[http://dev.mysql.com/doc/refman/5.6/en/connector-j-reference-configuration-properties.html].
+
+
+
+

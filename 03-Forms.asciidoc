@@ -1,0 +1,725 @@
+[[Forms]]
+Forms Processing in Lift
+------------------------
+
+This section gives examples of working with Lift forms in different
+ways.  You'll find many of the examples in https://github.com/LiftCookbook/cookbook_forms[https://github.com/LiftCookbook/cookbook_forms].
+
+
+[[PlainFormProcessing]]
+Plain Old Form Processing
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to process form data in a regular old-fashioned, non-Ajax, way.
+
+Solution
+^^^^^^^^
+
+Extract form values with `S.param`. For example, we can show a form,
+process an input value, and echo the value back out. Here we have
+`dumbForm.html` which contains a form wrapped in a snippet:
+
+[source,html]
+------------------
+<div class="lift:DumbForm">
+
+<form  action="/dumbForm.html" method="post">
+  <input type="text" name="it" value="something" >
+  <input type="submit" value="Go" >
+</form>
+
+<div id="result"> </div>
+
+</div>
+------------------
+
+Pick out the values in the snippet:
+
+[source,scala]
+------------------
+package code.snippet
+
+import net.liftweb.util._
+import net.liftweb.common._
+import Helpers._
+import net.liftweb.http._
+
+class DumbForm {
+
+  val inputParam = for {
+    r <- S.request if r.post_?  // restricting to POST requests
+    v <- S.param("it")
+  } yield v
+
+  def render = inputParam match {
+      case Full(x) =>
+        println("Input is: "+x)
+        "#result *" #> x
+
+      case _ =>
+        println("No input present! Rendering input form HTML")
+        PassThru
+  }
+
+}
+------------------
+
+When you run this code you'll see
+`No input present! Rendering input form HTML` on the console, and when
+you press "Go" you'll see `Input is: something` and the "something" will
+appear on the page.
+
+Discussion
+^^^^^^^^^^
+
+The `DumbForm` snippet extracts the input parameter using a for
+comprehension. The result will be of type `Box[String]` which we then
+match on to decide what to do next.
+
+In this example, we are also checking that the request is a POST request
+before extracting the value of the `it` form parameter.
+
+Screen or Wizard provide alternatives for form processing, but sometimes
+you just want to pull values from a request, as demonstrated in this
+recipe.
+
+See Also
+^^^^^^^^
+
+* _Simply Lift_, section 4.1,
+http://simply.liftweb.net/index-4.1.html#toc-Section-4.1[Old Fashioned
+Dumb Forms] and 4.9
+http://stable.simply.liftweb.net/#toc-Section-4.9[But sometimes Old
+Fashioned is good].
+* https://github.com/marekzebrowski/lift-basics[Simple forms], example
+Lift project.
+
+
+
+[[AjaxFormProcessing]]
+Ajax Form Processing
+~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to process a form on the server via Ajax, without reloading the
+whole page.
+
+Solution
+^^^^^^^^
+
+Mark your form as an Ajax form with `lift:form.ajax` and supply a
+function to run on the server when the form is submitted. Given this
+form...
+
+[source,html]
+---------------------------------------------------------
+<div class="lift:AjaxExample">
+ <form class="lift:form.ajax">
+  <input type="text" name="info" value="" />
+  <input type="submit" name="sb" value="go!" />
+ </form>
+ <div id="result"></div>
+</div>
+---------------------------------------------------------
+
+...we use the following snippet to accept the text field input of `info`
+and send back a JavasScript command to update the `result` div with the
+value sent to us:
+
+[source,scala]
+---------------------------------------------------------
+package code.snippet
+
+import net.liftweb.util.Helpers._
+import net.liftweb.http.SHtml
+import net.liftweb.http.js._
+import JsCmds._
+
+import scala.xml.Text
+
+class AjaxExample {
+
+  var inputVal = "default"
+
+  def process(): JsCmd = {
+    println("Received: "+inputVal)
+    SetHtml("result", Text(inputVal))
+  }
+
+  def render = {
+    "name=info" #> (
+        SHtml.text(inputVal, inputVal = _) ++
+        SHtml.hidden(process) )
+  }
+
+}
+---------------------------------------------------------
+
+Discussion
+^^^^^^^^^^
+
+The form's `info` input is bound to a `SHtml.text` box which will set
+the local `inputVal` variable to the value submitted by the form.
+
+The hidden field instructs Lift to call the `() => Any` function
+(`process`, in this example) when the form is submitted. The end result
+is the text entered is echoed back by setting the HTML node `result`.
+There are many other `JsCmd`s you could send, including `Noop` if you
+decide to send nothing.
+
+In `SHtml` you will see functions starting with "ajax" (e.g.,
+`ajaxText`). These are great for field-level Ajax interactions, such as
+triggering actions on input or selection changes.
+
+See Also
+^^^^^^^^
+
+* _Simply Lift_, chapter 4.8
+http://stable.simply.liftweb.net/#toc-Section-4.8[Ajax].
+* Example https://github.com/marekzebrowski/lift-basics[simple forms]
+Lift project.
+* http://www.assembla.com/spaces/liftweb/wiki/cool_tips[Server side
+function order] on the Lift Cool Tips Wiki page.
+*
+http://scala-tools.org/mvnsites/liftweb-2.4/net/liftweb/http/SHtml.html[SHtml
+Scala Doc].
+* Lift's http://demo.liftweb.net/ajax[Ajax Demo page].
+
+
+[[JsonForms]]
+Ajax JSON Form Processing
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to process a form via Ajax, sending the data in JSON format.
+
+Solution
+^^^^^^^^
+
+Make use of Lift's `jlift.js` Javascript and `JsonHandler` code.
+Consider this HTML, which is not in a form, but includes `jlift.js`:
+
+[source,html]
+---------------------------------------------------------
+<div class="lift:JsonForm" >
+
+ <!--  required for JSON forms processing -->
+ <script src="/classpath/jlift.js" class="lift:tail"></script>
+
+ <!--  placeholder script required to process the form -->
+ <script id="jsonFormScript" class="lift:tail"></script>
+
+ <div id="formToJson" name="formToJson">
+  <input type="text" name="name" value="Royal Society" />
+  <input type="text" name="motto" value="Nullius in verba" />
+  <input type="submit" name="sb" value="go!" />
+ </div>
+ <div id="result"></div>
+</div>
+---------------------------------------------------------
+
+The server-side code to accept the input as JSON would be as follows:
+
+[source,scala]
+---------------------------------------------------------
+package code.snippet
+
+import net.liftweb.util._
+import Helpers._
+
+import net.liftweb.http._
+import net.liftweb.http.js._
+import JsCmds._
+
+import scala.xml._
+
+class JsonForm {
+
+  def render =
+     "#formToJson" #> ((ns:NodeSeq) => SHtml.jsonForm(jsonHandler, ns)) &
+     "#jsonFormScript" #> Script(jsonHandler.jsCmd)
+
+    object jsonHandler extends JsonHandler {
+
+      def apply(in: Any): JsCmd = in match {
+          case JsonCmd("processForm", target, params: Map[String, _], all) =>
+            val name = params.getOrElse("name", "No Name")
+            val motto = params.getOrElse("motto", "No Motto")
+            SetHtml("result",
+                Text("The motto of %s is %s".format(name,motto)) )
+
+          case _ =>
+            SetHtml("result",Text("Unknown command"))
+      }
+
+    }
+}
+---------------------------------------------------------
+
+If you click the go button and observe the network traffic, you'll see
+the following sent to the server:
+
+[source,javascript]
+---------------------------------------------------------
+{
+  "command": "processForm",
+  "params": {"name":"Royal Society","motto":"Nullius in verba"}
+}
+---------------------------------------------------------
+
+The server will send back JavaScript to update the `results` div with
+"The motto of the Royal Society is Nullius in verba".
+
+Discussion
+^^^^^^^^^^
+
+The key components in the example are:
+
+1.  `jlift.js` script that makes various JSON functions available; and
+2.  generated JavaScript code (`jsonHandler.jsCmd`) that is included on
+the page to perform the actual submission.
+
+In the binding, `SHtml.jsonForm` takes the `jsonHandler` object which
+will process the form elements, and wraps your template, `ns`, with a
+`<form>` tag. We also bind the JavasScript required to the
+`jsonFormScript` placeholder.
+
+When the form is submitted, the `JsonHandler.apply` allows us to pattern
+match on the input and extract the values we need from a `Map`. Note
+that compiling this code will produce a warning as `Map[String,_]` will
+be "unchecked since it is eliminated by erasure".
+
+If you are implementing a REST service to process JSON, consider using
+Rest helpers in Lift to do that.
+
+See Also
+^^^^^^^^
+
+* http://www.javabeat.net/2011/05/using-json-forms-with-ajax-in-lift-framework/[Using
+JSON forms with AJAX in Lift Framework].
+
+* _Lift in Action_, section 9.1.4 "Using JSON forms with AJAX".
+
+* Example Lift application demonstrating
+https://github.com/marekzebrowski/lift-basics[Simple form] processing.
+
+* Section 10.4, JSON, in
+http://exploring.liftweb.net/master/index-10.html[Exploring Lift].
+
+* http://en.wikipedia.org/wiki/Nullius_in_verba[Nullius in verba].
+
+
+
+[[DisableCheckbox]]
+Conditionally Disable a Checkbox
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to add the `disabled` attribute to a `SHtml.checkbox` based on
+a conditional check.
+
+Solution
+^^^^^^^^
+
+Create a CSS selector transform to add the disabled attribute, and apply
+it to your checkbox transform. For example, suppose you have a simple
+checkbox:
+
+[source,scala]
+---------------------------------------------------------
+class Likes {
+  var likeTurtles = false
+  def checkbox = "*" #> SHtml.checkbox(likeTurtles, likeTurtles = _ )
+}
+---------------------------------------------------------
+
+Further suppose you want to disable it roughly 50% of the time:
+
+[source,scala]
+----
+def disabler =
+ if (math.random > 0.5d) "* [disabled]" #> "disabled"
+ else PassThru
+
+def conditionallyDisabledCheckbox =
+  "*" #> disabler( SHtml.checkbox(likeTurtles, likeTurtles = _ ) )
+----
+
+Using `lift:Likes.conditionallyDisabledCheckbox` the checkbox would be
+disabled half the time.
+
+Discussion
+^^^^^^^^^^
+
+The `disabler` method returns a `NodeSeq=>NodeSeq` function, meaning
+when we apply it in `conditionallyDisabledCheckbox` we need to give it a
+`NodeSeq`, which is exactly what `SHtml.checkbox` provides.
+
+The `[disabled]` part of the CSS selector is selecting the disabled
+attribute and replacing it with the value on the right of the `#>`,
+which is "disabled" in this example.
+
+What this combination means is that half the time the disabled attribute
+will be set on the checkbox, and half the time the checkbox `NodeSeq`
+will be left untouched because `PassThru` does not change the `NodeSeq`.
+
+The example above separates the test from the checkbox only to make it
+easier to write this discussion section. You can of course in-line the
+test, as is done in the mailing list post referenced below.
+
+See Also
+^^^^^^^^
+
+* Mailing list question regarding
+https://groups.google.com/d/topic/liftweb/KBVhkuM1NQQ/discussion[how to
+conditionally mark a SHtml.checkbox as disabled].
+
+* _Simply Lift_ http://simply.liftweb.net/index-7.10.html[7.10 CSS
+Selector Transforms].
+
+
+[[MultiSelectBox]]
+Use a Select Box with Multiple Options
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to show the user a number of options in a select box, and allow
+them to select multiple values.
+
+Solution
+^^^^^^^^
+
+Use `SHtml.multiSelect`:
+
+[source,scala]
+----
+class MySnippet {
+  def multi = {
+    case class Item(id: String, name: String)
+    val inventory = Item("a", "Coffee") :: Item("b", "Milk") ::
+       Item("c", "Sugar") :: Nil
+
+     val options : List[(String,String)] =
+       inventory.map(i => (i.id -> i.name))
+
+     val default = inventory.head.id :: Nil
+
+     "#opts *" #>
+       SHtml.multiSelect(options, default, xs => println("Selected: "+xs))
+  }
+}
+----
+
+The corresponding template would be:
+
+[source,html]
+---------------------------------------------------------
+<div class="lift:MySnippet.multi?form=post">
+  <p>What can I getcha?</p>
+  <div id="opts">options go here</div>
+  <input type="submit" value="Submit" />
+</div>
+---------------------------------------------------------
+
+This will render as something like:
+
+[source,html]
+---------------------------------------------------------
+<form action="/" method="post"><div>
+  <p>What can I getcha?</p>
+  <div id="opts">
+   <select name="F25749422319ALP1BW" multiple="true">
+     <option value="a" selected="selected">Coffee</option>
+     <option value="b">Milk</option>
+     <option value="c">Sugar</option>
+   </select>
+  </div>
+  <input value="Submit" type="submit">
+</form>
+---------------------------------------------------------
+
+Discussion
+^^^^^^^^^^
+
+Recall that an HTML select consists of a set of options, each of which
+has a value and a name. To reflect this, the above examples takes our
+`inventory` of objects and turns it into a list of (value,name) string
+pairs, called `options`.
+
+The function given to `multiSelect` will receive the values (ids), not
+the names, of the options. That is, if you ran the above code, and
+selected "Coffee" and "Milk" the function would see `List("a", "b")`.
+
+Selected No Options
++++++++++++++++++++
+
+Be aware if no options are selected at all, your handling function is
+not called. This is described in ticket 1139. One way to work around
+this to to add a hidden function to reset the list. For example, we
+could modify the above code to be a stateful snippet and remember the
+values we selected:
+
+[source,scala]
+---------------------------------------------------------
+class MySnippet extends StatefulSnippet {
+
+  def dispatch = {
+    case "multi" => multi
+  }
+
+  case class Item(id: String, name: String)
+  val inventory = Item("a", "Coffee") :: Item("b", "Milk") ::
+    Item("c", "Sugar") :: Nil
+
+  val options : List[(String,String)] = inventory.map(i => (i.id -> i.name))
+
+  var current = inventory.head.id :: Nil
+
+  def multi = "#opts *" #> (
+    SHtml.hidden( () => current = Nil) ++
+    SHtml.multiSelect(options, current, current = _)
+  )
+}
+---------------------------------------------------------
+
+Each time the form is submited the `current` list of IDs is set to
+whatever you have selected in the browser. But note that we have started
+with a hidden function that resets `current` to the empty list, meaning
+that if the receiving function in `multiSelect` is never called, that
+would mean you have nothing selected. That may be useful, depending on
+what behaviour you need in your application.
+
+Type-safe Options
++++++++++++++++++
+
+If you don't want to work in terms of `String` values for an option, you
+can use `multiSelectObj`. In this variation the list of options still
+provides a text name, but the value is in terms of a class. Likewise,
+the list of default values will be a list of class instances:
+
+[source,scala]
+---------------------------------------------------------
+val options : List[(Item,String)] = inventory.map(i => (i -> i.name))
+val current = inventory.head :: Nil
+---------------------------------------------------------
+
+The call to generate the multi-select from this data is similar, but
+note that the function receives a list of `Item`:
+
+[source,scala]
+---------------------------------------------------------
+"#opts *" #> SHtml.multiSelectObj(options, current,
+  (xs: List[Item]) => println("Got "+xs) )
+---------------------------------------------------------
+
+Enumerations
+++++++++++++
+
+You can use `multiSelectObj` with enumerations:
+
+[source,scala]
+---------------------------------------------------------
+object Item extends Enumeration {
+  type Item = Value
+  val Coffee, Milk, Sugar = Value
+}
+
+import Item._
+
+val options : List[(Item,String)] =
+  Item.values.toList.map(i => (i -> i.toString))
+
+var current = Item.Coffee :: Nil
+
+def multi = "#opts *" #> SHtml.multiSelectObj[Item](options, current,
+  xs => println("Got "+xs) )
+---------------------------------------------------------
+
+See Also
+^^^^^^^^
+
+<<SelectOptionChange>> describes how to trigger a server-side action when a selection changes in the browser.
+
+_Exploring Lift_, Chapter 6, "Forms in Lift", http://exploring.liftweb.net/[http://exploring.liftweb.net/].
+
+Ticket relating to no options being selected: https://github.com/lift/framework/issues/1139[https://github.com/lift/framework/issues/1139]
+
+
+
+[[FileUpload]]
+File Upload
+~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want a snippet to allow users to upload a file to your Lift application.
+
+Solution
+^^^^^^^^
+
+Use a `FileParamHolder` in your snippet, and extract file information from it when the form is submitted.
+
+Starting with a form which is marked as "multipart=true":
+
+[source,html]
+---------------------------------------------------------
+<html>
+<head>
+  <title>File Upload</title>
+  <script id="jquery" src="/classpath/jquery.js" type="text/javascript"></script>
+  <script id="json" src="/classpath/json.js" type="text/javascript"></script>
+</head>
+<body>
+<form data-lift="FileUploadSnippet?form=post;multipart=true">
+   <label for="file">
+     Select a file: <input id="file"></input>
+   </label>
+   <input type="submit" value="Submit"></input>
+</form>
+</body>
+</html>
+---------------------------------------------------------
+
+We can bind the form in a snippet:
+
+[source,scala]
+---------------------------------------------------------
+package code.snippet
+
+import net.liftweb.util.Helpers._
+import net.liftweb.http.SHtml._
+import net.liftweb.http.FileParamHolder
+import net.liftweb.common.{Loggable, Full, Empty, Box}
+
+
+class FileUploadSnippet extends Loggable {
+
+  def render = {
+
+    var upload : Box[FileParamHolder] = Empty
+
+    def processForm() = upload match {
+      case Full(FileParamHolder(_, mimeType, fileName, file)) =>
+        logger.info("%s of type %s is %d bytes long" format (fileName, mimeType, file.length))
+
+      case _ => logger.warn("No file?")
+    }
+
+    "#file" #> fileUpload(f => upload = Full(f)) &
+      "type=submit" #> onSubmitUnit(processForm)
+  }
+}
+---------------------------------------------------------
+
+This allows you to access the `Array[Byte]` of the file in the `processForm` method when the form is submitted.
+
+
+Discussion
+^^^^^^^^^^
+
+HTTP includes an encoding type of "multipart/form-data" which was introduced to support binary data uploads.  The `?form=post;multipart=true` parameters in the template mark the form with this encoding, and the HTML generated will look
+like this:
+
+[source,html]
+---------------------------------------------------------
+<form enctype="multipart/form-data" method="post" action="/fileupload">
+---------------------------------------------------------
+
+When the browser submits the form, Lift detects the "multipart/form-data" encoding and extracts any files from the request.  These are available as `uploadedFiles` on a `Req` object, for example:
+
+[source, scala]
+---------------------------------------------------------
+val files : List[FileParamHolder] = S.request.map(_.uploadedFiles) openOr Nil
+---------------------------------------------------------
+
+However, as we're dealing with a form with a single upload field it's easier to use `SHtml.fileUpload` to bind the input to our `upload` variable.  Lift arranges for the function `f => upload = Full(f)` to be called when a file is selected and uploaded via this field. If the file is zero length, the function is not called.
+
+The default behaviour for Lift is to read the file into memory and present it as a `FileParamHolder`.  In this recipe we're pattern matching on the fields of the `FileParamHolder` and simply printing out what we know about the file.  We're ignoring the first parameter which will be Lift's generated name for the field, but capturing the mime type, original filename and the raw data that was in the file.
+
+You probably don't want to use this method for very large files.  In fact, `LiftRules` provides a number of size restrictions which you can control:
+
+* `LiftRules.maxMimeFileSize` -- the maximum size of any single file uploaded (7MB by default).
+
+* `LiftRules.maxMimeSize` -- the maximum size of the multi-part upload in total (8MB by default)
+
+Why two settings?  Because when the form is submitted, there may be a number of fields on the form.  For example, in the recipe the value of the submit button is send as one of the parts, and the file is sent as another. Hence, you might want to limit file size, but allow for some field values, or multiple files, to be submitted.
+
+If you hit the size limit an exception will be thrown from the underlying file upload library. You can catch the exception, as described in <<CatchException>>:
+
+[source,scala]
+---------------------------------------------------------
+LiftRules.exceptionHandler.prepend {
+  case (_, _, x : FileUploadIOException) =>
+    ResponseWithReason(BadResponse(), "Unable to process file. Too large?")
+}
+---------------------------------------------------------
+
+Be aware that the container (Jetty, Tomcat) or any web server (Apache, NGINX) may also have limits on file upload sizes.
+
+[[UploadToDisk]]
+Uploading a file into memory may be fine for some situations, but you may want to upload larger items to disk and then processes them in Lift as a stream.  Lift supports this via the following setting:
+
+[source,scala]
+---------------------------------------------------------
+LiftRules.handleMimeFile = OnDiskFileParamHolder.apply
+---------------------------------------------------------
+
+The `handleMimeFile` variable expects to be given a function that takes a field name, mime type, filename and `InputStream` and returns a `FileParamHolder`.  The default implementation of this is the `InMemFileParamHolder`, but changing to `OnDiskFileParamHolder` means Lift will write the file to disk first. You can of course implement your own handler in addition to using `OnDiskFileParamHolder` or `InMemFileParamHolder`.
+
+With `OnDiskFileParamHolder`, the file will be written to a temporary location (`System.getProperty("java.io.tmpdir")`) but it's up to you to remove it when you're done with the file. For example, our snippet could change to:
+
+[source,scala]
+---------------------------------------------------------
+def processForm() = upload match {
+
+  case Full(content : OnDiskFileParamHolder) =>
+    logger.info("File: "+content.localFile.getAbsolutePath)
+    val in: InputStream = content.fileStream
+    // ...do something with the stream here...
+    val wasDeleted_? = content.localFile.delete()
+
+  case _ => logger.warn("No file?")
+}
+---------------------------------------------------------
+
+Be aware that `OnDiskFileParamHolder` implements `FileParamHolder` so would  match the original `FileParamHolder` pattern used in the recipe. However, if you access the `file` field of `OnDiskFileParamHolder`, you'll bring the file into memory, which would defeat the point of storing it on disk to process it as a stream.
+
+If you want to monitor the progress of the upload on the server side, you can. There's a hook in `LiftRules` which called as the upload is running:
+
+[source,scala]
+---------------------------------------------------------
+def progressPrinter(bytesRead: Long, contentLength: Long, fieldIndex: Int) {
+  println("Read %d of %d for %d" format (bytesRead, contentLength, fieldIndex))
+}
+
+LiftRules.progressListener = progressPrinter
+---------------------------------------------------------
+
+This is the progress of the whole multi-part upload, not just the file being uploaded.  In particular, the `contentLength` may not be known (in which case it will be `-1`), but if it is known it is the size of the complete multi-part upload. In the example in this recipe that would include the size of the file, but also the submit button value.  This also explains the `fieldIndex`, which is a counter as to which part is being processed. It will take on the values of 0 and 1 for the two parts in this example.
+
+
+See Also
+^^^^^^^^
+
+The HTTP file upload mechanics are described in RFC 1867, _Form-based File Upload in HTML_:
+http://tools.ietf.org/html/rfc1867[http://tools.ietf.org/html/rfc1867]
+
+<<RestBinaryData>> discusses file upload in the context of a REST service.
+
+See <<AjaxFileUpload>> for an example of an Ajax file upload through integration with a JavaScript library, providing progress indicators and drag-and-drop support.
+
+
+
+

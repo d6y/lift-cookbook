@@ -1,0 +1,782 @@
+[[InstallAndRunning]]
+Install and Running
+-------------------
+
+This chapter covers questions regarding starting development with Lift: running a first Lift application and setting up a coding environment. You'll find answers regarding production deployment in <<deployment>>.
+
+[[DownloadAndRun]]
+Downloading and Running Lift
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to install and run Lift on your computer.
+
+Solution
+^^^^^^^^
+
+The only prerequisite for installing and running Lift is to have Java
+1.5 or later installed. Instructions for installing Java can be found at
+http://java.com/[http://java.com/].
+
+You can find out if you have Java from the shell or command prompt by asking for the version you have installed:
+
+----------------------------------------------------------------
+$ java -version
+java version "1.7.0_13"
+Java(TM) SE Runtime Environment (build 1.7.0_13-b20)
+Java HotSpot(TM) 64-Bit Server VM (build 23.7-b01, mixed mode)
+----------------------------------------------------------------
+
+Once you have Java, the following instructions will download, build and
+start a basic Lift application.
+
+For Mac and Linux
++++++++++++++++++
+
+* Visit http://liftweb.net/download[http://liftweb.net/download] and download the Lift 2.5-RC2 ZIP file.
+* Unzip the file.
+* Start _Terminal_ or your favourite shell tool.
+* Navigate into the unzipped folder and into the `scala_29` sub-folder and then into the `lift_basic` folder.
+* Run:`./sbt`.
+* Required libraries will be downloaded automatically.
+* At the SBT prompt (>) type: `container:start`.
+* Open your browser and go to `http://127.0.0.1:8080/`.
+* When you're done, type `exit` at the SBT prompt to stop your application from running.
+
+For Windows
++++++++++++
+
+* Visit http://liftweb.net/download[http://liftweb.net/download] locate the link to the ZIP version of Lift 2.5-RC2 and save this to disk.
+* Extract the contents of the ZIP file.
+* Navigate in _Explorer_ to the extracted folder, and inside navigate into `scala_29` and then `lift_basic`.
+* Double click `sbt.bat` to run the build tool and a terminal window should open.
+* Required libraries will be downloaded automatically.
+* At the SBT prompt (>) type: `container:start`.
+* You may find Windows Firewall blocking Java from running. If so, opt to "allow access".
+* Start your browser and go to `http://127.0.0.1:8080/`
+* When you're done, type `exit` at the SBT prompt to stop your application from running.
+
+Expected result
++++++++++++++++
+
+The result of the above commands should be a basic Lift application running on
+your computer as shown in <<LiftBasicScreenshot>>.
+
+[[LiftBasicScreenshot]]
+.The basic Lift application home page.
+image::images/apphome.png[width=640]
+
+
+Discussion
+^^^^^^^^^^
+
+Lift isn't installed in the usual sense of "installing software".
+Instead you use standard build tools, such as SBT or Maven, to assemble your application with the Lift framework. In this recipe we downloaded a ZIP file containing four fairly minimal Lift applications, and then started one of them via the build tool.
+
+Simple Build Tool
++++++++++++++++++
+
+Typing `sbt` starts the Simple Build Tool, a dependency management
+tool used by Scala projects (it's not specific to Lift).  SBT will check the project definition and download any libraries required, which includes the Lift framework.
+
+This download happens once, and the downloaded
+files are stored on disk in `.ivy2/` under your home folder.
+
+Your application build is configured by `build.sbt`.  Looking inside you'll see:
+
+* basic information about your application, including a name and version;
+* resolvers, which inform SBT where to fetch dependencies from;
+* settings for plugins and the Scala compiler; and
+* a list of dependencies required to run your application, which will include the Lift framework.
+
+[[RunningYourApplication]]
+Running Your Application
+++++++++++++++++++++++++
+
+The SBT command `container:start` starts the web server on the default port of 8080 and
+passes requests to your Lift application. The word _container_ refers to the
+software you deploy your application into. There are a variety of containers (_Jetty_ and
+_Tomcat_ are probably the best known) all of which conform to a standard for deployment.
+The upshot is you can build your application and deploy to whichever one you prefer.
+The `container:start` command uses Jetty.
+
+Source Code
++++++++++++
+
+The source code of the application resides in `src/main/webapp` and `src/main/scala`. If you take a look at `index.html` in the `webapp` folder you'll see mention of `lift:helloWorld`. That's a reference to the class defined in `scala/code/snippet/HelloWorld.scala`. This is a _snippet invocation_ and an example of Lift's _view first_ approach to web applications. That is, there's no routing set up for the index page to collect the data and forward it to the view. Instead, the view defines areas of the content that are replaced with functions, such as those functions defined in `HelloWorld.scala`.
+
+Lift knows to look in the `code` package for snippets because that package is declared as a location for snippets in `scala/bootstrap/liftweb/Boot.scala`. The Boot class is run when starting your application, and it's where you can configure the behaviour of Lift.
+
+
+See Also
+^^^^^^^^
+
+The Simple Build Tool documentation is at http://www.scala-sbt.org[http://www.scala-sbt.org].
+
+Tutorials for Lift can be found in _Simply Lift_ at http://simply.liftweb.net/[http://simply.liftweb.net/] and in _Lift in Action_ (Tim Perrett, 2011, Manning Publications Co).
+
+[[LiftFromScratch]]
+Creating a Lift Project from Scratch using SBT
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want want to create a Lift web project from scratch without using the ZIP files provided on the official Lift website.
+
+Solution
+^^^^^^^^
+
+You will need to configure SBT and the Lift project yourself. Luckily, only five small files are needed.
+
+First, create an SBT plugin file at `project/plugins.sbt` (all file names are given relative to the project root directory):
+
+[source,scala]
+---------------------------------------------------------
+libraryDependencies <+= sbtVersion(v => v match {
+  case "0.11.0" => "com.github.siasia" %% "xsbt-web-plugin" % "0.11.0-0.2.8"
+  case "0.11.1" => "com.github.siasia" %% "xsbt-web-plugin" % "0.11.1-0.2.10"
+  case "0.11.2" => "com.github.siasia" %% "xsbt-web-plugin" % "0.11.2-0.2.11"
+  case "0.11.3" => "com.github.siasia" %% "xsbt-web-plugin" % "0.11.3-0.2.11.1"
+  case x if (x.startsWith("0.12")) =>
+    "com.github.siasia" %% "xsbt-web-plugin" % "0.12.0-0.2.11.1"
+})
+---------------------------------------------------------
+
+This file tells SBT that you will be using the xsbt-web-plugin and chooses the correct version based upon your version of SBT.
+
+Next, create an SBT build file, `build.sbt`:
+
+[source,scala]
+---------------------------------------------------------
+organization := "org.yourorganization"
+
+name := "liftfromscratch"
+
+version := "0.1-SNAPSHOT"
+
+scalaVersion := "2.10.0"
+
+seq(com.github.siasia.WebPlugin.webSettings :_*)
+
+libraryDependencies ++= {
+  val liftVersion = "2.5-RC2"
+  Seq(
+    "net.liftweb" %% "lift-webkit" % liftVersion % "compile",
+    "org.eclipse.jetty" % "jetty-webapp" % "8.1.7.v20120910" % "container,test"
+  )
+}
+---------------------------------------------------------
+
+Feel free to change the various versions, though be aware that certain versions of Lift are only build for certain versions of Scala.
+
+Now that you have a the basics of an SBT project, you can launch the `sbt` console. It should load all the necessary dependencies, including the proper Scala version, and bring you to a prompt.
+
+Next, create the following file at `src/main/webapp/WEB-INF/web.xml`:
+
+[source,xml]
+---------------------------------------------------------
+<!DOCTYPE web-app SYSTEM "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+  <filter>
+    <filter-name>LiftFilter</filter-name>
+    <display-name>Lift Filter</display-name>
+    <description>The Filter that intercepts Lift calls</description>
+    <filter-class>net.liftweb.http.LiftFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>LiftFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+</web-app>
+---------------------------------------------------------
+
+The `web.xml` files tells web containers, such as Jetty as configured by xsbt-web-plugin, to pass all requests on to Lift.
+
+Next, create a sample `index.html` file at `src/main/webapp/index.html` for our Lift app to load. For example:
+
+[source,html]
+---------------------------------------------------------
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lift From Scratch</title>
+  </head>
+  <body>
+    <h1>Welcome, you now have a working Lift installation</h1>
+  </body>
+</html>
+---------------------------------------------------------
+
+Finally, setup the basic Lift boot settings by creating a `Boot.scala` file at `src/main/scala/bootstrap/Boot.scala`. The following contents will be sufficient:
+
+[source,scala]
+---------------------------------------------------------
+package bootstrap.liftweb
+
+import net.liftweb.http.{Html5Properties, LiftRules, Req}
+import net.liftweb.sitemap.{Menu, SiteMap}
+
+/**
+ * A class that's instantiated early and run.  It allows the application
+ * to modify lift's environment
+ */
+class Boot {
+  def boot {
+    // where to search snippet
+    LiftRules.addToPackages("org.yourorganization.liftfromscratch")
+
+    // Build SiteMap
+    def sitemap(): SiteMap = SiteMap(
+      Menu.i("Home") / "index"
+    )
+
+    // Use HTML5 for rendering
+    LiftRules.htmlProperties.default.set((r: Req) =>
+      new Html5Properties(r.userAgent))
+  }
+}
+---------------------------------------------------------
+
+Congratulations, you now have a working Lift project!
+
+You can verify that you have a working Lift project by launching the Jetty web container from the `sbt` console with the `container:start` command. First the `Boot.scala` file should be compile and then you should be notified that Jetty has launched is listening at http://localhost:8080[http://localhost:8080]. You should be able to go to the address in your web browser and see the rendered `index.html` file you create earlier.
+
+Discussion
+^^^^^^^^^^
+
+As shown above, creating a Lift project from scratch is a relatively simple process. However, it can be a tricky one for newcomers, especially if you are not used to the JVM ecosystem and its conventions for web containers. If you run into problems, make sure the files are in the correct locations and that their contents were not mistakenly modified. If all else fails, refere to the sample project below or ask for help on the http://groups.google.com/group/liftweb[Lift mailing list].
+
+Lift projects using SBT or similar build tools follow a standard project layout, where Scala source code is in `src/main/scala` and web resources are in `src/main/webapp`. Your Scala files must be placed either directly at `src/main/scala` or in nested directories matching organization and name you defined in `build.sbt`, in our case giving us `src/main/scala/org/yourorganization/liftfromscratch/`. Test files match the directory structure but are placed in `src/test/` instead of `src/main/`. Likewise, the `web.xml` file must be placed in `src/main/webapp/WEB-INF/` for it to be properly detected.
+
+Given these conventions, you should have a directly structure looking quite, if not exactly, like this:
+
+---------------------------------------------------------
+- project root directory
+  | build.sbt
+  - project/
+    | plugins.sbt
+  - src/
+    - main/
+      - scala/
+        - bootstrap/
+          | Boot.scala
+        - org/
+          - yourorganization/
+            - liftfromscratch/
+              | <your Scala code goes here>
+      - webapp/
+        | index.html
+        | <any other web resources - images, HTML, JavaScript, etc - go here>
+        - WEB-INF/
+          | web.xml
+    - test/
+      - scala/
+        - org/
+          - yourorganization/
+            - liftfromscratch/
+              | <your tests go here>
+---------------------------------------------------------
+
+See Also
+^^^^^^^^
+
+There is a sample project created using this method at: https://github.com/bubblefoundry/lift-from-scratch[https://github.com/bubblefoundry/lift-from-scratch].
+
+[[texteditor]]
+Developing Using a Text Editor
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to develop your Lift application using your favourite text
+editor, hitting reload in your browser to see changes.
+
+Solution
+^^^^^^^^
+
+Run SBT while you are editing, and ask it to detect and compile changes to Scala files.  To do that, start `sbt` and enter the following to the SBT prompt:
+
+--------------------------------------
+~; container:start; container:reload /
+--------------------------------------
+
+When you save a source file in your editor, SBT will detect this change,
+compile the file, and reload the web container.
+
+Discussion
+^^^^^^^^^^
+
+An SBT command prefixed with `~` makes that command run when files
+change. The first semicolon introduces a sequence of commands, where if
+the first command succeeds, the second will run. The second semicolon
+means the `reload` command will run if the `start` command ran OK. The `start`
+command will recompile any Scala source files that have changed.
+
+When you run SBT in this way, you'll notice the following output:
+
+----------------------------------------------------------
+1. Waiting for source changes... (press enter to interrupt)
+-----------------------------------------------------------
+
+And indeed, if you do press enter in the SBT window you'll exit this _triggered
+execution_ mode and SBT will no longer be looking for file changes. However, while
+SBT is watching for changes, the output will indicate when this happens with something
+that looks a little like this:
+
+----------------------------------------------------------------------------------
+[info] Compiling 1 Scala source to target/scala-2.9.1/classes...
+[success] Total time: 1 s, completed 15-Nov-2012 18:14:46
+[pool-301-thread-4] DEBUG net.liftweb.http.LiftServlet - Destroyed Lift handler.
+[info] stopped o.e.j.w.WebAppContext{/,[src/main/webapp/]}
+[info] NO JSP Support for /, did not find org.apache.jasper.servlet.JspServlet
+[info] started o.e.j.w.WebAppContext{/,[src/main/webapp/]}
+[success] Total time: 0 s, completed 15-Nov-2012 18:14:46
+2. Waiting for source changes... (press enter to interrupt)
+----------------------------------------------------------------------------------
+
+Edits to HTML files don't trigger the SBT compile and reload commands.
+This is because SBT's default behaviour is to look for
+Scala and Java source file changes, and also changes to files in `src/main/resources/`.
+This works out just fine, because Jetty will use your modified HTML file when you
+reload the browser page.
+
+Restarting the web container each time you edit a Scala file isn't ideal. You can reduce
+the need for restarts by integrating JRebel into your development environment, as described
+in <<jrebel>>.
+
+However, if you are making a serious number of edits, you may prefer to issue a `container:stop` command until you're ready to run you application again with `container:start`. This will prevent SBT compiling and restarting your application over and over. The SBT console has a command history, and using the up and down keyboard arrows allows you to navigate to previous commands and run them by pressing the return key.  That takes some of the tedium out of these long commands.
+
+One error you may run into is:
+
+------------------------------------------
+java.lang.OutOfMemoryError: PermGen space
+------------------------------------------
+
+The _permanent generation_ is a Java virtual machine concept. It's the area of memory used for storing classes (amongst other things).  It's a fixed size and once it is full this PermGen error appears.  As you might imagine, continually restarting a container causes many classes to be loaded and unloaded, but the process is not perfect, effectively leaking memory. The best you can do is stop and then restart SBT.  If you're seeing this error often, check the setting for `-XX:MaxPermSize` inside the `sbt` (or `sbt.bat`) script, and if you can, double it.
+
+See Also
+^^^^^^^^
+
+There's more about triggered execution at http://www.scala-sbt.org/release/docs/Detailed-Topics/Triggered-Execution[http://www.scala-sbt.org/release/docs/Detailed-Topics/Triggered-Execution].
+
+Reference for the core SBT command line: http://www.scala-sbt.org/release/docs/Detailed-Topics/Command-Line-Reference[http://www.scala-sbt.org/release/docs/Detailed-Topics/Command-Line-Reference].
+
+Command reference for the web plugin for SBT is at: https://github.com/siasia/xsbt-web-plugin/wiki[https://github.com/siasia/xsbt-web-plugin/wiki].
+
+
+[[jrebel]]
+Incorporating JRebel
+~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to avoid application restarts when you change a Scala source file by using JRebel.
+
+Solutions
+^^^^^^^^^
+
+There are three steps required: install JRebel once; each year request the free Scala license; and configure SBT to use JRebel.
+
+First, visit the http://zeroturnaround.com/software/jrebel/[http://zeroturnaround.com/software/jrebel/] and request the free Scala license.
+
+Second, download the "Generic ZIP Archive" version of JRebel, unzip it to where you like. For this recipe I've chosen to use `/opt/zt/jrebel/`.
+
+When your have received your account confirmation email from JRebel, you can copy your "authentication token" from the "Active" area of ZeroTurnaround's site. To apply the token to your local install, run the JRebel configuration script:
+
+---------------------------------------
+$ /opt/zt/jrebel/bin/jrebel-config.sh
+---------------------------------------
+
+For Windows navigate to and launch `bin\jrebel-config.cmd`.
+
+In the "Activation" setting select "I want to use myJRebel" and then in the "License" section paste in your activation token. Click the "Activate" button, and once you see the license status change to "You have a valid myJRebel token" click "Finish".
+
+Finally, configure SBT by modifying the `sbt` script to enable JRebel.  This means setting the `-javaagent` and `-noverify` flags for Java, and enabling the JRebel Lift plugin.
+
+For Mac and Linux, the script that's included with the Lift downloads would become:
+
+--------------------------
+java -Drebel.lift_plugin=true -noverify -javaagent:/opt/zt/jrebel/jrebel.jar \
+ -Xmx1024M -Xss2M -XX:MaxPermSize=512m -XX:+CMSClassUnloadingEnabled -jar \
+ `dirname $0`/sbt-launch-0.12.jar "$@"
+--------------------------
+
+For Windows, modify `sbt.bat` to be:
+
+--------------------------
+set SCRIPT_DIR=%~dp0
+java -Drebel.lift_plugin=true -noverify -javaagent:c:/opt/zt/jrebel/jrebel.jar \
+ -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256m -Xmx1024M -Xss2M \
+ -jar "%SCRIPT_DIR%\sbt-launch-0.12.jar" %*
+--------------------------
+
+There's nothing else to do to use JRebel.  When you start SBT you'll see a large banner starting something like this:
+
+---------------------------
+#############################################################
+
+  JRebel 5.1.1 (201211271929)
+  (c) Copyright ZeroTurnaround OU, Estonia, Tartu.
+
+  Over the last 30 days JRebel prevented
+  at least 335 redeploys/restarts saving you about 13.6 hours.
+....
+---------------------------
+
+With JRebel installed, you can now `container:start` your application, modify and compile a Scala file and reload a page in your application. You'll see a notice that the class has been reloaded:
+
+-------------------------------------------------------------------------
+[2012-12-16 23:15:44] JRebel: Reloading class 'code.snippet.HelloWorld'.
+-------------------------------------------------------------------------
+
+That change is live, without having to restart the container.
+
+Discussion
+^^^^^^^^^^
+
+JRebel is very likely to speed up your development. It updates code in a running Java virtual machine, without having to stop and restart it.  The effect is that, on the whole, you can compile a class, then hit reload in your browser to see the change in your Lift application.
+
+Even with JRebel you will need to restart your applications from time to time, but JRebel usually reduces the number of restarts. For example, `Boot.scala` is run when your application starts, so if you modify something in your `Boot.scala` you'll need to start and start your application. JRebel can't help with that.
+
+But there are also other situations that JRebel cannot help with, such as when a superclass changes. Generally, JRebel will emit a warning about this in the console window.  If that happens, stop and start your application.
+
+The `-Drebel.lift_plugin=true` setting adds Lift-specific functionality to JRebel.  Specifically, it allows JRebel to reload changes to `LiftScreen`, `Wizard` and `RestHelper`. This means you can change fields or screens, and change REST `serve` code.
+
+
+Purchased licenses
+++++++++++++++++++
+
+This recipe uses a free Scala license for a service called myJRebel. This communicates with JRebel servers via the activation code.  If you have purchased a license from ZeroTurnaround, the situation is slightly different.  In this case, you will have a license key which you store in a file called `jrebel.lic`. You can place the file in a `.jrebel` folder in your home directory, or alongside `jrebel.jar` (e.g., in the `/opt/zt/jrebel/` folder if that's where you installed JRebel), or you can specify some other location.  For the latter option, modify the `sbt` script and specify the location of the file by adding another Java setting:
+
+-----------------------------------
+-Drebel.license=/path/to/jrebel.lic
+-----------------------------------
+
+
+See Also
+^^^^^^^^
+
+You'll find details about how JRebel works in the FAQ at: http://zeroturnaround.com/software/jrebel/resources/faq/[http://zeroturnaround.com/software/jrebel/resources/faq/].
+
+The Lift support was announced in a blog post in 2012 at http://zeroturnaround.com/jrebel/lift-support-in-jrebel/[http://zeroturnaround.com/jrebel/lift-support-in-jrebel/], where you'll find more about the capabilities of the plugin.
+
+[[eclipse]]
+Developing using Eclipse
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to develop your Lift application using the Eclipse IDE, hitting
+reload in your browser to see changes.
+
+Solution
+^^^^^^^^
+
+Use the "Scala IDE for Eclipse" plugin to Eclipse. The instructions for this
+are given at http://scala-ide.org[http://scala-ide.org]. There are a number of options (nightly builds, milestones) but start with the stable version. This will give you an Eclipse perspective that knows about Scala.
+
+To create the project files to allow Eclipse to load your Lift project, install "sbteclipse" by adding the following to `projects/plugins.sbt` in your Lift project:
+
+[source,scala]
+-----------------------------------------------------------------------
+addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.1.2")
+-----------------------------------------------------------------------
+
+You can then create Eclipse project files (`.project` and `.classpath`) by entering the
+following to the SBT prompt:
+
+-------
+eclipse
+-------
+
+Open the project in Eclipse by navigating to "File > Import.." and select "General > Existing
+Projects into Workspace". Browse to and select your Lift project. You
+are now set up to develop your application in Eclipse.
+
+To see live changes as you edit and save your work, run SBT in a separate terminal window.  That is, start `sbt` from a terminal window outside of Eclipse and enter the following:
+
+--------------------------------------
+~; container:start; container:reload /
+--------------------------------------
+
+This behaviour of this command is described in <<texteditor>>, but if you're using JRebel (see <<jrebel>>) then you just need to run `container:start` by itself.
+
+You can then edit in Eclipse, save to compile, and in your web browser hit reload to see
+the changes.
+
+Discussion
+^^^^^^^^^^
+
+One of the great benefits of an IDE is the ability to navigate source, by cmd+click (Mac) or F3 (PC).
+You can ask the SBT `eclipse` command to download the Lift
+source and Scaladoc, allowing you to click through to the Lift source from
+methods and classes, which is a useful way to discover more about Lift.
+
+To achieve this in a project, run `eclipse with-source=true` in SBT, but if you want
+this to be the default behaviour, add the following to your `build.sbt` file:
+
+[source,scala]
+------------------------------
+EclipseKeys.withSource := true
+------------------------------
+
+If you find yourself using the plugin frequently, you may wish to declare it
+in your global SBT configuration files so it appies to all projects.  To do that,
+create a `~/.sbt/plugins/plugins.sbt` file containing:
+
+[source,scala]
+------------------------------------------------------------------------
+resolvers += Classpaths.typesafeResolver
+
+addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.1.2")
+------------------------------------------------------------------------
+
+Note the blank line between the `resolvers` and the `addSbtPlugin`.  In `.sbt` files, a blank line is required between statements.
+
+Finally, set any global configurations (such as `withSource`) in `~/.sbt/global.sbt`.
+
+See Also
+^^^^^^^^
+
+There are other useful settings for sbteclipse, described at https://github.com/typesafehub/sbteclipse/wiki[https://github.com/typesafehub/sbteclipse/wiki].  You'll also find the latest version number for the plugin on that site.
+
+The SBT `~/.sbt/` structure is described in the guide to using plugins at http://www.scala-sbt.org/release/docs/Getting-Started/Using-Plugins[http://www.scala-sbt.org/release/docs/Getting-Started/Using-Plugins] and in the wiki page for global configuration at http://www.scala-sbt.org/release/docs/Detailed-Topics/Global-Settings[http://www.scala-sbt.org/release/docs/Detailed-Topics/Global-Settings].
+
+[[idea]]
+Developing using Intellij IDEA
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to use the Intellij IDEA development environment when writing your Lift application.
+
+Solution
+^^^^^^^^
+
+You need the Scala plugin for IntelliJ, and an SBT plugin to generate the IDEA project files.
+
+The IntelliJ plugin you'll need to install once, and these instructions are for IntelliJ IDEA 12.  The details may vary between releases of the IDE, but the basic idea is to find the JetBrains Scala plugin, and download and install it.
+
+From the "Welcome to Intellij IDEA" screen, select "Configure" and then "Plugins". Select "Browse repositories...". In the search box, top right, type "Scala".  You'll find on the left a number of matches: select "Scala".  On the right, you'll see confirmation that this is the "Plugin for Scala language support" and the vendor is JetBrains Inc. Select the "Download and Install" icon from the top of the window (or right click to download and install). "Close" the dialog, and OK out of the Plugins window. You'll be promoted to restart IntelliJ IDEA.
+
+With the IDE configured, you now need to add the SBT plugin inside your Lift project by adding the following to the file `projects/plugins.sbt`:
+
+[source,scala]
+------------------------------------------------------------------------
+addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.3.0")
+------------------------------------------------------------------------
+
+Start SBT and at the SBT prompt create the IDEA project files by typing:
+
+---------
+gen-idea
+---------
+
+This will generate the `.idea` and `.iml` files you need so you can do "File" and "Open..." in IntelliJ and navigate to your project.
+
+To see live changes as you edit and save your work, run SBT in a separate terminal window.  That is, start `sbt` from a terminal window outside of IntelliJ and enter the following:
+
+--------------------------------------
+~; container:start; container:reload /
+--------------------------------------
+
+This behaviour of this command is described in <<texteditor>>, but if you're using JRebel (see <<jrebel>>) then you just need to run `container:start` by itself.
+
+Each time you compile or make the project, the container will pick up the changes, and you can see them by re-loading your browser window.
+
+Discussion
+^^^^^^^^^^
+
+By default the `gen-idea` command will fetch source for dependent libraries. That means out-of-the-box you can click though to Lift source code to explore it and learn more about the framework.
+
+If you want to try the latest snapshot version of the plugin, you'll need to include the snapshot repository in your `plugin.sbt` file:
+
+[source,scala]
+------------------------------------------------------------------------
+resolvers += "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
+------------------------------------------------------------------------
+
+Setting up the SBT IDEA plugin globally, for all SBT projects, is the same pattern as described for Eclipse in <<eclipse>>.
+
+See Also
+^^^^^^^^
+
+The sbt-idea plugin at https://github.com/mpeltonen/sbt-idea[https://github.com/mpeltonen/sbt-idea] doesn't have a configuration guide yet. One way to discover the features is to browse the release notes in the `notes` folder of that project.
+
+JetBrains have a blog for the Scala plugin with feature news and tips: http://blog.jetbrains.com/scala/[http://blog.jetbrains.com/scala/].
+
+[[ViewH2]]
+Viewing the lift_proto H2 Database
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You're developing using the default `lift_proto.db` H2 database, and
+you would like use a tool to look at the tables.
+
+Solution
+^^^^^^^^
+
+Use the web interface included as part of H2. Here are the steps:
+
+* Locate the H2 JAR file. For me, this was: `~/.ivy2/cache/com.h2database/h2/jars/h2-1.2.147.jar`.
+* Start the server from a terminal window using the JAR file you found: `java -cp /path/to/h2-version.jar org.h2.tools.Server`
+* This should launch your web browser, asking you to login.
+* Select "Generic H2 Server" in "Saved Settings".
+* Enter `jdbc:h2:/path/to/youapp/lift_proto.db;AUTO_SERVER=TRUE` for "JDBC URL", adjusting the path for the location of your database, and adjusting the name of the database ("lift_proto.db") if different in your `Boot.scala`.
+* Press "Connect" to view and edit your database.
+
+Discussion
+^^^^^^^^^^
+
+The default Lift projects that include a database, such as `lift_basic`, use the H2 relational database as it can be included as an SBT dependency and requires no external installation or configuration. It's a fine product, although production deployments typically use standalone databases, such as PostgreSQL or MySQL.
+
+Even if you're deploying to a non-H2 database it may be useful to keep H2 around because it has an in-memory mode, which is great for unit tests. This means you can create a database in-memory, no files on disk, and throw it away when your unit tests ends.
+
+If you don't like the web interface, the connection settings described in this recipe should give you the information you need to configure other SQL tools.
+
+See Also
+^^^^^^^^
+
+The properties of H2 are described at  http://www.h2database.com[http://www.h2database.com].
+
+If you're using the console frequently, consider mapping it accessible from your Lift application in development node.  This is described by Diego Medina in a blog post at https://fmpwizard.telegr.am/blog/lift-and-h2[https://fmpwizard.telegr.am/blog/lift-and-h2].
+
+The example Lift project for <<Squeryl>> has the H2 console enabled. The source is: https://github.com/LiftCookbook/cookbook_squeryl[https://github.com/LiftCookbook/cookbook_squeryl].
+
+[[snapshot]]
+Using the Latest Lift build
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to use the latest ("snapshot") build of Lift.
+
+Solution
+^^^^^^^^
+
+You need to make two changes to your `build.sbt` file. First, reference
+the snapshot repository:
+
+[source,scala]
+----
+resolvers += "snapshots" at "http://oss.sonatype.org/content/repositories/snapshots"
+----
+
+Second, change the `liftVersion` in your build to be the latest version. For this example, let's use the 2.5-SNAPSHOT version of Lift:
+
+[source,scala]
+--------------------------------
+val liftVersion = "2.5-SNAPSHOT"
+--------------------------------
+
+Restarting SBT (or issuing a `reload` command) will trigger a download
+of the latest build.
+
+Discussion
+^^^^^^^^^^
+
+Production releases of Lift (e.g., "2.4", "2.5"), as well as milestone releases
+(e.g., "2.5-M3") and release candidates (e.g., "2.5-RC1") are published
+into a releases repository. When SBT downloads them, they are downloaded
+once.
+
+Snapshot releases are different: they are the result of an automated
+build, and change often. You can force SBT to resolve the latest
+versions by running the command `clean` and then `update`.
+
+See Also
+^^^^^^^^
+
+To learn the detail of SNAPSHOT versions, dig into the Maven Complete Reference at http://www.sonatype.com/books/mvnref-book/reference/pom-relationships-sect-pom-syntax.html[http://www.sonatype.com/books/mvnref-book/reference/pom-relationships-sect-pom-syntax.html].
+
+
+[[NewScala]]
+Using a New Version of Scala
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+A new Scala version has just been released and you want to immediately
+use it in your Lift project.
+
+Solution
+^^^^^^^^
+
+You may find that the latest snapshot of Lift is built using the latest
+Scala version. Failing that, and assuming you cannot wait for a build, you may still be in luck.
+Providing that the Scala version is _binary compatible_ with the latest
+version used by Lift, you can change your build file to force the Scala
+version.
+
+For example, assuming your `build.sbt` file is set up to use Lift 2.5
+with Scala 2.9.1:
+
+[source,scala]
+---------------------------------------------------------------------
+scalaVersion := "2.9.1"
+
+libraryDependencies ++= {
+  val liftVersion = "2.5"
+  Seq(
+    "net.liftweb" %% "lift-webkit" % liftVersion % "compile->default"
+  )
+}
+---------------------------------------------------------------------
+
+Let's assume that you now want to use Scala 2.9.2 but (pretend) Lift 2.5 was only
+built against Scala 2.9.1. Replace `%%` with `%` for the `net.liftweb`
+resources and explicitly include the Scala version that Lift was built
+against for each Lift component:
+
+[source,scala]
+--------------------------------------------------------------------------
+scalaVersion := "2.9.2"
+
+libraryDependencies ++= {
+  val liftVersion = "2.5"
+  Seq(
+    "net.liftweb" % "lift-webkit_2.9.1" % liftVersion % "compile->default"
+  )
+}
+--------------------------------------------------------------------------
+
+What we've done here is change the `scalaVersion` to the new version we want
+to use, but explicitly specified we want the 2.9.1 Scala version for Lift.
+This works if the two different Scala versions are binary compatible.
+
+Discussion
+^^^^^^^^^^
+
+Dependencies have a particular naming convention.  For example, the `lift-webkit` library for Lift 2.5-RC2 is called `lift-webkit_2.9.1-2.5-RC2.jar`.  Normally in `build.sbt` we simply refer to `"net.liftweb" %% "lift-webkit"` and SBT turns that into the name of a file that can be downloaded.
+
+However, in this recipe we have forced SBT to explicitly fetch the 2.9.1 version
+of the Lift resources rather than allow it to compute the URL to the
+Lift components.  This is the difference between using `%%` and `%` in a
+dependency: with `%%` you do not specify the Scala version as SBT will append
+the `scalaVersion` number automatically; with '%' this automatic change is not made,
+so we have to manually specify more details for the name of the library.
+
+Please note this only works for minor releases of Scala: major releases
+break compatibility.  For example Scala 2.9.1 is compatible with Scala 2.9.0, but not 2.10.
+
+See Also
+^^^^^^^^
+
+Binary compatibly in Scala is discussed on the Scala user mailing list at
+http://article.gmane.org/gmane.comp.lang.scala.user/39290[http://article.gmane.org/gmane.comp.lang.scala.user/39290].
+
+The SBT behaviour is described at: http://www.scala-sbt.org/release/docs/Getting-Started/Library-Dependencies[http://www.scala-sbt.org/release/docs/Getting-Started/Library-Dependencies].
+
+<<snapshot>> describes how to use a snapshot version of Lift.
+
