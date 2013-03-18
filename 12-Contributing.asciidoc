@@ -1,6 +1,9 @@
+[[ContributingAndHelp]]
 Contributing, Bug Reports & Getting Help
 ----------------------------------------
 
+
+[[GettingHelp]]
 You'd Like Some Help
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -29,6 +32,7 @@ The Lift community is one of the things that makes Lift what it is. Please take 
 If you need paid consulting, development or SLA-backed support, there's a list of organizations on the Wiki at https://www.assembla.com/spaces/liftweb/wiki/Commercial_Support[https://www.assembla.com/spaces/liftweb/wiki/Commercial_Support].
 
 
+[[HowToReportBugs]]
 How to Report Bugs
 ~~~~~~~~~~~~~~~~~~
 
@@ -158,6 +162,7 @@ See Also
 The markup format for the Wiki pages is Textile. A reference guide can be found at: http://redcloth.org/hobix.com/textile/[http://redcloth.org/hobix.com/textile/].
 
 
+[[AddRecipe]]
 How to Add a New Recipe to this Cookbook
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

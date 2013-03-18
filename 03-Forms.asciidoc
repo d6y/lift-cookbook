@@ -5,6 +5,8 @@ Forms Processing in Lift
 This section gives examples of working with Lift forms in different
 ways.  You'll find many of the examples in https://github.com/LiftCookbook/cookbook_forms[https://github.com/LiftCookbook/cookbook_forms].
 
+
+[[PlainFormProcessing]]
 Plain Old Form Processing
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -95,6 +97,9 @@ Fashioned is good].
 * https://github.com/marekzebrowski/lift-basics[Simple forms], example
 Lift project.
 
+
+
+[[AjaxFormProcessing]]
 Ajax Form Processing
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -185,6 +190,8 @@ http://scala-tools.org/mvnsites/liftweb-2.4/net/liftweb/http/SHtml.html[SHtml
 Scala Doc].
 * Lift's http://demo.liftweb.net/ajax[Ajax Demo page].
 
+
+[[JsonForms]]
 Ajax JSON Form Processing
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -308,6 +315,9 @@ http://exploring.liftweb.net/master/index-10.html[Exploring Lift].
 
 * http://en.wikipedia.org/wiki/Nullius_in_verba[Nullius in verba].
 
+
+
+[[DisableCheckbox]]
 Conditionally Disable a Checkbox
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
