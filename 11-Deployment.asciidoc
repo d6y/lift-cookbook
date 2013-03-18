@@ -61,6 +61,13 @@ $ bees app:deploy -a myaccount/myapp ./target/scala-2.9.1/myapp.war
 
 This will send your WAR file to CloudBees and deploy it.  You'll see the location (URL) of your application output from the bees `app:deploy` command when it completes.
 
+If you change a configuration setting, you will need to restart the application for setting 
+to take effect. Deploying the application will do this, otherwise to do this run the `bees app:restart` command:
+
+[source, bash]
+---------------------------------------------------------
+$ bees app:restart -a myaccount/myapp 
+---------------------------------------------------------
 
 Discussion
 ^^^^^^^^^^
