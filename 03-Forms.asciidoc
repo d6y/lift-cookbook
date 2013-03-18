@@ -582,7 +582,7 @@ Starting with a form which is marked as "multipart=true":
   <script id="json" src="/classpath/json.js" type="text/javascript"></script>
 </head>
 <body>
-<form class="lift:FileUploadSnippet?form=post;multipart=true">
+<form data-lift="FileUploadSnippet?form=post;multipart=true">
    <label for="file">
      Select a file: <input id="file"></input>
    </label>
@@ -601,9 +601,10 @@ package code.snippet
 import net.liftweb.util.Helpers._
 import net.liftweb.http.SHtml._
 import net.liftweb.http.FileParamHolder
-import net.liftweb.common.{Full, Empty, Box}
+import net.liftweb.common.{Loggable, Full, Empty, Box}
 
-class FileUploadSnippet {
+
+class FileUploadSnippet extends Loggable {
 
   def render = {
 
@@ -611,18 +612,15 @@ class FileUploadSnippet {
 
     def processForm() = upload match {
       case Full(FileParamHolder(_, mimeType, fileName, file)) =>
-        println("%s of type %s is %d bytes long".
-           format (fileName, mimeType, file.length) )
+        logger.info("%s of type %s is %d bytes long" format (fileName, mimeType, file.length))
 
-      case _ => println("No file?")
+      case _ => logger.warn("No file?")
     }
 
     "#file" #> fileUpload(f => upload = Full(f)) &
       "type=submit" #> onSubmitUnit(processForm)
-
   }
 }
-
 ---------------------------------------------------------
 
 This allows you to access the `Array[Byte]` of the file in the `processForm` method when the form is submitted.
@@ -687,12 +685,12 @@ With `OnDiskFileParamHolder`, the file will be written to a temporary location (
 def processForm() = upload match {
 
   case Full(content : OnDiskFileParamHolder) =>
-    println("File is at "+content.localFile.getAbsolutePath)
+    logger.info("File: "+content.localFile.getAbsolutePath)
     val in: InputStream = content.fileStream
-    // do something with the stream here
+    // ...do something with the stream here...
     val wasDeleted_? = content.localFile.delete()
 
-  case _ => println("No file?")
+  case _ => logger.warn("No file?")
 }
 ---------------------------------------------------------
 
@@ -720,158 +718,7 @@ http://tools.ietf.org/html/rfc1867[http://tools.ietf.org/html/rfc1867]
 
 <<RestBinaryData>> discusses file upload in the context of a REST service.
 
-
-
-
-[[AjaxFileUpload]]
-Ajax File Upload
-~~~~~~~~~~~~~~~~
-
-Problem
-^^^^^^^
-
-You want to offer your users an Ajax file upload tool, with progress bars and drag and drop support.
-
-Solution
-^^^^^^^^
-
-Add Sebastian Tschan's _jQuery File Upload_ widget (https://github.com/blueimp/jQuery-File-Upload[https://github.com/blueimp/jQuery-File-Upload]) to your project, and implement a REST end point to receive files.
-
-The first step is to download the widget, and drag the `js` folder into your application as `src/main/webapp/js`.  We can then use the JavaScript in a template:
-
-[source,html]
----------------------------------------------------------
-<!DOCTYPE HTML>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>jQuery File Upload Example</title>
-</head>
-<body>
-
-<h1>Drag files onto this page</h1>
-
-<input id="fileupload" type="file" name="files[]" data-url="/upload" multiple>
-
-<div id="progress" style="width:20em; border: 1pt solid silver; display: none">
-  <div id="progress-bar" style="background: green; height: 1em; width:0%"></div>
-</div>
-
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script src="js/vendor/jquery.ui.widget.js"></script>
-<script src="js/jquery.iframe-transport.js"></script>
-<script src="js/jquery.fileupload.js"></script>
-
-<script>
-  $(function () {
-    $('#fileupload').fileupload({
-      dataType: 'json',
-      add: function (e,data) {
-        $('#progress-bar').css('width', '0%');
-        $('#progress').show();
-        data.submit();
-      },
-      progressall: function (e, data) {
-        var progress = parseInt(data.loaded / data.total * 100, 10) + '%';
-        $('#progress-bar').css('width', progress);
-      },
-      done: function (e, data) {
-        $.each(data.files, function (index, file) {
-          $('<p/>').text(file.name).appendTo(document.body);
-        });
-        $('#progress').fadeOut();
-      }
-    });
-  });
-</script>
-
-</body>
-</html>
----------------------------------------------------------
-
-This template provides an input field for files, an area to use as a progress indicator, and configures the widget when the page loads in a JQuery `$( ... )` block.
-
-The final part is to implement a Lift REST service to receive the file or files.  The URL of the service, `/upload`, is set in `data-url` on the `input` field, and that's the address we match on:
-
-[source,scala]
----------------------------------------------------------
-package code.rest
-
-import net.liftweb.http.rest.RestHelper
-import net.liftweb.http.OkResponse
-
-object AjaxFileUpload extends RestHelper {
-
-  serve {
-
-    case "upload" :: Nil Post req =>
-      for (file <- req.uploadedFiles) {
-        println("Received: "+file.fileName)
-      }
-      OkResponse()
-
-  }
-
-}
----------------------------------------------------------
-
-This implementation simply logs the name of the file received and acknowledges successful delivery with a 200 status code back to the widget.
-
-As with all REST services, it needs to be registered in `Boot.scala`:
-
-[source,scala]
----------------------------------------------------------
-LiftRules.dispatch.append(code.rest.AjaxFileUpload)
----------------------------------------------------------
-
-By default the widget makes the whole HTML page a drop-target for files, meaning you can drag a file onto the page and it will immediately be uploaded to your Lift application.
-
-Discussion
-^^^^^^^^^^
-
-In this recipe we've shown just the basic integration of the widget with a Lift application.  The demo site for the widget, http://blueimp.github.com/jQuery-File-Upload/[http://blueimp.github.com/jQuery-File-Upload/], shows other capabilities, and provides documentation on how to integrate them.
-
-May of the features just require JavaScript configuration.  For example, we've used the widget's `add`, `progressall`, and `done` handlers to show, update and then fade out a progress bar.  When the upload is completed, the name of the uploaded file is appended to the page.
-
-In the REST service the uploaded file are available via the `uploadedFiles` method on the request. When Lift receives a multi-part form it automatically extracts files as `uploadedFiles`, each of which is a `FileParamHolder` which gives us access to the `fileName`, `length`, `mimeType` and `fileStream`.
-
-By default uploaded files are held in memory, but that can be changed (see <<UploadToDisk>> in <<FileUpload>>).
-
-In the recipe we return a 200 (`OkResponse`).  If we wanted to signal to the widget that a file was rejected we can return another code. For example, perhaps we want to reject all files except PNG images.  On the server-side we can do that by replacing the `OkResponse` with a test:
-
-[source,scala]
----------------------------------------------------------
-import net.liftweb.http.{ResponseWithReason, BadResponse, OkResponse}
-
-if (req.uploadedFiles.exists( _.mimeType != "image/png" ))
-  ResponseWithReason(BadResponse(), "Only PNGs")
-else
-  OkResponse()
----------------------------------------------------------
-
-We would mirror this with a `fail` handler in the client JavaScript:
-
-[source,javascript]
----------------------------------------------------------
-fail: function (e, data) {
-  alert(data.errorThrown);
-}
----------------------------------------------------------
-
-If we uploaded, say a JPEG, the browser would show an alert dialog reporting "Only PNGs".
-
-See Also
-^^^^^^^^
-
-Diego Medina has posted a Gist of Lift REST code to integrate more fully with the image upload and image reviewing features of the widget, specifically implementing the JSON response that the widget expects for that functionality.  You'll find it at: https://gist.github.com/a6715d1e3664f73cd03a[https://gist.github.com/a6715d1e3664f73cd03a].
-
-<<FileUpload>> describes the basic file upload behaviour of Lift and how to control where files are stored.
-
-Antonio Salazar Cardozo has posted example code for performing Ajax file upload using Lift's Ajax mechanisms, which avoids external JavaScript libraries. You can find a description and link to the code at: https://groups.google.com/d/msg/liftweb/OuN1sqRMO_c/TrUGUaSvoN4J[https://groups.google.com/d/msg/liftweb/OuN1sqRMO_c/TrUGUaSvoN4J].
-
-
-
-
+See <<AjaxFileUpload>> for an example of an Ajax file upload through integration with a JavaScript library, providing progress indicators and drag-and-drop support.
 
 
 
