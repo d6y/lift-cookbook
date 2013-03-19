@@ -61,6 +61,13 @@ $ bees app:deploy -a myaccount/myapp ./target/scala-2.9.1/myapp.war
 
 This will send your WAR file to CloudBees and deploy it.  You'll see the location (URL) of your application output from the bees `app:deploy` command when it completes.
 
+If you change a configuration setting, you will need to restart the application for setting
+to take effect. Deploying the application will do this, otherwise run the `bees app:restart` command:
+
+[source, bash]
+---------------------------------------------------------
+$ bees app:restart -a myaccount/myapp
+---------------------------------------------------------
 
 Discussion
 ^^^^^^^^^^
@@ -89,7 +96,7 @@ $ bees app:update -a myaccount/myapp disableProxyBuffering=true
 As with the run mode setting, CloudBees will remember these settings, so you
 only need to set them once.
 
-Finally, you may want to increase the _permanent generation_ memory setting of the JVM. By default, an application has 64M assigned for the permgen. To increase this to 128M, run the `bees:update` commannd:
+Finally, you may want to increase the _permanent generation_ memory setting of the JVM. By default, an application has 64M assigned for the permgen. To increase this to 128M, run the `bees app:update` commannd:
 
 [source, bash]
 ----------------------------------------------------------------
@@ -211,6 +218,46 @@ val hostAndPort : String =
 
 Running locally `hostAndPort` might be `192.168.1.60:8080` and running on CloudBees it would be something like `ec2-204-236-222-252.compute-1.amazonaws.com:8520`.
 
+Java Version
+++++++++++++
+
+Currently the default JVM provided by CloudBees is JDK 7, but you can select 6, 7 and 8.
+To change the default Java Virtual Machine, use the `bees config:set` command:
+
+[source, bash]
+----------------------------------------------------------------
+$ bees config:set -a myaccount/myapp -Rjava_version=1.8
+----------------------------------------------------------------
+
+Excluding the application identifier `-a myaccount/myapp` from the command will set the
+JVM as the default for all applications in the account.
+
+The JVM can also be changed when an application is deployed or updated via following commands:
+
+[source, bash]
+----------------------------------------------------------------
+$ bees app:deploy -a myaccount/myapp ./target/scala-2.9.2/myapp_2.9.2-1.0.war  -Rjava_version=1.6
+----------------------------------------------------------------
+
+[source, bash]
+----------------------------------------------------------------
+$ bees app:update -a myaccount/myapp -Rjava_version=1.7
+----------------------------------------------------------------
+
+
+Container Version
++++++++++++++++++
+
+CloudBees  offer several containers: Tomcat 6.0.32 (the default), Tomcat 7, JBoss 7.02, JBoss 7.1 and GlassFish 3.
+
+To change containers the application will need to be redeployed as CloudBees uses different file configurations for the various containers.  Hence we use the `bees app:deploy` command. The following example updates to Tomcat 7:
+
+[source, bash]
+----------------------------------------------------------------
+bees app:deploy -t tomcat7 -a myaccount/myapp ./target/scala-2.9.2/myapp_2.9.2-1.0.war
+----------------------------------------------------------------
+
+
 ClickStarts
 +++++++++++
 
@@ -230,7 +277,7 @@ The CloudBees SDK provides command line tools for configuring and controlling ap
 
 The CloudBees developer portal (https://developer.cloudbees.com[https://developer.cloudbees.com])contains a "Resources" section which provides details of the CloudBees services.
 
-The JVM PermGen settings for CloudBees are described at https://wiki.cloudbees.com/bin/view/RUN/JVM+PermGen+Space[https://wiki.cloudbees.com/bin/view/RUN/JVM+PermGen+Space], and settings for which JVM is used can be found at https://developer.cloudbees.com/bin/view/RUN/JVMVersion[https://developer.cloudbees.com/bin/view/RUN/JVMVersion].  The run time stack defaults to Tomcat 6, but can also be changed as described at https://developer.cloudbees.com/bin/view/RUN/ClickStack[https://developer.cloudbees.com/bin/view/RUN/ClickStack].
+The JVM PermGen settings for CloudBees are described at https://wiki.cloudbees.com/bin/view/RUN/JVM+PermGen+Space[https://wiki.cloudbees.com/bin/view/RUN/JVM+PermGen+Space], and settings for which JVM is used can be found at https://developer.cloudbees.com/bin/view/RUN/JVMVersion[https://developer.cloudbees.com/bin/view/RUN/JVMVersion]. For information about the containers, see: https://developer.cloudbees.com/bin/view/RUN/ClickStack[https://developer.cloudbees.com/bin/view/RUN/ClickStack].
 
 A plugin is available to automate deployments from SBT. The plugin and the excellent
 instructions for installing and configuring it can be found at https://github.com/timperrett/sbt-cloudbees-plugin[https://github.com/timperrett/sbt-cloudbees-plugin].
