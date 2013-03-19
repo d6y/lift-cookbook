@@ -218,6 +218,34 @@ val hostAndPort : String =
 
 Running locally `hostAndPort` might be `192.168.1.60:8080` and running on CloudBees it would be something like `ec2-204-236-222-252.compute-1.amazonaws.com:8520`.
 
+JDK/JVM
++++++++++++++++++++++++++
+
+Currently the default JVM provided by CloudBees is JDK7, JVMs currently offered are JDK6, 7 and 8.
+
+To set the JVM use the `bees configset` command:
+
+[source, bash]
+----------------------------------------------------------------
+$ bees config:set -a  myaccount/myapp -Rjava_version=1.8
+----------------------------------------------------------------
+
+Excluding the application identifier `-a  myaccount/myapp` from the command will set the 
+JVM as the default for all applications of the account.
+
+The JVM and also be changed when an application is deployed or updated via following commands:
+
+
+[source, bash]
+----------------------------------------------------------------
+$ bees app:deploy -a  myaccount/myapp  ./target/scala-2.9.2/myapp_2.9.2-1.0.war  -Rjava_version=1.6
+----------------------------------------------------------------
+
+[source, bash]
+----------------------------------------------------------------
+$ bees app:update -a  myaccount/myapp -Rjava_version=1.7
+----------------------------------------------------------------
+
 ClickStarts
 +++++++++++
 
