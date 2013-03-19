@@ -246,6 +246,23 @@ $ bees app:deploy -a  myaccount/myapp  ./target/scala-2.9.2/myapp_2.9.2-1.0.war 
 $ bees app:update -a  myaccount/myapp -Rjava_version=1.7
 ----------------------------------------------------------------
 
+More information about JVMs supported by CloudBees can be found here: http://developer.cloudbees.com/bin/view/RUN/JVMVersion[http://developer.cloudbees.com/bin/view/RUN/JVMVersion].
+
+
+Container Version
++++++++++++++++++++++++++
+
+CloudBees currently offer several containers of interest,Tomcat 6.0.32. (This is the default ), JBoss 7.02,Tomcat 7.,JBoss 7.1 and GlassFish 3.
+
+ To change containers the application will need to be redeployed as CloudBees uses different file configurations for the various containers.  Hence we use the `bees app:deploy` command, the following example is updating to the Tomcat 7 container. 
+
+[source, bash]
+----------------------------------------------------------------
+  bees app:deploy -t tomcat7  -a  myaccount/myapp  ./target/scala-2.9.2/myapp_2.9.2-1.0.war
+----------------------------------------------------------------
+
+More information about the supported containers can be found on the CloudBees Application Containers page http://developer.cloudbees.com/bin/view/RUN/ClickStack[http://developer.cloudbees.com/bin/view/RUN/ClickStack].
+
 ClickStarts
 +++++++++++
 
