@@ -225,24 +225,33 @@ Currently the default JVM provided by CloudBees is JDK 7, but you can select 6, 
 To change the default Java Virtual Machine, use the `bees config:set` command:
 
 [source, bash]
-----------------------------------------------------------------
+------------------------------------------------------------
 $ bees config:set -a myaccount/myapp -Rjava_version=1.8
-----------------------------------------------------------------
+------------------------------------------------------------
 
-Excluding the application identifier `-a myaccount/myapp` from the command will set the
-JVM as the default for all applications in the account.
+Excluding the application identifier `-a myaccount/myapp` from the command will set the JVM as the default for all applications in the account. The  `bees config:set` command will update the configuration, but not take effect until the application(s) have been updated or restarted.
 
 The JVM can also be changed when an application is deployed or updated via following commands:
 
 [source, bash]
-----------------------------------------------------------------
-$ bees app:deploy -a myaccount/myapp ./target/scala-2.9.2/myapp_2.9.2-1.0.war  -Rjava_version=1.6
-----------------------------------------------------------------
+------------------------------------------------------------
+$ bees app:deploy -a myaccount/myapp sample.war  -Rjava_version=1.6
+------------------------------------------------------------
 
 [source, bash]
-----------------------------------------------------------------
+------------------------------------------------------------
 $ bees app:update -a myaccount/myapp -Rjava_version=1.7
-----------------------------------------------------------------
+------------------------------------------------------------
+
+To confirm which JVM an application is currently running, use the 
+'bees config:list' command, which will display Java version. As can be seen below:
+
+[source, bash]
+------------------------------------------------------------
+$ bees config:list -a myaccount/myapp
+Runtime Parameters:
+  java_version=1.6
+------------------------------------------------------------
 
 
 Container Version
@@ -254,8 +263,38 @@ To change containers the application will need to be redeployed as CloudBees use
 
 [source, bash]
 ----------------------------------------------------------------
-bees app:deploy -t tomcat7 -a myaccount/myapp ./target/scala-2.9.2/myapp_2.9.2-1.0.war
+bees app:deploy -t tomcat7 -a myaccount/myapp sample.war
 ----------------------------------------------------------------
+
+The JVM and container commands can be run as a single 'bees app:deploy' as follows:
+
+[source, bash]
+----------------------------------------------------------------
+bees app:deploy -t tomcat -a myaccount/myapp sample.war -Rjava_version=1.6
+----------------------------------------------------------------
+
+Which would deploy sample.war to the myapp application on myaccount with Tomcat 6.0.32 and JDK6.
+
+To determine which container an application is deployed to, use the command 'bees app:info', example can be seen below:
+
+[source, bash]
+----------------------------------------------------------------
+bees app:info -a myaccount/myapp
+Application     : myaccount/myapp
+Title           : myapp
+Created         : Wed Mar 20 11:02:40 EST 2013
+Status          : active
+URL             : myapp.myaccount.cloudbees.net
+clusterSize     : 1
+container       : java_free
+containerType   : tomcat
+idleTimeout     : 21600
+maxMemory       : 256
+proxyBuffering  : false
+securityMode    : PUBLIC
+serverPool      : stax-global (Stax Global Pool)
+----------------------------------------------------------------
+
 
 
 ClickStarts
