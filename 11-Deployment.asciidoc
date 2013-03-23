@@ -186,14 +186,7 @@ This will return a `Full` hostname on the CloudBees environment, but when runnin
 Failure(instance-data,Full(java.net.UnknownHostException: instance-data),Empty)
 ------------------------------------------------------------
 
-The port number can be read from the JVM system property of `sun.java.command`. This is the command that started your application and it includes the port number. An example would be:
-
-------------------------------------------------------------
-net.stax.appserver.bootstrap.Bootstrap -dir /var/genapp/apps/d414b3f4/staxcat
-  -port 8783 -config /var/genapp/apps/d414b3f4/appserver.xml
-------------------------------------------------------------
-
-We can pick out the port number with a regular expression:
+The port number can be found from the name of a file in the `.genapps/ports` folder of your application deployment:
 
 [source, scala]
 ------------------------------------------------------------
