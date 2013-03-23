@@ -197,13 +197,18 @@ We can pick out the port number with a regular expression:
 
 [source, scala]
 ------------------------------------------------------------
-val beesPort : Box[String] = for {
-  command <- Box !! System.getProperty("sun.java.command")
-  port <- """.*-port (\d+) .*""".r findFirstMatchIn command
-} yield port group 1
+val beesPort : Option[Int] = {
+  val portsDir = new File(System.getenv("PWD"), ".genapp/ports")
+  for {
+    files <- Option(portsDir.list)
+    port <- files.flatMap(asInt).headOption
+  } yield port
+}
 ------------------------------------------------------------
 
-Running locally this will return a `Empty` box, but on CloudBees you'll see a `Full[String]` port number.
+The `java.io.File#list` method returns a list of filenames in a directory, but will return null if the directory doesn't exist or if there are any IO errors.  For this reason, we wrap it in `Option` to convert null values to `None`.
+
+Running locally this will return a `None`, but on CloudBees you'll see a `Full[Int]` port number.
 
 You might put these two values together as follows:
 
@@ -213,7 +218,7 @@ import java.net.InetAddress
 
 val hostAndPort : String =
   (beesPublicHostname openOr InetAddress.getLocalHost.getHostAddress) +
-  ":" + (beesPort openOr "8080")
+  ":" + (beesPort getOrElse 8080).toString
 ------------------------------------------------------------
 
 Running locally `hostAndPort` might be `192.168.1.60:8080` and running on CloudBees it would be something like `ec2-204-236-222-252.compute-1.amazonaws.com:8520`.
@@ -236,15 +241,11 @@ The JVM can also be changed when an application is deployed or updated via follo
 [source, bash]
 ------------------------------------------------------------
 $ bees app:deploy -a myaccount/myapp sample.war  -Rjava_version=1.6
-------------------------------------------------------------
-
-[source, bash]
-------------------------------------------------------------
 $ bees app:update -a myaccount/myapp -Rjava_version=1.7
 ------------------------------------------------------------
 
-To confirm which JVM an application is currently running, use the 
-'bees config:list' command, which will display Java version. As can be seen below:
+To confirm which JVM an application is currently running, use the
+`bees config:list` command, which will display Java version. As can be seen below:
 
 [source, bash]
 ------------------------------------------------------------
@@ -257,29 +258,29 @@ Runtime Parameters:
 Container Version
 +++++++++++++++++
 
-CloudBees  offer several containers: Tomcat 6.0.32 (the default), Tomcat 7, JBoss 7.02, JBoss 7.1 and GlassFish 3.
+CloudBees offer several containers: Tomcat 6.0.32 (the default), Tomcat 7, JBoss 7.02, JBoss 7.1 and GlassFish 3.
 
 To change containers the application will need to be redeployed as CloudBees uses different file configurations for the various containers.  Hence we use the `bees app:deploy` command. The following example updates to Tomcat 7:
 
 [source, bash]
 ----------------------------------------------------------------
-bees app:deploy -t tomcat7 -a myaccount/myapp sample.war
+$ bees app:deploy -t tomcat7 -a myaccount/myapp sample.war
 ----------------------------------------------------------------
 
-The JVM and container commands can be run as a single 'bees app:deploy' as follows:
+The JVM and container commands can be run as a single `bees app:deploy` as follows:
 
 [source, bash]
 ----------------------------------------------------------------
-bees app:deploy -t tomcat -a myaccount/myapp sample.war -Rjava_version=1.6
+$ bees app:deploy -t tomcat -a myaccount/myapp sample.war -Rjava_version=1.6
 ----------------------------------------------------------------
 
-Which would deploy sample.war to the myapp application on myaccount with Tomcat 6.0.32 and JDK6.
+This would deploy `sample.war` to the "myapp" application on "myaccount" with Tomcat 6.0.32 and JDK 6.
 
-To determine which container an application is deployed to, use the command 'bees app:info', example can be seen below:
+To determine which container an application is deployed to, use the command `bees app:info`:
 
 [source, bash]
 ----------------------------------------------------------------
-bees app:info -a myaccount/myapp
+$ bees app:info -a myaccount/myapp
 Application     : myaccount/myapp
 Title           : myapp
 Created         : Wed Mar 20 11:02:40 EST 2013
