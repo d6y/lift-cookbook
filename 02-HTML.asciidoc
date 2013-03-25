@@ -740,7 +740,7 @@ Do so by including the CSS in the part of the page that will get processed and m
  <head>
    <title>Special</title>
  </head>
- <body class="lift:content_id=main">
+ <body data-lift-content-id="main">
   <div id="main" data-lift="surround?with=default;at=content">
     <link data-lift="head" rel="stylesheet"
        href="red-titles.css" type="text/css" />
