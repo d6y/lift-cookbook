@@ -358,8 +358,8 @@ file with the message you want to show to users:
 <head>
   <title>500</title>
 </head>
-<body class="lift:content_id=main">
-<div id="main" class="lift:surround?with=default;at=content">
+<body data-lift-content-id="main">
+<div id="main" data-lift="surround?with=default;at=content">
   <h1>Something is wrong!</h1>
   <p>It's our fault - sorry</p>
 </div>

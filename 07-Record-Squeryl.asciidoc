@@ -772,11 +772,11 @@ The corresponding template could be:
 <head>
   <title>Planet Name Validation</title>
 </head>
-<body class="lift:content_id=main">
-<div id="main" class="lift:surround?with=default;at=content">
+<body data-lift-content-id="main">
+<div id="main" data-lift="surround?with=default;at=content">
   <h1>Add a planet</h1>
 
-  <div class="lift:Msgs?showAll=false">
+  <div data-lift="Msgs?showAll=false">
     <lift:notice_class>noticeBox</lift:notice_class>
   </div>
 
@@ -789,7 +789,7 @@ The corresponding template could be:
     <div>
       <label for="planetName">Planet name:</label>
       <input id="planetName" type="text"></input>
-      <span class="lift:Msg?id=name_id&errorClass=error">
+      <span data-lift="Msg?id=name_id&errorClass=error">
         Msg to appear here
       </span>
     </div>
