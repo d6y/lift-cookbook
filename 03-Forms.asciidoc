@@ -18,69 +18,91 @@ You want to process form data in a regular old-fashioned, non-Ajax, way.
 Solution
 ^^^^^^^^
 
-Extract form values with `S.param`. For example, we can show a form,
-process an input value, and echo the value back out. Here we have
-`dumbForm.html` which contains a form wrapped in a snippet:
+Extract form values with `S.param`, process the values, and produce some output.
+
+For example, we can show a form, process an input value, and give a message back as a notice.  The template is a regular HTML form, with the addition of a snippet:
+
 
 [source,html]
 ------------------
-<div data-lift="DumbForm">
-
-<form  action="/dumbForm.html" method="post">
-  <input type="text" name="it" value="something" >
+<form data-lift="Plain" action="/plain" method="post">
+  <input type="text" name="name" placeholder="What's your name?">
   <input type="submit" value="Go" >
 </form>
-
-<div id="result"> </div>
-
-</div>
 ------------------
 
-Pick out the values in the snippet:
+In the snippet we can pick out the value of the field "name" with `S.param("name")`:
 
 [source,scala]
 ------------------
 package code.snippet
 
-import net.liftweb.util._
-import net.liftweb.common._
-import Helpers._
-import net.liftweb.http._
+import net.liftweb.common.Full
+import net.liftweb.http.S
+import net.liftweb.util.PassThru
 
-class DumbForm {
+object Plain {
 
-  val inputParam = for {
-    r <- S.request if r.post_?  // restricting to POST requests
-    v <- S.param("it")
-  } yield v
-
-  def render = inputParam match {
-      case Full(x) =>
-        println("Input is: "+x)
-        "#result *" #> x
-
-      case _ =>
-        println("No input present! Rendering input form HTML")
-        PassThru
+  def render = S.param("name") match {
+    case Full(name) =>
+      S.notice("Hello "+name)
+      S.redirectTo("/plain")
+    case _ =>
+      PassThru
   }
 
 }
 ------------------
 
-When you run this code you'll see
-`No input present! Rendering input form HTML` on the console, and when
-you press "Go" you'll see `Input is: something` and the "something" will
-appear on the page.
+When you reach this template in your browser, the first time through there will be no parameter so we just pass back the form unchanged. You can then enter a value into the "name" field and submit the form. This will result in Lift processing the template again, but this time with a value for the "name" input.  The result will be your browser redirected to a page with a message set for display.
+
 
 Discussion
 ^^^^^^^^^^
 
-The `DumbForm` snippet extracts the input parameter using a for
-comprehension. The result will be of type `Box[String]` which we then
-match on to decide what to do next.
+Manually plucking parameters from a request isn't making the best use of Lift, but sometimes you need to do it, and `S.param` is the way you can process request parameters.
 
-In this example, we are also checking that the request is a POST request
-before extracting the value of the `it` form parameter.
+
+The result of `S.param` is a `Box[String]`, and in the above example we pattern match on a value.  With more than one parameter you're probably see `S.param` used in this way:
+
+[source,scala]
+------------------
+def render = {
+  for {
+    name <- S.param("name")
+    pet <- S.param("petName")
+  } {
+    S.notice("Hello %s and %s".format(name,pet))
+    S.redirectTo("/plain")
+  }
+
+ PassThru
+}
+------------------
+
+If both "name" and "petName" are provided, the body of the _for_ will be evaluated.
+
+
+Related function on `S` include:
+
+* `S.params(name)` -- producing a `List[String]` for all the request parameters with the given name.
+* `S.post_?`, `S.get_?`-- to see if the request was a GET or POST.
+* `S.getRequestHeader(name)` -- giving the `Box[String]` for a header in the request with the given name.
+* `S.request` -- to access the `Box[Req]` which gives you access to further HTTP-specific information about the request.
+
+As an example of using `S.request` we could produce a `List[String]` for the values of all request parameters that have "name" somewhere in their parameter name:
+
+[source,scala]
+------------------
+val names = for {
+  req <- S.request.toList
+  paramName <- req.paramNames
+  if paramName.toLowerCase contains "name"
+  value <- S.param(paramName)
+} yield value
+------------------
+
+Note that by opening up `S.request` we can access all the parameter names via `paramNames` function on `Req`.
 
 Screen or Wizard provide alternatives for form processing, but sometimes
 you just want to pull values from a request, as demonstrated in this
@@ -89,13 +111,8 @@ recipe.
 See Also
 ^^^^^^^^
 
-* _Simply Lift_, section 4.1,
-http://simply.liftweb.net/index-4.1.html#toc-Section-4.1[Old Fashioned
-Dumb Forms] and 4.9
-http://stable.simply.liftweb.net/#toc-Section-4.9[But sometimes Old
-Fashioned is good].
-* https://github.com/marekzebrowski/lift-basics[Simple forms], example
-Lift project.
+_Simply Lift_ covers a variety of ways of processing forms.  See: http://simply.liftweb.net[http://simply.liftweb.net].
+
 
 
 
