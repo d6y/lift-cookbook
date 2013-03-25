@@ -280,16 +280,16 @@ the site map.  To do that, make use of `Menu.title` in your template directly:
 
 [source,html]
 ----
-<title class="lift:Menu.title"></title>
+<title data-lift="Menu.title"></title>
 ----
 
-The `lift:Menu.title` code appends to any existing text in the title.
+The `Menu.title` code appends to any existing text in the title.
 This means the following will have the phrase "Site Title - " in the
 title followed by the page title:
 
 [source,html]
 ----
-<title class="lift:Menu.title">Site Title - </title>
+<title data-lift="Menu.title">Site Title - </title>
 ----
 
 If you need more control, you can of course bind on `<title>` using a
@@ -298,7 +298,7 @@ title after the page title:
 
 [source,html]
 ----
-<title class="lift:MyTitle"></title>
+<title data-lift="MyTitle"></title>
 -----
 
 [source,scala]
@@ -311,7 +311,7 @@ object MyTitle {
 See Also
 ^^^^^^^^
 
-At https://www.assembla.com/spaces/liftweb/wiki/SiteMap[https://www.assembla.com/spaces/liftweb/wiki/SiteMap] there's more about Site Map and the `Lift:Menu` snippets.
+At https://www.assembla.com/spaces/liftweb/wiki/SiteMap[https://www.assembla.com/spaces/liftweb/wiki/SiteMap] there's more about Site Map and the `Menu` snippets.
 
 
 
@@ -351,7 +351,7 @@ all pages via `templates-hidden/default.html`:
 
 [source,html]
 ----
-<script class="lift:Html5Shiv"></script>
+<script data-lift="Html5Shiv"></script>
 ----
 
 Discussion
@@ -390,7 +390,7 @@ It would be used like this...
 
 [source,html]
 ----
-<div class="lift:IEOnly">
+<div data-lift="IEOnly">
   A div just for IE
 </div>
 ----
@@ -408,7 +408,7 @@ Notice that the `condition` test defaults to "IE", but first tries to look for a
 
 [source,html]
 ----
-<div class="lift:IEOnly?cond=lt+IE+9">
+<div data-lift="IEOnly?cond=lt+IE+9">
   You're using IE 8 or earlier
 </div>
 ----
@@ -461,7 +461,7 @@ Starting with the original markup...
 
 <p>There's a 50:50 chance of seeing "Try again" or "Congratulations!":</p>
 
-<div class="lift:PassThruSnippet">
+<div data-lift="PassThruSnippet">
   Try again - this is the template content.
 </div>
 ----
@@ -536,7 +536,7 @@ Switch to the designer-friendly snippet invocation mechanism. E.g.,
 
 [source,html]
 ----
-<div class="lift:HellowWorld.howdy">...</div>
+<div data-lift="HellowWorld.howdy">...</div>
 ----
 
 Discussion
@@ -579,15 +579,15 @@ to avoid this browser caching.
 Solution
 ^^^^^^^^
 
-Add the `lift:with-resource-id` class attribute to script or link tags:
+Add the `with-resource-id` data-lift attribute to script or link tags:
 
 [source,html]
 ----
-<script class="lift:with-resource-id" src="/myscript.js"
+<script data-lift="with-resource-id" src="/myscript.js"
  type="text/javascript"></script>
 ----
 
-The addition of this class will cause Lift to append a "resource id" to
+The addition of this attribute will cause Lift to append a "resource id" to
 your `src` (or `href`), and as this resource id changes each time Lift
 starts, it defeats browser caching.
 
@@ -635,7 +635,7 @@ object CustomResourceId {
   // The random number we're using to avoid caching
   val resourceId = Helpers.nextFuncName
 
-  // Prefix lift:with-resource-id links with "/cache/{resouceId}"
+  // Prefix with-resource-id links with "/cache/{resouceId}"
   LiftRules.attachResourceId = (path: String) => {
    "/cache/" + resourceId + path
   }
@@ -663,7 +663,7 @@ With the code in place, we can, for example, modify `templates-hidden/default.ht
 
 [source, html]
 -----------
-<script id="jquery" class="lift:with-resource-id"
+<script id="jquery" data-lift="with-resource-id"
   src="/classpath/jquery.js" type="text/javascript"></script>
 -----------
 
@@ -708,7 +708,7 @@ something to the `<head>` section.
 Solution
 ^^^^^^^^
 
-Use the `lift:head` snippet or CSS class so Lift knows to merge the
+Use the `head` snippet or CSS class so Lift knows to merge the
 contents with the `<head>` of your page. For example, suppose you have
 the following contents in `templates-hidden/default.html`:
 
@@ -717,7 +717,7 @@ the following contents in `templates-hidden/default.html`:
 <html lang="en" xmlns:lift="http://liftweb.net/">
   <head>
     <meta charset="utf-8"></meta>
-    <title class="lift:Menu.title">App: </title>
+    <title data-lift="Menu.title">App: </title>
     <script id="jquery" src="/classpath/jquery.js"
       type="text/javascript"></script>
     <script id="json" src="/classpath/json.js"
@@ -731,7 +731,7 @@ the following contents in `templates-hidden/default.html`:
 
 Also suppose you have `index.html` on which you want to include `red-titles.css` to just change the style of just this page.
 
-Do so by including the CSS in the part of the page that will get processed and mark it for the head with `lift:head`:
+Do so by including the CSS in the part of the page that will get processed and mark it for the head with `head`:
 
 [source,html]
 -----
@@ -741,8 +741,8 @@ Do so by including the CSS in the part of the page that will get processed and m
    <title>Special</title>
  </head>
  <body class="lift:content_id=main">
-  <div id="main" class="lift:surround?with=default;at=content">
-    <link class="lift:head" rel="stylesheet"
+  <div id="main" data-lift="surround?with=default;at=content">
+    <link data-lift="head" rel="stylesheet"
        href="red-titles.css" type="text/css" />
     <h2>Hello</h2>
   </div>
@@ -790,13 +790,13 @@ You can also use `<lift:head>...</lift:head>` to wrap a number of
 expressions, and will see `<head_merge>...</head_merge>` used in code
 example as an alternative to `<lift:head>`.
 
-Another variant you may see is `data-lift="head"`, as an alternative to `class="lift:head"`.
+Another variant you may see is `class="lift:head"`, as an alternative to `data-lift="head"`.
 
-The `lift:head` snippet is a built-in snippet, but otherwise no different from any snippet you might write.  What the snippet does is emit a `<head>` block, containing the elements you want in the head.  These can be `<title>`, `<link>`, `<meta>`, `<style>`, `<script>` or `<base>` tags.  How does this `<head>` block produced by the `lift:head` snippet end up inside the main `<head>` section of the page?  When Lift processes your template, it automatically merges all `<head>` tags into the main `<head>` section of the page.
+The `head` snippet is a built-in snippet, but otherwise no different from any snippet you might write.  What the snippet does is emit a `<head>` block, containing the elements you want in the head.  These can be `<title>`, `<link>`, `<meta>`, `<style>`, `<script>` or `<base>` tags.  How does this `<head>` block produced by the `head` snippet end up inside the main `<head>` section of the page?  When Lift processes your template, it automatically merges all `<head>` tags into the main `<head>` section of the page.
 
 You might suspect you can therefore put a plain old `<head>` section anywhere on your template, but that would not necessarily be valid HTML5 mark up.
 
-There's also `lift:tail` which works in a similar way, except anything marked with this snippet is moved to be just before the close of the body tag.
+There's also `tail` which works in a similar way, except anything marked with this snippet is moved to be just before the close of the body tag.
 
 See Also
 ^^^^^^^^
@@ -860,7 +860,7 @@ slash.  `ParsePath` is a representation for a URI path, and exposing
 if the path is absolute or ends in a slash are useful flags for matching on, but
 in this case, they're not relevant.
 
-Be aware that 404 pages, when rendered this way, won't have a location in the site map. That's because we've not included the `404.html` file in the site map, and we don't have to because we're rendering via `NotFoundAsTemplate` rather than sending a redirect to _/404.html_. However, this means that if you display an error page using a template that contains `lift:Menu.builder` or similar (as `templates-hidden/default.html` does), you'll see "No Navigation Defined".  In that case, you'll probably want to use a different template on your 404 page.
+Be aware that 404 pages, when rendered this way, won't have a location in the site map. That's because we've not included the `404.html` file in the site map, and we don't have to because we're rendering via `NotFoundAsTemplate` rather than sending a redirect to _/404.html_. However, this means that if you display an error page using a template that contains `Menu.builder` or similar (as `templates-hidden/default.html` does), you'll see "No Navigation Defined".  In that case, you'll probably want to use a different template on your 404 page.
 
 As an alternative, you could include the 404 page in your site map but make it hidden when the site map is displayed via the `Menu.builder`:
 
@@ -1034,7 +1034,7 @@ You might pair this with the following in your template...
 
 [source,html]
 ---------------------------------------------------------
-<div class="lift:Msg?id=checkPrivacyPolicy"></div>
+<div data-lift="Msg?id=checkPrivacyPolicy"></div>
 ---------------------------------------------------------
 
 
