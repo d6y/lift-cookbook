@@ -177,7 +177,7 @@ snippet could include:
 
 [source,html]
 ------------------------------------------------------------------
-<div class="lift:Places.facts">
+<div data-lift="Places.facts">
  <table>
   <thead>
    <tr><th>City</th><th>Population</th></tr>
