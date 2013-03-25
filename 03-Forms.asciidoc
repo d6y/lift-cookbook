@@ -24,7 +24,7 @@ process an input value, and echo the value back out. Here we have
 
 [source,html]
 ------------------
-<div class="lift:DumbForm">
+<div data-lift="DumbForm">
 
 <form  action="/dumbForm.html" method="post">
   <input type="text" name="it" value="something" >
@@ -118,8 +118,8 @@ form...
 
 [source,html]
 ---------------------------------------------------------
-<div class="lift:AjaxExample">
- <form class="lift:form.ajax">
+<div data-lift="AjaxExample">
+ <form data-lift="form.ajax">
   <input type="text" name="info" value="" />
   <input type="submit" name="sb" value="go!" />
  </form>
@@ -208,13 +208,13 @@ Consider this HTML, which is not in a form, but includes `jlift.js`:
 
 [source,html]
 ---------------------------------------------------------
-<div class="lift:JsonForm" >
+<div data-lift="JsonForm" >
 
  <!--  required for JSON forms processing -->
- <script src="/classpath/jlift.js" class="lift:tail"></script>
+ <script src="/classpath/jlift.js" data-lift="tail"></script>
 
  <!--  placeholder script required to process the form -->
- <script id="jsonFormScript" class="lift:tail"></script>
+ <script id="jsonFormScript" data-lift="tail"></script>
 
  <div id="formToJson" name="formToJson">
   <input type="text" name="name" value="Royal Society" />
@@ -425,7 +425,7 @@ The corresponding template would be:
 
 [source,html]
 ---------------------------------------------------------
-<div class="lift:MySnippet.multi?form=post">
+<div data-lift="MySnippet.multi?form=post">
   <p>What can I getcha?</p>
   <div id="opts">options go here</div>
   <input type="submit" value="Submit" />
