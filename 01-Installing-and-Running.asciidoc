@@ -579,7 +579,7 @@ Start SBT and at the SBT prompt create the IDEA project files by typing:
 gen-idea
 ---------
 
-This will generate the `.idea` and `.iml` files that IntelliJ uses. Inside IntelliJ you can open the project from the "File" menu, picking "Open..." and then navigating to your project and select the directory.
+This will generate the `.idea` and `.iml` files that IntelliJ uses. Inside IntelliJ you can open the project from the "File" menu, picking "Open..." and then navigating to your project and selecting the directory.
 
 To see live changes as you edit and save your work, run SBT in a separate terminal window.  That is, start `sbt` from a terminal window outside of IntelliJ and enter the following:
 
