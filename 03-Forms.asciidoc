@@ -129,83 +129,136 @@ whole page.
 Solution
 ^^^^^^^^
 
-Mark your form as an Ajax form with `lift:form.ajax` and supply a
-function to run on the server when the form is submitted. Given this
-form...
+Mark your form as an Ajax form with `data-lift="form.ajax"` and supply a
+function to run on the server when the form is submitted.
+
+Here's an example of a form that will collect our name, and submit it via Ajax to the server:
 
 [source,html]
 ---------------------------------------------------------
-<div data-lift="AjaxExample">
- <form data-lift="form.ajax">
-  <input type="text" name="info" value="" />
-  <input type="submit" name="sb" value="go!" />
- </form>
- <div id="result"></div>
-</div>
+<form data-lift="form.ajax">
+  <div data-lift="EchoForm">
+    <input type="text" name="name" placeholder="What's your name?">
+    <input type="submit">
+  </div>
+</form>
+
+<div id="result">Your name will be echoed here</div>
 ---------------------------------------------------------
 
-...we use the following snippet to accept the text field input of `info`
-and send back a JavasScript command to update the `result` div with the
-value sent to us:
+The following snippet will echo back the name via Ajax:
 
 [source,scala]
 ---------------------------------------------------------
 package code.snippet
 
 import net.liftweb.util.Helpers._
-import net.liftweb.http.SHtml
-import net.liftweb.http.js._
-import JsCmds._
+import net.liftweb.http.SHtml.{text,ajaxSubmit}
+import net.liftweb.http.js.JsCmd
+import net.liftweb.http.js.JsCmds.SetHtml
+import xml.Text
 
-import scala.xml.Text
-
-class AjaxExample {
-
-  var inputVal = "default"
-
-  def process(): JsCmd = {
-    println("Received: "+inputVal)
-    SetHtml("result", Text(inputVal))
-  }
+object EchoForm extends {
 
   def render = {
-    "name=info" #> (
-        SHtml.text(inputVal, inputVal = _) ++
-        SHtml.hidden(process) )
-  }
 
+    var name = ""
+
+    def process() : JsCmd = SetHtml("result", Text(name))
+
+    "@name" #> text(name, s => name = s) &
+    "type=submit" #> ajaxSubmit("Click Me", process)
+  }
 }
 ---------------------------------------------------------
+
+When the button is pressed, the `process` function is called, which will return the
+value of the `name` back to the element in the HTML with an ID of `result`.
+
+Note you'll more typically see `s => name = s` written in the shorter form of `name = _`.
 
 Discussion
 ^^^^^^^^^^
 
-The form's `info` input is bound to a `SHtml.text` box which will set
-the local `inputVal` variable to the value submitted by the form.
+The `data-lift="form.ajax"` part of this recipe ensures that Lift adds the Ajax processing mechanics to the form.  This means the `<form>` element in the output will end up as something like:
 
-The hidden field instructs Lift to call the `() => Any` function
-(`process`, in this example) when the form is submitted. The end result
-is the text entered is echoed back by setting the HTML node `result`.
-There are many other `JsCmd`s you could send, including `Noop` if you
-decide to send nothing.
+[source,html]
+---------------------------------------------------------
+<form id="F2203365740CJME2G" action="javascript://"
+  onsubmit="liftAjax.lift_ajaxHandler(
+    jQuery('#'+&quot;F2203365740CJME2G&quot;).serialize(),
+    null, null, &quot;javascript&quot;);return false;">
+  ...
+</form>
+---------------------------------------------------------
 
-In `SHtml` you will see functions starting with "ajax" (e.g.,
-`ajaxText`). These are great for field-level Ajax interactions, such as
-triggering actions on input or selection changes.
+In other words, when the form is asked to submit, Lift's will serialise the form via Ajax.  This means you don't necessarily need the submit button at all.  In this example with a single text field, if you omit the submit button you can trigger serialisation by pressing _return_.  This will trigger the `s => name = s` function which was bound in our regular `data-lift="EchoForm"` snippet. In other words, the value `name` will be assigned even without a submit button.
+
+Adding in a submit button gives us a way to perform actions once all the field's functions have been executed.
+
+Notice that Lift's approach is to serialise the form to the server, execute the functions associated with the fields, execute the submit function (if any), the return a JavaScript result to the client.
+
+Submit Styling
+++++++++++++++
+
+The `SHtml.ajaxSubmit` function generates a `<input type="submit">` element for the page. You may prefer to use a styled button for submit. For example, with Twitter Bootstrap, a button with an icon would require the following markup:
+
+[source,html]
+---------------------------------------------------------
+<button id="submit" class="btn btn-primary btn-large">
+  <i class="icon-white icon-ok"></i> Submit
+</button>
+---------------------------------------------------------
+
+Pressing a `<button>` inside a form triggers the submit. However, if you bound that button with `Shtml.ajaxSubmit` the content, and therefore the styling, would be lost.
+
+To fix this you can assign a function to a hidden field. This function will be called when the form is submitted just like any other field.  The only part of our snippet that changes is the CSS selector binding:
+
+[source,scala]
+---------------------------------------------------------
+import net.liftweb.http.SHtml.hidden
+
+"@name" #> text(name, s => name = s) &
+"button *+" #> hidden(process)
+---------------------------------------------------------
+
+This will include a hidden field in the form, such as....
+
+[source,html]
+---------------------------------------------------------
+<input type="hidden" name="F11202029628285OIEC2" value="true">
+---------------------------------------------------------
+
+...and when the form is submitted, the hidden field is submitted, and like any field, Lift will call the function associated with it: `process` in this case.
+
+The effect is something like `ajaxSubmit`, but not exactly the same. In this instance we're appending a hidden field after the `<button>`, but you could place it anywhere on the form you find convenient. However, there's one complication: when is `process` called? Is it before the `name` has been assigned or after? That depends on the order the fields are rendered.  That's to say, in your HTML template, placing the button before the text field (and therefore moving the hidden field's position in this example), the `process` function is called before the name has been set.
+
+There are a couple of ways around that.  Either, ensure your hidden fields used in this way appear late in your form, or make sure the function is called late with a `formGroup`:
+
+[source,scala]
+---------------------------------------------------------
+import net.liftweb.http.SHtml.hidden
+import net.liftweb.http.S
+
+"@name" #> text(name, s => name = s) &
+"button *+" #> S.formGroup(1000) { hidden(process) }
+---------------------------------------------------------
+
+The `formGroup` addition manipulates the function identifier to ensure it sorts later, resulting in the function `process` being called later than fields in the default group (0).
+
+[NOTE]
+Lift 2.6 and 3.0 may contain `ajaxOnSubmit`, which will give the reliability of `ajaxSubmit` and the flexibility of the hidden-field approach.  If you want to try it in Lift 2.5,
+Antonio Salazar Cardozo has created a helper you can include in your project: https://gist.github.com/Shadowfiend/5042131[https://gist.github.com/Shadowfiend/5042131].
+
+
 
 See Also
 ^^^^^^^^
 
-* _Simply Lift_, chapter 4.8
-http://stable.simply.liftweb.net/#toc-Section-4.8[Ajax].
-* Example https://github.com/marekzebrowski/lift-basics[simple forms]
-Lift project.
-* http://www.assembla.com/spaces/liftweb/wiki/cool_tips[Server side
-function order] on the Lift Cool Tips Wiki page.
-*
-http://scala-tools.org/mvnsites/liftweb-2.4/net/liftweb/http/SHtml.html[SHtml
-Scala Doc].
-* Lift's http://demo.liftweb.net/ajax[Ajax Demo page].
+Function order is discussed in the Lift Cool Tips wiki page: http://www.assembla.com/spaces/liftweb/wiki/cool_tips[http://www.assembla.com/spaces/liftweb/wiki/cool_tips].
+
+
+
 
 
 [[JsonForms]]
