@@ -689,7 +689,7 @@ alter table Visit add constraint VisitFK2 foreign key (planetId)
 See Also
 ^^^^^^^^
 
-<<SquerylOneToMany>>, on one-to-many relationships, discusses `leftStateful` and `rightStaeful` relations, which are also applicable for many-to-many relationships.
+<<SquerylOneToMany>>, on one-to-many relationships, discusses `leftStateful` and `rightStateful` relations, which are also applicable for many-to-many relationships.
 
 Foreign keys, cascading deletes, are described at: http://squeryl.org/relations.html[http://squeryl.org/relations.html].
 

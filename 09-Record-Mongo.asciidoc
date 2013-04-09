@@ -338,7 +338,7 @@ To associate a value:
 val unionJack =
   Image.createRecord.url("http://bit.ly/unionflag200").width(200).height(100)
 
-uk.createRecord.id("uk").flag(unionJack).save(true)
+Country.createRecord.id("uk").flag(unionJack).save(true)
 -----------------------------------------------------------------------------
 
 In Mongo, the resulting data structure would be:
