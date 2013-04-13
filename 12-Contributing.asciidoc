@@ -393,14 +393,16 @@ name <<= (name, liftEdition) { (n, e) =>  n + "_" + e }
 ...
 
 libraryDependencies <++= liftVersion { v =>
-  "net.liftweb" %% "lift-webkit" % v % "compile->default" ::
+  "net.liftweb" %% "lift-webkit" % v % "provided" ::
   Nil
 }
 --------------------------------------------------------------
 
-What this gives you is a way for the version of your module to depend on the `liftVersion` value.  This in turn can be set via a script.  This is what we do to publish a range of Lift Modules after each Lift release, as described at https://www.assembla.com/spaces/liftweb/wiki/Releasing_the_modules[https://www.assembla.com/spaces/liftweb/wiki/Releasing_the_modules].
+Note the "provided" configuration for Lift in the build file. This means that when your module is used the version of Lift's webkit used be the version provided by the application being built by the person using your module.
 
-Don't forget to announce your module on the Lift mailing list.
+What the above gives you is a way for your module to depend on Lift ("2.5"), without locking your module into a specific release it happens to be built with ("2.5-SNAPSHOT").  By using a setting of `liftVersion`, we can control the version via a script for all modules.  This is what we do to publish a range of Lift Modules after each Lift release, as described at https://www.assembla.com/spaces/liftweb/wiki/Releasing_the_modules[https://www.assembla.com/spaces/liftweb/wiki/Releasing_the_modules].
+
+When you're module is built, don't forget to announce it on the Lift mailing list.
 
 Debugging Your Module
 +++++++++++++++++++++
