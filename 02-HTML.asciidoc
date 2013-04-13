@@ -1361,7 +1361,7 @@ following to the list of dependencies:
 
 [source,scala]
 ----
-"net.liftmodules" %% "textile" % (liftVersion + "1.3")
+"net.liftmodules" %% "textile_2.5" % "1.3"
 ----
 
 You can then use the module to render Textile using the `toHtml` method.
@@ -1421,11 +1421,14 @@ Discussion
 
 There's nothing special code has to do to become a Lift module, although there are common conventions: they typically are packaged as _net.liftmodules_, but don't have to be; they usually depend on a version of Lift; they sometimes use the hooks provided by `LiftRules` to provide a particular behaviour.  Anyone can create and publish a Lift module, and anyone can contribute to existing modules. In the end, they are declared as dependencies in SBT, and pulled into your code just like any other dependency.
 
-The dependency version is made up of two elements: the Lift version, and the module version, as shown in <<ModuleVersioning>>. This is because modules have their own release cycle, so you could have versions 1.1, 1.2 and 1.3 all for the same version of Lift. However, they may also depend on certain features of Lift, hence the combined version number.
+The dependency name is made up of two elements: the name and the "edition" of Lift that the module is compatible with, as shown in <<ModuleVersioning>>. By "edition" we just mean the first part of the Lift version number. This implies the module is compatible with any Lift release that starts "2.5".
 
 [[ModuleVersioning]]
 .The structure of a module version.
-image::images/moduleversioning.png[]
+image::images/moduleversioning.png[width=640]
+
+This structure has been adopted because modules have their own release cycle, independent of Lift. However, modules may also depend on certain features of Lift, and Lift may change APIs between major releases, hence the need to use part of the Lift version number to identify the module.
+
 
 
 See Also

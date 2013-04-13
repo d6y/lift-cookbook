@@ -352,9 +352,9 @@ Making your Module Available
 
 If you do want your module to be used by a wider audience, you need to publish it to a public repository, such as Sonatype or CloudBees. You'll also want to keep your module up-to-date with Lift releases. There are a few conventions around this.
 
-One convention is to include the Lift version as part of the module version number.  For example, version 1.0.0 of your module for Lift 2.5 would be "2.5-1.0.0".  This is verbose but makes it clear which version of your module is compatible with which versions of Lift.  It also means you need to keep your module up-to-date with Lift releases.
+One convention is to include the Lift "edition" as part of the module name.  For example, version 1.0.0 of your "foo" module for Lift 2.5 would have the name "foo_2.5".  This makes it clear your module is compatible with Lift for all of 2.5, including milestones, release candidates, snapshots and final releases.  It also means you only need publish your module once, at least until Lift 2.6 or 3.0 is available.
 
-One way to ease that is to make a modification to your module build to allow the Lift version number to change. This makes it possible to automate the build when new versions of Lift are released. To do that, create `project/LiftModule.scala` in your module:
+One way to ease the above is to make a modification to your module build to allow the Lift version number to change. This makes it possible to automate the build when new versions of Lift are released. To do that, create `project/LiftModule.scala` in your module:
 
 
 [source,scala]
@@ -363,8 +363,13 @@ import sbt._
 import sbt.Keys._
 
 object LiftModuleBuild extends Build {
+
   val liftVersion = SettingKey[String]("liftVersion",
-    "Version number of the Lift Web Framework")
+    "Full version number of the Lift Web Framework")
+
+  val liftEdition = SettingKey[String]("liftEdition",
+    "Lift Edition (short version number to append to artifact name)")
+
   val project = Project("LiftModule", file("."))
 }
 --------------------------------------------------------------
@@ -375,9 +380,15 @@ This defines a setting to control the Lift version number.  You use it in your m
 --------------------------------------------------------------
 name := "snowstorm"
 
+organization := "net.liftmodules"
+
+version := "1.0.0-SNAPSHOT"
+
 liftVersion <<= liftVersion ?? "2.5-SNAPSHOT"
 
-version <<= liftVersion apply { _ + "-1.0.0-SNAPSHOT" }
+liftEdition <<= liftVersion apply { _.substring(0,3) }
+
+name <<= (name, liftEdition) { (n, e) =>  n + "_" + e }
 
 ...
 
