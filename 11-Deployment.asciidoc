@@ -377,7 +377,7 @@ Multiple Instances
 
 Beanstalks enables _auto scaling_ by default. That is, it launches a single instance of your Lift application, but if the load increases above a threshold, up to four instances may be running.
 
-If you're making use of Lift's state features, you'll need to enable sticky sessions from the "Load Balancer" tab of the environment configuration. It's a check box named "Enable Session Stickiness"--it's easy to miss, but that tab does scroll to show more options if you don't see it first time.
+If you're making use of Lift's state features, you'll need to enable sticky sessions from the "Load Balancer" tab of the environment configuration. It's a check box named "Enable Session Stickiness" -- it's easy to miss, but that tab does scroll to show more options if you don't see it first time.
 
 
 Working with a Database
