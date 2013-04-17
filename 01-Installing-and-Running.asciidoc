@@ -572,7 +572,7 @@ With the IDE configured, you now need to add the SBT plugin inside your Lift pro
 
 [source,scala]
 ------------------------------------------------------------------------
-addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.3.0")
+addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.4.0")
 ------------------------------------------------------------------------
 
 Start SBT and at the SBT prompt create the IDEA project files by typing:
