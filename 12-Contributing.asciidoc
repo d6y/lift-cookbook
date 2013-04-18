@@ -290,7 +290,7 @@ resolvers ++= Seq(
 scalacOptions ++= Seq("-deprecation", "-unchecked")
 
 libraryDependencies ++= {
-  val liftVersion = "2.5-RC2"
+  val liftVersion = "2.5-RC5"
   Seq(
     "net.liftweb" %% "lift-webkit"  % liftVersion  % "compile"
   )
@@ -308,7 +308,7 @@ With our module built and published, we can now include it in our Lift applicati
 [source,scala]
 --------------------------------------------------------------
 libraryDependencies ++= {
-  val liftVersion = "2.5-RC2"
+  val liftVersion = "2.5-RC5"
   Seq(
   ...
   "net.liftmodules" %% "snowstorm" % "1.0.0",

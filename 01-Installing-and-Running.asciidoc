@@ -35,7 +35,7 @@ start a basic Lift application.
 For Mac and Linux
 +++++++++++++++++
 
-* Visit http://liftweb.net/download[http://liftweb.net/download] and download the Lift 2.5-RC2 ZIP file.
+* Visit http://liftweb.net/download[http://liftweb.net/download] and download the Lift 2.5-RC5 ZIP file.
 * Unzip the file.
 * Start _Terminal_ or your favourite shell tool.
 * Navigate into the unzipped folder and into the `scala_29` sub-folder and then into the `lift_basic` folder.
@@ -48,7 +48,7 @@ For Mac and Linux
 For Windows
 +++++++++++
 
-* Visit http://liftweb.net/download[http://liftweb.net/download] locate the link to the ZIP version of Lift 2.5-RC2 and save this to disk.
+* Visit http://liftweb.net/download[http://liftweb.net/download] locate the link to the ZIP version of Lift 2.5-RC5 and save this to disk.
 * Extract the contents of the ZIP file.
 * Navigate in _Explorer_ to the extracted folder, and inside navigate into `scala_29` and then `lift_basic`.
 * Double click `sbt.bat` to run the build tool and a terminal window should open.
@@ -162,7 +162,7 @@ scalaVersion := "2.10.0"
 seq(com.github.siasia.WebPlugin.webSettings :_*)
 
 libraryDependencies ++= {
-  val liftVersion = "2.5-RC2"
+  val liftVersion = "2.5-RC5"
   Seq(
     "net.liftweb" %% "lift-webkit" % liftVersion % "compile",
     "org.eclipse.jetty" % "jetty-webapp" % "8.1.7.v20120910"  % "container,test",
@@ -736,7 +736,7 @@ libraryDependencies ++= {
 }
 ---------------------------------------------------------------------
 
-Let's assume that you now want to use Scala 2.9.2 but (pretend) Lift 2.5 was only
+Let's assume that you now want to use Scala 2.9.3 but Lift 2.5 was only
 built against Scala 2.9.1. Replace `%%` with `%` for the `net.liftweb`
 resources and explicitly include the Scala version that Lift was built
 against for each Lift component:
@@ -760,7 +760,7 @@ This works if the two different Scala versions are binary compatible.
 Discussion
 ^^^^^^^^^^
 
-Dependencies have a particular naming convention.  For example, the `lift-webkit` library for Lift 2.5-RC2 is called `lift-webkit_2.9.1-2.5-RC2.jar`.  Normally in `build.sbt` we simply refer to `"net.liftweb" %% "lift-webkit"` and SBT turns that into the name of a file that can be downloaded.
+Dependencies have a particular naming convention.  For example, the `lift-webkit` library for Lift 2.5-RC5 is called `lift-webkit_2.9.1-2.5-RC5.jar`.  Normally in `build.sbt` we simply refer to `"net.liftweb" %% "lift-webkit"` and SBT turns that into the name of a file that can be downloaded.
 
 However, in this recipe we have forced SBT to explicitly fetch the 2.9.1 version
 of the Lift resources rather than allow it to compute the URL to the
