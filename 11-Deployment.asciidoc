@@ -760,7 +760,7 @@ The first modification is to include the Lift module to talk to RabbitMQ. This i
 
 [source, scala]
 -----------------------------------------
-"net.liftmodules" %% "amqp" % (liftVersion + "-1.1"),
+"net.liftmodules" %% "amqp_2.5" % "1.3-SNAPSHOT"
 -----------------------------------------
 
 AMQP stands for Advanced Message Queuing Protocol, a protocol that RabbitMQ talks. The AMQP module provides abstract actors to send and receive messages, and we will implement these actors as `RemoteSend` and `RemoteReceiver`:
@@ -774,28 +774,32 @@ import com.rabbitmq.client._
 
 object Rabbit {
 
-  val factory = new ConnectionFactory(new ConnectionParameters)
+  val factory = new ConnectionFactory {
+    import ConnectionFactory._
+    setHost("127.0.0.1")
+    setPort(DEFAULT_AMQP_PORT)
+  }
 
-  val host = "127.0.0.1"
-  val port = 5672
   val exchange = "lift.chat"
   val routing = ""
   val durable = true
-  val noAck = false
+  val autoAck = false
 
-  object RemoteSend extends AMQPSender[String](factory, host, port,
-    exchange, routing) {
+  object RemoteSend extends AMQPSender[String](factory, exchange, routing) {
     def configure(channel: Channel) =
       channel.exchangeDeclare(exchange, "fanout", durable)
   }
 
-  object RemoteReceiver extends AMQPDispatcher[String](factory, host, port) {
+  object RemoteReceiver extends AMQPDispatcher[String](factory) {
     def configure(channel: Channel) = {
+
       channel.exchangeDeclare(exchange, "fanout", durable)
       val queueName = channel.queueDeclare().getQueue()
+
       channel.queueBind(queueName, exchange, routing)
-      channel.basicConsume(queueName, noAck,
-        new SerializedConsumer(channel, this))
+
+      channel.basicConsume(queueName, autoAck,
+        new SerializedConsumer(channel, this) )
     }
   }
 
