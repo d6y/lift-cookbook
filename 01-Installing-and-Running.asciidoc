@@ -384,7 +384,7 @@ Solutions
 
 There are three steps required: install JRebel once; each year request the free Scala license; and configure SBT to use JRebel.
 
-First, visit the http://zeroturnaround.com/software/jrebel/[http://zeroturnaround.com/software/jrebel/] and request the free Scala license.
+First, visit the https://my.jrebel.com/plans[https://my.jrebel.com/plans] and request the free Scala license.
 
 Second, download the "Generic ZIP Archive" version of JRebel, unzip it to where you like. For this recipe I've chosen to use `/opt/zt/jrebel/`.
 
