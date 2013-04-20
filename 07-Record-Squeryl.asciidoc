@@ -57,11 +57,29 @@ a transaction around all HTTP requests. This is also configured in `Boot.scala`:
 
 [source, scala]
 ---------------------------------------------------------------
+import net.liftweb.squerylrecord.RecordTypeMode._
+import net.liftweb.http.S
+import net.liftweb.util.LoanWrapper
+
 S.addAround(new LoanWrapper {
-  override def apply[T](f: => T): T = inTransaction { f }
+  override def apply[T](f: => T): T = {
+    val result = inTransaction {
+      try {
+        Right(f)
+      } catch {
+        case e: LiftFlowOfControlException => Left(e)
+      }
+    }
+
+    result match {
+      case Right(r) => r
+      case Left(exception) => throw exception
+    }
+  }
 })
 ---------------------------------------------------------------
 
+This arranges for requests to be handled in the `inTransaction` scope. As Lift uses an exception for redirects, we catch this exception and throw it after the transaction completes, avoiding rollbacks after a `S.redirectTo` or similar.
 
 Discussion
 ^^^^^^^^^^

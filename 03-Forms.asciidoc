@@ -2,8 +2,11 @@
 Forms Processing in Lift
 ------------------------
 
-This section gives examples of working with Lift forms in different
-ways.  You'll find many of the examples in https://github.com/LiftCookbook/cookbook_forms[https://github.com/LiftCookbook/cookbook_forms].
+This chapter looks at how to process form data with Lift: submitting forms, working with form elements. The end result of a form submission can be records being updated in a database, so you may also find <<Squeryl>> or <<MongoRecord>> useful, as they discuss relational databases and MongoDB, respectively.
+
+To the extend that form processing is passing data to a server, there are also recipes in <<Ajax>> that are relevant to form processing.
+
+You'll find many of the examples from this chapter as source code at: https://github.com/LiftCookbook/cookbook_forms[https://github.com/LiftCookbook/cookbook_forms].
 
 
 [[PlainFormProcessing]]
@@ -416,7 +419,8 @@ def render =
   "#jsonScript" #> Script(
     MottoServer.jsCmd &
     Function("changeCase", List("direction"),
-      MottoServer.call("processCase", JsVar("direction"), JsRaw("$('#motto').val()"))
+      MottoServer.call("processCase", JsVar("direction"),
+        JsRaw("$('#motto').val()"))
     )
   )
 ---------------------------------------------------------
@@ -427,7 +431,8 @@ an extra JavaScript function: it's a function called "changeCase", it takes one 
 [source,javascript]
 ---------------------------------------------------------
 function changeCase(direction) {
-  F299202CYGIL({'command': "processCase", 'target': direction, 'params':$('#motto').val()});
+  F299202CYGIL({'command': "processCase", 'target': direction,
+    'params':$('#motto').val() });
 }
 ---------------------------------------------------------
 
@@ -459,7 +464,9 @@ object MottoServer extends JsonHandler {
         Text("The motto of %s is %s".format(name,motto)) )
 
     case JsonCmd("processCase", direction, motto: String, all) =>
-      val update = if (direction == "upper") motto.toUpperCase else motto.toLowerCase
+      val update =
+        if (direction == "upper") motto.toUpperCase
+        else motto.toLowerCase
       SetValById("motto", update)
 
   }
@@ -881,7 +888,8 @@ class FileUploadSnippet extends Loggable {
 
     def processForm() = upload match {
       case Full(FileParamHolder(_, mimeType, fileName, file)) =>
-        logger.info("%s of type %s is %d bytes long" format (fileName, mimeType, file.length))
+        logger.info("%s of type %s is %d bytes long" format (
+         fileName, mimeType, file.length) )
 
       case _ => logger.warn("No file?")
     }
