@@ -87,6 +87,28 @@ MongoUrl.defineDb(DefaultMongoIdentifier,
 
 The full URL scheme for MongoDB is more complicated, allowing for multiple hosts and connection parameters, but the above code handles optional user name and password fields and may be enough to get you up and running with your Mongo configuration.
 
+See Also
+^^^^^^^^
+
+Connection configuration that includes replica sets and Mongo options, such as timeout settings, are described on the Lift wiki at:  https://www.assembla.com/wiki/show/liftweb/Mongo_Configuration[https://www.assembla.com/wiki/show/liftweb/Mongo_Configuration].
+
+The full specification for Mongo connection URLs is: http://docs.mongodb.org/manual/reference/connection-string/[http://docs.mongodb.org/manual/reference/connection-string/].
+
+
+[[MongoIdentifiers]]
+Mongo Identifiers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Problem
+^^^^^^^
+
+You want to use more than one MongoDB
+
+Solution
+^^^^^^^^
+
+
 The `DefaultMongoIdentifier` is a value used to identify a particular connection.  Lift keeps a map of identifiers to connections, meaning you can connect to more than on database.  The common case is a single database, and that is usually assigned to `DefaultMongoIdentifier`.
 
 However, if you do need to access two Monogo databases, you can create a new identifier and assign it as part of your record.  For example:
@@ -106,16 +128,6 @@ object Country extends Country with MongoMetaRecord[Country] {
 --------------------------------------------------------------
 
 The `lift-mongodb-record` dependency itself depends on another Lift module, `lift-mongodb`, which provides connectivity and other other lower-level access to MongoDB. Both bottom out with the MongoDB Java driver.
-
-
-See Also
-^^^^^^^^
-
-Connection configuration that includes replica sets and Mongo options, such as timeout settings, are described on the Lift wiki at:  https://www.assembla.com/wiki/show/liftweb/Mongo_Configuration[https://www.assembla.com/wiki/show/liftweb/Mongo_Configuration].
-
-The full specification for Mongo connection URLs is: http://docs.mongodb.org/manual/reference/connection-string/[http://docs.mongodb.org/manual/reference/connection-string/].
-
-
 
 [[MongoHashMap]]
 Storing a HashMap in a Mongo Record
