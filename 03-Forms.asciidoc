@@ -600,31 +600,53 @@ Use `SHtml.multiSelect`:
 
 [source,scala]
 ----
-class MySnippet {
-  def multi = {
-    case class Item(id: String, name: String)
-    val inventory = Item("a", "Coffee") :: Item("b", "Milk") ::
-       Item("c", "Sugar") :: Nil
+package code.snippet
 
-     val options : List[(String,String)] =
-       inventory.map(i => (i.id -> i.name))
+import net.liftweb.util.Helpers._
+import net.liftweb.http.SHtml
+import net.liftweb.common.Loggable
 
-     val default = inventory.head.id :: Nil
+class MultiSelect extends Loggable {
 
-     "#opts *" #>
-       SHtml.multiSelect(options, default, xs => println("Selected: "+xs))
+  case class Item(id: String, name: String)
+
+  val inventory =
+    Item("a", "Coffee") ::
+    Item("b", "Milk") ::
+    Item("c", "Sugar") :: Nil
+
+  val options : List[(String,String)] =
+    inventory.map(i => (i.id -> i.name))
+
+  val default = inventory.head.id :: Nil
+
+  def render = {
+
+    def selection(ids: List[String]) : Unit = {
+      logger.info("Selected: "+ids)
+    }
+
+    "#opts *" #>
+      SHtml.multiSelect(options, default, selection)
   }
 }
 ----
 
-The corresponding template would be:
+In this example the user is being presented with a list of three items, with the first one selected, as shown in <<MultiSelectExample>>.  When the form is submitted the `selection` function is called, with a list of the selected option values.
+
+[[MultiSelectExample]]
+.Selecting from multiple options.
+image::images/multiselect.png[width=214]
+
+
+The template to go with the snippet could be:
 
 [source,html]
 ---------------------------------------------------------
-<div data-lift="MySnippet.multi?form=post">
-  <p>What can I getcha?</p>
+<div data-lift="MultiSelect?form=post">
+  <p>What can I get you?</p>
   <div id="opts">options go here</div>
-  <input type="submit" value="Submit" />
+   <input type="submit" value="Place Order">
 </div>
 ---------------------------------------------------------
 
@@ -633,7 +655,7 @@ This will render as something like:
 [source,html]
 ---------------------------------------------------------
 <form action="/" method="post"><div>
-  <p>What can I getcha?</p>
+  <p>What can I get you?</p>
   <div id="opts">
    <select name="F25749422319ALP1BW" multiple="true">
      <option value="a" selected="selected">Coffee</option>
@@ -641,7 +663,7 @@ This will render as something like:
      <option value="c">Sugar</option>
    </select>
   </div>
-  <input value="Submit" type="submit">
+  <input value="Place Order" type="submit">
 </form>
 ---------------------------------------------------------
 
@@ -653,48 +675,70 @@ has a value and a name. To reflect this, the above examples takes our
 `inventory` of objects and turns it into a list of (value,name) string
 pairs, called `options`.
 
-The function given to `multiSelect` will receive the values (ids), not
+The function given to `SHtml.multiSelect` will receive the values (ids), not
 the names, of the options. That is, if you ran the above code, and
 selected "Coffee" and "Milk" the function would see `List("a", "b")`.
 
 Selected No Options
 +++++++++++++++++++
 
-Be aware if no options are selected at all, your handling function is
-not called. This is described in ticket 1139. One way to work around
-this to to add a hidden function to reset the list. For example, we
+Be aware that if no options are selected, your handling function is
+not called. This is described in https://github.com/lift/framework/issues/1139[issue 1139].
+
+One way to work around this is to add a hidden function to reset the list. For example, we
 could modify the above code to be a stateful snippet and remember the
 values we selected:
 
 [source,scala]
 ---------------------------------------------------------
-class MySnippet extends StatefulSnippet {
+package code.snippet
+
+import net.liftweb.util.Helpers._
+import net.liftweb.http.{StatefulSnippet, SHtml}
+import net.liftweb.common.Loggable
+
+class MultiSelectStateful extends StatefulSnippet with Loggable {
 
   def dispatch = {
-    case "multi" => multi
+    case _ => render
   }
 
   case class Item(id: String, name: String)
-  val inventory = Item("a", "Coffee") :: Item("b", "Milk") ::
+
+  val inventory =
+    Item("a", "Coffee") ::
+    Item("b", "Milk") ::
     Item("c", "Sugar") :: Nil
 
-  val options : List[(String,String)] = inventory.map(i => (i.id -> i.name))
+  val options : List[(String,String)] =
+    inventory.map(i => (i.id -> i.name))
 
   var current = inventory.head.id :: Nil
 
-  def multi = "#opts *" #> (
-    SHtml.hidden( () => current = Nil) ++
-    SHtml.multiSelect(options, current, current = _)
-  )
+  def render = {
+
+    def logSelected() =
+      logger.info("Values selected: "+current)
+
+    "#opts *" #> (
+      SHtml.hidden( () => current = Nil) ++
+      SHtml.multiSelect(options, current, current = _)
+    ) &
+    "type=submit" #> SHtml.onSubmitUnit(logSelected)
+
+  }
+
 }
 ---------------------------------------------------------
 
+The template is unchanged, and the snippet has been modified to introduce a `current` value, a hidden function to reset the value, and we've bound to the submit button to simply log the selected values when the form is submitted.
+
 Each time the form is submited the `current` list of IDs is set to
 whatever you have selected in the browser. But note that we have started
-with a hidden function that resets `current` to the empty list, meaning
-that if the receiving function in `multiSelect` is never called, that
-would mean you have nothing selected. That may be useful, depending on
-what behaviour you need in your application.
+with a hidden function that resets `current` to the empty list. This means
+that if the receiving function in `multiSelect` is never called, because nothing is selected, that the value store in current would reflect this and be `Nil`.
+
+That may be useful, depending on what behaviour you need in your application.
 
 Type-safe Options
 +++++++++++++++++
@@ -702,21 +746,32 @@ Type-safe Options
 If you don't want to work in terms of `String` values for an option, you
 can use `multiSelectObj`. In this variation the list of options still
 provides a text name, but the value is in terms of a class. Likewise,
-the list of default values will be a list of class instances:
+the list of default values will be a list of class instances.
+
+The only changes to the code are to produce a `List[(Item,String)]`, use an `Item` as a default:
 
 [source,scala]
 ---------------------------------------------------------
-val options : List[(Item,String)] = inventory.map(i => (i -> i.name))
-val current = inventory.head :: Nil
+val options : List[(Item,String)] =
+  inventory.map(i => (i -> i.name))
+
+val default = inventory.head :: Nil
 ---------------------------------------------------------
 
 The call to generate the multi-select from this data is similar, but
-note that the function receives a list of `Item`:
+note our `selection` function now receives a list of `Item`:
 
 [source,scala]
 ---------------------------------------------------------
-"#opts *" #> SHtml.multiSelectObj(options, current,
-  (xs: List[Item]) => println("Got "+xs) )
+def render = {
+
+  def selection(items: List[Item]) : Unit = {
+    logger.info("Selected: "+items)
+  }
+
+  "#opts *" #>
+    SHtml.multiSelectObj(options, default, selection)
+  }
 ---------------------------------------------------------
 
 Enumerations
@@ -726,31 +781,49 @@ You can use `multiSelectObj` with enumerations:
 
 [source,scala]
 ---------------------------------------------------------
-object Item extends Enumeration {
-  type Item = Value
-  val Coffee, Milk, Sugar = Value
+package code.snippet
+
+import net.liftweb.util.Helpers._
+import net.liftweb.http.SHtml
+import net.liftweb.common.Loggable
+
+class MultiSelectEnum extends Loggable {
+
+  object Item extends Enumeration {
+    type Item = Value
+    val Coffee, Milk, Sugar = Value
+  }
+
+  import Item._
+
+  val options : List[(Item,String)] =
+    Item.values.toList.map(i => (i -> i.toString))
+
+  val default = Item.Coffee :: Nil
+
+  def render = {
+
+    def selection(items: List[Item]) : Unit = {
+      logger.info("Selected: "+items)
+    }
+
+    "#opts *" #>
+      SHtml.multiSelectObj(options, default, selection)
+  }
+
 }
-
-import Item._
-
-val options : List[(Item,String)] =
-  Item.values.toList.map(i => (i -> i.toString))
-
-var current = Item.Coffee :: Nil
-
-def multi = "#opts *" #> SHtml.multiSelectObj[Item](options, current,
-  xs => println("Got "+xs) )
 ---------------------------------------------------------
 
 See Also
 ^^^^^^^^
 
+The "Submit Styling" discussion section in <<AjaxFormProcessing>> discusses the use of hidden fields as function calls.
+
 <<SelectOptionChange>> describes how to trigger a server-side action when a selection changes in the browser.
 
-_Exploring Lift_, Chapter 6, "Forms in Lift", http://exploring.liftweb.net/[http://exploring.liftweb.net/].
+Chapter 6 of _Exploring Lift_, "Forms in Lift", discusses multiselect and other types of form elements at http://exploring.liftweb.net/[http://exploring.liftweb.net/].
 
-Ticket relating to no options being selected: https://github.com/lift/framework/issues/1139[https://github.com/lift/framework/issues/1139]
-
+The issue relating to no options being selected is on Github: https://github.com/lift/framework/issues/1139[https://github.com/lift/framework/issues/1139]
 
 
 [[FileUpload]]
