@@ -483,6 +483,7 @@ _Lift in Action_, section 9.1.4 discusses "Using JSON forms with AJAX", as does 
 
 
 
+
 [[DisableCheckbox]]
 Conditionally Disable a Checkbox
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -497,37 +498,74 @@ Solution
 ^^^^^^^^
 
 Create a CSS selector transform to add the disabled attribute, and apply
-it to your checkbox transform. For example, suppose you have a simple
-checkbox:
+it to your checkbox transform.
+
+For example, suppose you have a simple checkbox...
 
 [source,scala]
 ---------------------------------------------------------
 class Likes {
   var likeTurtles = false
-  def checkbox = "*" #> SHtml.checkbox(likeTurtles, likeTurtles = _ )
+  def render =
+    "#like" #> SHtml.checkbox(likeTurtles, likeTurtles = _ )
 }
 ---------------------------------------------------------
 
-Further suppose you want to disable it roughly 50% of the time:
+...and a corresponding template:
+
+[source,html]
+---------------------------------------------------------
+<!DOCTYPE html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+  <title>Disable Checkboxes</title>
+</head>
+<body data-lift-content-id="main">
+<div id="main" data-lift="surround?with=default;at=content">
+
+  <div>Select the things you like:</div>
+
+  <form data-lift="Likes">
+    <label for="like">Do you like turtles?</label>
+    <input id="like" type="checkbox">
+  </form>
+
+</div>
+</body>
+</html>
+---------------------------------------------------------
+
+Further suppose you want to disable it roughly 50% of the time. We could do that
+by adjusting the `NodeSeq` generated from `SHtml.checkbox`:
+
 
 [source,scala]
 ----
-def disabler =
- if (math.random > 0.5d) "* [disabled]" #> "disabled"
- else PassThru
+package code.snippet
 
-def conditionallyDisabledCheckbox =
-  "*" #> disabler( SHtml.checkbox(likeTurtles, likeTurtles = _ ) )
+import net.liftweb.util.Helpers._
+import net.liftweb.util.PassThru
+import net.liftweb.http.SHtml
+
+class Likes {
+  var likesTurtles = false
+
+  def disable =
+    if (math.random > 0.5d) "* [disabled]" #> "disabled"
+    else PassThru
+
+  def render =
+    "#like" #> disable( SHtml.checkbox(likesTurtles, likesTurtles = _) )
+}
 ----
 
-Using `lift:Likes.conditionallyDisabledCheckbox` the checkbox would be
-disabled half the time.
+When the checkbox is rendered, it will be disbaled roughly half the time.
 
 Discussion
 ^^^^^^^^^^
 
-The `disabler` method returns a `NodeSeq=>NodeSeq` function, meaning
-when we apply it in `conditionallyDisabledCheckbox` we need to give it a
+The `disable` method returns a `NodeSeq => NodeSeq` function, meaning
+when we apply it we need to give it a
 `NodeSeq`, which is exactly what `SHtml.checkbox` provides.
 
 The `[disabled]` part of the CSS selector is selecting the disabled
@@ -538,19 +576,11 @@ What this combination means is that half the time the disabled attribute
 will be set on the checkbox, and half the time the checkbox `NodeSeq`
 will be left untouched because `PassThru` does not change the `NodeSeq`.
 
-The example above separates the test from the checkbox only to make it
-easier to write this discussion section. You can of course in-line the
-test, as is done in the mailing list post referenced below.
-
 See Also
 ^^^^^^^^
 
-* Mailing list question regarding
-https://groups.google.com/d/topic/liftweb/KBVhkuM1NQQ/discussion[how to
-conditionally mark a SHtml.checkbox as disabled].
+<<PassThru>> describes the `PassThru` function.
 
-* _Simply Lift_ http://simply.liftweb.net/index-7.10.html[7.10 CSS
-Selector Transforms].
 
 
 [[MultiSelectBox]]
