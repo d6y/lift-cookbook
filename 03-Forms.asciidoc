@@ -488,6 +488,171 @@ _Lift in Action_, section 9.1.4 discusses "Using JSON forms with AJAX", as does 
 
 
 
+[[DatePicker]]
+Use a Date Picker for Input
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to provide a date picker to make it easy for users to supply
+dates to your forms.
+
+Solution
+^^^^^^^^
+
+Use a standard Lift `SHtml.text` input field and attach a JavaScript date picker to it.  In this example we will use the JQuery UI date picker.
+
+Our form will include an input field called `birthday` to be used as a date picker, and also the JQuery UI JavaScript and CSS:
+
+[source,html]
+---------------------------------------------------------
+<!DOCTYPE html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+  <title>JQuery Date Picker</title>
+</head>
+<body data-lift-content-id="main">
+<div id="main" data-lift="surround?with=default;at=content">
+
+  <h3>When's your birthday?</h3>
+
+  <link data-lift="head" type="text/css" rel="stylesheet"
+    href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.2/css/smoothness/jquery-ui-1.10.2.custom.min.css">
+  </link>
+
+  <script data-lift="tail"
+    src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js">
+  </script>
+
+  <div data-lift="JqDatePicker?form=post">
+    <input type="text" id="birthday">
+    <input type="submit" value="Submit">
+  </div>
+
+</div>
+</body>
+</html>
+---------------------------------------------------------
+
+This would normally produce a regular text input field, but we can change that by adding JavaScript to attach the date picker to the input field.  You could do this in the template, but in this example we're attaching it as part of the snippet code:
+
+
+[source,scala]
+---------------------------------------------------------
+package code.snippet
+
+import java.util.Date
+import java.text.SimpleDateFormat
+
+import net.liftweb.util.Helpers._
+import net.liftweb.http.{S, SHtml}
+import net.liftweb.http.js.JsCmds.Run
+import net.liftweb.common.Loggable
+
+class JqDatePicker extends Loggable {
+
+  val dateFormat = new SimpleDateFormat("yyyy-MM-dd")
+
+  val default = (dateFormat format now)
+
+  def logDate(s: String) : Unit = {
+    val date : Date = tryo(dateFormat parse s) getOrElse now
+    logger.info("Birthday: "+date)
+  }
+
+  def render = {
+    S.appendJs(enhance)
+    "#birthday" #> SHtml.text(default, logDate)
+  }
+
+  val enhance =
+    Run("$('#birthday').datepicker({dateFormat: 'yy-mm-dd'});")
+}
+---------------------------------------------------------
+
+Notice in `render` we are binding a regular `SHtml.text` field to the element with the ID of "birthday", but also appending  JavaScript to the page.  That JavaScript selects the birthday input field and attaches a configured date picker to it.
+
+When the field is submitted, the `logDate` method is called with the value of the text field. We parse the text into a `java.util.Date` object.  The `tryo` Lift helper will catch any `ParseException` and return a `Box[Date]` which we open, or default to the current date if a bad date is supplied.
+
+Running this code and submitting the form will produce a log message something like this:
+
+---------------------------------------------------------
+INFO  code.snippet.DatePicker - Birthday: Sun Apr 21 00:00:00 BST 2013
+---------------------------------------------------------
+
+Discussion
+^^^^^^^^^^
+
+The approach outlined in this recipe can be used with other date picker libraries. The key point is to configure the date picker to submit a date in a format you can parse when the value is submitted to the server. This is the "wire format" of the date, and does not have to necessarily be the same format the user sees in the browser, depending on the browser or the JavaScript library being used.
+
+HTML 5 Date Pickers
++++++++++++++++++++
+
+The HTML 5 specification includes support for a variety of date input types: `datetime`, `datetime-local`, `date`, `month`, `time`, `week`. For example:
+
+[source,html]
+---------------------------------------------------------
+<input type="date" name="birthday" value="2013-04-21">
+---------------------------------------------------------
+
+This type of input field will submit a date in _yyyy-mm-dd_ format which our snippet would be able to process.
+
+As more browsers implement these types, it will become possible to depend on them.  However, you can default to the browser-native date pickers today and fall back to a JavaScript library as required.  The difference is show in <<DatePickerScreenGrabs>>.
+
+[[DatePickerScreenGrabs]]
+.An input field with the JQuery UI date picker attached, compared to the browser-native date picker in Chrome.
+image::images/date-picker.png[width=640]
+
+To detect if the browser supports `type="date"` inputs, we can use the _Modernizr_ library.  This is an additional script in our template:
+
+[source,html]
+---------------------------------------------------------
+<script data-lift="tail"
+  src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js">
+</script>
+---------------------------------------------------------
+
+We will use this in our snippet. In fact, there are  two changes we need to make to the snippet:
+
+1. add the `type="date"` attribute to the input field; and
+
+2. modify the JavaScript to only attach the JQuery UI date picker in browsers that don't support the `type="date"` input.
+
+In code that becomes:
+
+[source,scala]
+---------------------------------------------------------
+def render = {
+  S.appendJs(enhance)
+  "#birthday" #> SHtml.text(default, logDate, ("type"->"date"))
+}
+
+val enhance = Run(
+  """
+    |if (!Modernizr.inputtypes.date) {
+    | $('input[type=date]').datepicker({dateFormat: 'yy-mm-dd'});
+    |}
+  """.stripMargin)
+---------------------------------------------------------
+
+When this snippet runs, and the page is rendered, the JQuery UI date picker will be attached to input fields of `type="date"` only if the browser doesn't support that type already.  An alternative approach would be to detect support via the browser's _user agent_ string, if you had a list of user agents that support this feature.
+
+
+See Also
+^^^^^^^^
+
+_Dive into HTML5_, at http://diveintohtml5.info/[http://diveintohtml5.info/
+], describes how to detect browser features.
+
+JQuery UI's date picker has many configuration options, which are described at http://api.jqueryui.com/datepicker/[http://api.jqueryui.com/datepicker/].
+
+The HTML5 date input types submit dates in RFC3339 format. These are specified at http://tools.ietf.org/html/rfc3339[http://tools.ietf.org/html/rfc3339]
+
+<<TestingReq>> includes a description of how to access the user agent string.
+
+
+
 
 
 
