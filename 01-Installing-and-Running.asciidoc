@@ -174,7 +174,7 @@ libraryDependencies ++= {
 
 Feel free to change the various versions, though be aware that certain versions of Lift are only built for certain versions of Scala.
 
-Now that you have a the basics of an SBT project, you can launch the `sbt` console. It should load all the necessary dependencies, including the proper Scala version, and bring you to a prompt.
+Now that you have the basics of an SBT project, you can launch the `sbt` console. It should load all the necessary dependencies, including the proper Scala version, and bring you to a prompt.
 
 Next, create the following file at `src/main/webapp/WEB-INF/web.xml`:
 
