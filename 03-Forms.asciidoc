@@ -892,13 +892,13 @@ class ProgrammingLanguagesTypeAhead extends Loggable {
 }
 -------------------------------------------
 
-Working from the bottom of the snippet, we bind a regular Lift `SHtml.text` input to the autocomplete field.  This will receive the selected value when the form is submitted.  We also bind the JavaScript placeholder to a function definition called `askServer`.  This is the function that Typeahead will call.
+Working from the bottom of the snippet, we bind a regular Lift `SHtml.text` input to the autocomplete field.  This will receive the selected value when the form is submitted.  We also bind the JavaScript placeholder to a JavaScript function definition called `askServer`.  This is the function that Typeahead will call when it wants suggestions.
 
 The function takes two arguments: the `query` and `callback`. The body of `askServer` causes it to run something called `runSuggestion`, which is a `jsonCall` to the server, with the value of the `query`.
 
 The suggestions are made by the `suggest` function which expects to be able to find a `String` in the passed-in JSON value. It uses this value to find matches in the list of `languages`.  These are returned as a `JArray` of `JString`, which is treated as JSON data back on the client.
 
-What does the client do with the data? It calls the `callback` function with the suggestions, and they are displayed.  We specify that it's `callback` via `JsonContext`, which is a class that lets us specify a custom function to call on success of the request to the server.
+What does the client do with the data? It calls the `callback` function with the suggestions, which results in the display updating. We specify that it's `callback` via `JsonContext`, which is a class that lets us specify a custom function to call on success of the request to the server.
 
 It may help to understand this by looking at the JavaScript generated in the HTML page for `askServer`:
 
@@ -914,6 +914,16 @@ function askServer(query, callback) {
 
 As the user types into the text field, Typeahead calls `askServer` with the input supplied. Lift's Ajax support arranges for that value, `query`, to be  serialised to our `suggest` function on the server, and for the results to be passed to `callback`. At that point, Typeahead takes over again, and displays the suggestions.
 
+Typing "Scala" to the text field and pressing submit will produce a sequence like this on the server:
+
+-------------------------------------------
+INFO  c.s.ProgrammingLanguagesTypeAhead - Making suggestion for: JString(Sc)
+INFO  c.s.ProgrammingLanguagesTypeAhead - Making suggestion for: JString(Sca)
+INFO  c.s.ProgrammingLanguagesTypeAhead - Making suggestion for: JString(Sca)
+INFO  c.s.ProgrammingLanguagesTypeAhead - Making suggestion for: JString(Scal)
+INFO  c.s.ProgrammingLanguagesTypeAhead - Making suggestion for: JString(Scala)
+INFO  c.s.ProgrammingLanguagesTypeAhead - Submitted: Scala
+-------------------------------------------
 
 See Also
 ^^^^^^^^
