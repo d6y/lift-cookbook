@@ -35,7 +35,7 @@ In `Boot.scala` add:
 import com.mongodb.{ServerAddress, Mongo}
 import net.liftweb.mongodb.{MongoDB,DefaultMongoIdentifier}
 
-val server = new ServerAddress("127.0.0.1", 20717)
+val server = new ServerAddress("127.0.0.1", 27017)
 MongoDB.defineDb(DefaultMongoIdentifier, new Mongo(server), "mydb")
 -----------------------------------------------------------------
 
