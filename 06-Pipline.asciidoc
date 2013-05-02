@@ -487,6 +487,9 @@ OutputStreamResponse(out => infinite.foreach(out.write))
 ...we are making use of the `write(byte[])` method on Java's `OutputStream` (`out`), and sending it
 the `Array[Byte]` being generated from our `infinite` stream.
 
+Be aware that `OutputStreamResponse` is executed outside of the scope of `S`. This means if you need to access anything in the session, do so outside of the function you pass to `OutputStreamResponse`.
+
+
 For more control over status codes, headers and cookies, there are a
 variety of signatures for the `OutputStreamResponse` object. For the
 most control, create an instance of the `OutputStreamResponse` class:
