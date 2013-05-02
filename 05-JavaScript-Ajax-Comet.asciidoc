@@ -1021,3 +1021,46 @@ Diego Medina has posted a Gist of Lift REST code to integrate more fully with th
 
 Antonio Salazar Cardozo has posted example code for performing Ajax file upload using Lift's Ajax mechanisms, which avoids external JavaScript libraries. You can find a description and link to the code at: https://groups.google.com/d/msg/liftweb/OuN1sqRMO_c/TrUGUaSvoN4J[https://groups.google.com/d/msg/liftweb/OuN1sqRMO_c/TrUGUaSvoN4J].
 
+[[FormatWiring]]
+Format A Wired Field
+~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want a wired UI element to have a different format than plain conversion to a string. For example, you'd like to round
+a floating point value to 2 fractional digits.
+
+Solution
+^^^^^^^^
+
+Use the WiringUI.toNode method to create a wiring node that can render the output formatted as you desire:
+
+[source,scala]
+---------------------------------------------------------
+  val cost = ValueCell(1.99)
+  val quantity = ValueCell(5)
+  val taxRate = 0.085
+  val subtotal = cost.lift(quantity)(_ * _)
+
+  def wireRounded(cell: Cell[Double]): NodeSeq => NodeSeq =
+      WiringUI.toNode(cell, JqWiringSupport.fade)((t, ns) => Text("%.2f".format(t)))
+
+  def render = "#subtotal *" #> wireRounded(subtotal) &
+
+---------------------------------------------------------
+
+Discussion
+^^^^^^^^^^
+
+The primary wiring UI makes it easy to bind a cell as text (which translates to
+a Text node that uses toString); however, you can use the toNode method instead
+to generate a transform function that is both hooked into the wiring UI, and
+asks your code for the translation of the item. 
+
+The mechanism is type-safe, so in this example cost is in double cell, quantity
+is an integer cell, and subtotal therefore ends up inferred as a Cell[Double], which
+then results in t being passed to your anonymous function as a double. 
+
+Note that your lambda function must return a node sequence, which typically
+means wrapping your string in a Text object.
