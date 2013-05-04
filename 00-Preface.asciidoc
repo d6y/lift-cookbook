@@ -1,6 +1,64 @@
+:bookseries: cookbook
+
+This document is licensed: Creative Commons Attribution, Non Commercial,
+No Derivatives.
+
 == Preface
 
-// asciidoc version of boilerplate preface
+This is a collection of solutions to questions you might have while developing
+web applications with the Lift Web Framework.
+
+The aim is to give a single, short answer to a specific question. Lift's philosophy of "let the developer decide" gives plenty of freedom, and means there's sometimes more than approach, or style, to solve a problem. We'll give you one solution, but will point you at alternatives in the discussion.
+
+<<InstallAndRunning>> will get you up and running with Lift, but in other respects this cookbook is aimed at practitioners and the questions they have asked. If this is the first time you've heard of Lift, I suggest first taking a look at:
+
+* _Simply Lift_, online at http://simply.liftweb.net[http://simply.liftweb.net].
+
+* Torsten Uhlmann's short _Instant Lift Web Applications How-to_, PACKT Publishing, 2013.
+
+* Timothy Perrett's _Lift in Action_, Manning Publications, 2011.
+
+
+[[Contributors]]
+=== Contributors
+
+I've mined the Lift mailing list for these recipes, but I'm not the only one.  Recipes have also been contributed by:
+
+[glossary]
+*Jono Ferguson*::
+
+*Franz Bettag*:: Franz is an enthusiastic Scala Hacker for several years now. He joined the Lift team in January 2012 and actively tweets and blogs about his newest Scala adventures. Find him at https://twitter.com/fbettag[https://twitter.com/fbettag]
+
+*Marek Żebrowski*::
+
+*Peter Robinett*:: Peter is a web and mobile developer and a Lift committer. He can be found on the web at http://www.bubblefoundry.com[http://www.bubblefoundry.com] and on Twitter at http://twitter.com/pr1001[http://twitter.com/pr1001].
+
+*Kevin Lau*:: Kevin is a founder of few web apps with a focus in AWS cloud, iOS and Lift.
+
+*Tony Kay*::
+
+[[jointhem]]
+You should join them: <<AddRecipe>> tells you how.
+
+
+=== Source
+
+The text of this cookbook is at: https://github.com/d6y/lift-cookbook[https://github.com/d6y/lift-cookbook].
+
+You'll find projects for each chapter at GitHub: https://github.com/LiftCookbook/[https://github.com/LiftCookbook/].
+
+
+=== Updates
+
+Follow https://twitter.com/liftcookbook[@LiftCookbook].
+
+=== Software Versions
+
+Except where otherwise indicated, the examples use Lift 2.5 with SBT
+0.12 and Scala 2.9.
+
+Lift 2.5 is also available for Scala 2.10.
+
 
 === Conventions Used in This Book
 
@@ -29,7 +87,7 @@ This icon indicates a warning or caution.
 
 This book is here to help you get your job done. In general, if this book includes code examples, you may use the code in this book in your programs and documentation. You do not need to contact us for permission unless you’re reproducing a significant portion of the code. For example, writing a program that uses several chunks of code from this book does not require permission. Selling or distributing a CD-ROM of examples from O’Reilly books does require permission. Answering a question by citing this book and quoting example code does not require permission. Incorporating a significant amount of example code from this book into your product’s documentation does require permission.
 
-We appreciate, but do not require, attribution. An attribution usually includes the title, author, publisher, and ISBN. For example: “_Book Title_ by Some Author (O’Reilly). Copyright 2012 Some Copyright Holder, 978-0-596-xxxx-x.”
+We appreciate, but do not require, attribution. An attribution usually includes the title, author, publisher, and ISBN. For example: “_Lift Cookbook_ by Richard Dallaway (O’Reilly). Copyright 2013 Richard Dallaway, 978-1-4493-6268-3.”
 
 If you feel your use of code examples falls outside fair use or the permission given above, feel free to contact us at pass:[<email>permissions@oreilly.com</email>].
 
@@ -60,11 +118,8 @@ Please address comments and questions concerning this book to the publisher:
 </simplelist>
 ++++
 
-We have a web page for this book, where we list errata, examples, and any additional information. You can access this page at link:$$http://www.oreilly.com/catalog/<catalog page>$$[].
+We have a web page for this book, where we list errata, examples, and any additional information. You can access this page at link:$$http://www.oreilly.com/catalog/0636920029151$$[].
 
-++++
-<remark>Don't forget to update the link above.</remark>
-++++
 
 To comment or ask technical questions about this book, send email to pass:[<email>bookquestions@oreilly.com</email>].
 
@@ -78,6 +133,10 @@ Watch us on YouTube: link:$$http://www.youtube.com/oreillymedia$$[]
 
 === Acknowledgments
 
-++++
-<remark>Fill in...</remark>
-++++
+These recipes existing because of the innumerable contributions on the Lift mailing list, where _Liftafarians_, as they are known, generously give their time to ask clear questions, give answers, share alternatives and chip in with comments.
+
+I also want to thank those who have provided corrections to the recipes, on the mailing list, Github, and Twitter.  No matter what else it means, writing on the web and publishing on the web has meant I've received some high-quality prompt feedback.
+
+I am indebted to the contributors who have taken the trouble to write new recipes for this book.
+
+
