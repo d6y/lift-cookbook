@@ -40,6 +40,7 @@ Contributors
 * Marek Żebrowski
 * *Peter Robinett*  Peter is a web and mobile developer and a Lift committer. He can be found on the web at http://www.bubblefoundry.com[http://www.bubblefoundry.com] and on Twitter at http://twitter.com/pr1001[http://twitter.com/pr1001].
 * *Kevin Lau* is a founder of few web apps with a focus in AWS cloud, iOS and Lift.
+* Tony Kay
 
 
 Source
