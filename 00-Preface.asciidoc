@@ -1,8 +1,5 @@
 :bookseries: cookbook
 
-This document is licensed: Creative Commons Attribution, Non Commercial,
-No Derivatives.
-
 == Preface
 
 This is a collection of solutions to questions you might have while developing
@@ -133,9 +130,9 @@ Watch us on YouTube: link:$$http://www.youtube.com/oreillymedia$$[]
 
 === Acknowledgments
 
-These recipes existing because of the innumerable contributions on the Lift mailing list, where _Liftafarians_, as they are known, generously give their time to ask clear questions, give answers, share alternatives and chip in with comments.
+These recipes existing because of the innumerable contributions on the Lift mailing list, where _Liftafarians_, as they are known, generously give their time to ask  questions, put together simple example projects, give answers, share alternatives and chip in with comments.
 
-I also want to thank those who have provided corrections to the recipes, on the mailing list, Github, and Twitter.  No matter what else it means, writing on the web and publishing on the web has meant I've received some high-quality prompt feedback.
+I also want to thank those who have provided corrections to the recipes, on the mailing list, Github, and Twitter.  No matter what else it means, writing on the web and publishing on the web has meant I've received some prompt high-quality feedback.
 
 I am indebted to the contributors who have taken the trouble to write new recipes for this book.
 
