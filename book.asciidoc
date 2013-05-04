@@ -2,7 +2,7 @@
 
 = Lift Cookbook
 
-include::00-Lift-Cookbook.asciidoc[]
+include::00-Preface.asciidoc[]
 
 include::01-Installing-and-Running.asciidoc[]
 
