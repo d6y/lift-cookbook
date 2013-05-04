@@ -1028,39 +1028,113 @@ Format A Wired Field
 Problem
 ^^^^^^^
 
-You want a wired UI element to have a different format than plain conversion to a string. For example, you'd like to round
-a floating point value to 2 fractional digits.
+You want a wired UI element to have a different format than plain conversion to a string. For example, you'd like display a floating point value as a currency.
 
 Solution
 ^^^^^^^^
 
-Use the WiringUI.toNode method to create a wiring node that can render the output formatted as you desire:
+Use the `WiringUI.toNode` method to create a wiring node that can render the output formatted as you desire.
+
+As an example consider a HTML template to display the quantity of an item being purchased and the subtotal:
+
+[source,html]
+---------------------------------------------------------
+<div data-lift="Wiring">
+
+<table>
+  <tbody>
+    <tr><td>Quantity</td><td id="quantity">?</td></tr>
+    <tr><td>Subtotal</td><td id="subtotal">?</td></tr>
+  </tbody>
+</table>
+
+<button id="add">Add Another One</button>
+
+</div>
+---------------------------------------------------------
+
+We'd like the subtotal to display as US dollars.  The snippet would be:
 
 [source,scala]
 ---------------------------------------------------------
+package code.snippet
+
+import java.text.NumberFormat
+import java.util.Locale
+
+import scala.xml.{NodeSeq, Text}
+
+import net.liftweb.util.Helpers._
+import net.liftweb.util.{Cell, ValueCell}
+import net.liftweb.http.{S, WiringUI}
+import net.liftweb.http.SHtml.ajaxInvoke
+import net.liftweb.http.js.JsCmd
+
+class Wiring {
+
   val cost = ValueCell(1.99)
-  val quantity = ValueCell(5)
-  val taxRate = 0.085
+  val quantity = ValueCell(1)
   val subtotal = cost.lift(quantity)(_ * _)
 
-  def wireRounded(cell: Cell[Double]): NodeSeq => NodeSeq =
-      WiringUI.toNode(cell, JqWiringSupport.fade)((t, ns) => Text("%.2f".format(t)))
+  val formatter = NumberFormat.getCurrencyInstance(Locale.US)
 
-  def render = "#subtotal *" #> wireRounded(subtotal) &
+  def currency(cell: Cell[Double]): NodeSeq => NodeSeq =
+    WiringUI.toNode(cell)((value, ns) => Text(formatter format value))
 
+  def increment(): JsCmd  = {
+    quantity.atomicUpdate(_ + 1)
+    S.notice("Added One")
+  }
+
+  def render =
+    "#add [onclick]" #> ajaxInvoke(increment) &
+    "#quantity *" #> WiringUI.asText(quantity) &
+    "#subtotal *" #> currency(subtotal)
+
+}
 ---------------------------------------------------------
+
+We have defined a `currency` method to format the `subtotal` not as a `Double` but as currency amount using the Java number formatting capabilities.  This will result in values like "$19.90" being shown rather than "19.9".
+
 
 Discussion
 ^^^^^^^^^^
 
-The primary wiring UI makes it easy to bind a cell as text (which translates to
-a Text node that uses toString); however, you can use the toNode method instead
+The primary wiring UI makes it easy to bind a cell as text. The `asText` method works by converting a value to a `String` and wraps it in a `Text` node. This is done via `toNode`, however we can use the `toNode` method directly
 to generate a transform function that is both hooked into the wiring UI, and
-asks your code for the translation of the item. 
+uses our code for the translation of the item.
 
-The mechanism is type-safe, so in this example cost is in double cell, quantity
-is an integer cell, and subtotal therefore ends up inferred as a Cell[Double], which
-then results in t being passed to your anonymous function as a double. 
+The mechanism is type-safe. In this example `cost` is in `Double` cell, `quantity` is an `Int` cell, and `subtotal` is inferred as a `Cell[Double]`.  This is why our formatting function is passed `value` as a `Double`.
 
-Note that your lambda function must return a node sequence, which typically
-means wrapping your string in a Text object.
+Note that the function passed to `toNode` must return a node sequence. This gives a great deal of flexibility as you can return a great deal in a `NodeSeq`. Our example complies with this signature by wrapping a text value in a `Text` object.
+
+The `WiringUI.toNode` requires a `(T, NodeSeq) => NodeSeq`.  In the example above, we ignore the `NodeSeq`, but the value would be the contents of the element we've bound to.  Given the input...
+
+[source,html]
+---------------------------------------------------------
+<td id="subtotal">?</td>
+---------------------------------------------------------
+
+...this would mean the `NodeSeq` passed to us would just be the text node representing "?".  With a richer template we can use CSS selectors. For example, we can modify the template...
+
+[source,html]
+---------------------------------------------------------
+<td>Subtotal</td><td id="subtotal">
+  <i>The value is <b class="amount">?</b></i>
+</td>
+---------------------------------------------------------
+
+...and apply a CSS selector to change the "amount" element:
+
+[source,scala]
+---------------------------------------------------------
+(value, ns) => (".amount *" #> Text(formatter format value)) apply ns)
+---------------------------------------------------------
+
+
+See Also
+^^^^^^^^
+
+Chapter 6 of _Simply Lift_ describes Lift's Wiring mechanism, and gives a detailed shopping example. http://simply.liftweb.net/[http://simply.liftweb.net/].
+
+
