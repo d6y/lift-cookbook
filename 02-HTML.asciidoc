@@ -548,7 +548,7 @@ case when looking up snippets. This means Lift would take `<lift:HelloWorld.howd
 
 Switching to the designer-friendly mechanism is the solution here, and you gain validating HTML as a bonus.
 
-In this Cookbook we use the HTML5 parser, which is set in `Boot.scala`:
+In this Cookbook we use the HTML5 parser, which is set in _Boot.scala_:
 
 [source,scala]
 -----
@@ -650,14 +650,14 @@ object CustomResourceId {
 }
 -----------
 
-This would be initialised in `Boot.scala`...
+This would be initialised in _Boot.scala_...
 
 [source, scala]
 -----------
 CustomResourceId.init()
 -----------
 
-...or you could just paste all the code into `Boot.scala`, if you prefer.
+...or you could just paste all the code into _Boot.scala_, if you prefer.
 
 With the code in place, we can, for example, modify `templates-hidden/default.html` and add a resource ID class to jQuery:
 
@@ -820,7 +820,7 @@ You want to show a customised "404" (not found) page.
 Solution
 ^^^^^^^^
 
-In `Boot.scala` add the following:
+In _Boot.scala_ add the following:
 
 [source,scala]
 ----
@@ -899,7 +899,7 @@ For example, suppose we want to provide a custom page for 403
 this page might contain snippets so will need to pass through the Lift
 rendering flow.
 
-To do this in `Boot.scala` we define the `LiftResponse` we want to generate
+To do this in _Boot.scala_ we define the `LiftResponse` we want to generate
 and use the response when a 403 status is about to be produced by Lift:
 
 [source,scala]
@@ -979,7 +979,7 @@ The convention in `Customised` is that we have a HTML file in `src/main/webapp` 
 the status code we want to show, but of course you can change that by using a different
 pattern in the argument to `Templates`.
 
-One way to test the above examples is to add the following to `Boot.scala` to
+One way to test the above examples is to add the following to _Boot.scala_ to
 make all requests to _/secret_ return a 403:
 
 [source,scala]
@@ -1185,7 +1185,7 @@ Solution
 
 Supply a mock request to Lift's `MockWeb.testReq`, and run your test in the context of the `Req` supplied by `testReq`.
 
-The first step is to add Lift's Test Kit as dependency to your project in `build.sbt`:
+The first step is to add Lift's Test Kit as dependency to your project in _build.sbt_:
 
 [source, scala]
 -------
@@ -1356,7 +1356,7 @@ You want to render Textile markup in your web application.
 Solution
 ^^^^^^^^
 
-Install the Lift Textile module in your `build.sbt` file by adding the
+Install the Lift Textile module in your _build.sbt_ file by adding the
 following to the list of dependencies:
 
 [source,scala]

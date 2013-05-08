@@ -47,7 +47,7 @@ object IssuesService extends RestHelper {
 This service responds to URLs of _/issues/by-state/open_ and _/issues/by-state/closed_ and we have
 factored out the common part as a `prefix`.
 
-Wire this into `Boot.scala` with:
+Wire this into _Boot.scala_ with:
 
 [source,scala]
 ----
@@ -231,7 +231,7 @@ Solution
 
 Modify `LiftRules.explicitlyParsedSuffixes` so that Lift doesn't change URLs that end with ".com".
 
-In `Boot.scala`:
+In _Boot.scala_:
 
 [source,scala]
 ----
@@ -271,7 +271,7 @@ object Suffix extends RestHelper {
 }
 ----
 
-With this service `init` method called in `Boot.scala` we could then make requests and observe the issue:
+With this service `init` method called in _Boot.scala_ we could then make requests and observe the issue:
 
 ----------------
 $ curl http://localhost:8080/email/you@example.com/send
@@ -324,7 +324,7 @@ case Req("reports" :: name :: Nil, "csv", GetRequest) =>
 You're expecting `/reports/foo.csv` to produce "Here's your CSV report
 for foo", but you get a 404.
 
-To resolve this, include "csv" as a file suffix that Lift knows to split from URLs.  In `Boot.scala` call:
+To resolve this, include "csv" as a file suffix that Lift knows to split from URLs.  In _Boot.scala_ call:
 
 [source,scala]
 ----
@@ -395,7 +395,7 @@ object Upload extends RestHelper {
 }
 ----------------------
 
-Wire this into your application in `Boot.scala`:
+Wire this into your application in _Boot.scala_:
 
 [source,scala]
 ----------------------
@@ -494,7 +494,7 @@ object QuotationsAPI extends RestHelper {
 }
 ----
 
-Wire this into `Boot.scala`:
+Wire this into _Boot.scala_:
 
 [source,scala]
 ----
@@ -618,7 +618,7 @@ object Sitemap extends RestHelper {
 }
 ----
 
-Wire this into your application in `Boot.scala`, for example:
+Wire this into your application in _Boot.scala_, for example:
 
 [source,scala]
 ----
@@ -705,7 +705,7 @@ object Shouty extends RestHelper {
 }
 ---------------------------------------------------------
 
-The service expects a JSON post with a parameter of "name", and it returns a greeting as a JSON object.  To demonstrate the data to and from the service, we can include the service in `Boot.scala`...
+The service expects a JSON post with a parameter of "name", and it returns a greeting as a JSON object.  To demonstrate the data to and from the service, we can include the service in _Boot.scala_...
 
 [source,scala]
 ---------------------------------------------------------

@@ -270,7 +270,7 @@ object Snowstorm {
 Here we are plugging into Lift's processing pipeline and adding the required
 JavaScript to the head of every page.
 
-We modify `build.sbt` to give the module a name, organisation and version number.  We also can remove many of the dependencies and the web plugin as we only depend on the web API elements of Lift:
+We modify _build.sbt_ to give the module a name, organisation and version number.  We also can remove many of the dependencies and the web plugin as we only depend on the web API elements of Lift:
 
 [source,scala]
 --------------------------------------------------------------
@@ -303,7 +303,7 @@ We can publish this plugin to the repository on disk by starting SBT and typing:
 publish-local
 ---------------------------
 
-With our module built and published, we can now include it in our Lift applications. To do that, modify the Lift application's `build.sbt` to reference this new "snowstorm" dependency:
+With our module built and published, we can now include it in our Lift applications. To do that, modify the Lift application's _build.sbt_ to reference this new "snowstorm" dependency:
 
 [source,scala]
 --------------------------------------------------------------
@@ -315,7 +315,7 @@ libraryDependencies ++= {
   ...
 --------------------------------------------------------------
 
-In our Lift application's `Boot.scala` we finally initialise the plugin:
+In our Lift application's _Boot.scala_ we finally initialise the plugin:
 
 [source,scala]
 --------------------------------------------------------------
@@ -374,7 +374,7 @@ object LiftModuleBuild extends Build {
 }
 --------------------------------------------------------------
 
-This defines a setting to control the Lift version number.  You use it in your module `build.sbt` like this:
+This defines a setting to control the Lift version number.  You use it in your module _build.sbt_ like this:
 
 [source,scala]
 --------------------------------------------------------------

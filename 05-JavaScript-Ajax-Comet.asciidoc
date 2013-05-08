@@ -665,7 +665,7 @@ Discussion
 
 `Templates` produces a `Box[NodeSeq]`.  In the example above, we map this content into a `JsCmd` which will populate the `inject` div.
 
-If you write unit tests to access templates, be aware that you may need to modify your development or testing environment to include the `webapps` folder.  To do this for SBT, add the following to `build.sbt`:
+If you write unit tests to access templates, be aware that you may need to modify your development or testing environment to include the `webapps` folder.  To do this for SBT, add the following to _build.sbt_:
 
 [source,scala]
 ----
@@ -838,7 +838,7 @@ jQuery(document).ready(function() {
 
 Our `stash` function will save the current value of the input field in a cookie called "stashed".  We arrange, on page load, to check for that cookie and insert the value into our message field.
 
-The final part is to modify `Boot.scala` to register our `stash` function:
+The final part is to modify _Boot.scala_ to register our `stash` function:
 
 [source, scala]
 -----
@@ -969,7 +969,7 @@ object AjaxFileUpload extends RestHelper {
 
 This implementation simply logs the name of the file received and acknowledges successful delivery with a 200 status code back to the widget.
 
-As with all REST services, it needs to be registered in `Boot.scala`:
+As with all REST services, it needs to be registered in _Boot.scala_:
 
 [source,scala]
 ---------------------------------------------------------

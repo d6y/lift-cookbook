@@ -116,7 +116,7 @@ but you do want to see what would have been sent.
 Solution
 ^^^^^^^^
 
-Assign a logging function to `Mailer.devModeSend` in `Boot.scala`:
+Assign a logging function to `Mailer.devModeSend` in _Boot.scala_:
 
 [source,scala]
 ---------------------------------------------------------
@@ -357,7 +357,7 @@ Set the `Mailer.authenticator` in `Boot` with the credentials for your
 SMTP server, and enable the `mail.smtp.auth` flag in your Lift properties
 file.
 
-Modify `Boot.scala` to include:
+Modify _Boot.scala_ to include:
 
 [source,scala]
 --------------------------------------------------------
@@ -611,7 +611,7 @@ Discussion
 The `Schedule.schedule` call is ensuring that `this` actor is sent the
 `DoIt` message after 10 minutes.
 
-To start this process off, possibly in `Boot.scala`, just send the
+To start this process off, possibly in _Boot.scala_, just send the
 `DoIt` message to the actor:
 
 [source,scala]
@@ -620,7 +620,7 @@ MyScheduledTask ! MyScheduledTask.DoIt
 ----------------------------------------------------------------------------
 
 To ensure the process stops correctly when Lift shuts down, we register
-a shutdown hook in `Boot.scala` to send the `Stop` message to prevent
+a shutdown hook in _Boot.scala_ to send the `Stop` message to prevent
 future re-schedules:
 
 [source,scala]
@@ -657,7 +657,7 @@ Solution
 
 Use _Dispatch_, "a library for asynchronous HTTP interaction".
 
-Before you start, include Dispatch dependency in your `build.sbt` file:
+Before you start, include Dispatch dependency in your _build.sbt_ file:
 
 [source,scala]
 -------------------------------------------------

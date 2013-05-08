@@ -55,7 +55,7 @@ See Also
 Manipulation Functions].
 * MySQL http://dev.mysql.com/doc/refman/5.6/en/example-auto-increment.html[AUTO-INCREMENT]
 describes how to use ALTER TABLE to change the sequence value.
-* http://www.techonthenet.com/oracle/sequences.php[Updating ORACLE sequence] involves changing the incrementing step to cover the values to skip. 
+* http://www.techonthenet.com/oracle/sequences.php[Updating ORACLE sequence] involves changing the incrementing step to cover the values to skip.
 
 Detect if the schema has changed
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -70,7 +70,7 @@ Solution
 ^^^^^^^^
 
 Run `Schemifier` and capture the changes it would make if allowed. For
-example, in `Boot.scala`:
+example, in _Boot.scala_:
 
 [source,scala]
 ------------------------------------------------------------------------------

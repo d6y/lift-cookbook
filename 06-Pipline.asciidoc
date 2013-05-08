@@ -22,7 +22,7 @@ You want to debug a request and see what's arriving to your Lift application.
 Solution
 ^^^^^^^^
 
-Add an `onBeginServicing` function in `Boot.scala` to log the request.
+Add an `onBeginServicing` function in _Boot.scala_ to log the request.
 For example:
 
 [source,scala]
@@ -117,7 +117,7 @@ You want to carry out actions when a session is created or destroyed.
 Solution
 ^^^^^^^^
 
-Make use of the hooks in `LiftSession`. For example, in `Boot.scala`:
+Make use of the hooks in `LiftSession`. For example, in _Boot.scala_:
 
 [source,scala]
 ------------------------------------------------------------
@@ -228,7 +228,7 @@ You want to force your application to be stateless at the HTTP level.
 Solution
 ^^^^^^^^
 
-In `Boot.scala`:
+In _Boot.scala_:
 
 [source,scala]
 ----------------------------------------------------
@@ -307,7 +307,7 @@ something to the user.
 Solution
 ^^^^^^^^
 
-Declare an exception handler in `Boot.scala`:
+Declare an exception handler in _Boot.scala_:
 
 [source,scala]
 --------------------------------------------------
@@ -460,7 +460,7 @@ object Numbers extends RestHelper {
 Scala's `Stream` class is a way to generate a sequence with lazy evaluation. The values being
 produced by `infinite` are used as example data to stream back to the client.
 
-Wire this into Lift in `Boot.scala`:
+Wire this into Lift in _Boot.scala_:
 
 [source,scala]
 ----------------------------------
@@ -667,7 +667,7 @@ private def fileResponse(fileId: String): Box[LiftResponse] = for {
 
 If no permission is given, the user is redirected to `/sorry.html`.
 
-All of this is wired into Lift in `Boot.scala` with:
+All of this is wired into Lift in _Boot.scala_ with:
 
 [source,scala]
 ------------------------------------------
@@ -774,7 +774,7 @@ If you visit the page without a header, you'll
 see a notice saying "Access not allowed".  This will be the home page of the site, but
 that's just the default.
 
-You can request that Lift show a different page by setting `LiftRules.siteMapFailRedirectLocation` in `Boot.scala`:
+You can request that Lift show a different page by setting `LiftRules.siteMapFailRedirectLocation` in _Boot.scala_:
 
 [source,scala]
 ----
@@ -866,7 +866,7 @@ You want to ensure clients are using HTTPs.
 Solution
 ^^^^^^^^
 
-Add an `earlyResponse` function in `Boot.scala` redirecting http requests to https
+Add an `earlyResponse` function in _Boot.scala_ redirecting http requests to https
 equivalents. For example:
 
 [source,scala]

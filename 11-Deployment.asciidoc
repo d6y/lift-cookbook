@@ -146,7 +146,7 @@ example:
 
 The above is a JNDI database configuration, defining a connection to a
 CloudBees database called "mydb". This will be used by Lift if the JNDI
-name is referenced in `Boot.scala`:
+name is referenced in _Boot.scala_:
 
 [source, scala]
 ------------------------------------------------------------
@@ -370,7 +370,7 @@ As with many cloud providers keep in mind that you want to avoid local file stor
 
 Log files are written to the local file system. To access them, from the AWS console, navigate to your environment, into the "Logs" tab and hit the "Snapshot" button. This will take a copy of the logs and store them in an S3 bucket, and give you a link to the file contents.  This is a single file showing the content of variety of log files, and `catalina.out` will be the one showing any output from your Lift application.  If you want to try to keep these log files around, you can configure the environment to rotate the logs to S3 every hour from the "Container" tab under "Edit Configuration".
 
-The Lift application WAR files are stored in the same S3 bucket that the logs are stored in. From the AWS console, you'll find it under the S3 page listed with a name like `elasticbeanstalk-us-east-1-5989673916964`. You'll note that the AWS uploads makes your WAR filename unique by adding a prefix to each filename. If you need to be able to tell the difference between these files in S3, one good approach is to is to bump the `version` value in your `build.sbt` file.  This version number is included in the WAR filename.
+The Lift application WAR files are stored in the same S3 bucket that the logs are stored in. From the AWS console, you'll find it under the S3 page listed with a name like `elasticbeanstalk-us-east-1-5989673916964`. You'll note that the AWS uploads makes your WAR filename unique by adding a prefix to each filename. If you need to be able to tell the difference between these files in S3, one good approach is to is to bump the `version` value in your _build.sbt_ file.  This version number is included in the WAR filename.
 
 Multiple Instances
 ++++++++++++++++++
@@ -387,7 +387,7 @@ There's nothing unusual you have to do to use Lift and a database from Beanstalk
 
 The MySQL option will create a MySQL 5.5 InnoDB database. The database will be accessible from Beanstalk, but not from elsewhere on the Internet. To change that, modify the security groups for the RDS instance from the AWS web console.  For example, you might permit access from your IP address.
 
-When your application launches with an associated RDS instance, the JVM system properties include settings for the database name, host, port, user and password.  You could pull them together like this in `Boot.scala`:
+When your application launches with an associated RDS instance, the JVM system properties include settings for the database name, host, port, user and password.  You could pull them together like this in _Boot.scala_:
 
 [source,scala]
 -------------------------------------------
@@ -526,7 +526,7 @@ Discussion
 
 There are a few important comments regarding Lift applications on Heroku. First, note that there's no support for session affinity. This means if you deploy to multiple _dynos_ (Heroku terminology for instances), there is no co-ordination over which requests go to which servers. As a consequence, you won't be able to make use of Lift's stateful features and will want to turn them off (<<RunningStateless>> describes for how to do that).
 
-Second, if you are using Lift comet features, there's an adjustment to make in `Boot.scala` to work a little better in the Heroku environment:
+Second, if you are using Lift comet features, there's an adjustment to make in _Boot.scala_ to work a little better in the Heroku environment:
 
 [source, scala]
 ---------------------------
@@ -552,7 +552,7 @@ Anyone visiting your Lift application will cause Heroku to unidle your applicati
 
 Note, though, that the application was stopped with a `SIGTERM`.  This is a Unix signal sent to a process, the JVM in this case, to request it to stop.  Unfortunately the Tomcat application on Heroku does not use this signal to request Lift to shutdown. This may be of little consequence to you, but if you do have external resources you want to release to other actions to take at shutdown, you need to register a shutdown hook with the JVM.
 
-For example, you might add this to `Boot.scala` if you're running on Heroku:
+For example, you might add this to _Boot.scala_ if you're running on Heroku:
 
 [source, scala]
 ---------------------------
@@ -634,7 +634,7 @@ postgres://gghetjutddgr:RNC_lINakkk899HHYEFUppwG@ec2-54-243-230-119.compute-1.
  amazonaws.com:5432/d44nsahps11hda
 ---------------------------
 
-This URL contains a user name, password, host and database name, but needs to be manipulated to be used by JDBC.  To do so, you might include the following in `Boot.scala`:
+This URL contains a user name, password, host and database name, but needs to be manipulated to be used by JDBC.  To do so, you might include the following in _Boot.scala_:
 
 [source, scala]
 ---------------------------
@@ -666,7 +666,7 @@ def initHerokuDb(dbInfo: String) {
 
 Here we are testing for the presence of the `DATABASE_URL` environment variable, which would indicate that we are in the Heroku environment. The example code then goes on to initialize Squeryl Record in Lift (described in <<Squeryl>>) using the Heroku database settings.
 
-For it to run `build.sbt` needs the appropriate dependencies for Record and PostgresSQL:
+For it to run _build.sbt_ needs the appropriate dependencies for Record and PostgresSQL:
 
 [source, scala]
 ---------------------------
@@ -756,7 +756,7 @@ $ ./sbin/rabbitmq-server -detatched
 This command will produce various messages as it starts but will eventually say: "broker running".
 
 The Lift application we'll use to demonstrate the pubsub pattern is the real-time chat application, described in _Simply Lift_.
-The first modification is to include the Lift module to talk to RabbitMQ. This is a one-line addition to the `libraryDependencies` in `build.sbt`:
+The first modification is to include the Lift module to talk to RabbitMQ. This is a one-line addition to the `libraryDependencies` in _build.sbt_:
 
 [source, scala]
 -----------------------------------------
@@ -808,7 +808,7 @@ object Rabbit {
 
 This code is establishing `RemoteSend` and `RemoteReceiver` actors that serialise `String` values via RabbitMQ.  This code is explored in the _Discussion_ section below.
 
-To make use of this and route comet messages over RabbitMQ we need to make two changes.  In `Boot.scala` we need to start listening for messages from RabbitMQ:
+To make use of this and route comet messages over RabbitMQ we need to make two changes.  In _Boot.scala_ we need to start listening for messages from RabbitMQ:
 
 [source, scala]
 -----------------------------------------
@@ -868,7 +868,7 @@ $ ./sbin/rabbitmq-plugins enable rabbitmq_management
 
 Visit the administrative web interface at `http://127.0.0.1:15672/` and login.  The default username and password is "guest".
 
-Having to have RabbitMQ (or other type of pubsub solution) running during development may be inconvenient. In that case, you can simply not initialize the service in `Boot.scala`:
+Having to have RabbitMQ (or other type of pubsub solution) running during development may be inconvenient. In that case, you can simply not initialize the service in _Boot.scala_:
 
 [source, scala]
 -----------------------------------------

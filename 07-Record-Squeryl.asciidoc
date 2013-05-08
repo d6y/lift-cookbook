@@ -18,9 +18,9 @@ You want to configure your Lift application to use Squeryl and Record.
 Solution
 ^^^^^^^^
 
-Include the Squeryl-Record dependency in your build, and in `Boot.scala` provide a database connection function to `SquerylRecord.initWithSquerylSession`.
+Include the Squeryl-Record dependency in your build, and in _Boot.scala_ provide a database connection function to `SquerylRecord.initWithSquerylSession`.
 
-For example, to configure Squeryl with PostgreSQL, modify `build.sbt` to add two dependencies, one for Squeryl-Record and one for the database driver:
+For example, to configure Squeryl with PostgreSQL, modify _build.sbt_ to add two dependencies, one for Squeryl-Record and one for the database driver:
 
 [source, scala]
 ---------------------------------------------------------------
@@ -37,7 +37,7 @@ libraryDependencies ++= {
 
 This will give you access to Squeryl version 0.9.5-6.
 
-In `Boot.scala` we define a connection and register it with Squeryl:
+In _Boot.scala_ we define a connection and register it with Squeryl:
 
 [source, scala]
 ---------------------------------------------------------------
@@ -53,7 +53,7 @@ SquerylRecord.initWithSquerylSession(
 ---------------------------------------------------------------
 
 All Squeryl queries need to run in the context of a transaction.  One way to provide a transaction is to configure
-a transaction around all HTTP requests. This is also configured in `Boot.scala`:
+a transaction around all HTTP requests. This is also configured in _Boot.scala_:
 
 [source, scala]
 ---------------------------------------------------------------
@@ -121,7 +121,7 @@ application.
 Solution
 ^^^^^^^^
 
-In `Boot.scala` call `initWithSquerylSession` with a `DataSource` looked up from the JDNI context:
+In _Boot.scala_ call `initWithSquerylSession` with a `DataSource` looked up from the JDNI context:
 
 [source,scala]
 ------------------------------------------------------------
@@ -452,7 +452,7 @@ object MySchema extends Schema {
 }
 -----------------------------------------------------------
 
-In `Boot.scala` we can print out the schema...
+In _Boot.scala_ we can print out the schema...
 
 [source, scala]
 -----------------------------------------------------------
@@ -1060,7 +1060,7 @@ Use an in-memory database, and arrange for it to be set up around your test.
 
 There are three parts to this: including a database in your project and connect to it in an in-memory mode; creating a re-usable trait to set up the database; and then using the trait in your test.
 
-The H2 database has an in memory mode, meaning it won't save data to disk. It needs to be included in `build.sbt` as a dependency. Whilst you are editing `build.sbt` also disable SBT's parallel test execution to prevent database tests from influencing each other:
+The H2 database has an in memory mode, meaning it won't save data to disk. It needs to be included in _build.sbt_ as a dependency. Whilst you are editing _build.sbt_ also disable SBT's parallel test execution to prevent database tests from influencing each other:
 
 [source, scala]
 --------------------------------------------
@@ -1487,7 +1487,7 @@ class MySnippet extends Loggable {
 
 This will log queries according to the settings for the logging system, typically the Logback project configured in `src/resources/props/default.logback.xml`.
 
-It can be inconvenient to have to enable logging in each snippet during development.  To trigger logging for all snippets, you can modify the `addAround` call in `Boot.scala`.
+It can be inconvenient to have to enable logging in each snippet during development.  To trigger logging for all snippets, you can modify the `addAround` call in _Boot.scala_.
 
 Recall from <<ConfiguringSqueryl>> that this is usually defined as:
 
@@ -1498,7 +1498,7 @@ S.addAround(new LoanWrapper {
 })
 ---------------------------------------------------------------
 
-To enable logging in each session, we can modify `Boot.scala` to mix in logging and enable logging on every session:
+To enable logging in each session, we can modify _Boot.scala_ to mix in logging and enable logging on every session:
 
 [source,scala]
 ---------------------------------------------------------------
@@ -1604,7 +1604,7 @@ Solution
 
 Ensure that:
 
-* `LiftRules.early.append(_.setCharacterEncoding("UTF-8"))` is included in `Boot.scala`.
+* `LiftRules.early.append(_.setCharacterEncoding("UTF-8"))` is included in _Boot.scala_.
 * `?useUnicode=true&characterEncoding=UTF-8` is included in your JDBC connections URL.
 * Your MySQL database has been created using a UTF-8 character set.
 
@@ -1613,7 +1613,7 @@ Discussion
 
 There are a number of interactions here which can impact characters going into, and coming out of, a MySQL database.  The basic problem is that bytes transferred across networks have no meaning unless you know the encoding.
 
-The `setCharacterEncoding("UTF-8")` call in `Boot.scala` is being applied to every `HTTPRequest` which ultimately, in a servlet container, is applied to a `ServletRequest`. This is how parameters in a request are going to be interpreted by the servlet container when received.
+The `setCharacterEncoding("UTF-8")` call in _Boot.scala_ is being applied to every `HTTPRequest` which ultimately, in a servlet container, is applied to a `ServletRequest`. This is how parameters in a request are going to be interpreted by the servlet container when received.
 
 The flip side of this is that responses from Lift are encoded as UTF-8.  You'll see this in a number of places. For example, `templates-hidden/default` includes:
 
