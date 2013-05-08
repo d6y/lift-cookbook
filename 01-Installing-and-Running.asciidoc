@@ -479,28 +479,26 @@ reload in your browser to see changes.
 Solution
 ^^^^^^^^
 
-Use the "Scala IDE for Eclipse" plugin to Eclipse. The instructions for this
-are given at http://scala-ide.org[http://scala-ide.org]. There are a number of options (nightly builds, milestones) but start with the stable version. This will give you an Eclipse perspective that knows about Scala.
+Use the "Scala IDE for Eclipse" plugin to Eclipse, and the _sbteclipse_ plugin for SBT.  This will give Eclipse the ability to understand Scala, and SBT the ability to create project files which Eclipse can load.
 
-To create the project files to allow Eclipse to load your Lift project, install "sbteclipse" by adding the following to `projects/plugins.sbt` in your Lift project:
+The instructions for the Eclipse plugin are given at http://scala-ide.org[http://scala-ide.org]. There are a number of options to be aware of when picking an update site to use: there a different sites for Scala 2.9 and 2.10, and for different versions of Eclipse. Start with the _stable_ version of the plugin rather than a nightly or milestone version. This will give you an Eclipse perspective that knows about Scala.
+
+Once the Eclipse plugin is installed and restarted you need to create the project files to allow Eclipse to load your Lift project. Install "sbteclipse" by adding the following to _projects/plugins.sbt_ in your Lift project:
 
 [source,scala]
 -----------------------------------------------------------------------
 addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.1.2")
 -----------------------------------------------------------------------
 
-You can then create Eclipse project files (`.project` and `.classpath`) by entering the
-following to the SBT prompt:
+You can then create Eclipse project files (_.project_ and _.classpath_) by entering the following to the SBT prompt:
 
 -------
 eclipse
 -------
 
-Open the project in Eclipse by navigating to "File > Import.." and select "General > Existing
-Projects into Workspace". Browse to and select your Lift project. You
-are now set up to develop your application in Eclipse.
+Open the project in Eclipse by navigating to "File > Import..." and selecting "General > Existing Projects into Workspace". Browse to, and pick, your Lift project.You are now set up to develop your application in Eclipse.
 
-To see live changes as you edit and save your work, run SBT in a separate terminal window.  That is, start `sbt` from a terminal window outside of Eclipse and enter the following:
+To see live changes as you edit and save your work, run SBT in a separate terminal window.  That is, start _sbt_ from a terminal window outside of Eclipse and enter the following:
 
 --------------------------------------
 ~; container:start; container:reload /
@@ -528,8 +526,8 @@ EclipseKeys.withSource := true
 ------------------------------
 
 If you find yourself using the plugin frequently, you may wish to declare it
-in your global SBT configuration files so it appies to all projects.  To do that,
-create a `~/.sbt/plugins/plugins.sbt` file containing:
+in your global SBT configuration files so it applies to all projects.  To do that,
+create a _~/.sbt/plugins/plugins.sbt_ file containing:
 
 [source,scala]
 ------------------------------------------------------------------------
@@ -538,16 +536,16 @@ resolvers += Classpaths.typesafeResolver
 addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.1.2")
 ------------------------------------------------------------------------
 
-Note the blank line between the `resolvers` and the `addSbtPlugin`.  In `.sbt` files, a blank line is required between statements.
+Note the blank line between the `resolvers` and the `addSbtPlugin`.  In _.sbt_ files, a blank line is required between statements.
 
-Finally, set any global configurations (such as `withSource`) in `~/.sbt/global.sbt`.
+Finally, set any global configurations (such as `withSource`) in _~/.sbt/global.sbt_.
 
 See Also
 ^^^^^^^^
 
 There are other useful settings for sbteclipse, described at https://github.com/typesafehub/sbteclipse/wiki[https://github.com/typesafehub/sbteclipse/wiki].  You'll also find the latest version number for the plugin on that site.
 
-The SBT `~/.sbt/` structure is described in the guide to using plugins at http://www.scala-sbt.org/release/docs/Getting-Started/Using-Plugins[http://www.scala-sbt.org/release/docs/Getting-Started/Using-Plugins] and in the wiki page for global configuration at http://www.scala-sbt.org/release/docs/Detailed-Topics/Global-Settings[http://www.scala-sbt.org/release/docs/Detailed-Topics/Global-Settings].
+The SBT _~/.sbt/_ structure is described in the guide to using plugins at http://www.scala-sbt.org/release/docs/Getting-Started/Using-Plugins[http://www.scala-sbt.org/release/docs/Getting-Started/Using-Plugins] and in the wiki page for global configuration at http://www.scala-sbt.org/release/docs/Detailed-Topics/Global-Settings[http://www.scala-sbt.org/release/docs/Detailed-Topics/Global-Settings].
 
 [[idea]]
 Developing using Intellij IDEA
@@ -565,9 +563,9 @@ You need the Scala plugin for IntelliJ, and an SBT plugin to generate the IDEA p
 
 The IntelliJ plugin you'll need to install once, and these instructions are for IntelliJ IDEA 12.  The details may vary between releases of the IDE, but the basic idea is to find the JetBrains Scala plugin, and download and install it.
 
-From the "Welcome to Intellij IDEA" screen, select "Configure" and then "Plugins". Select "Browse repositories...". In the search box, top right, type "Scala".  You'll find on the left a number of matches: select "Scala".  On the right, you'll see confirmation that this is the "Plugin for Scala language support" and the vendor is JetBrains Inc. Select the "Download and Install" icon from the top of the window (or right click to download and install). "Close" the dialog, and OK out of the Plugins window. You'll be promoted to restart IntelliJ IDEA.
+From the "Welcome to Intellij IDEA" screen, select "Configure" and then "Plugins". Select "Browse repositories...". In the search box, top right, type "Scala".  You'll find on the left a number of matches: select "Scala".  On the right, you'll see confirmation that this is the "Plugin for Scala language support" and the vendor is JetBrains Inc. Select the "Download and Install" icon from the top of the window, or right click to download and install. "Close" the dialog, and OK out of the plugins window. You'll be promoted to restart IntelliJ IDEA.
 
-With the IDE configured, you now need to add the SBT plugin inside your Lift project by adding the following to the file `projects/plugins.sbt`:
+With the IDE configured, you now need to add the SBT plugin inside your Lift project by adding the following to the file _projects/plugins.sbt_:
 
 [source,scala]
 ------------------------------------------------------------------------
@@ -580,9 +578,9 @@ Start SBT and at the SBT prompt create the IDEA project files by typing:
 gen-idea
 ---------
 
-This will generate the `.idea` and `.iml` files that IntelliJ uses. Inside IntelliJ you can open the project from the "File" menu, picking "Open..." and then navigating to your project and selecting the directory.
+This will generate the _.idea_ and _.iml_ files that IntelliJ uses. Inside IntelliJ you can open the project from the "File" menu, picking "Open..." and then navigating to your project and selecting the directory.
 
-To see live changes as you edit and save your work, run SBT in a separate terminal window.  That is, start `sbt` from a terminal window outside of IntelliJ and enter the following:
+To see live changes as you edit and save your work, run SBT in a separate terminal window.  That is, start _sbt_ from a terminal window outside of IntelliJ and enter the following:
 
 --------------------------------------
 ~; container:start; container:reload /
@@ -597,11 +595,12 @@ Discussion
 
 By default the `gen-idea` command will fetch source for dependent libraries. That means out-of-the-box you can click though to Lift source code to explore it and learn more about the framework.
 
-If you want to try the latest snapshot version of the plugin, you'll need to include the snapshot repository in your `plugin.sbt` file:
+If you want to try the latest snapshot version of the plugin, you'll need to include the snapshot repository in your _plugin.sbt_ file:
 
 [source,scala]
 ------------------------------------------------------------------------
-resolvers += "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
+resolvers += "Sonatype snapshots" at
+  "http://oss.sonatype.org/content/repositories/snapshots/"
 ------------------------------------------------------------------------
 
 Setting up the SBT IDEA plugin globally, for all SBT projects, is the same pattern as described for Eclipse in <<eclipse>>.
@@ -609,7 +608,7 @@ Setting up the SBT IDEA plugin globally, for all SBT projects, is the same patte
 See Also
 ^^^^^^^^
 
-The sbt-idea plugin at https://github.com/mpeltonen/sbt-idea[https://github.com/mpeltonen/sbt-idea] doesn't have a configuration guide yet. One way to discover the features is to browse the release notes in the `notes` folder of that project.
+The sbt-idea plugin at https://github.com/mpeltonen/sbt-idea[https://github.com/mpeltonen/sbt-idea] doesn't have a configuration guide yet. One way to discover the features is to browse the release notes in the _notes_ folder of that project.
 
 JetBrains have a blog for the Scala plugin with feature news and tips: http://blog.jetbrains.com/scala/[http://blog.jetbrains.com/scala/].
 
@@ -620,7 +619,7 @@ Viewing the lift_proto H2 Database
 Problem
 ^^^^^^^
 
-You're developing using the default `lift_proto.db` H2 database, and
+You're developing using the default _lift_proto.db_ H2 database, and
 you would like use a tool to look at the tables.
 
 Solution
@@ -628,28 +627,28 @@ Solution
 
 Use the web interface included as part of H2. Here are the steps:
 
-* Locate the H2 JAR file. For me, this was: `~/.ivy2/cache/com.h2database/h2/jars/h2-1.2.147.jar`.
+* Locate the H2 JAR file. For me, this was: _~/.ivy2/cache/com.h2database/h2/jars/h2-1.2.147.jar_.
 * Start the server from a terminal window using the JAR file you found: `java -cp /path/to/h2-version.jar org.h2.tools.Server`
 * This should launch your web browser, asking you to login.
 * Select "Generic H2 Server" in "Saved Settings".
-* Enter `jdbc:h2:/path/to/youapp/lift_proto.db;AUTO_SERVER=TRUE` for "JDBC URL", adjusting the path for the location of your database, and adjusting the name of the database ("lift_proto.db") if different in your _Boot.scala_.
+* Enter _jdbc:h2:/path/to/youapp/lift_proto.db;AUTO_SERVER=TRUE_ for "JDBC URL", adjusting the path for the location of your database, and adjusting the name of the database ("lift_proto.db") if different in your _Boot.scala_.
 * Press "Connect" to view and edit your database.
 
 Discussion
 ^^^^^^^^^^
 
-The default Lift projects that include a database, such as `lift_basic`, use the H2 relational database as it can be included as an SBT dependency and requires no external installation or configuration. It's a fine product, although production deployments typically use standalone databases, such as PostgreSQL or MySQL.
+The default Lift projects that include a database, such as _lift_basic_, use the H2 relational database as it can be included as an SBT dependency and requires no external installation or configuration. It's a fine product, although production deployments typically use standalone databases, such as PostgreSQL or MySQL.
 
-Even if you're deploying to a non-H2 database it may be useful to keep H2 around because it has an in-memory mode, which is great for unit tests. This means you can create a database in-memory, no files on disk, and throw it away when your unit tests ends.
+Even if you're deploying to a non-H2 database it may be useful to keep H2 around because it has an in-memory mode, which is great for unit tests. This means you can create a database in-memory, and throw it away when your unit tests ends.
 
 If you don't like the web interface, the connection settings described in this recipe should give you the information you need to configure other SQL tools.
 
 See Also
 ^^^^^^^^
 
-The properties of H2 are described at  http://www.h2database.com[http://www.h2database.com].
+The properties of H2 are described at http://www.h2database.com[http://www.h2database.com].
 
-If you're using the console frequently, consider mapping it accessible from your Lift application in development node.  This is described by Diego Medina in a blog post at https://fmpwizard.telegr.am/blog/lift-and-h2[https://fmpwizard.telegr.am/blog/lift-and-h2].
+If you're using the console frequently, consider making it accessible from your Lift application in development node.  This is described by Diego Medina in a blog post at https://fmpwizard.telegr.am/blog/lift-and-h2[https://fmpwizard.telegr.am/blog/lift-and-h2].
 
 The example Lift project for <<Squeryl>> has the H2 console enabled. The source is: https://github.com/LiftCookbook/cookbook_squeryl[https://github.com/LiftCookbook/cookbook_squeryl].
 
@@ -670,7 +669,8 @@ the snapshot repository:
 
 [source,scala]
 ----
-resolvers += "snapshots" at "http://oss.sonatype.org/content/repositories/snapshots"
+resolvers += "snapshots" at
+  "http://oss.sonatype.org/content/repositories/snapshots"
 ----
 
 Second, change the `liftVersion` in your build to be the latest version. For this example, let's use the 2.5-SNAPSHOT version of Lift:
@@ -742,7 +742,7 @@ against for each Lift component:
 
 [source,scala]
 --------------------------------------------------------------------------
-scalaVersion := "2.9.2"
+scalaVersion := "2.9.3"
 
 libraryDependencies ++= {
   val liftVersion = "2.5"
@@ -754,12 +754,12 @@ libraryDependencies ++= {
 
 What we've done here is change the `scalaVersion` to the new version we want
 to use, but explicitly specified we want the 2.9.1 Scala version for Lift.
-This works if the two different Scala versions are binary compatible.
+This works because the two different Scala versions are binary compatible.
 
 Discussion
 ^^^^^^^^^^
 
-Dependencies have a particular naming convention.  For example, the `lift-webkit` library for Lift 2.5-RC5 is called `lift-webkit_2.9.1-2.5-RC5.jar`.  Normally in _build.sbt_ we simply refer to `"net.liftweb" %% "lift-webkit"` and SBT turns that into the name of a file that can be downloaded.
+Dependencies have a particular naming convention.  For example, the `lift-webkit` library for Lift 2.5-RC5 is called _lift-webkit_2.9.1-2.5-RC5.jar_.  Normally in _build.sbt_ we simply refer to `"net.liftweb" %% "lift-webkit"` and SBT turns that into the name of a file that can be downloaded.
 
 However, in this recipe we have forced SBT to explicitly fetch the 2.9.1 version
 of the Lift resources rather than allow it to compute the URL to the
