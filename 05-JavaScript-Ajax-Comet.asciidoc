@@ -1015,11 +1015,11 @@ If we uploaded, say a JPEG, the browser would show an alert dialog reporting "On
 See Also
 ^^^^^^^^
 
-Diego Medina has posted a Gist of Lift REST code to integrate more fully with the image upload and image reviewing features of the widget, specifically implementing the JSON response that the widget expects for that functionality.  You'll find it at: https://gist.github.com/a6715d1e3664f73cd03a[https://gist.github.com/a6715d1e3664f73cd03a].
+Diego Medina has posted a Gist of Lift REST code to integrate more fully with the image upload and image reviewing features of the widget, specifically implementing the JSON response that the widget expects for that functionality.  You'll find it on GitHub via: http://bit.ly/lift-restupload[http://bit.ly/lift-restupload].
 
 <<FileUpload>> describes the basic file upload behaviour of Lift and how to control where files are stored.
 
-Antonio Salazar Cardozo has posted example code for performing Ajax file upload using Lift's Ajax mechanisms, which avoids external JavaScript libraries. You can find a description and link to the code at: https://groups.google.com/d/msg/liftweb/OuN1sqRMO_c/TrUGUaSvoN4J[https://groups.google.com/d/msg/liftweb/OuN1sqRMO_c/TrUGUaSvoN4J].
+Antonio Salazar Cardozo has posted example code for performing Ajax file upload using Lift's Ajax mechanisms. This avoids external JavaScript libraries. You can find a description and link to the code on the mailing list: http://bit.ly/lift-ajaxupload[http://bit.ly/lift-ajaxupload].
 
 [[FormatWiring]]
 Format A Wired Field

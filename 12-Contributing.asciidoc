@@ -433,7 +433,7 @@ The Snowstorm project ("setting CPUs on fire worldwide every winter since 2003")
 
 To publish to Sonatype, take a look at their guide: https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide[https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide]. CloudBees offer an open source repository, which you can learn about via http://www.cloudbees.com/foss/foss-dev.cb[http://www.cloudbees.com/foss/foss-dev.cb].
 
-There are other ways to structure common code between Lift applications. For an example that uses SBT modules and Git, see the mailing list discussion on "Modularize Lift Applications" at https://groups.google.com/d/msg/liftweb/7GA5t0lefzI/c1wf6W1keDcJ[https://groups.google.com/d/msg/liftweb/7GA5t0lefzI/c1wf6W1keDcJ].
+There are other ways to structure common code between Lift applications. For an example that uses SBT modules and Git, see the mailing list discussion on "Modularize Lift Applications" via http://bit.ly/lift-moduleapp[http://bit.ly/lift-moduleapp].
 
 
 

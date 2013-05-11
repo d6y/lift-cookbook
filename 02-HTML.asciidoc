@@ -50,7 +50,7 @@ res0: scala.xml.NodeSeq =
   NodeSeq(<a href="http://example.org">click me</a>)
 ----
 
-The `Helpers._` import brings in the CSS Selector functionality, which we then exercise by creating a selector, calling it with a (very simple) template and observing the result.
+The `Helpers._` import brings in the CSS Selector functionality, which we then exercise by creating a selector, `f`, calling it with a very simple template, `in`, and observing the result, `res0`.
 
 Discussion
 ^^^^^^^^^^
@@ -73,6 +73,7 @@ See Also
 
 The syntax for selectors is best described in _Simply Lift_ at http://simply.liftweb.net/[http://simply.liftweb.net/].
 
+See <<eclipse>> and <<idea>> for how to work with Eclipse and Intellij IDEA.
 
 
 [[SequencingSelectorOps]]
@@ -120,7 +121,7 @@ Discussion
 
 When using `&` think of the CSS selectors as always applying to the
 original template, no matter what other expressions you are combining.
-This is because `&` is aggregating the selectors together before applying them; whereas `andThen` is
+This is because `&` is aggregating the selectors together before applying them. In contrast, `andThen` is
 a method of all Scala functions that composes two functions together, with the first being
 called before the second.
 
@@ -137,8 +138,8 @@ res1: scala.xml.NodeSeq = NodeSeq(<div id="bar"></div>)
 ----
 
 The second expression will not match as it is applied to the original
-input of `<div id="foo"/>`. The selector of `#bar` won't match on that,
-and adds nothing to the results of `render`.
+input of `<div id="foo"/>` -- the selector of `#bar` won't match on `id=foo`,
+and so adds nothing to the results of `render`.
 
 See Also
 ^^^^^^^^
@@ -155,7 +156,7 @@ Setting Meta Tag Contents
 Problem
 ^^^^^^^
 
-You want to set the content of an HTML meta tag using Lift.
+You want to set the content of an HTML meta tag from a snippet.
 
 Solution
 ^^^^^^^^
@@ -184,8 +185,8 @@ The `[content]` part is an example of a _replacement rule_ that can follow a sel
 
 There are two other replacement rules useful for manipulating attributes:
 
-* `[content!]` -- to remove an attribute with a matching value.
-* `[content+]` -- to append to the value.
+* `[content!]` to remove an attribute with a matching value.
+* `[content+]` to append to the value.
 
 Examples of these would be...
 
@@ -253,7 +254,7 @@ You want to set the `<title>` of the page from a Lift snippet.
 Solution
 ^^^^^^^^
 
-Select all the elements of the `title` element and replace them with the
+Select the content of the `title` element and replace it with the
 text you want:
 
 [source,scala]
@@ -272,7 +273,7 @@ result in:
 Discussion
 ^^^^^^^^^^
 
-This example uses a element selector, which picks out tags in the HTML template, and replaces the content.
+This example uses a element selector, which picks out tags in the HTML template, and replaces the content.  Notice that we are using "title *" to select the _content_ of the title tag. If we had left off the "*" the entire title tag would have been replaced with text.
 
 As an alternative, it is also possible to set the page title from the contents of `SiteMap`,
 meaning the title used will be the title you've assigned to the page in
@@ -308,11 +309,14 @@ object MyTitle {
 }
 ----
 
+Notice that our snippet is returning another snippet, `<lift:Menu.title/>`.  This is a perfectly normal thing to do in Lift, and snippet invocations returned from snippets will be processed by Lift as normal.
+
 See Also
 ^^^^^^^^
 
-At https://www.assembla.com/spaces/liftweb/wiki/SiteMap[https://www.assembla.com/spaces/liftweb/wiki/SiteMap] there's more about Site Map and the `Menu` snippets.
+<<SnippetNotFound>> describes the different ways to reference a snippet, such as `data-lift` and `<lift: ... />`.
 
+At https://www.assembla.com/spaces/liftweb/wiki/SiteMap[https://www.assembla.com/spaces/liftweb/wiki/SiteMap] there's more about Site Map and the `Menu` snippets.
 
 
 [[ConditionalIncludes]]
@@ -426,7 +430,7 @@ The `+` symbol is the the URL encoding for a space, resulting in:
 See Also
 ^^^^^^^^
 
-The `IEOnly` example is derived from a posting on the mailing list from Antonio Salazar Cardozo: https://groups.google.com/d/msg/liftweb/kLzcJwfIqHQ/K91MdtoNz0MJ[https://groups.google.com/d/msg/liftweb/kLzcJwfIqHQ/K91MdtoNz0MJ].
+The `IEOnly` example is derived from a posting on the mailing list from Antonio Salazar Cardozo: http://bit.ly/lift-ieonly[http://bit.ly/lift-ieonly].
 
 The html5shim project can be found at: http://code.google.com/p/html5shim/[http://code.google.com/p/html5shim/].
 
@@ -448,8 +452,7 @@ Solution
 
 Use the `PassThru` transform.
 
-For
-example, suppose you have a snippet which performs a transforms when some
+Suppose you have a snippet which performs a transforms when some
 condition is met, but if the condition is not met, you want the snippet
 return the original markup.
 
@@ -520,13 +523,13 @@ The pattern of converting one `NodeSeq` to another is simple, but also powerful 
 
 
 [[SnippetNotFound]]
-Snippet Not Found when using HTML5
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Snippet Not Found when using HTML 5
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
 
-You're using Lift with the HTML5 parser and one of your snippets is rendering with a "Class Not
+You're using Lift with the HTML 5 parser and one of your snippets is rendering with a "Class Not
 Found" error. It even happens for `<lift:HelloWorld.howdy />`.
 
 Solution
@@ -536,19 +539,13 @@ Switch to the designer-friendly snippet invocation mechanism. E.g.,
 
 [source,html]
 ----
-<div data-lift="HellowWorld.howdy">...</div>
+<div data-lift="HellowWorld.howdy"></div>
 ----
 
 Discussion
 ^^^^^^^^^^
 
-The HTML5 parser and the traditional Lift XHTML parser have different
-behaviours. In particular the HTML5 parser converts elements and attribute names to lower
-case when looking up snippets. This means Lift would take `<lift:HelloWorld.howdy />` and look for a class called "helloworld" rather than "HelloWorld", which would be the cause of the "Class Not Found Error".
-
-Switching to the designer-friendly mechanism is the solution here, and you gain validating HTML as a bonus.
-
-In this Cookbook we use the HTML5 parser, which is set in _Boot.scala_:
+In this Cookbook we use the HTML 5 parser, which is set in _Boot.scala_:
 
 [source,scala]
 -----
@@ -558,10 +555,25 @@ LiftRules.htmlProperties.default.set( (r: Req) =>
 ----
 
 
+The HTML5 parser and the traditional Lift XHTML parser have different
+behaviours. In particular the HTML5 parser converts elements and attribute names to lower
+case when looking up snippets. This means Lift would take `<lift:HelloWorld.howdy />` and look for a class called "helloworld" rather than "HelloWorld", which would be the cause of the "Class Not Found Error".
+
+Switching to the designer-friendly mechanism is the solution here, and you gain validating HTML as a bonus.
+
+There are three popular ways of referencing a snippet:
+
+* As an HTML 5 data attribute: `data-lift="MySnippet"`. This is style we use in this book, and is valid HTML 5 markup.
+
+* Using the "lift" attribute, as in: `lift="MySnippet"`. This won't strictly validate against HTML 5, but you may see it.
+
+* The XHTML namespace version: `<lift:MySnippet />`. You'll see the usage of this tag in templates declining because of the way it interacts with the HTML5 parser. However, it works just fine outside of a template, for example when embedding a snippet invocation in your server side code (<<SetPageTitle>> includes an example of this for "Menu.title").
+
+
 See Also
 ^^^^^^^^
 
-The key differences between the XHTML and HTML5 parser are outlined on the mailing list at https://groups.google.com/d/msg/liftweb/H-xe1uRLW1c/B60UH8P54VAJ[https://groups.google.com/d/msg/liftweb/H-xe1uRLW1c/B60UH8P54VAJ].
+The key differences between the XHTML and HTML5 parser are outlined on the mailing list at http://bit.ly/lift-parsers[http://bit.ly/lift-parsers].
 
 
 
@@ -579,7 +591,7 @@ to avoid this browser caching.
 Solution
 ^^^^^^^^
 
-Add the `with-resource-id` data-lift attribute to script or link tags:
+Add the `with-resource-id` attribute to script or link tags:
 
 [source,html]
 ----
@@ -587,8 +599,8 @@ Add the `with-resource-id` data-lift attribute to script or link tags:
  type="text/javascript"></script>
 ----
 
-The addition of this attribute will cause Lift to append a "resource id" to
-your `src` (or `href`), and as this resource id changes each time Lift
+The addition of this attribute will cause Lift to append a _resource ID_ to
+your `src` (or `href`), and as this resource ID changes each time Lift
 starts, it defeats browser caching.
 
 The resultant HTML might be:
@@ -607,7 +619,7 @@ The random value that is appended to the resource is computed when your Lift app
 If you need some other behaviour from `with-resource-id` you can assign
 a new function of type `String => String` to
 `LiftRules.attachResourceId`. The default implementation, shown above,
-takes the resource name, "/myscript.js" in the example, and returns the
+takes the resource name, _/myscript.js_ in the example, and returns the
 resource name with an id appended.
 
 You can also wrap a number of tags inside a
@@ -616,10 +628,10 @@ avoid doing this in the `<head>` of your page as the HTML5 parser will
 move the tags to be outside of the head section.
 
 Note that some proxies may choose not to cache resources with query
-parameters at all. If that impacts you, it's possible to code a custom resource-id method
+parameters at all. If that impacts you, it's possible to code a custom resource ID method
 to move the random resource ID out of the query parameter and into the path.
 
-Here's one approach to doing this. Rather than generate JavaScript and CSS links that look like `/assets/style.css?F61973`, we will generate `/cache/F61973/assets/style.css`. We then will need to tell Lift to take requests
+Here's one approach to doing this. Rather than generate JavaScript and CSS links that look like _/assets/style.css?F61973_, we will generate _/cache/F61973/assets/style.css_. We then will need to tell Lift to take requests
 that look like this new format, and render the correct content for the request.  The code for this is:
 
 [source, scala]
@@ -680,7 +692,7 @@ Most of the work for this is happening in the `statelessRewrite`, which is worki
 * A `RewriteRequest` which is the pattern we're matching on; and
 * A `RewriteResponse` which is the result we want if the request matches.
 
-Looking at the `RewriteRequest` first, this expects three arguments: the path, which we care about, and then the method (e.g., `GetRequest`, `PutRequest`, etc) and the `HTTPRequest` itself, neither of which concern us in this instance.  In the path part we're match on patterns that start with "cache", followed by something (we don't care what), and then the rest of the path, represented by the name `file`.  In that situation, we rewrite to the original path, which is just the `file` with the `suffix`, effectively removing the `/cache/F352555437877UHCNRW` part.  This is the content that Lift will serve.
+Looking at the `RewriteRequest` first, this expects three arguments: the path, which we care about, and then the method (e.g., `GetRequest`, `PutRequest`, etc) and the `HTTPRequest` itself, neither of which concern us in this instance.  In the path part we're matching on patterns that start with "cache", followed by something (we don't care what), and then the rest of the path, represented by the name `file`.  In that situation, we rewrite to the original path, which is just the `file` with the `suffix`, effectively removing the _/cache/F352555437877UHCNRW_ part.  This is the content that Lift will serve.
 
 
 See Also
@@ -708,9 +720,9 @@ something to the `<head>` section.
 Solution
 ^^^^^^^^
 
-Use the `head` snippet or CSS class so Lift knows to merge the
+Use the `head` snippet so Lift knows to merge the
 contents with the `<head>` of your page. For example, suppose you have
-the following contents in `templates-hidden/default.html`:
+the following contents in _templates-hidden/default.html_:
 
 [source,html]
 ----
@@ -729,16 +741,16 @@ the following contents in `templates-hidden/default.html`:
 </html>
 ----
 
-Also suppose you have `index.html` on which you want to include `red-titles.css` to just change the style of just this page.
+Also suppose you have _index.html_ on which you want to include _red-titles.css_ to just change the style of just this page.
 
-Do so by including the CSS in the part of the page that will get processed and mark it for the head with `head`:
+Do so by including the CSS in the part of the page that will get processed, and mark it with the `head` snippet:
 
 [source,html]
 -----
 <!DOCTYPE html>
 <html>
  <head>
-   <title>Special</title>
+   <title>Special CSS</title>
  </head>
  <body data-lift-content-id="main">
   <div id="main" data-lift="surround?with=default;at=content">
@@ -750,7 +762,7 @@ Do so by including the CSS in the part of the page that will get processed and m
 </html>
 -----
 
-Note that this `index.html` page is validated HTML5, and will produce a
+Note that this _index.html_ page is validated HTML 5, and will produce a
 result with the custom CSS inside the `<head>` tag, something like this:
 
 [source,html]
@@ -759,7 +771,7 @@ result with the custom CSS inside the `<head>` tag, something like this:
 <html lang="en">
  <head>
   <meta charset="utf-8">
-  <title>App:  Home</title>
+  <title>App:  Special CSS</title>
   <script type="text/javascript"
     src="/classpath/jquery.js" id="jquery"></script>
   <script type="text/javascript"
@@ -780,11 +792,12 @@ result with the custom CSS inside the `<head>` tag, something like this:
 </html>
 ----
 
+
 Discussion
 ^^^^^^^^^^
 
 If you find your tags not appearing the the `<head>` section, check that
-the HTML in your template and page is valid HTML5.
+the HTML in your template and page is valid HTML 5.
 
 You can also use `<lift:head>...</lift:head>` to wrap a number of
 expressions, and will see `<head_merge>...</head_merge>` used in code
@@ -794,14 +807,14 @@ Another variant you may see is `class="lift:head"`, as an alternative to `data-l
 
 The `head` snippet is a built-in snippet, but otherwise no different from any snippet you might write.  What the snippet does is emit a `<head>` block, containing the elements you want in the head.  These can be `<title>`, `<link>`, `<meta>`, `<style>`, `<script>` or `<base>` tags.  How does this `<head>` block produced by the `head` snippet end up inside the main `<head>` section of the page?  When Lift processes your template, it automatically merges all `<head>` tags into the main `<head>` section of the page.
 
-You might suspect you can therefore put a plain old `<head>` section anywhere on your template, but that would not necessarily be valid HTML5 mark up.
+You might suspect you can therefore put a plain old `<head>` section anywhere on your template. You can, but that would not necessarily be valid HTML 5 mark up.
 
 There's also `tail` which works in a similar way, except anything marked with this snippet is moved to be just before the close of the body tag.
 
 See Also
 ^^^^^^^^
 
-<<JavaScriptTail>> describes how to move JavaScript to the end of the page.
+<<JavaScriptTail>> describes how to move JavaScript to the end of the page with the `tail` snippet.
 
 The W3C HTML validator is a useful tool for tracking down HTML markup issues that may cause problems with content being moved into the head of your page. http://validator.w3.org/[http://validator.w3.org/].
 
@@ -833,7 +846,7 @@ LiftRules.uriNotFound.prepend(NamedPF("404handler"){
 })
 ----
 
-The file `src/main/webapp/404.html` will now be served for requests to
+The file _src/main/webapp/404.html_ will now be served for requests to
 unknown resources.
 
 Discussion
@@ -841,7 +854,7 @@ Discussion
 
 The `uriNotFound` Lift rule needs to return a `NotFound` in reply to a
 `Req` and `Box[Failure]`. This allows you to customise the
-response based on the type of failure or the request that was made.
+response based on the request and the type of failure.
 
 There are three types of `NotFound`:
 
@@ -852,7 +865,7 @@ facilities from a `ParsePath`.
 response.
 
 In the example we're matching any not found situation, regardless of the request and the failure, and evaluating
-this as a resource identified by `ParsePath`.  The path we've used is `/404.html`.
+this as a resource identified by `ParsePath`.  The path we've used is _/404.html_.
 
 In case you're wondering, the last two `true` and `false` arguments to `ParsePath`
 indicates the path we've given is absolute, and doesn't end in a
@@ -860,7 +873,7 @@ slash.  `ParsePath` is a representation for a URI path, and exposing
 if the path is absolute or ends in a slash are useful flags for matching on, but
 in this case, they're not relevant.
 
-Be aware that 404 pages, when rendered this way, won't have a location in the site map. That's because we've not included the `404.html` file in the site map, and we don't have to because we're rendering via `NotFoundAsTemplate` rather than sending a redirect to _/404.html_. However, this means that if you display an error page using a template that contains `Menu.builder` or similar (as `templates-hidden/default.html` does), you'll see "No Navigation Defined".  In that case, you'll probably want to use a different template on your 404 page.
+Be aware that 404 pages, when rendered this way, won't have a location in the site map. That's because we've not included the _404.html_ file in the site map, and we don't have to because we're rendering via `NotFoundAsTemplate` rather than sending a redirect to _/404.html_. However, this means that if you display an error page using a template that contains `Menu.builder` or similar (as `templates-hidden/default.html` does), you'll see "No Navigation Defined".  In that case, you'll probably want to use a different template on your 404 page.
 
 As an alternative, you could include the 404 page in your site map but make it hidden when the site map is displayed via the `Menu.builder`:
 
@@ -894,7 +907,7 @@ Solution
 Use `LiftRules.responseTransformers` to match against the response and
 supply an alternative.
 
-For example, suppose we want to provide a custom page for 403
+As an example, suppose we want to provide a custom page for 403
 ("Forbidden") statuses created in our Lift application.  Further suppose that
 this page might contain snippets so will need to pass through the Lift
 rendering flow.
@@ -919,7 +932,7 @@ LiftRules.responseTransformers.append {
 ----
 
 The file _src/main/webapp/403.html_ will now be served for requests that
-generate 403 status codes. Other non-403 responses are left untouched.
+generate 403 status codes. Other, non-403, responses are left untouched.
 
 Discussion
 ^^^^^^^^^^
@@ -931,8 +944,8 @@ example we are matching on a status code, but we could match on anything
 exposed by `LiftResponse`.
 
 
-In the recipe we processes a template to give a response, but you may find
-situations where other kinds of response make sense, such as a `InMemoryResponse`.
+In the recipe we respond with a template, but you may find
+situations where other kinds of response make sense, such as an `InMemoryResponse`.
 
 You could even simplify the example to just this:
 
@@ -944,7 +957,10 @@ LiftRules.responseTransformers.append {
 }
 ----
 
-That will work just fine, with the only downside that the HTTP status code sent back to the web browser won't be a 403 code.
+[NOTE]
+In Lift 3 `responseTransformers` will be modified to be a partial function, meaning you'll be able to leave off the final `case r => r` part of this example.
+
+That redirect will work just fine, with the only downside that the HTTP status code sent back to the web browser won't be a 403 code.
 
 A more general approach, if you're customising a number of pages, would be to define the status codes you want to
 customise, create a page for each, and then only match on those pages:
@@ -975,7 +991,7 @@ object Customised {
 }
 ----
 
-The convention in `Customised` is that we have a HTML file in `src/main/webapp` which matches
+The convention in `Customised` is that we have a HTML file in _src/main/webapp_ which matches
 the status code we want to show, but of course you can change that by using a different
 pattern in the argument to `Templates`.
 
@@ -996,8 +1012,7 @@ val entries = List(
 If you request _/secret_, a 403 response will be triggered, which will match the response transformer showing you
 the contents of the _403.html_ template.
 
-[NOTE]
-In Lift 3 `responseTransformers` will be modified to be a partial function, meaning you'll be able to leave off the final `case r => r` part of this example.
+
 
 
 See Also
@@ -1034,14 +1049,14 @@ You might pair this with the following in your template...
 
 [source,html]
 ---------------------------------------------------------
-<div data-lift="Msg?id=checkPrivacyPolicy"></div>
+<span data-lift="Msg?id=checkPrivacyPolicy"></span>
 ---------------------------------------------------------
 
 
 Discussion
 ^^^^^^^^^^
 
-You may be more familiar with the `S.error(String)` signature of the Lift notices than the versions
+You may be more familiar with the `S.error(String)` signature of Lift notices than the versions
 that take a `NodeSeq` as an argument, but the `String` versions just convert the `String` argument
 to a `scala.xml.Text` kind of `NodeSeq`.
 
@@ -1253,7 +1268,7 @@ class SingleRobotDetectorSpec extends Specification {
 }
 -------
 
-Running this from SBT with the "test" command would produce:
+Running this from SBT with the `test` command would produce:
 
 -------
 [info] SingleRobotDetectorSpec

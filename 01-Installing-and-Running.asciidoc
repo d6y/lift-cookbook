@@ -673,11 +673,11 @@ resolvers += "snapshots" at
   "http://oss.sonatype.org/content/repositories/snapshots"
 ----
 
-Second, change the `liftVersion` in your build to be the latest version. For this example, let's use the 2.5-SNAPSHOT version of Lift:
+Second, change the `liftVersion` in your build to be the latest version. For this example, let's use the 2.6-SNAPSHOT version of Lift:
 
 [source,scala]
 --------------------------------
-val liftVersion = "2.5-SNAPSHOT"
+val liftVersion = "2.6-SNAPSHOT"
 --------------------------------
 
 Restarting SBT (or issuing a `reload` command) will trigger a download

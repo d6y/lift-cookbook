@@ -283,7 +283,7 @@ runtime.
 See Also
 ^^^^^^^^
 
-A discussion on the mailing list regarding the limited type support in `MongoMapField` and a possible way around it by overriding `asDBObject` can be found at: https://groups.google.com/d/msg/liftweb/XoseG-8mIPc/OLyIu6FrHIgJ[https://groups.google.com/d/msg/liftweb/XoseG-8mIPc/OLyIu6FrHIgJ].
+A discussion on the mailing list regarding the limited type support in `MongoMapField` and a possible way around it by overriding `asDBObject` can be found via: http://bit.ly/lift-mongomap[http://bit.ly/lift-mongomap].
 
 
 [[MongoEmbedding]]
@@ -672,7 +672,7 @@ The query language itself is expressive, and the best place to explore the varie
 [NOTE]
 Rogue is working towards a v2 release which introduces a number of new concepts. If you want to give it a try, take a look at the
 instructions and comments on the Rogue
-mailing list at: https://groups.google.com/d/topic/rogue-users/SdtFCU-w3ng/[https://groups.google.com/d/topic/rogue-users/SdtFCU-w3ng/].
+mailing list via: http://bit.ly/rogue2-announce[http://bit.ly/rogue2-announce].
 
 
 See Also

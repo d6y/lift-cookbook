@@ -289,9 +289,7 @@ See Also
 
 The Lift Wiki gives further details on the processing of stateless requests: http://www.assembla.com/wiki/show/liftweb/Stateless_Requests[http://www.assembla.com/wiki/show/liftweb/Stateless_Requests].
 
-This stateless request control was introduced in Lift 2.2.  The announcement on the mailing list gives more details: https://groups.google.com/d/msg/liftweb/2rVMCnWppSo/KoaUMHeQAEAJ[https://groups.google.com/d/msg/liftweb/2rVMCnWppSo/KoaUMHeQAEAJ].
-
-
+This stateless request control was introduced in Lift 2.2.  The announcement on the mailing list gives more details: http://bit.ly/lift-stateless[http://bit.ly/lift-stateless].
 
 
 [[CatchException]]

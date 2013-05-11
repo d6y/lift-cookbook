@@ -21,13 +21,13 @@ A short example:
 val x = 42
 ---------------------------------------------------------
 
-You might use this in a tempplate like this:
+You might use this in a template like this:
 
 [source,html]
 ---------------------------------------------------------
 <html>
   <body>
-    <h1>Uses two spaces, not tabs</h1> 
+    <h1>Uses two spaces, not tabs</h1>
    </body>
 </html>
 ---------------------------------------------------------
