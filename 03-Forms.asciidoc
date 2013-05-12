@@ -791,7 +791,7 @@ When the page loads, the jQuery UI `autocomplete` function is bound to the input
 Submitting New Values
 +++++++++++++++++++++
 
-One peculiarity of the `AutoComplete` widget is that if you type in a new value --- one not suggested --- and press submit, it is not sent to the server.  That is, you need to click on one of the suggestions to select it.  If that's not the behaviour you want, you can adjust it.
+One peculiarity of the `AutoComplete` widget is that if you type in a new value -- one not suggested -- and press submit, it is not sent to the server.  That is, you need to click on one of the suggestions to select it.  If that's not the behaviour you want, you can adjust it.
 
 Inside the `render` method we can modify the behaviour by adding JavaScript to the page:
 

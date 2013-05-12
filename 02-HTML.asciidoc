@@ -1288,9 +1288,9 @@ Although `MockWeb.testReq` is handling the creation of a `Req` for us, the envir
 
 Aside from HTTP headers, you can set cookies, content type, query parameters, the HTTP method, authentication type, and the body.  There are variations on the `body` assignment, which conveniently set the content type depending on the value you assign:
 
-* `JValue` will use content type of "application/json".
-* `NodeSeq` will use "text/xml" (or you can supply an alternative).
-* `String` uses "text/plain" (unless you supply an alternative).
+* `JValue` will use content type of _application/json_.
+* `NodeSeq` will use _text/xml_ (or you can supply an alternative).
+* `String` uses _text/plain_ (unless you supply an alternative).
 * `Array[Byte]` does not set the content type.
 
 Data Table
