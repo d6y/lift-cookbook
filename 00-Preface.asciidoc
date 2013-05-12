@@ -11,7 +11,7 @@ The aim is to give a single, short answer to a specific question. When there's m
 
 * _Simply Lift_, online at http://simply.liftweb.net[http://simply.liftweb.net].
 
-* Torsten Uhlmann's short _Instant Lift Web Applications How-to_, PACKT Publishing, 2013.
+* Torsten Uhlmann's _Instant Lift Web Applications How-to_, PACKT Publishing, 2013.
 
 * Timothy Perrett's _Lift in Action_, Manning Publications, 2011.
 
@@ -21,19 +21,18 @@ The aim is to give a single, short answer to a specific question. When there's m
 
 I've mined the Lift mailing list for these recipes, but I'm not the only one.  Recipes have been contributed by:
 
-[glossary]
-*Jono Ferguson*::
 
-*Franz Bettag*:: Franz is an enthusiastic Scala Hacker for several years now. He joined the Lift team in January 2012 and actively tweets and blogs about his newest Scala adventures. Find him at https://twitter.com/fbettag[https://twitter.com/fbettag]
+* Jono Ferguson
 
-*Marek Żebrowski*::
+* Franz Bettag --- Franz is an enthusiastic Scala Hacker for several years now. He joined the Lift team in January 2012 and actively tweets and blogs about his newest Scala adventures. Find him at https://twitter.com/fbettag[https://twitter.com/fbettag]
 
-*Peter Robinett*:: Peter is a web and mobile developer and a Lift committer. He can be found on the web at http://www.bubblefoundry.com[http://www.bubblefoundry.com] and on Twitter at http://twitter.com/pr1001[http://twitter.com/pr1001].
+* Marek Żebrowski
 
-*Kevin Lau*:: Kevin is a founder of few web apps with a focus in AWS cloud, iOS and Lift.
+* Peter Robinett --- Peter is a web and mobile developer and a Lift committer. He can be found on the web at http://www.bubblefoundry.com[http://www.bubblefoundry.com] and on Twitter at http://twitter.com/pr1001[http://twitter.com/pr1001].
 
-*Tony Kay*::
+* Kevin Lau --- Kevin is a founder of few web apps with a focus in AWS cloud, iOS and Lift.
 
+* Tony Kay
 
 [[jointhem]]
 You should join them: <<AddRecipe>> tells you how.
@@ -131,7 +130,7 @@ Watch us on YouTube: link:$$http://www.youtube.com/oreillymedia$$[]
 
 === Acknowledgments
 
-These recipes existing because of the innumerable contributions on the Lift mailing list, where _Liftafarians_, as they are known, generously give their time to ask  questions, put together example projects, give answers, share alternatives and chip in with comments. Thank you.
+These recipes existing because of the many contributions on the Lift mailing list, where _Liftafarians_, as they are known, generously give their time to ask questions, put together example projects, give answers, share alternatives and chip in with comments. Thank you.
 
 I also want to thank those who have provided corrections to the recipes, on the mailing list, Github, and Twitter.  No matter what else it means, writing on the web and publishing on the web has meant I've received some prompt high-quality feedback.
 

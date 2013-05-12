@@ -75,7 +75,7 @@ Discussion
 You can have many `serve` blocks in your `RestHelper`, which helps give
 your REST service structure.
 
-In this example we've arbitrarily decided to return XML and to match on an XML request using `XmlGet` and `XmlDelete`.  The test for an XML request requires a content-type of _text/xml_ or _application/xml_, a request for a path that ends with `.xml`.   This is why the cURL request includes a header with with the `-H` flag.  If we hadn't included that, the request would not match any of our patterns, and the result would be a 404 response.
+In this example we've arbitrarily decided to return XML and to match on an XML request using `XmlGet` and `XmlDelete`.  The test for an XML request requires a content-type of _text/xml_ or _application/xml_, a request for a path that ends with _.xml_.   This is why the cURL request includes a header with with the `-H` flag.  If we hadn't included that, the request would not match any of our patterns, and the result would be a 404 response.
 
 
 
@@ -104,8 +104,8 @@ Solution
 Access `req.path.suffix` to recover the suffix.
 
 For example, when
-processing `/download/123.png` you want to be able reconstruct
-`123.png`:
+processing _/download/123.png_ you want to be able reconstruct
+_123.png_:
 
 [source,scala]
 ----
@@ -132,7 +132,7 @@ object Reunite extends RestHelper  {
 }
 ----
 
-We we are matching on `download` but rather than using the `file` value directly, we pass it through the `reunite` function first to attach the suffix back on (if any).
+We are matching on _download_ but rather than using the `file` value directly, we pass it through the `reunite` function first to attach the suffix back on (if any).
 
 Requesting this URL with a command like cURL will show you the filename
 as expected:
@@ -169,7 +169,7 @@ case "download" :: file :: Nil Get req if req.path.suffix == "png" =>
   Text("You requested PNG file called "+file)
 -------
 
-Or rather than simply attaching the suffix back on, you could take the opportunity to negotiate the format to send back to the client. For example, if the client supports the WebP image format, you might prefer to send that:
+Or rather than simply attaching the suffix back on, you could take the opportunity do some computation to decide what to send back.  For example, if the client supports the WebP image format, you might prefer to send that:
 
 [source, scala]
 -------
@@ -242,7 +242,7 @@ LiftRules.explicitlyParsedSuffixes = Helpers.knownSuffixes &~ (Set("com"))
 Discussion
 ^^^^^^^^^^
 
-By default Lift will strip off file suffixes from URLs to make it easy to match on suffixes. An example would be needing to match on all requests ending in ".xml" or ".pdf".  However, ".com" is registered as one of those suffixes, but is inconvenient if you have URLs that end with email addresses.
+By default Lift will strip off file suffixes from URLs to make it easy to match on suffixes. An example would be needing to match on all requests ending in ".xml" or ".pdf".  However, ".com" is also registered as one of those suffixes, but this is inconvenient if you have URLs that end with email addresses.
 
 Note that this doesn't impact email addresses in the middle of URLs.  For example, consider the following REST service:
 
@@ -312,8 +312,8 @@ Solution
 Ensure the suffix you're matching on is included in
 `LiftRules.explicitlyParsedSuffixes`.
 
-As an example, perhaps you want to match anything ending in `.csv` at
-your `/reports/` URL:
+As an example, perhaps you want to match anything ending in _.csv_ at
+your _/reports/_ URL:
 
 [source,scala]
 ----
@@ -321,7 +321,7 @@ case Req("reports" :: name :: Nil, "csv", GetRequest) =>
   Text("Here's your CSV report for "+name)
 ----
 
-You're expecting `/reports/foo.csv` to produce "Here's your CSV report
+You're expecting _/reports/foo.csv_ to produce "Here's your CSV report
 for foo", but you get a 404.
 
 To resolve this, include "csv" as a file suffix that Lift knows to split from URLs.  In _Boot.scala_ call:
@@ -336,7 +336,7 @@ The pattern will now match.
 Discussion
 ^^^^^^^^^^
 
-Without adding ".csv" to the `explicitlyParsedSuffixes`, the example URL
+Without adding "csv" to the `explicitlyParsedSuffixes`, the example URL
 would match with:
 
 [source,scala]
@@ -345,7 +345,7 @@ case Req("reports" :: name :: Nil, "", GetRequest) =>
   Text("Here's your CSV report for "+name)
 ----
 
-Here we're matching on no suffix (`""`). In this case `name` would be set to "foo.csv".  This is because Lift separates file suffixes from the end of URLs only for file suffixes that are registered with `explicitlyParsedSuffixes`.  Because `csv` is not one of the default registered suffixes, "foo.csv" is not split. That's why `csv` in the suffix position of `Req` pattern match won't match the request, but an empty string in that position will.
+Here we're matching on no suffix (`""`). In this case `name` would be set to "foo.csv".  This is because Lift separates file suffixes from the end of URLs only for file suffixes that are registered with `explicitlyParsedSuffixes`.  Because "csv" is not one of the default registered suffixes, "foo.csv" is not split. That's why "csv" in the suffix position of `Req` pattern match won't match the request, but an empty string in that position will.
 
 
 See Also
@@ -424,7 +424,7 @@ the size of an upload. You will recognise this situation by an error
 such as "java.lang.IllegalStateException: Form too large705784>200000".
 Check with documentation for the container for changing these limits.
 
-To restrict the type of image you accept, you could add a guard-condition on the match, but you may find you have more readable code by moving the logic into an `unapply` method on an object.  For example, to restrict an upload to just a JPEG you could say:
+To restrict the type of image you accept, you could add a _guard condition_ to the match, but you may find you have more readable code by moving the logic into an `unapply` method on an object.  For example, to restrict an upload to just a JPEG you could say:
 
 
 [source,scala]
@@ -442,7 +442,7 @@ object JPeg {
 }
 ----------------------
 
-We have defined an extractor called `JPeg` which returns `Some[Req]` if the content type of the upload is "image/jpg"; otherwise the result will be `None`.  This is used in the REST pattern match as `JPeg(req)`.  Note that the `unapply` needs to return `Option[Req]` as this is what's expected by the `Post` extractor.
+We have defined an extractor called `JPeg` which returns `Some[Req]` if the content type of the upload is _image/jpg_; otherwise the result will be `None`.  This is used in the REST pattern match as `JPeg(req)`.  Note that the `unapply` needs to return `Option[Req]` as this is what's expected by the `Post` extractor.
 
 
 See Also
@@ -507,8 +507,8 @@ Running this example produces:
 ----
 $ curl -H 'Content-type: text/json' http://127.0.0.1:8080/quotation
 {
-  "text":"A beach house isn't just real estate. It's a state of mind.",
-  "by":"Douglas Adams"
+ "text":"A beach house isn't just real estate. It's a state of mind.",
+ "by":"Douglas Adams"
 }
 ----
 
@@ -523,6 +523,33 @@ to return a `JValue`.
 
 The JSON DSL allows you to created nested structures, lists and
 everything else you expect of JSON.
+
+In addition to the DSL, you can also create JSON from a case class by using the `Extraction.decompose` method:
+
+[source,scala]
+----
+import net.liftweb.json.Extraction
+import net.liftweb.json.DefaultFormats
+
+case class Quote(by: String, text: String)
+val quote = Quote(
+  "A beach house isn't just real estate. It's a state of mind.",
+  "Douglas Adams")
+
+implicit val formats = DefaultFormats
+val json : JValue = Extraction decompose quote
+----
+
+This will also produce a `JValue`, which when printed will be:
+
+[source,scala]
+----
+{
+ "by":"A beach house isn't just real estate. It's a state of mind.",
+ "text":"Douglas Adams"
+}
+----
+
 
 See Also
 ^^^^^^^^
@@ -546,7 +573,7 @@ Solution
 
 Create the sitemap structure, and bind to it as you would for any template in Lift.
 
-Start with a `sitemap.html` in your `webapp` folder containing valid XML-Sitemap markup:
+Start with a _sitemap.html_ in your _webapp_ folder containing valid XML-Sitemap markup:
 
 [source, xml]
 ----
@@ -599,7 +626,7 @@ class SitemapContent {
 
 This example is using canned data for two pages.
 
-Apply the template and snippet in a REST service at `/sitemap`:
+Apply the template and snippet in a REST service at _/sitemap_:
 
 [source,scala]
 ----
@@ -654,7 +681,7 @@ Discussion
 
 You may be wondering why we've used REST here, when we could have used a regular HTML template and snippet. The reason is that we want XML rather than HTML output.  We use the same mechanism, but invoke it and wrap it in an `XmlResponse`.
 
-The `S.render` method takes a `NodeSeq` and a `HTTPRequst`. The first we supply by running the `sitemap.html` snippet; the second is simply the current request.  `XmlResponse` requires a `Node` rather than a `NodeSeq`, which is why we call `head` -- as there's only one node in the response, this does what we need.
+The `S.render` method takes a `NodeSeq` and a `HTTPRequst`. The first we supply by running the _sitemap.html_ snippet; the second is simply the current request.  `XmlResponse` requires a `Node` rather than a `NodeSeq`, which is why we call `head` -- as there's only one node in the response, this does what we need.
 
 Note that Google Sitemaps need dates to be in ISO 8601 format. The built-in `java.text.SimpleDateFormat` does not support this format prior to Java 7. If you are using Java 6 you need to use `org.joda.time.DateTime` as we are in this example.
 
@@ -679,7 +706,7 @@ You want to make a HTTP POST from a native iOS device to a Lift REST service.
 Solution
 ^^^^^^^^
 
-Use `NSURLConnection` ensuring you set the content-type to "application/json".
+Use `NSURLConnection` ensuring you set the content-type to _application/json_.
 
 For example, suppose we want to call this service:
 

@@ -2,7 +2,7 @@
 Request Pipeline
 ----------------
 
-When a request reaches Lift there are a number of points where you can jump in an control what Lift does, or send back a different kind of response, or control access.  This chapter looks at the pipeline through examples of different kinds of `LiftResponse` and configurations.
+When a request reaches Lift there are a number of points where you can jump in an control what Lift does,  send back a different kind of response, or control access.  This chapter looks at the pipeline through examples of different kinds of `LiftResponse` and configurations.
 
 You can get a great overview of the pipeline, including diagrams, from the Lift pipeline Wiki page at
 http://www.assembla.com/spaces/liftweb/wiki/HTTP_Pipeline[http://www.assembla.com/spaces/liftweb/wiki/HTTP_Pipeline].
@@ -51,7 +51,7 @@ LiftRules.onBeginServicing.append {
 
 This pattern will match any request starting _/paypal_, and we're ignoring the suffix on the request if any, and the type of request (e.g., GET, POST or so on).
 
-There's also `LiftRules.early` which is called before `onBeginServicing`.  It expects a `HTTPRequest => Unit` function, so is a little lower-level than the `Req` used in `onBeginServicing`.  However, it will be called by all requests that pass through Lift. For example, you could mark a request as something that the container should handle by itself:
+There's also `LiftRules.early` which is called before `onBeginServicing`.  It expects a `HTTPRequest => Unit` function, so is a little lower-level than the `Req` used in `onBeginServicing`.  However, it will be called by all requests that pass through Lift. To see the difference, you could mark a request as something that the container should handle by itself:
 
 [source,scala]
 -----------------------------------------------------
@@ -144,8 +144,6 @@ servicing the request, after servicing, when the session is about to
 shutdown, at shutdown... the pipeline diagrams mentioned at the start of this chapter
 are a useful guide to these stages.
 
-Note that the Lift session is not the same as the HTTP Session. Lift bridges from the HTTP session to it's own session management.  This is described in some detail in _Exploring Lift_ (see _See Also_).
-
 The full list of session hooks is:
 
 * `onSetupSession` -- this will be the first hook called when a session is created.
@@ -165,6 +163,7 @@ LiftRules.sessionInactivityTimeout.default.set(Full(1000L * 30))
 
 There are two other hooks in `LiftSession`: `onSessionActivate` and `onSessionPassivate`. These may be of use if you are working with a servlet container in distributed mode, and want to be notified when the servlet HTTP session is about to be serialized (passivated) and de-serialized (activated) between container instances. These hooks are rarely used.
 
+Note that the Lift session is not the same as the HTTP Session. Lift bridges from the HTTP session to its own session management.  This is described in some detail in _Exploring Lift_.
 
 See Also
 ^^^^^^^^
@@ -347,7 +346,7 @@ LiftRules.exceptionHandler.prepend {
 --------------------------------------------------
 
 Here we are sending back a response with a 500 status code, but the content is the
-`Node` that results from running `src/main/webapp/template-hidden/500.html`.  Create that
+`Node` that results from running _src/main/webapp/template-hidden/500.html_.  Create that
 file with the message you want to show to users:
 
 [source,html]
@@ -502,8 +501,7 @@ case class OutputStreamResponse(
   code: Int)
 -----------------------------------
 
-Any headers you set (such as `Content-type`), or status code, may
-already have been set by the time your output function is called. Note that
+Note that
 setting `size` to `-1` causes the `Content-length` header to be skipped.
 
 There are two related types of response: `InMemoryResponse` and
@@ -524,7 +522,7 @@ case class InMemoryResponse(
   code: Int)
 -----------------------------------
 
-As an example, we can modify the recipe and force our `infinite` sequence of numbers to produce the first few numbers as a `Array[Byte]` in memory:
+As an example, we can modify the recipe and force our `infinite` sequence of numbers to produce the first few numbers as an `Array[Byte]` in memory:
 
 [source,scala]
 -----------------------------------
@@ -663,7 +661,7 @@ private def fileResponse(fileId: String): Box[LiftResponse] = for {
     200)
 ---------------------------------------------------------------------
 
-If no permission is given, the user is redirected to `/sorry.html`.
+If no permission is given, the user is redirected to _/sorry.html_.
 
 All of this is wired into Lift in _Boot.scala_ with:
 
@@ -755,7 +753,7 @@ Discussion
 
 The `If` test ensures the `() => Boolean` function you supply as a first
 argument returns `true` before the page it applies to is shown. In this example
-we'll get true if the request contains a header called "ALLOWED", and the optional
+we'll get `true` if the request contains a header called "ALLOWED", and the optional
 value of that header is `Full("YES")`.  This is a `LocParam` (location parameter) which
 modifies the site map item. It can be appended to any menu items you want using the `>>` method.
 
@@ -763,16 +761,14 @@ Note that without the header, the test will be false. This will mean with link t
 menu generated by `Menu.builder`.
 
 The second argument to the `If()` is what Lift does if the test isn't true when the user tries to access the page.  It's
-a `() => LiftResponse` function.  This means return whatever you
+a `() => LiftResponse` function.  This means you can return whatever you
 like, including redirects to other pages.  In the example we are making use of a convenient implicit conversation
-from a `String` ("Access not allowed") to a redirection that will take
+from a `String` ("Access not allowed") to a notice with a redirection that will take
 the user to the home page.
 
 If you visit the page without a header, you'll
 see a notice saying "Access not allowed".  This will be the home page of the site, but
-that's just the default.
-
-You can request that Lift show a different page by setting `LiftRules.siteMapFailRedirectLocation` in _Boot.scala_:
+that's just the default. You can request that Lift show a different page by setting `LiftRules.siteMapFailRedirectLocation` in _Boot.scala_:
 
 [source,scala]
 ----
@@ -844,7 +840,7 @@ you'll need to include this dependency in your SBT build:
 
 [source,scala]
 -------------------------------------------------------------
-"javax.servlet" % "servlet-api" % "2.5" % "provided->default"
+"javax.servlet" % "servlet-api" % "2.5" % "provided"
 -------------------------------------------------------------
 
 
@@ -864,7 +860,7 @@ You want to ensure clients are using HTTPs.
 Solution
 ^^^^^^^^
 
-Add an `earlyResponse` function in _Boot.scala_ redirecting http requests to https
+Add an `earlyResponse` function in _Boot.scala_ redirecting HTTP requests to HTTPS
 equivalents. For example:
 
 [source,scala]
@@ -882,7 +878,7 @@ LiftRules.earlyResponse.append { (req: Req) =>
 Discussion
 ^^^^^^^^^^
 
-The `earlyResponse` call is called early in the Lift pipeline. It is
+The `earlyResponse` call is called early on in the Lift pipeline. It is
 used to execute code before a request is handled and, if required, exit the
 pipeline and return a response. The function signature expected is
 `Req => Box[LiftResponse]`.
@@ -892,7 +888,7 @@ formulating a new URL that starts "https" and appends to it the rest of the
 original URL and any query parameters. With this created, we return a redirections
 to the new URL, along with any cookies that were set.
 
-By evaluating to `Empty` for other requests (i.e., https requets), Lift will continue passing the request
+By evaluating to `Empty` for other requests (i.e., HTTPS requests), Lift will continue passing the request
 through the pipeline as usual.
 
 The ideal method to ensure requests are served using the correct scheme

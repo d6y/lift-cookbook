@@ -14,6 +14,8 @@ You can also install and run a _container_ such as Tomcat or Jetty on your own s
 
 * Tanuj Khare (2012) _Apache Tomcat 7 Essentials_, Packt Publishing.
 
+The Lift wiki includes a page on Tomcat configuration options relevant to Lift: https://www.assembla.com/spaces/liftweb/wiki/Tomcat[https://www.assembla.com/spaces/liftweb/wiki/Tomcat].
+
 
 [[CloudBees]]
 Deploying to CloudBees
@@ -110,7 +112,7 @@ RDBMS Configuration
 +++++++++++++++++++
 
 If you are using a SQL database in your application, you'll want to
-configure `src/main/webapp/WEB-INF/cloudbees-web.xml`. For
+configure _src/main/webapp/WEB-INF/cloudbees-web.xml_. For
 example:
 
 [source, xml]
@@ -157,7 +159,7 @@ if (!DB.jndiJdbcConnAvailable_?) {
 }
 ------------------------------------------------------------
 
-Because the JDNI setting is only defined in `cloudbees-web.xml` it will
+Because the JDNI setting is only defined in _cloudbees-web.xml_ it will
 only be available in a CloudBees environment. This means you can develop
 against a different database locally, and use your CloudBees database
 when deploying.
@@ -167,7 +169,7 @@ Host IP and Port Number
 
 Generally you don't need to know about your deployed instance's public host name and port number. Requests to your application URL are routed to the specific instance by CloudBees. However there are situations, especially when you have multiple instances, where you do need to find this out. For example, if you want to receive messages from Amazon's Simple Notification Service (SNS), then each instance will need to give a direct URL to SNS when the application boots.
 
-To get the public hostname, you need to make a HTTP request to `http://instance-data/latest/meta-data/public-hostname`, as documented at https://developer.cloudbees.com/bin/view/Main/Finding+out+app+port+and+hostname[https://developer.cloudbees.com/bin/view/Main/Finding+out+app+port+and+hostname].  For example:
+To get the public hostname, you need to make a HTTP request to _http://instance-data/latest/meta-data/public-hostname_, as documented at https://developer.cloudbees.com/bin/view/Main/Finding+out+app+port+and+hostname[https://developer.cloudbees.com/bin/view/Main/Finding+out+app+port+and+hostname].  For example:
 
 [source, scala]
 ------------------------------------------------------------
@@ -186,7 +188,7 @@ This will return a `Full` hostname on the CloudBees environment, but when runnin
 Failure(instance-data,Full(java.net.UnknownHostException: instance-data),Empty)
 ------------------------------------------------------------
 
-The port number can be found from the name of a file in the `.genapps/ports` folder of your application deployment:
+The port number can be found from the name of a file in the _.genapps/ports_ folder of your application deployment:
 
 [source, scala]
 ------------------------------------------------------------
@@ -199,7 +201,7 @@ val beesPort : Option[Int] = {
 }
 ------------------------------------------------------------
 
-The `java.io.File#list` method returns a list of filenames in a directory, but will return null if the directory doesn't exist or if there are any IO errors.  For this reason, we wrap it in `Option` to convert null values to `None`.
+The `java.io.File#list` method returns a list of filenames in a directory, but will return `null` if the directory doesn't exist or if there are any IO errors.  For this reason, we wrap it in `Option` to convert `null` values to `None`.
 
 Running locally this will return a `None`, but on CloudBees you'll see a `Full[Int]` port number.
 
@@ -214,7 +216,7 @@ val hostAndPort : String =
   ":" + (beesPort getOrElse 8080).toString
 ------------------------------------------------------------
 
-Running locally `hostAndPort` might be `192.168.1.60:8080` and running on CloudBees it would be something like `ec2-204-236-222-252.compute-1.amazonaws.com:8520`.
+Running locally `hostAndPort` might be "192.168.1.60:8080" and running on CloudBees it would be something like "ec2-204-236-222-252.compute-1.amazonaws.com:8520".
 
 Java Version
 ++++++++++++
@@ -229,11 +231,11 @@ $ bees config:set -a myaccount/myapp -Rjava_version=1.8
 
 Excluding the application identifier `-a myaccount/myapp` from the command will set the JVM as the default for all applications in the account. The  `bees config:set` command will update the configuration, but not take effect until the application(s) have been updated or restarted.
 
-The JVM can also be changed when an application is deployed or updated via following commands:
+The JVM can also be changed when an application is deployed or updated via the following commands:
 
 [source, bash]
 ------------------------------------------------------------
-$ bees app:deploy -a myaccount/myapp sample.war  -Rjava_version=1.6
+$ bees app:deploy -a myaccount/myapp sample.war -Rjava_version=1.6
 $ bees app:update -a myaccount/myapp -Rjava_version=1.7
 ------------------------------------------------------------
 
@@ -267,7 +269,7 @@ The JVM and container commands can be run as a single `bees app:deploy` as follo
 $ bees app:deploy -t tomcat -a myaccount/myapp sample.war -Rjava_version=1.6
 ----------------------------------------------------------------
 
-This would deploy `sample.war` to the "myapp" application on "myaccount" with Tomcat 6.0.32 and JDK 6.
+This would deploy _sample.war_ to the "myapp" application on "myaccount" with Tomcat 6.0.32 and JDK 6.
 
 To determine which container an application is deployed to, use the command `bees app:info`:
 
@@ -308,12 +310,10 @@ See Also
 
 The CloudBees SDK provides command line tools for configuring and controlling applications. It can be found at https://wiki.cloudbees.com/bin/view/RUN/BeesSDK[https://wiki.cloudbees.com/bin/view/RUN/BeesSDK].
 
-The CloudBees developer portal (https://developer.cloudbees.com[https://developer.cloudbees.com])contains a "Resources" section which provides details of the CloudBees services.
+The CloudBees developer portal (https://developer.cloudbees.com[https://developer.cloudbees.com]) contains a "Resources" section which provides details of the CloudBees services.
 
 The JVM PermGen settings for CloudBees are described at https://wiki.cloudbees.com/bin/view/RUN/JVM+PermGen+Space[https://wiki.cloudbees.com/bin/view/RUN/JVM+PermGen+Space], and settings for which JVM is used can be found at https://developer.cloudbees.com/bin/view/RUN/JVMVersion[https://developer.cloudbees.com/bin/view/RUN/JVMVersion]. For information about the containers, see: https://developer.cloudbees.com/bin/view/RUN/ClickStack[https://developer.cloudbees.com/bin/view/RUN/ClickStack].
 
-A plugin is available to automate deployments from SBT. The plugin and the excellent
-instructions for installing and configuring it can be found at https://github.com/timperrett/sbt-cloudbees-plugin[https://github.com/timperrett/sbt-cloudbees-plugin].
 
 //////////////////////////////////////////
 
@@ -342,7 +342,7 @@ Solution
 
 Create a new Tomcat 7 _environment_, use SBT to package your Lift application as a WAR file, and then deploy the application to your environment.
 
-To create a new environment, visit the AWS console, navigate to Elastic Beanstalk and select "Apache Tomcat 7" as your environment. This will create and launch a default Beanstalk application. This will take a few minutes, but eventually report "Successfully running version Sample Application". You'll be shown the URL of the application (something like `http://default-environment-nsdmixm7ja.elasticbeanstalk.com`) and visiting the URL you're given will show the running default Amazon application.
+To create a new environment, visit the AWS console, navigate to Elastic Beanstalk and select "Apache Tomcat 7" as your environment. This will create and launch a default Beanstalk application. This will take a few minutes, but eventually report "Successfully running version Sample Application". You'll be shown the URL of the application (something like _http://default-environment-nsdmixm7ja.elasticbeanstalk.com_) and visiting the URL you're given will show the running default Amazon application.
 
 Prepare your WAR file by running:
 
@@ -351,7 +351,7 @@ Prepare your WAR file by running:
 $ sbt package
 -------------------------
 
-This will write a WAR file into the `target` folder.  To deploy this WAR file from the AWS Beanstalk web console (see <<ConsoleImage>>), select the "Versions" tab under the "Elastic Beanstalk Application Details" and click the "Upload new version" button. You'll be given a dialog where you give a version label and use the "Choose file" button to select the WAR file you just built.  You can either upload and deploy in one step, or upload first and then select the version in the console and hit the "Deploy" button.
+This will write a WAR file into the _target_ folder.  To deploy this WAR file from the AWS Beanstalk web console (see <<ConsoleImage>>), select the "Versions" tab under the "Elastic Beanstalk Application Details" and click the "Upload new version" button. You'll be given a dialog where you give a version label and use the "Choose file" button to select the WAR file you just built.  You can either upload and deploy in one step, or upload first and then select the version in the console and hit the "Deploy" button.
 
 The Beanstalk console will show "Environment updating..." and after some minutes it'll report "Successfully running".  Your Lift application is now deployed and running on Beanstalk.
 
@@ -368,9 +368,9 @@ Elastic Beanstalk provides a pre-built stack of software and infrastructure, in 
 
 As with many cloud providers keep in mind that you want to avoid local file storage. The reason for this is to allow instances to be terminated or restarted without data loss. With your Beanstalk application you do have a file system and you can write to it, but it is lost if the image is restarted. You can get persistent local file storage, for example using Amazon Elastic Block Storage, but you're fighting against the nature of the platform.
 
-Log files are written to the local file system. To access them, from the AWS console, navigate to your environment, into the "Logs" tab and hit the "Snapshot" button. This will take a copy of the logs and store them in an S3 bucket, and give you a link to the file contents.  This is a single file showing the content of variety of log files, and `catalina.out` will be the one showing any output from your Lift application.  If you want to try to keep these log files around, you can configure the environment to rotate the logs to S3 every hour from the "Container" tab under "Edit Configuration".
+Log files are written to the local file system. To access them, from the AWS console, navigate to your environment, into the "Logs" tab and hit the "Snapshot" button. This will take a copy of the logs and store them in an S3 bucket, and give you a link to the file contents.  This is a single file showing the content of variety of log files, and _catalina.out_ will be the one showing any output from your Lift application.  If you want to try to keep these log files around, you can configure the environment to rotate the logs to S3 every hour from the "Container" tab under "Edit Configuration".
 
-The Lift application WAR files are stored in the same S3 bucket that the logs are stored in. From the AWS console, you'll find it under the S3 page listed with a name like `elasticbeanstalk-us-east-1-5989673916964`. You'll note that the AWS uploads makes your WAR filename unique by adding a prefix to each filename. If you need to be able to tell the difference between these files in S3, one good approach is to is to bump the `version` value in your _build.sbt_ file.  This version number is included in the WAR filename.
+The Lift application WAR files are stored in the same S3 bucket that the logs are stored in. From the AWS console, you'll find it under the S3 page listed with a name like "elasticbeanstalk-us-east-1-5989673916964". You'll note that the AWS uploads makes your WAR filename unique by adding a prefix to each filename. If you need to be able to tell the difference between these files in S3, one good approach is to is to bump the `version` value in your _build.sbt_ file.  This version number is included in the WAR filename.
 
 Multiple Instances
 ++++++++++++++++++
@@ -383,7 +383,7 @@ If you're making use of Lift's state features, you'll need to enable sticky sess
 Working with a Database
 ++++++++++++++++++++++++
 
-There's nothing unusual you have to do to use Lift and a database from Beanstalk. However, Beanstalk does try to make it easy for you to work with Amazon's Relational Database Service (RDS).  Either when creating your Beanstalk environment, or from the configuration options later, you can add an RDS instance, which cab be an Oracle, SQL-Server or MySQL database.
+There's nothing unusual you have to do to use Lift and a database from Beanstalk. However, Beanstalk does try to make it easy for you to work with Amazon's Relational Database Service (RDS).  Either when creating your Beanstalk environment, or from the configuration options later, you can add an RDS instance, which can be an Oracle, SQL-Server or MySQL database.
 
 The MySQL option will create a MySQL 5.5 InnoDB database. The database will be accessible from Beanstalk, but not from elsewhere on the Internet. To change that, modify the security groups for the RDS instance from the AWS web console.  For example, you might permit access from your IP address.
 
@@ -485,7 +485,7 @@ $ heroku plugins:install https://github.com/heroku/heroku-deploy
 Installing heroku-deploy... done
 ---------------------------
 
-With that one-time set up complete, you can create an application on Heroku. Here we've not specified a name so we given a random name of `glacial-waters-6292` which we will use throughout this recipe:
+With that one-time set up complete, you can create an application on Heroku. Here we've not specified a name so we given a random name of "glacial-waters-6292" which we will use throughout this recipe:
 
 ---------------------------
 $ heroku create
@@ -550,7 +550,7 @@ $ heroku logs -t --app glacial-waters-6292
 
 Anyone visiting your Lift application will cause Heroku to unidle your application.
 
-Note, though, that the application was stopped with a `SIGTERM`.  This is a Unix signal sent to a process, the JVM in this case, to request it to stop.  Unfortunately the Tomcat application on Heroku does not use this signal to request Lift to shutdown. This may be of little consequence to you, but if you do have external resources you want to release to other actions to take at shutdown, you need to register a shutdown hook with the JVM.
+Note, though, that the application was stopped with a _SIGTERM_.  This is a Unix signal sent to a process, the JVM in this case, to request it to stop.  Unfortunately the Tomcat application on Heroku does not use this signal to request Lift to shutdown. This may be of little consequence to you, but if you do have external resources you want to release to other actions to take at shutdown, you need to register a shutdown hook with the JVM.
 
 For example, you might add this to _Boot.scala_ if you're running on Heroku:
 
@@ -564,7 +564,7 @@ Runtime.getRuntime().addShutdownHook(new Thread {
 })
 ---------------------------
 
-Do not count on being able to do much during shutdown.  Heroku allows around 10 seconds before killing the JVM after issuing the `SIGTERM`.
+Do not count on being able to do much during shutdown.  Heroku allows around 10 seconds before killing the JVM after issuing the _SIGTERM_.
 
 Possibly a more general approach is to perform clean up using Lift's unload hooks (see <<ShutdownHooks>>) and then arrange the hooks to be called when Heroku sends the signal to terminate:
 
@@ -597,9 +597,9 @@ $ heroku ps --app glacial-waters-6292
 web.1: up 2013/01/01 22:37:35 (~ 31s ago)
 ---------------------------
 
-Here we see a Java process executing a JAR file called `webapp-runner-7.0.29.3.jar` which is passed our WAR file as an argument. This is not identical to the Tomcat `catalina.sh` script you may be more familiar with, but instead is this launcher process: https://github.com/jsimone/webapp-runner[https://github.com/jsimone/webapp-runner]. As it does not register a handler to deal with `SIGTERM`, so we will have to if we need to release any resources during shutdown.
+Here we see a Java process executing a JAR file called _webapp-runner-7.0.29.3.jar_ which is passed our WAR file as an argument. This is not identical to the Tomcat _catalina.sh_ script you may be more familiar with, but instead is this launcher process: https://github.com/jsimone/webapp-runner[https://github.com/jsimone/webapp-runner]. As it does not register a handler to deal with _SIGTERM_, so we will have to if we need to release any resources during shutdown.
 
-All of this means that if you want to launch a Lift application in a different way, you can. You'd need to wrap an appropriate container (Jetty or Tomcat for example), and provide a `main` method for Heroku to call. This is sometimes called "containerless deployment".
+All of this means that if you want to launch a Lift application in a different way, you can. You'd need to wrap an appropriate container (Jetty or Tomcat for example), and provide a `main` method for Heroku to call. This is sometimes called _containerless deployment_.
 
 If you are not a Heruoku Enterprise Java customer, and you're uncomfortable with the unsupported nature of the `deploy:war` plugin, you now know what you need to do to run in a supported way: provide a `main` method that launches you application and listen for connections. The _See Also_ section gives pointers for how to do this.
 
@@ -658,13 +658,10 @@ def initHerokuDb(dbInfo: String) {
   SquerylRecord.initWithSquerylSession(
     Session.create(connection, new PostgreSqlAdapter))
 
-  S.addAround(new LoanWrapper {
-    override def apply[T](f: => T): T = inTransaction { f }
-  })
 }
 ---------------------------
 
-Here we are testing for the presence of the `DATABASE_URL` environment variable, which would indicate that we are in the Heroku environment. The example code then goes on to initialize Squeryl Record in Lift (described in <<Squeryl>>) using the Heroku database settings.
+Here we are testing for the presence of the `DATABASE_URL` environment variable, which would indicate that we are in the Heroku environment. We can then extract out the connection information to use in `Session.create`.  We would additionally need to complete the usual `addAround` configuration described in <<ConfiguringSqueryl>>.
 
 For it to run _build.sbt_ needs the appropriate dependencies for Record and PostgresSQL:
 
@@ -741,7 +738,7 @@ Use the _publish/subscribe_ (pubsub) model to connect each server to a _topic_ a
 
 There are a variety of technologies you can use to accomplish this, such as databases, message systems, actor systems. For this recipe we will use the RabitMQ message service, but there are examples using CouchDB and Amazon's Simple Notification Service in the _See Also_ section.
 
-Regardless of the technology, the principle is that illustrated in <<DistributedCometDiagram>>. A comet event originating on one Lift application, is sent to a service for redistribution. It is the responsibility of this service (labeled as "topic" in the figure) is to ensure all the participating Lift applications receive the event so it can be processed as normal by Lift.
+Regardless of the technology, the principle is that illustrated in <<DistributedCometDiagram>>. A comet event originating on one Lift application, is sent to a service for redistribution. It is the responsibility of this service (labeled as "topic" in the figure) to ensure all the participating Lift applications receive the event.
 
 [[DistributedCometDiagram]]
 .Comet events originating on one server are distributed via a topic.
@@ -760,7 +757,7 @@ The first modification is to include the Lift module to talk to RabbitMQ. This i
 
 [source, scala]
 -----------------------------------------
-"net.liftmodules" %% "amqp_2.5" % "1.3-SNAPSHOT"
+"net.liftmodules" %% "amqp_2.5" % "1.3"
 -----------------------------------------
 
 AMQP stands for Advanced Message Queuing Protocol, a protocol that RabbitMQ talks. The AMQP module provides abstract actors to send and receive messages, and we will implement these actors as `RemoteSend` and `RemoteReceiver`:
@@ -852,7 +849,7 @@ $ sbt
 > container:start
 -----------------------------------------
 
-You can then visit one application at `http://127.0.0.1:8080` and another at `http://127.0.0.1:9090`.
+You can then visit one application at _http://127.0.0.1:8080_ and another at _http://127.0.0.1:9090_.
 
 In the example code, you can see that `AMQPSender[T]` and `AMQPDispatcher[T]` take care of most of the work for us, and we provide some configuration.  In the case of `RemoteSend` we're configuring the `AMQPSender` to work with `String` messages and to work with an _exchange_ called "lift.chat". In RabbitMQ the exchange is the entity we send messages to, and the exchange has the responsibility for passing on the message.  In this case the exchange is a _fanout_ (a simple kind of topic) where each subscriber receives a copy of any messages sent to the exchange.  This is clearly what we want to get our chat messages sent to all connected Lift instances of the chat application.
 
@@ -866,7 +863,7 @@ To see the behaviour of RabbitMQ, it's useful to install the management web cons
 $ ./sbin/rabbitmq-plugins enable rabbitmq_management
 -----------------------------------------
 
-Visit the administrative web interface at `http://127.0.0.1:15672/` and login.  The default username and password is "guest".
+Visit the administrative web interface at _http://127.0.0.1:15672/_ and login.  The default username and password is "guest".
 
 Having to have RabbitMQ (or other type of pubsub solution) running during development may be inconvenient. In that case, you can simply not initialize the service in _Boot.scala_:
 

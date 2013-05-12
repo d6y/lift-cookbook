@@ -3,13 +3,12 @@ MongoDB Persistence with Record
 -------------------------------
 
 This section gives recipes for making use of MongoDB in your Lift
-application. For recipes regarding Mongo itself, check out the MongoDB Cookbook at http://cookbook.mongodb.org/[http://cookbook.mongodb.org/].
+application. Many of the code examples in this chapter can be found in: https://github.com/LiftCookbook/cookbook_mongo[https://github.com/LiftCookbook/cookbook_mongo].
 
-Many of the code examples in this chapter can be found in: https://github.com/LiftCookbook/cookbook_mongo[https://github.com/LiftCookbook/cookbook_mongo].
 
 [[ConnectingToMongo]]
-Connecting to a Mongo Database
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Connecting to a MongoDB Database
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
@@ -19,13 +18,13 @@ You want to connect to a MongoDB.
 Solution
 ^^^^^^^^
 
-Add the Lift Mongo dependencies to your build and configure a connection using `net.liftweb.mongodb` and `com.mongodb`.
+Add the Lift MongoDB dependencies to your build and configure a connection using `net.liftweb.mongodb` and `com.mongodb`.
 
 In _build.sbt_ add the following to `libraryDependencies`:
 
 [source,scala]
 -----------------------------------------------------------------
-"net.liftweb" %% "lift-mongodb-record" % liftVersion,
+"net.liftweb" %% "lift-mongodb-record" % liftVersion
 -----------------------------------------------------------------
 
 In _Boot.scala_ add:
@@ -54,9 +53,9 @@ MongoDB.defineDbAuth(DefaultMongoIdentifier, new Mongo(server),
 --------------------------------------------------------------
 
 Some cloud services will give you a URL to connect to, such as
-"mongodb://alex.mongohq.com:10050/fglvBskrsdsdsDaGNs1". In this case, the host and
+_mongodb://alex.mongohq.com:10050/fglvBskrsdsdsDaGNs1_. In this case, the host and
 the port make up the first part, and the database name is the part after
-the `/`.
+the _/_.
 
 If you need to turn a URL like this into a connection, you can do so by
 using `java.net.URI` to parse the URL and make a connection:
@@ -86,11 +85,11 @@ MongoUrl.defineDb(DefaultMongoIdentifier,
   "mongodb://user:pass@127.0.0.1:27017/myDb")
 --------------------------------------------------------------
 
-The full URL scheme for MongoDB is more complicated, allowing for multiple hosts and connection parameters, but the above code handles optional user name and password fields and may be enough to get you up and running with your Mongo configuration.
+The full URL scheme for MongoDB is more complicated, allowing for multiple hosts and connection parameters, but the above code handles optional user name and password fields and may be enough to get you up and running with your MongoDB configuration.
 
-The `DefaultMongoIdentifier` is a value used to identify a particular connection.  Lift keeps a map of identifiers to connections, meaning you can connect to more than on database.  The common case is a single database, and that is usually assigned to `DefaultMongoIdentifier`.
+The `DefaultMongoIdentifier` is a value used to identify a particular connection.  Lift keeps a map of identifiers to connections, meaning you can connect to more than one database.  The common case is a single database, and that is usually assigned to `DefaultMongoIdentifier`.
 
-However, if you do need to access two Monogo databases, you can create a new identifier and assign it as part of your record.  For example:
+However, if you do need to access two MongoDB databases, you can create a new identifier and assign it as part of your record.  For example:
 
 [source,scala]
 --------------------------------------------------------------
@@ -112,25 +111,25 @@ The `lift-mongodb-record` dependency itself depends on another Lift module, `lif
 See Also
 ^^^^^^^^
 
-Connection configuration that includes replica sets and Mongo options, such as timeout settings, are described on the Lift wiki at:  https://www.assembla.com/wiki/show/liftweb/Mongo_Configuration[https://www.assembla.com/wiki/show/liftweb/Mongo_Configuration].
+Connection configuration that includes replica sets and MongoDB options, such as timeout settings, are described on the Lift wiki at:  https://www.assembla.com/wiki/show/liftweb/Mongo_Configuration[https://www.assembla.com/wiki/show/liftweb/Mongo_Configuration].
 
-The full specification for Mongo connection URLs is: http://docs.mongodb.org/manual/reference/connection-string/[http://docs.mongodb.org/manual/reference/connection-string/].
+The full specification for MongoDB connection URLs is: http://docs.mongodb.org/manual/reference/connection-string/[http://docs.mongodb.org/manual/reference/connection-string/].
 
 
 
 [[MongoHashMap]]
-Storing a HashMap in a Mongo Record
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Storing a HashMap in a MongoDB Record
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
 
-You want to store a hash map in Mongo.
+You want to store a hash map in MongoDB.
 
 Solution
 ^^^^^^^^
 
-Create a Mongo Record which contains a `MongoMapField`:
+Create a MongoDB Record which contains a `MongoMapField`:
 
 [source,scala]
 -------------------------------------------------------------------------------
@@ -192,7 +191,7 @@ snippet could include:
 </div>
 ------------------------------------------------------------------
 
-In Mongo the resulting data structure would be:
+In MongoDB the resulting data structure would be:
 
 ------------------------------------------------------
 $ mongo cookbook
@@ -215,7 +214,7 @@ system.indexes
 Discussion
 ^^^^^^^^^^
 
-If you do not set a value for the map, the default will be an empty map, represented in Mongo
+If you do not set a value for the map, the default will be an empty map, represented in MongoDB
 as:
 
 ----------------------------------------
@@ -231,7 +230,7 @@ object population extends MongoMapField[Country,Int](this) {
 }
 -------------------------------------------------------------------
 
-If you now write the document without a `population` set, the field will be omitted in Mongo:
+If you now write the document without a `population` set, the field will be omitted in MongoDB:
 
 -------------------------------------------------------------------
 > db.example.earth.find();
@@ -246,7 +245,7 @@ new `Map`:
 uk.population(uk.population.is + ("Westminster"->81766)).update
 -------------------------------------------------------------------
 
-Note that we are using `update` here, rather than `save`.  The `save` method is pretty smart and will either insert a new document into a Mongo collection or _replace_ an existing document based on the `_id`.  Update is different: it detects just the changed fields of the document and updates them. It will send this command to Mongo for the document:
+Note that we are using `update` here, rather than `save`.  The `save` method is pretty smart and will either insert a new document into a MongoDB collection or _replace_ an existing document based on the `_id`.  Update is different: it detects just the changed fields of the document and updates them. It will send this command to MongoDB for the document:
 
 -------------------------------------------------------------------
 { "$set" : { "population" : { "Brighton" : 134293 , "Liverpool" : 469017 ,
@@ -276,8 +275,8 @@ What a `MongoMapField` Can Contain
 You should be aware that `MongoMapField` supports only primitive types.
 
 The mapped field used in this recipe is typed `String => Int`, but of course
-Mongo will let you mix types such as putting a `String` or a `Boolean` as a population value.
-If you do modify the Mongo record in the database outside of Lift and mix types, you'll get a `java.lang.ClassCastException` at
+MongoDB will let you mix types such as putting a `String` or a `Boolean` as a population value.
+If you do modify the MongoDB record in the database outside of Lift and mix types, you'll get a `java.lang.ClassCastException` at
 runtime.
 
 See Also
@@ -286,14 +285,99 @@ See Also
 A discussion on the mailing list regarding the limited type support in `MongoMapField` and a possible way around it by overriding `asDBObject` can be found via: http://bit.ly/lift-mongomap[http://bit.ly/lift-mongomap].
 
 
-[[MongoEmbedding]]
-Embedding a Document Inside a Mongo Record
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[MongoEnum]]
+Storing an Enumeration in MongoDB
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
 
-You have a Mongo record, and you want to embed another set of values
+You want to store an enumeration in a MongoDB document.
+
+Solution
+^^^^^^^^
+
+Use `EnumNameField` to store the string value of the enumeration.  Here's an example using days of the week:
+
+[source, scala]
+-----------------------------------
+object DayOfWeek extends Enumeration {
+  type DayOfWeek = Value
+  val Mon, Tue, Wed, Thu, Fri, Sat, Sun = Value
+}
+-----------------------------------
+
+We can use this to model someone's birth day-of-week:
+
+[source, scala]
+-----------------------------------
+package code.model
+
+import net.liftweb.mongodb.record._
+import net.liftweb.mongodb.record.field._
+import net.liftweb.record.field.EnumNameField
+
+class Birthday private () extends MongoRecord[Birthday] with StringPk[Birthday] {
+  override def meta = Birthday
+  object dow extends EnumNameField(this, DayOfWeek)
+}
+
+object Birthday extends Birthday with MongoMetaRecord[Birthday]
+-----------------------------------
+
+When creating records `dow` field will expect a `DayOfWeek` value:
+
+[source, scala]
+-----------------------------------
+import DayOfWeek._
+
+Birthday.createRecord.id("Albert Einstein").dow(Fri).save
+Birthday.createRecord.id("Richard Feynman").dow(Sat).save
+Birthday.createRecord.id("Isaac Newton").dow(Sun).save
+-----------------------------------
+
+Discussion
+^^^^^^^^^^
+
+Take a look at what's stored in MongoDB:
+
+-----------------------------------
+> db.birthdays.find()
+{ "_id" : "Albert Einstein", "dow" : "Fri" }
+{ "_id" : "Richard Feynman", "dow" : "Sat" }
+{ "_id" : "Isaac Newton", "dow" : "Sun" }
+-----------------------------------
+
+The `dow` value is the `toString` of the enumeration, not the `id` value:
+
+[source, scala]
+-----------------------------------
+Fri.toString // java.lang.String = Fri
+Fri.id //  Int = 4
+-----------------------------------
+
+If you wanted to store the ID, use `EnumField` instead.
+
+Be aware that other tools, notably Rogue, expect the string value, not the integer ID, of an enumeration, so you may prefer to use `EnumNameField` for that reason.
+
+
+See Also
+^^^^^^^^
+
+<<QueryingWithRogue>> introduces _Rogue_.
+
+
+
+
+[[MongoEmbedding]]
+Embedding a Document Inside a MongoDB Record
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You have a MongoDB record, and you want to embed another set of values
 inside it as a single entity.
 
 Solution
@@ -342,7 +426,7 @@ val unionJack =
 Country.createRecord.id("uk").flag(unionJack).save(true)
 -----------------------------------------------------------------------------
 
-In Mongo, the resulting data structure would be:
+In MongoDB, the resulting data structure would be:
 
 -----------------------------------------
 > db.example.earth.findOne()
@@ -376,7 +460,7 @@ object image extends BsonRecordField(this, Image) {
 }
 ---------------------------------------------------
 
-With `optional_?` set in this way the image part of the Mongo document
+With `optional_?` set in this way the image part of the MongoDB document
 won't be saved if the value is not set. Within Scala you will then want
 to access the value with `valueBox` call:
 
@@ -388,7 +472,7 @@ val img : Box[Image] = uk.flag.valueBox
 In fact, regardless of the setting of `optional_?` you can access the
 value using `valueBox`.
 
-An alternative is optional values is to always provide a default value for the embedded
+An alternative to optional values is to always provide a default value for the embedded
 document:
 
 [source,scala]
@@ -407,13 +491,13 @@ The Lift Wiki describes BsonRecord in more detail at: https://www.assembla.com/s
 
 
 
-Linking Between Mongo Records
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Linking Between MongoDB Records
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
 
-You have a Mongo record and want to include a link to another record.
+You have a MongoDB record and want to include a link to another record.
 
 Solution
 ^^^^^^^^
@@ -445,7 +529,9 @@ object Country extends Country with MongoMetaRecord[Country] {
 }
 ------------------------------------------------------------------------------
 
-In a snippet we can make us of the link:
+To make this example easier to follow, our model mixes in `StringPk[Planet]` to use strings as the primary key on our documents, rather than the more usual MongoDB object IDs. Consequently, the link is established with a `StringRefField`.
+
+In a snippet we can make us of the `planet` reference by resolving it with `.obj`:
 
 [source,scala]
 -----------------------------------------------------------------------------
@@ -465,8 +551,8 @@ class HelloWorld {
 -----------------------------------------------------------------------------
 
 For the value `uk` we lookup an existing record, or create one if none
-is found. Note that `earth` is created as a separate Mongo record, and
-then referenced in the `planet` field with the id of the planet.
+is found. We create `earth` as a separate MongoDB record, and
+then reference it in the `planet` field with the ID of the planet.
 
 Retrieving the reference is via the `obj` method, which returns a
 `Box[Planet]` in this example.
@@ -474,9 +560,9 @@ Retrieving the reference is via the `obj` method, which returns a
 Discussion
 ^^^^^^^^^^
 
-Referenced records are fetched from Mongo when you call the `obj` method
+Referenced records are fetched from MongoDB when you call the `obj` method
 on a `MongoRefField`. You can see this by turning on logging in the
-Mongo driver. Do this by adding the following to the start of your
+MongoDB driver. Do this by adding the following to the start of your
 _Boot.scala_:
 
 [source,scala]
@@ -500,7 +586,7 @@ INFO: find: cookbook.example.planet { "_id" : "earth"}
 What you're seeing here is the initial look up for "uk", followed by the
 creation of the "earth" record and an update which is saving the "uk"
 record. Finally, there is a lookup of "earth" when `uk.obj` is called in
-the `fact` method.
+the `facts` method.
 
 The `obj` call will cache the `planet` reference. That means you could
 say...
@@ -514,7 +600,7 @@ say...
 
 ...and you'd still only see one query for the "earth" record despite
 calling `obj` multiple times. The flip side of that is if the "earth"
-record was updated elsewhere in Mongo after you called `obj` you would
+record was updated elsewhere in MongoDB after you called `obj` you would
 not see the change from a call to `uk.obj` unless you reloaded the `uk`
 record first.
 
@@ -563,7 +649,7 @@ Or you could replace the reference with another:
 uk.planet( Planet.createRecord.id("mars").save.id.is ).save
 -----------------------------------------------------------------------
 
-Again, note that the reference is via the id of the record (`save.id.is`), not the record itself.
+Again, note that the reference is via the ID of the record (`id.is`), not the record itself.
 
 
 To remove the reference:
@@ -573,16 +659,16 @@ To remove the reference:
 uk.planet(Empty).save
 -----------------------------------------------------------------------
 
-This removes the link, but the Mongo record pointed to by the link will remain in the database. If you remove
+This removes the link, but the MongoDB record pointed to by the link will remain in the database. If you remove
 the object being referenced, a later call to `obj` will return an
 `Empty` box.
 
 Types of Link
 +++++++++++++
 
-The example uses a `StringRefField` as the Mongo records themselves use `String` as the `_id`. Other reference types are:
+The example uses a `StringRefField` as the MongoDB records themselves use `String` as the `_id`. Other reference types are:
 
-* `ObjectIdRefField` -- possibly the most frequently used kind of reference, when you want to reference via the usual default `ObjectId` reference in Mongo.
+* `ObjectIdRefField` -- possibly the most frequently used kind of reference, when you want to reference via the usual default `ObjectId` in MongoDB.
 * `UUIDRefField` -- for records with an ID based on `java.util.UUID`.
 * `StringRefField` -- as used in this example, where you control the ID as a `String`.
 * `IntRefField` and `LongRefField` -- for when you're using a numeric value as an ID.
@@ -594,6 +680,11 @@ See Also
 
 
 
+
+
+
+
+
 [[QueryingWithRogue]]
 Using Rogue
 ~~~~~~~~~~~
@@ -601,7 +692,7 @@ Using Rogue
 Problem
 ^^^^^^^
 
-You want to use Foursquare's type-safe domain specific language (DSL), Rogue, for querying and updating Mongo records.
+You want to use Foursquare's type-safe domain specific language (DSL), Rogue, for querying and updating MongoDB records.
 
 Solution
 ^^^^^^^^
@@ -640,7 +731,8 @@ scala> Country.where(_.id eqs "uk").
 Discussion
 ^^^^^^^^^^
 
-Rogue is able to use information in your Lift Record to offer an elegant way to query and update records. It's type safe meaning, for example, if you try to use an `Int` where a `String` is expected in a query, Mongo would allow that and fail to find results at runtime, but Rogue enables Scala to reject the query at compile timeRogue
+Rogue is able to use information in your Lift Record to offer an elegant way to query and update records. It's type safe meaning, for example, if you try to use an `Int` where a `String` is expected in a query, MongoDB would allow that and fail to find results at runtime, but Rogue enables Scala to reject the query at compile time:
+
 [source, scala]
 ---------------------------------------------
 scala> Country.where(_.id eqs 7).fetch
@@ -652,7 +744,7 @@ scala> Country.where(_.id eqs 7).fetch
 
 The DSL constructs a query which we then `fetch` to send the query to MongoDB. That last method, `fetch`, is just one of the ways to run the query. Others include:
 
-* `count` -- queries Mongo for the size of the result set.
+* `count` -- queries MongoDB for the size of the result set.
 
 * `countDistinct` -- the number of distinct values in the results.
 
@@ -694,7 +786,7 @@ Storing Geospatial Values
 Problem
 ^^^^^^^
 
-You want to store latitude and longitude information in Mongo.
+You want to store latitude and longitude information in MongoDB.
 
 Solution
 ^^^^^^^^
@@ -709,16 +801,13 @@ import com.foursquare.rogue.LatLong
 
 class City private () extends MongoRecord[City] with ObjectIdPk[City] {
   override def meta = City
-
   object name extends StringField(this, 60)
-
   object loc extends MongoCaseClassField[City, LatLong](this)
 }
 
 object City extends City with MongoMetaRecord[City] {
   import net.liftweb.mongodb.BsonDSL._
   ensureIndex(loc.name -> "2d", unique=true)
-
   override def collectionName = "example.city"
 }
 -----------------------------------------------
@@ -731,7 +820,7 @@ val place = LatLong(50.819059, -0.136642)
 val city = City.createRecord.name("Brighton, UK").loc(pos).save(true)
 -----------------------------------------------------------
 
-This will produce data in Mongo that looks like this:
+This will produce data in MongoDB that looks like this:
 
 [source,javascript]
 ---------------------------------------------------
@@ -753,7 +842,7 @@ we are storing the location information in one of MongoDB's permitted formats.  
 an embedding document containing the coordinates. We could also have use a array of two values
 to represent the point.
 
-Second, we're creating a index of type "2d", which allows us to use Mongo's geospatial functions such as `$near` and `$within`. The `unique=true` in the `ensureIndex` highlights that you can control
+Second, we're creating a index of type "2d", which allows us to use MongoDB's geospatial functions such as `$near` and `$within`. The `unique=true` in the `ensureIndex` highlights that you can control
 whether locations needs to be unique (`true`, no duplications) or not (`false`).
 
 With regard to the unique index, you'll note that we're calling `save(true)` on the `City` in
@@ -762,9 +851,9 @@ it would work fine, but difference is that `save(true)` raises the _write concer
 from "normal" to "safe".
 
 With the normal write concern, the call to `save` would return as soon
-as the request has gone down the wire to the Mongo server.  This gives a certain degree of reliability in that
+as the request has gone down the wire to the MongoDB server.  This gives a certain degree of reliability in that
 `save` would fail if the network had gone away. However, there's no indication that the server has
-processed the request.  For example, if we tried to insert a city at the exact same location as one that was already in the database, the index uniqueness rule would be violated and the record would not be saved.  With just `save` (or `save(false)`) our Lift application would not receive this error, and the call would fail silently. Raising the concern to "safe" causes `save(true)` to wait for an acknowledgment from the Mongo server, which means the application will receive exceptions for some kinds of errors.
+processed the request.  For example, if we tried to insert a city at the exact same location as one that was already in the database, the index uniqueness rule would be violated and the record would not be saved.  With just `save` (or `save(false)`) our Lift application would not receive this error, and the call would fail silently. Raising the concern to "safe" causes `save(true)` to wait for an acknowledgment from the MongoDB server, which means the application will receive exceptions for some kinds of errors.
 
 As an example, if we tried to insert a duplicate city, our call to `save(true)` would result in:
 
@@ -852,7 +941,7 @@ Solution
 Start the console from your project, call `boot()`, and then interact with your model.
 
 For example, using the
-Mongo records developed as part of <<ConnectingToMongo>>, we can perform a basic query:
+MongoDB records developed as part of <<ConnectingToMongo>>, we can perform a basic query:
 
 ---------------------------------------------
 $ sbt
@@ -911,8 +1000,8 @@ See Also
 
 
 [[MongoUnitTest]]
-Unit Testing Record with Mongo
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Unit Testing Record with MongoDB
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
@@ -924,7 +1013,7 @@ Solution
 
 Using the Specs2 testing framework, surround your specification with a _context_ which creates and connects to a database for each test and destroys it after the test runs.
 
-Create a Scala trait to set up and destroy a connection to Mongo.  We'll be mixing this trait into your specifications:
+First, create a Scala trait to set up and destroy a connection to MongoDB.  We'll be mixing this trait into our specifications:
 
 [source, scala]
 --------------------------------------------
@@ -973,7 +1062,7 @@ trait MongoTestKit {
 }
 --------------------------------------------
 
-This trait provides the plumbing for connection to a Mongo server running locally, and creates a database based on the name of the class it is mixed into.  The important part is the `MongoContext` which ensures that `around` your specification the database is initialized, and that after your specification is run, it is cleaned up.
+This trait provides the plumbing for connection to a MongoDB server running locally, and creates a database based on the name of the class it is mixed into.  The important part is the `MongoContext` which ensures that `around` your specification the database is initialized, and that after your specification is run, it is cleaned up.
 
 To use this in a specification, mix in the trait and then add the context:
 
@@ -1018,9 +1107,9 @@ You can now run the test in SBT by typing `test`:
 Discussion
 ^^^^^^^^^^
 
-Lift normally provides all the scaffolding you need to connect and run against MongoDB. Without a running Lift application, we need to ensure Mongo is configured when our tests run outside of Lift, and that's what the `MongoTestKit` trait is providing for us.
+Lift normally provides all the scaffolding you need to connect and run against MongoDB. Without a running Lift application, we need to ensure MongoDB is configured when our tests run outside of Lift, and that's what the `MongoTestKit` trait is providing for us.
 
-The one unusual part of the test set up is including a `TestLiftSession`. This provides an empty session around your test, which is useful if you are accessing or testing state-related code (e.g., access to `S`).  It's not strictly necessary for running tests against Record, but it has been included here because you may want to do that at some point, for example if you are testing user login via Mongo Records.
+The one unusual part of the test set up is including a `TestLiftSession`. This provides an empty session around your test, which is useful if you are accessing or testing state-related code (e.g., access to `S`).  It's not strictly necessary for running tests against Record, but it has been included here because you may want to do that at some point, for example if you are testing user login via MongoDB records.
 
 There are a few nice tricks in SBT to help you run tests. Running `test` will run all the tests in your project. If you want to focus on just one test, you can:
 
@@ -1038,6 +1127,11 @@ There's also `test-quick` (in SBT 0.12) which will only run tests that have not 
 
 `test-only` together with modifications to `around` in `MongoTestKit` can be a good way to track down any issues you have with a test.  By disabling the call to `destroyDb()` you can jump into the MongoDB shell and examine the state of the database after a test has run.
 
+Database Cleanup
+++++++++++++++++
+
+Around each test we've simply deleted the database so the next time we try to use it, it'll be empty.  In some situations you may not be able to do this.  For example, if you're running tests against a database hosted with companies such as MongoLabs or MongoHQ, then deleting the database will mean you won't be able to connect to it next time you run.
+
 One way to resolve that is to clean up each individual collection, by defining the collections you need to clean up, and replacing `destroyDb` with a method that will remove all entries in those collections:
 
 [source, scala]
@@ -1053,10 +1147,6 @@ def destroyDb() : Unit = {
 Note that the collection list is `lazy` to avoid start up of the Record system before we've initialized our database connections.
 
 
-Database Cleanup
-++++++++++++++++
-
-Around each test we've simply deleted the database so the next time we try to use it, it'll be empty.  In some situations you may not be able to do this.  For example, if you're running tests against a database hosted with companies such as MongoLabs or MongoHQ, then deleting the database will mean you won't be able to connect to it next time you run.
 
 
 Parallel Tests
@@ -1094,11 +1184,11 @@ See Also
 
 Specs2 is documented at: http://specs2.org/[http://specs2.org/].
 
-If you prefer to use the Scala Test framework (http://www.scalatest.org[http://www.scalatest.org]), take a look at Tim Nelson's _Mongo Auth_ Lift module at https://github.com/eltimn/lift-mongoauth[https://github.com/eltimn/lift-mongoauth]. It includes tests using that framework that run against Mongo.  Much of what Tim has written there has been used to produce this recipe for Specs2.
+If you prefer to use the Scala Test framework (http://www.scalatest.org[http://www.scalatest.org]), take a look at Tim Nelson's _Mongo Auth_ Lift module at https://github.com/eltimn/lift-mongoauth[https://github.com/eltimn/lift-mongoauth]. It includes tests using that framework that run against MongoDB.  Much of what Tim has written there has been adapted to produce this recipe for Specs2.
 
-The Lift Mongo Record library includes a variation on testing with Specs2, using just `Before` and `After` rather than the `around` example used in this recipe. If you prefer that approach, you'll find the code in: https://github.com/lift/framework/tree/master/persistence/mongodb-record/src/test/scala/net/liftweb/mongodb/record[https://github.com/lift/framework/tree/master/persistence/mongodb-record/src/test/scala/net/liftweb/mongodb/record].
+The Lift MongoDB Record library includes a variation on testing with Specs2, using just `Before` and `After` rather than the `around` example used in this recipe. If you prefer that approach, you'll find the code in: https://github.com/lift/framework/tree/master/persistence/mongodb-record/src/test/scala/net/liftweb/mongodb/record[https://github.com/lift/framework/tree/master/persistence/mongodb-record/src/test/scala/net/liftweb/mongodb/record].
 
-Flapdoodle (https://github.com/flapdoodle-oss/embedmongo.flapdoodle.de[https://github.com/flapdoodle-oss/embedmongo.flapdoodle.de] provides a way to automate the download, install, set up and clean up of a MongoDB database. This automation is something you can wrap around your unit tests, and a Specs2 integration is included using the same `Before` and `After` approach to testing used by Lift Mongo Record: https://github.com/athieriot/specs2-embedmongo[https://github.com/athieriot/specs2-embedmongo].
+Flapdoodle (https://github.com/flapdoodle-oss/embedmongo.flapdoodle.de[https://github.com/flapdoodle-oss/embedmongo.flapdoodle.de]) provides a way to automate the download, install, set up and clean up of a MongoDB database. This automation is something you can wrap around your unit tests, and a Specs2 integration is included using the same `Before` and `After` approach to testing used by Lift MongoDB Record: https://github.com/athieriot/specs2-embedmongo[https://github.com/athieriot/specs2-embedmongo].
 
 The test interface provided by SBT, such as the `test` command, also supports the ability to fork tests, set specific configurations for test cases, and ways to select which tests are run. You'll find it at: http://www.scala-sbt.org/release/docs/Detailed-Topics/Testing[http://www.scala-sbt.org/release/docs/Detailed-Topics/Testing].
 

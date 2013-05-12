@@ -2,8 +2,7 @@
 Around Lift
 -----------
 
-This chapter gives examples of working with Lift and other systems, such
-as sending email or scheduling tasks.
+This chapter looks at interacting with other systems from within Lift, such as sending email, calling URLs or scheduling tasks.
 
 Many of the recipes in this chapter have code examples in a project at Github: https://github.com/LiftCookbook/cookbook_around[https://github.com/LiftCookbook/cookbook_around].
 
@@ -40,11 +39,11 @@ Discussion
 `Mailer` sends the message asynchronously, meaning `sendMail` will
 return immediately, so you don't have to worry about the time costs of
 negotiating with an SMTP server. There's also a `blockingSendMail`
-method if you want to wait.
+method if you need to wait.
 
-By default, the SMTP server used will be `localhost`. You can change
+By default, the SMTP server used will be _localhost_. You can change
 this by setting the `mail.smtp.host` property.
-For example, edit `src/mail/resources/props/default.props` and add the line:
+For example, edit _src/mail/resources/props/default.props_ and add the line:
 
 --------------------------------
 mail.smtp.host=smtp.example.org
@@ -53,9 +52,7 @@ mail.smtp.host=smtp.example.org
 The signature of `sendMail` requires a `From`, `Subject` and then any
 number of `MailTypes`:
 
-* `To` -- the recipient email address.
-* `CC` -- ditto
-* `BCC` -- ditto
+* `To`, `CC` and `BCC` -- the recipient email address.
 * `ReplyTo` -- the address mail clients should use for replies.
 * `MessageHeader` -- key/value pairs to include as headers in the message.
 * `PlainMailBodyType` -- a plain text email sent with UTF-8 encoding.
@@ -64,7 +61,7 @@ number of `MailTypes`:
 * `XHTMLPlusImages` -- for attachments (<<EmailWithAttachments>>).
 
 In the example above we added two types:`PlainMailBodyType`
-and `To`.  Adding more as as you'd expect:
+and `To`.  Adding more is as you'd expect:
 
 [source,scala]
 ----------------------------------------
@@ -76,7 +73,6 @@ Mailer.sendMail(
   MessageHeader("X-Ignore-This", "true"),
   PlainMailBodyType("Hello from Lift") )
 ----------------------------------------
-
 
 The address-like `MailTypes` (`To`, `CC`, `BCC`, `ReplyTo`) can be given an optional "personal name":
 
@@ -138,6 +134,9 @@ Would have sent: Hello from Lift
 Discussion
 ^^^^^^^^^^
 
+The key part of this recipe is setting a
+`MimeMessage => Unit` function on `Mailer.devModeSend`.  We happen to be logging, but you can use this function to handle the email any way you want.
+
 The Lift Mailer allows you to control how email is sent at each run mode:
 
 * `devModeSend` -- will send email by default.
@@ -154,7 +153,7 @@ would show a message like:
 Sending javax.mail.internet.MimeMessage@4a91a883
 --------------------------------------
 
-This recipe has changed just the behaviour of `Mailer` when your Lift
+This recipe has changed the behaviour of `Mailer` when your Lift
 application is in developer mode (which it is by default). We're logging
 just the body part of the message.
 
@@ -205,19 +204,16 @@ Subject: Hello
 Hello from Lift
 ---------------------------------------------------------
 
-This example `display` function is mostly straight-forward. The `body` value handles multi-part messages by extracting the each body part.  This is triggered when sending more structured emails, such as the HTML emails described in <<HTMLEmail>>.
+This example `display` function is long mostly straight-forward. The `body` value handles multi-part messages by extracting the each body part.  This is triggered when sending more structured emails, such as the HTML emails described in <<HTMLEmail>>.
 
-The key part of this recipe is setting a
-`MimeMessage => Unit` function on `Mailer.devModeSend`.  We happen to be logging, but you can use this function to handle the email any way you want. Examples might include logging and then sending, or recording information about the send in a database.
-
-If you want to debug the mail system while it's actually sending the email, enable the Java Mail debug mode.  In `default.props` add:
+If you want to debug the mail system while it's actually sending the email, enable the Java Mail debug mode.  In _default.props_ add:
 
 [source, properties]
 --------------------------------------
 mail.debug=true
 --------------------------------------
 
-This produces low-level output from the `javax.mail` system when email is sent:
+This produces low-level output from the Java Mail system when email is sent:
 
 --------------------------------------
 DEBUG: JavaMail version 1.4.4
@@ -272,7 +268,7 @@ Discussion
 ^^^^^^^^^^
 
 An implicit converts the `NodeSeq` into a `XHTMLMailBodyType`. This
-ensures the mime type of the email is "text/html". Despite the name of
+ensures the mime type of the email is _text/html_. Despite the name of
 "XHTML", the message is to converted for transmission using
 HTML5 semantics.
 
@@ -303,7 +299,7 @@ Mailer.sendMail(
 )
 ---------------------------------------------------
 
-This message would be sent as a "multipart/alternative":
+This message would be sent as a _multipart/alternative_:
 
 ------------------------------------------
 Content-Type: multipart/alternative;
@@ -375,7 +371,7 @@ Mailer.authenticator = for {
 
 In this example we expect the username and password to come from Lift
 properties, so we need to modify
-`src/main/resources/props/default.props` to include them:
+_src/main/resources/props/default.props_ to include them:
 
 [source,scala]
 ------------------------------------------
@@ -385,15 +381,15 @@ mail.password=correct horse battery staple
 mail.smtp.host=smtp.sendgrid.net
 ------------------------------------------
 
-When you send email, the credentials in `default.props` will be used to authenticate with the SMTP server.
+When you send email, the credentials in _default.props_ will be used to authenticate with the SMTP server.
 
 Discussion
 ^^^^^^^^^^
 
 We've used Lift properties as a way to configure SMTP authentication.
 This has the benefit of allowing us to enable authentication for just
-some run modes. For example, if our `default.props` did not contain
-authentication settings, but our `production.default.props` did, then no
+some run modes. For example, if our _default.props_ did not contain
+authentication settings, but our _production.default.props_ did, then no
 authentication would happen in development mode, ensuring we can't
 accidentally send email outside of a production environment.
 
@@ -420,7 +416,7 @@ You want to send an email with one or more attachments.
 Solution
 ^^^^^^^^
 
-Use the `Mailer` `XHTMLPlusImages` to package a message with one or more attachments.
+Use the `Mailer` `XHTMLPlusImages` to package a message with attachments.
 
 Suppose we want to construct a CSV file and send it via email:
 
@@ -448,7 +444,7 @@ Mailer.sendMail(
   msg)
 --------------------------------------------------------------
 
-What's happening here is that our message is `XHTMLPlusImages` with accepts
+What's happening here is that our message is an `XHTMLPlusImages` instance, which accepts
 a body message and attachment.  The attachment, the `PlusImageHolder`, is an `Array[Byte]`, mime-type and a filename.
 
 
@@ -468,7 +464,7 @@ PlusImageHolder(attach.filename, attach.mime, attach.bytes, attachment=true)
 In reality, the mail client will display the message how it wants to, but this extra parameter may give you a little more control.
 
 
-To attach a pre-made file, you can use `LiftRules.loadResource` to fetch content from the classpath.  As an example, if our project contained a file called `Kepler-22b_System_Diagram.jpg` in the `src/main/resources/` folder, we could load and attach it like this:
+To attach a pre-made file, you can use `LiftRules.loadResource` to fetch content from the classpath.  As an example, if our project contained a file called _Kepler-22b_System_Diagram.jpg_ in the _src/main/resources/_ folder, we could load and attach it like this:
 
 [source,scala]
 --------------------------------------------------------------
@@ -493,7 +489,7 @@ msg match {
 }
 --------------------------------------------------------------
 
-As the contents of `src/main/resources` is included on the classpath, we pass the filename to `loadResource` with a leading `/` character so the file can be found at the right place on the classpath.
+As the contents of _src/main/resources_ is included on the classpath, we pass the filename to `loadResource` with a leading `/` character so the file can be found at the right place on the classpath.
 
 The `loadResource` returns a `Box[Array[Byte]]` as we have no guarantee the file will exist. We map this to a `Box[XHTMLPlusImages]` and match on that result to either send the email, or log that the file wasn't found.
 
@@ -501,7 +497,7 @@ The `loadResource` returns a `Box[Array[Byte]]` as we have no guarantee the file
 See Also
 ^^^^^^^^
 
-Messages are sent using the "multipart/related" mime heading, with an "inline" disposition.  Lift ticket #1197 links to a discussion regarding "multipart/mixed" which may be preferable for working around issues with Microsoft Exchange. See: https://github.com/lift/framework/issues/1197[https://github.com/lift/framework/issues/1197].
+Messages are sent using the _multipart/related_ mime heading, with an "inline" disposition.  Lift ticket #1197 links to a discussion regarding "multipart/mixed" which may be preferable for working around issues with Microsoft Exchange. See: https://github.com/lift/framework/issues/1197[https://github.com/lift/framework/issues/1197].
 
 RFC 2183 describes the "Content-Disposition" header: http://www.ietf.org/rfc/rfc2183.txt[http://www.ietf.org/rfc/rfc2183.txt].
 
@@ -535,7 +531,7 @@ seconds from now.
 Discussion
 ^^^^^^^^^^
 
-The signature for `Schedule` used above expects a function of type `() => Unit`, which is the thing we want to happen in the future, and a `TimeSpan` from Lift's `TimeHelpers` which is when we want it to happen.  The `30 seconds` value gives us a `TimeSpan` via the `Helpers._` import, but there's a variation which accepts a `Long` millisecond value if you prefer that:
+The signature for `Schedule` used above expects a function of type `() => Unit`, which is the thing we want to happen in the future, and a `TimeSpan` from Lift's `TimeHelpers` which is when we want it to happen.  The `30 seconds` value gives us a `TimeSpan` via the `Helpers._` import, but there's a variation called `perform` which accepts a `Long` millisecond value if you prefer that:
 
 [source,scala]
 ------------------------------------------------
@@ -657,7 +653,7 @@ Solution
 
 Use _Dispatch_, "a library for asynchronous HTTP interaction".
 
-Before you start, include Dispatch dependency in your _build.sbt_ file:
+Before you start, include Dispatch dependency in _build.sbt_:
 
 [source,scala]
 -------------------------------------------------
@@ -682,7 +678,7 @@ The result printed will be a country code such as `GB`, or `XX` if the country c
 Discussion
 ^^^^^^^^^^
 
-This short example expects a 200 (OK) status result and turns the result into a `String`, but that a tiny part of what Dispatch is capable of.  We'll explore further in this section.
+This short example expects a 200 (OK) status result and turns the result into a `String`, but that's a tiny part of what Dispatch is capable of.  We'll explore further in this section.
 
 What if the request doesn't return a 200? In that case, with the code we have, we'd get an exception such as: "Unexpected response status: 404". There are a few ways to change that.
 
@@ -693,7 +689,7 @@ We can ask for an `Option`:
 val result : Option[String] = country.option()
 ------------------------------------------
 
-As you'd expect, this will give a `None` or `Some[String]`. However, if you have debug level logging enabled in your application you'll see the request and response and error messages from the underlying Netty library.  You can tune these messages by adding a logger setting to `default.logback.xml` file:
+As you'd expect, this will give a `None` or `Some[String]`. However, if you have debug level logging enabled in your application you'll see the request and response and error messages from the underlying Netty library.  You can tune these messages by adding a logger setting to _default.logback.xml_ file:
 
 [source, xml]
 ------------------------------------------
@@ -768,7 +764,7 @@ val title = Http(svc > as.jsoup.Document).map(_.select("h1").text).option
 println( title() getOrElse "unknown title" )
 -------------------------------------------------
 
-He we are applying JSoup's `select` function to pick out the `<h1>` element on the page, taking the text of the element which we turn into a `Promise[Option[String]]`.  The result, unless _example.org_ has changed, will be "Example Domain".
+Here we are applying JSoup's `select` function to pick out the `<h1>` element on the page, taking the text of the element which we turn into a `Promise[Option[String]]`.  The result, unless _example.org_ has changed, will be "Example Domain".
 
 As a final example of using Dispatch, we can pipe a request into Lift's JSON library:
 
@@ -791,7 +787,7 @@ val hostInfo = json.map(_.extract[HostInfo])()
 -------------------------------------------------
 
 
-The URL we're calling returns a JSON representation for location information for the IP address we've passed.
+The URL we're calling returns a JSON representation for location information of the IP address we've passed.
 
 By providing a `Response => JValue` to Dispatch we're able to pass the response body through to the JSON parser. We can then map on the `Promise[JValue]` to apply whatever Lift JSON functions we want to. In this case, we're extracting a simple case class.
 

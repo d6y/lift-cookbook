@@ -42,7 +42,7 @@ For Mac and Linux
 * Run:`./sbt`.
 * Required libraries will be downloaded automatically.
 * At the SBT prompt (>) type: `container:start`.
-* Open your browser and go to `http://127.0.0.1:8080/`.
+* Open your browser and go to _http://127.0.0.1:8080/_.
 * When you're done, type `exit` at the SBT prompt to stop your application from running.
 
 For Windows
@@ -55,7 +55,7 @@ For Windows
 * Required libraries will be downloaded automatically.
 * At the SBT prompt (>) type: `container:start`.
 * You may find Windows Firewall blocking Java from running. If so, opt to "allow access".
-* Start your browser and go to `http://127.0.0.1:8080/`
+* Start your browser and go to _http://127.0.0.1:8080/_.
 * When you're done, type `exit` at the SBT prompt to stop your application from running.
 
 Expected result
@@ -194,7 +194,7 @@ Next, create the following file at _src/main/webapp/WEB-INF/web.xml_:
 </web-app>
 ---------------------------------------------------------
 
-The `web.xml` files tells web containers, such as Jetty as configured by xsbt-web-plugin, to pass all requests on to Lift.
+The _web.xml_ file tells web containers, such as Jetty as configured by xsbt-web-plugin, to pass all requests on to Lift.
 
 Next, create a sample _index.html_ file at _src/main/webapp/index.html_ for our Lift app to load. For example:
 
