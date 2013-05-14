@@ -25,3 +25,5 @@ include::10-Around.asciidoc[]
 include::11-Deployment.asciidoc[]
 
 include::12-Contributing.asciidoc[]
+
+include::colo.asciidoc[]
