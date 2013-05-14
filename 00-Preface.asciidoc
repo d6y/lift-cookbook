@@ -117,7 +117,6 @@ Please address comments and questions concerning this book to the publisher:
 
 We have a web page for this book, where we list errata, examples, and any additional information. You can access this page at link:$$http://www.oreilly.com/catalog/0636920029151$$[].
 
-
 To comment or ask technical questions about this book, send email to pass:[<email>bookquestions@oreilly.com</email>].
 
 For more information about our books, courses, conferences, and news, see our website at link:$$http://www.oreilly.com$$[].
