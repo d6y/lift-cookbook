@@ -602,7 +602,7 @@ As more browsers implement these types it will become possible to depend on them
 
 [[DatePickerScreenGrabs]]
 .An input field with the jQuery UI date picker attached, compared to the browser-native date picker in Chrome.
-image::images/date-picker.png[width=640]
+image::images/lfcb_0301.png[]
 
 To detect if the browser supports `type="date"` inputs, we can use the _Modernizr_ library.  This is an additional script in our template:
 
@@ -739,7 +739,7 @@ Running this code renders as shown in <<AutoCompleteWidgetScreenGrab>>.
 
 [[AutoCompleteWidgetScreenGrab]]
 .The rendering of the `ProgrammingLanguages` snippet.
-image::images/autocomplete-widget.png[width=540]
+image::images/lfcb_0302.png[]
 
 When the form is submitted, the `submit` function will be passed the selected value. The `submit` function is simply logging this value:
 
@@ -1098,7 +1098,7 @@ In this example the user is being presented with a list of three items, with the
 
 [[MultiSelectExample]]
 .Selecting from multiple options.
-image::images/multiselect.png[width=214]
+image::images/lfcb_0303.png[]
 
 
 The template to go with the snippet could be:

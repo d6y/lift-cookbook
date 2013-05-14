@@ -193,7 +193,7 @@ The objective is to model the relationship as shown in <<SquerylPlanetOneToManyF
 
 [[SquerylPlanetOneToManyFigure]]
 .One planet may have many satellites, but a satellite orbits just one planet.
-image::images/planets.png[width=640]
+image::images/lfcb_0701.png[]
 
 In code:
 
@@ -405,7 +405,7 @@ Use Squeryl's `manyToManyRelation` in your schema, and implement a record to hol
 
 [[SquerylPlanetManyToManyFigure]]
 .Many-to-many: Jupiter was visited by Juno and Voyager 1; Saturn was only visited by Voyager 1.
-image::images/visits.png[width=640]
+image::images/lfcb_0702.png[]
 
 The schema is defined in terms of two tables, one for planets and one for space probes, plus a relationship between the two based on a third class, called `Visit`:
 
@@ -647,7 +647,7 @@ The lower-half of <<SquerylManyToManyScreengrab>> demonstrates how this snippet 
 
 [[SquerylManyToManyScreengrab]]
 .Example output from using the many-to-many features in this recipe.
-image::images/visitsscreengrab.png[width=640]
+image::images/lfcb_0703.png[]
 
 To remove an association you have access to `dissociate` and `dissociateAll` on the `left` and `right` queries.  To remove a single association:
 

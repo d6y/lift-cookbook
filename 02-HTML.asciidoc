@@ -1440,7 +1440,7 @@ The dependency name is made up of two elements: the name and the "edition" of Li
 
 [[ModuleVersioning]]
 .The structure of a module version.
-image::images/moduleversioning.png[width=640]
+image::images/lfcb_0201.png[]
 
 This structure has been adopted because modules have their own release cycle, independent of Lift. However, modules may also depend on certain features of Lift, and Lift may change APIs between major releases, hence the need to use part of the Lift version number to identify the module.
 

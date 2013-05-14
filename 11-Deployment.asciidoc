@@ -359,7 +359,7 @@ A final step is to enable Lift's production run mode. From the environment in th
 
 [[ConsoleImage]]
 .AWS Console, with Elastic Beanstalk service selected.
-image::images/beanstalkconsole.png[width=640]
+image::images/lfcb_1001.png[]
 
 Discussion
 ^^^^^^^^^^
@@ -742,7 +742,7 @@ Regardless of the technology, the principle is that illustrated in <<Distributed
 
 [[DistributedCometDiagram]]
 .Comet events originating on one server are distributed via a topic.
-image::images/topic.png[width=640]
+image::images/lfcb_1002.png[]
 
 The first step is to download and install RabbitMQ from http://rabbitmq.com/[http://rabbitmq.com/]. Then start the server:
 
