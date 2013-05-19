@@ -25,7 +25,7 @@ For example, to configure Squeryl with PostgreSQL, modify _build.sbt_ to add two
 [source, scala]
 ---------------------------------------------------------------
 libraryDependencies ++= {
-  val liftVersion = "2.5-RC5"
+  val liftVersion = "2.5-RC6"
   Seq(
     "net.liftweb" %% "lift-webkit" % liftVersion,
     "net.liftweb" %% "lift-squeryl-record" % liftVersion,

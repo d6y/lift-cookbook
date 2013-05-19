@@ -1204,7 +1204,7 @@ The first step is to add Lift's Test Kit as dependency to your project in _build
 
 [source, scala]
 -------
-libraryDependencies += "net.liftweb" %% "lift-testkit" % "2.5-RC5" % "test"
+libraryDependencies += "net.liftweb" %% "lift-testkit" % "2.5-RC6" % "test"
 -------
 
 To demonstrate how to use `testReq` we will test a function that detects a Google crawler. Google identifies

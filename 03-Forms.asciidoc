@@ -947,6 +947,243 @@ You can find documentation for Twitter Bootstrap Typeahead at http://twitter.git
 
 
 
+
+[[Radio]]
+Offering Choices with Radio Buttons
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want users to select an option using radio buttons.
+
+Solution
+^^^^^^^^
+
+Use `SHtml.radioElem` to present the options as radio buttons, but retain type safety.
+
+To illustrate this, let's create a form to allow a user to specify their gender:
+
+[source, scala]
+-----------------------------------------------
+object BirthGender extends Enumeration {
+  type BirthGender = Value
+  val Male = Value("Male")
+  val Female = Value("Female")
+  val NotSpecified = Value("Rather Not Say")
+}
+-----------------------------------------------
+
+We're using an enumeration, but it could be any class. The `toString` of the class will be used as the label shown to the user.
+
+To present these options and handle the section, we use the enumeration in a snippet:
+
+[source, scala]
+-----------------------------------------------
+package code.snippet
+
+import net.liftweb.common._
+import net.liftweb.util.Helpers._
+import net.liftweb.http.SHtml
+import net.liftweb.http.SHtml.ChoiceHolder
+
+object Radio extends Loggable {
+
+  import BirthGender._
+
+  val options : Seq[BirthGender] = BirthGender.values.toSeq
+
+  val default : Box[BirthGender] = Empty
+
+  val radio : ChoiceHolder[BirthGender] =
+    SHtml.radioElem(options, default) { selected =>
+      logger.info("Choice: "+selected)
+    }
+
+  def render = ".options" #> radio.toForm
+}
+-----------------------------------------------
+
+Rather than generate the radio buttons in one expression on the `render` method, we've pulled out the intermediate values to show their types.  The `radio.toForm` call is generating the radio buttons and we're binding them to the CSS selector ".option" in the following template:
+
+[source, html]
+-----------------------------------------------
+<div data-lift="Radio?form=post">
+
+  <span class="options">
+    <input type="radio">Option 1</input>
+    <input type="radio">Option 2</input>
+  </span>
+
+  <input type="submit" value="Submit">
+
+</div>
+-----------------------------------------------
+
+The "options" span will be replaced with the radio buttons from the code, and when the form is submitted the function supplied to `SHtml.radioElem` will be called resulting in the selected value being logged:
+
+-----------------------------------------------
+INFO  code.snippet.Radio - Selected radio is: Empty
+-----------------------------------------------
+
+...or perhaps...
+
+-----------------------------------------------
+INFO  code.snippet.Radio - Selected radio is: Full(Rather Not Say)
+-----------------------------------------------
+
+Discussion
+^^^^^^^^^^
+
+Many of the Lift `SHtml` methods return a `NodeSeq` which can be directly bound into our HTML. However, `radioElem` is different in that it gives us a `ChoiceHolder[T]`, and to generate a `NodeSeq` from that we're calling `toForm`.  This has implications for how you customize radio buttons, as we'll see later.
+
+The `radioElem` method expects three parameters:
+
+[source, scala]
+-----------------------------------------------
+SHtml.radioElem(options, default) { selected =>
+  logger.info("Choice: "+selected)
+}
+-----------------------------------------------
+
+The first is the set of options to show, as a `Seq[T]`. The second is the value to be pre-selected as a `Box[T]`.  In the example we have no pre-selected value, which is represented as `Empty`.  Finally, there's the function to run when the form is submitted, of type `Box[T] => Any`.
+
+Note that even if the user selects no value, your function will be called, and it will be given the value `Empty`.
+
+To understand a little more of what's happening, take a look at the default HTML produced by `radioElem`:
+
+[source, html]
+-----------------------------------------------
+<span>
+ <input value="F317293945993CDMQZ" type="radio" name="F317293946030HYAFP">
+ <input name="F317293946030HYAFP" type="hidden" value="F317293946022HCGEG">
+ Male<br>
+</span>
+<span>
+ <input value="F31729394600RIE253" type="radio" name="F317293946030HYAFP">
+ Female<br>
+</span>
+<span>
+ <input value="F317293946011OMEMM" type="radio" name="F317293946030HYAFP">
+ Rather Not Say<br>
+</span>
+-----------------------------------------------
+
+Notice that:
+
+* all the input fields have the same randomly generated name;
+* the input fields have randomly generated values; and
+* there's a hidden field added to the first item.
+
+This might be a surprise if you were just expecting something like:
+
+[source, html]
+-----------------------------------------------
+<input type="radio" name="gender" value="Male">Male<br>
+<input type="radio" name="gender" value="Female">Female<br>
+<input type="radio" name="gender" value="RatherNotSay">Rather Not Say<br>
+-----------------------------------------------
+
+By using random values, Lift has helped us by protecting against a range of form-based attacks, such as submitting values we're not expected or setting values on fields we don't want set.
+
+Each of the random radio button values is associated, on the server, with a value from our options (a `BirthGender` instance). The hidden value maps to a function that's called when the form is submitted, and by using the common "name" value on the fields, it is able to pick out the selected radio button and identify the corresponding `BirthGender` value and pass it to our code.
+
+
+Customising the HTML
+++++++++++++++++++++
+
+The default HTML wraps each radio button in a `<span>` and separates them with a `<br>`.  Let's change that to make it work well with the _Twitter Bootstrap_ framework, and put each choice in a `<lablel>` and give it a class.
+
+To customise the HTML you need to understand that the `ChoiceHolder` is a container for a sequence of items.  Each item is a `ChoiceItem`:
+
+[source, scala]
+-----------------------------------------------
+final case class ChoiceItem[T](key: T, xhtml: NodeSeq)
+-----------------------------------------------
+
+The `key` in our example is a `BirthGender` instance, and the `xhtml` is the radio button input field (plus the hidden field for the first option).  With this knowledge we can write a helper to generate a `NodeSeq` in the style we want:
+
+[source, scala]
+-----------------------------------------------
+import scala.xml.NodeSeq
+import net.liftweb.http.SHtml.ChoiceItem
+
+object LabelStyle {
+  def htmlize[T](item: ChoiceItem[T]) : NodeSeq =
+   <label class="radio">{item.xhtml} {item.key.toString}</label>
+
+  def toForm[T](holder: ChoiceHolder[T]) : NodeSeq =
+   holder.items.flatMap(htmlize)
+}
+-----------------------------------------------
+
+The `htmlize` method produces a `<label>` element with the class we want, and it contains the radio input (`item.xhtml`) and the text of the label (`item.key.toString`).  The `toForm` is applying the `htmlize` function to all the choices.
+
+We can apply this in our snippet...
+
+[source, scala]
+-----------------------------------------------
+def render = ".options" #> LabelStyle.toForm(radio)
+-----------------------------------------------
+
+...and the result would be:
+
+[source, html]
+-----------------------------------------------
+<label class="radio">
+ <input value="F234668654428LWW305" type="radio" name="F234668654432WS5LWK">
+ <input name="F234668654432WS5LWK" type="hidden" value="F234668654431KYJB3S">
+ Male
+</label>
+<label class="radio">
+ <input value="F234668654429MB5RF3" type="radio" name="F234668654432WS5LWK">
+ Female
+</label>
+<label class="radio">
+ <input value="F234668654430YULGC1" type="radio" name="F234668654432WS5LWK">
+ Rather Not Say
+</label>
+-----------------------------------------------
+
+The `toForm` method could be wrapping the choices in some other HTML, such as an `<ul>`. But in this case it's not and as a consequence of this is that we could make the `LabelStyle` the default across our Lift application:
+
+[source, scala]
+-----------------------------------------------
+ChoiceHolder.htmlize = c => LabelStyle.htmlize(c)
+-----------------------------------------------
+
+This works because `toForm` on `ChoiceHolder` defers to `ChoiceHolder.htmlize`, which is a variable you can assign to.
+
+
+String Values
++++++++++++++
+
+If you want to work directly with `String` values for options, you can use `SHtml.radio`.  Although it too produces a `ChoiceHolder`, it differs from `radioElem` in that it uses the same `String` as both the  label and the value. The function associated with each option is only called if a value is selected by the user.
+
+An `SHtml.radio` version of our example would look like this:
+
+[source, scala]
+-----------------------------------------------
+SHtml.radio(
+  "Male" :: "Female" :: "Rather Not Say" :: Nil,
+  Empty,
+  selected => logger.info("Choice: "+selected)
+)
+-----------------------------------------------
+
+This is a similar structure to `radioElem`: a list of options, a default, a function to call, and it produces a `ChoiceHolder[String]`.  When a form is submitted, our function is passed the `String` value of the selected option. If no radio buttons are selected, the function is not called.
+
+
+
+
+
+
+
+
+
+
+
+
 [[DisableCheckbox]]
 Conditionally Disable a Checkbox
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

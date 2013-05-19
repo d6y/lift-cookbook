@@ -180,7 +180,7 @@ pull request.
 Alternatively, download a template file, write your recipe, and email
 to the Lift mailing list at https://groups.google.com/group/liftweb[https://groups.google.com/group/liftweb].
 
-You can find the template file at: https://raw.github.com/d6y/lift-cookbook/master/template.asciidoc[https://raw.github.com/d6y/lift-cookbook/master/template.asciidoc].
+You can find the template file at: https://raw.github.com/d6y/lift-cookbook/master/etc/template.asciidoc[https://raw.github.com/d6y/lift-cookbook/master/etc/template.asciidoc].
 
 Discussion
 ^^^^^^^^^^
@@ -290,7 +290,7 @@ resolvers ++= Seq(
 scalacOptions ++= Seq("-deprecation", "-unchecked")
 
 libraryDependencies ++= {
-  val liftVersion = "2.5-RC5"
+  val liftVersion = "2.5-RC6"
   Seq(
     "net.liftweb" %% "lift-webkit"  % liftVersion  % "compile"
   )
@@ -308,7 +308,7 @@ With our module built and published, we can now include it in our Lift applicati
 [source,scala]
 --------------------------------------------------------------
 libraryDependencies ++= {
-  val liftVersion = "2.5-RC5"
+  val liftVersion = "2.5-RC6"
   Seq(
   ...
   "net.liftmodules" %% "snowstorm" % "1.0.0",
