@@ -1020,17 +1020,19 @@ Rather than generate the radio buttons in one expression on the `render` method,
 </div>
 -----------------------------------------------
 
-The "options" span will be replaced with the radio buttons from the code, and when the form is submitted the function supplied to `SHtml.radioElem` will be called resulting in the selected value being logged:
+The "options" span will be replaced with the radio buttons from the code, and when the form is submitted the function supplied to `SHtml.radioElem` will be called resulting in the selected value being logged...
 
 -----------------------------------------------
-INFO  code.snippet.Radio - Selected radio is: Empty
+INFO  code.snippet.Radio - Choice: Empty
 -----------------------------------------------
 
-...or perhaps...
+...if no radio button is selected, and...
 
 -----------------------------------------------
-INFO  code.snippet.Radio - Selected radio is: Full(Rather Not Say)
+INFO  code.snippet.Radio - Choice: Full(Rather Not Say)
 -----------------------------------------------
+
+...if the third button was selected.
 
 Discussion
 ^^^^^^^^^^
