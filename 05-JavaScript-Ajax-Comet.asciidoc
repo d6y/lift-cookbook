@@ -272,7 +272,7 @@ Call Server When Select Option Changes
 Problem
 ^^^^^^^
 
-When a HTML select option is selected, you want to trigger a function on the server.
+When an HTML select option is selected, you want to trigger a function on the server.
 
 
 Solution
@@ -280,7 +280,7 @@ Solution
 
 Register a `String => JsCmd` function with `SHtml.ajaxSelect`.
 
-In this example we will lookup the distance from Earth to the planet a user selects.  This lookup will
+In this example, we will look up the distance from Earth to the planet a user selects.  This lookup will
 happen on the server and update the browser with the result. The interface is:
 
 [source, html]
@@ -368,10 +368,10 @@ To understand what's going on here, take a look at the HTML that Lift produces:
 </select>
 -----
 
-The `handler` function has been stored by Lift under the identifier of "F470183993611Y15ZJU" (in this particular rendering). An "onchange" event handler is attached to the select element and is responsible for transporting the selected value to the server, and bringing a value back. The `lift_ajaxHandler` JavaScript function is defined in _liftAjax.js_ which is automatically added to your page.
+The `handler` function has been stored by Lift under the identifier of `F470183993611Y15ZJU` (in this particular rendering). An `onchange` event handler is attached to the `<select>` element and is responsible for transporting the selected value to the server, and bringing a value back. The `lift_ajaxHandler` JavaScript function is defined in _liftAjax.js_, which is automatically added to your page.
 
 
-Collecting the Value on Form Submission
+Collecting the value on form submission
 +++++++++++++++++++++++++++++++++++++++
 
 If you need to additionally capture the selected value on a regular form submission, you can make use of `SHtml.onEvents`.  This attaches event listeners to a `NodeSeq`, triggering a server-side function when the event occurs.  We can use this with a regular form with a regular select box, but wire in Ajax calls to the server when the select changes.
@@ -388,7 +388,7 @@ var selectedValue : String = ""
 "type=submit" #> onSubmitUnit( () => S.notice("Destination "+selectedValue))
 ----
 
-We are arranging for the same `handler` function to be called when an "onchange" event is triggered.  This event binding is applied to a regular `SHtml.select`, which is storing the `selectedValue` when the form is submitted. We also bind a submit button to a function which generates a notice of which planet was selected.
+We are arranging for the same `handler` function to be called when an `onchange` event is triggered.  This event binding is applied to a regular `SHtml.select`, which is storing the `selectedValue` when the form is submitted. We also bind a submit button to a function that generates a notice of which planet was selected.
 
 The corresponding HTML also changes little.  We need to add a button and make sure the snippet is marked as a form with `?form`:
 
@@ -446,7 +446,7 @@ object ClientSide {
 }
 ----
 
-In the template we'd perhaps say:
+In the template, we'd perhaps say:
 
 [source,html]
 ----
@@ -465,9 +465,9 @@ Lift will render the page as:
 Discussion
 ^^^^^^^^^^
 
-Lift includes a JavaScript abstraction which you can use to build up
+Lift includes a JavaScript abstraction that you can use to build up
 more elaborate expressions for the client-side. For example you can
-combine basic commands...
+combine basic commands:
 
 [source,scala]
 ----
@@ -477,7 +477,7 @@ def render = "button [onclick]" #>
   (Alert("Here we go...") & RedirectTo("http://liftweb.net"))
 ----
 
-...which pops up an alert dialog and then sends you to _http://liftweb.net_. The HTML would be rendered as:
+which pops up an alert dialog and then sends you to _http://liftweb.net_. The HTML would be rendered as:
 
 [source,html]
 ----
@@ -530,7 +530,7 @@ Focus on a Field on Page Load
 Problem
 ^^^^^^^
 
-When a page loads you want the browser to select a particular field for
+When a page loads, you want the browser to select a particular field for
 input from the keyboard.
 
 Solution
@@ -566,17 +566,17 @@ The JavaScript that performs the focus simply looks up the node in the DOM by ID
 
 There are two related `JsCmd`:
 
-* `Focus` -- takes an element ID and sets focus on the element.
-* `SetValueAndFocus` -- which is like `Focus` but takes an additional
-`String` value to populate the element with.
+`Focus`:: Takes an element ID and sets focus on the element
+`SetValueAndFocus`:: Similar to `Focus`, but takes an additional
+`String` value to populate the element with
 
 These two are useful if you need to set focus from Ajax or Comet
-components dynamically.
+components pass:[<phrase role='keep-together'>dynamically.</phrase>]
 
 See Also
 ^^^^^^^^
 
-The source for `FocusOnLoad` is worth checking out to understand how it, and related commands, are constructed.  This may help you package your own JavaScript functionality up into commands that can be used in CSS binding expressions: https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/js/JsCommands.scala[https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/js/JsCommands.scala].
+The source for `FocusOnLoad` is worth checking out to understand how it and related commands are constructed.  This may help you package your own JavaScript functionality up into commands that can be used in CSS binding expressions: https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/js/JsCommands.scala[https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/js/JsCommands.scala].
 
 
 [[CSSClassOnAjaxForm]]
@@ -624,7 +624,7 @@ Running a Template via JavaScript
 Problem
 ^^^^^^^
 
-You want to load an entire page -- a template with snippets -- inside of the current page (i.e., without a browser refresh).
+You want to load an entire page--a template with snippets--inside of the current page (i.e., without a browser refresh).
 
 Solution
 ^^^^^^^^
@@ -668,7 +668,7 @@ loaded into the `inject` element.
 Discussion
 ^^^^^^^^^^
 
-`Templates` produces a `Box[NodeSeq]`.  In the example above, we map this content into a `JsCmd` which will populate the `inject` div.
+`Templates` produces a `Box[NodeSeq]`.  In the example above, we map this content into a `JsCmd` that will populate the `inject` `<div>`.
 
 If you write unit tests to access templates, be aware that you may need to modify your development or testing environment to include the _webapps_ folder.  To do this for SBT, add the following to _build.sbt_:
 
@@ -677,7 +677,7 @@ If you write unit tests to access templates, be aware that you may need to modif
 unmanagedResourceDirectories in Test <+= (baseDirectory) { _ / "src/main/webapp" }
 ----
 
-For this to work in your IDE you'll need to add _webapp_ as a source folder to locate templates.
+For this to work in your IDE, you'll need to add _webapp_ as a source folder to locate templates.
 
 See Also
 ^^^^^^^^
@@ -697,9 +697,9 @@ You want the JavaScript created in your snippet to be included at the end of the
 Solution
 ^^^^^^^^
 
-Use `S.appendJs` which places your JavaScript just before the closing `</body>` tag, along with other JavaScript produced by Lift.
+Use `S.appendJs`, which places your JavaScript just before the closing `</body>` tag, along with other JavaScript produced by Lift.
 
-In this HTML we have placed a `<script>` tag in the middle of the page, and marked it with a snippet called `JavaScriptTail`:
+In this HTML, we have placed a `<script>` tag in the middle of the page, and marked it with a snippet called `JavaScriptTail`:
 
 [source,html]
 -----
@@ -726,7 +726,7 @@ In this HTML we have placed a `<script>` tag in the middle of the page, and mark
 -----
 
 The `<script>` content will be generated by a snippet.
-It doesn't need to be a `<script>` tag: the snippet just replaces the content with nothing, but
+It doesn't need to be a `<script>` tag; the snippet just replaces the content with nothing, but
 hanging the snippet on the `<script>` tag is a reminder of the purpose of the snippet:
 
 [source, scala]
@@ -780,7 +780,7 @@ class JavascriptTail {
 }
 -----
 
-Note that `lift:tail` is a general-purpose Lift snippet and be used to move various kinds of content to the end of the page, not just JavaScript.
+Note that `lift:tail` is a general purpose Lift snippet and can be used to move various kinds of content to the end of the page, not just JavaScript.
 
 
 See Also
@@ -798,14 +798,14 @@ Run JavaScript on Comet Session Loss
 Problem
 ^^^^^^^
 
-You're using a comet actor and you want to arrange for some JavaScript to be executed in the event of the session being lost.
+You're using a Comet actor and you want to arrange for some JavaScript to be executed in the event of the session being lost.
 
 Solution
 ^^^^^^^^
 
 Configure your JavaScript via `LiftRules.noCometSessionCmd`.
 
-As an example we can modify the standard Lift chat demo to save the message being typed in the event of the session loss.  In the style of the demo we would have a Ajax form for entering a message and the comet chat area for displaying messages received:
+As an example, we can modify the standard Lift chat demo to save the message being typed in the event of the session loss.  In the style of the demo, we would have an Ajax form for entering a message and the Comet chat area for displaying messages received:
 
 [source, html]
 -----
@@ -821,7 +821,7 @@ As an example we can modify the standard Lift chat demo to save the message bein
 </div>
 -----
 
-To this we can add a function, `stash`, which we want to be called in the event of a comet session being lost:
+To this we can add a function, `stash`, which we want to be called in the event of a Comet session being lost:
 
 [source, html]
 -----
@@ -843,7 +843,7 @@ jQuery(document).ready(function() {
 </script>
 -----
 
-Our `stash` function will save the current value of the input field in a cookie called "stashed".  We arrange, on page load, to check for that cookie and insert the value into our message field.
+Our `stash` function will save the current value of the input field in a cookie called `stashed`.  We arrange, on page load, to check for that cookie and insert the value into our message field.
 
 The final part is to modify _Boot.scala_ to register our `stash` function:
 
