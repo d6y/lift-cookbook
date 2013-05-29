@@ -11,9 +11,9 @@ The aim is to give a single, short answer to a specific question. When there's m
 
 * _Simply Lift_, online at http://simply.liftweb.net[http://simply.liftweb.net].
 
-* Torsten Uhlmann's _Instant Lift Web Applications How-to_, PACKT Publishing, 2013.
+* Torsten Uhlmann's _Instant Lift Web Applications How-to_ (PACKT Publishing).
 
-* Timothy Perrett's _Lift in Action_, Manning Publications, 2011.
+* Timothy Perrett's _Lift in Action_ (Manning Publications).
 
 
 [[Contributors]]
@@ -22,17 +22,17 @@ The aim is to give a single, short answer to a specific question. When there's m
 I've mined the Lift mailing list for these recipes, but I'm not the only one.  Recipes have been contributed by:
 
 
-* Jono Ferguson
+* Jono Ferguson.
 
-* Franz Bettag -- Franz is an enthusiastic Scala Hacker for several years now. He joined the Lift team in January 2012 and actively tweets and blogs about his newest Scala adventures. Find him at https://twitter.com/fbettag[https://twitter.com/fbettag]
+* Franz Bettag, who's been an enthusiastic Scala hacker for several years now. He joined the Lift team in January 2012 and actively tweets and blogs about his newest Scala adventures. Find him at https://twitter.com/fbettag[https://twitter.com/fbettag].
 
-* Marek Żebrowski
+* Marek Żebrowski.
 
-* Peter Robinett -- Peter is a web and mobile developer and a Lift committer. He can be found on the web at http://www.bubblefoundry.com[http://www.bubblefoundry.com] and on Twitter at http://twitter.com/pr1001[http://twitter.com/pr1001].
+* Peter Robinett, who's a web and mobile developer and a Lift committer. He can be found on the Web at http://www.bubblefoundry.com[http://www.bubblefoundry.com] and on Twitter at http://twitter.com/pr1001[http://twitter.com/pr1001].
 
-* Kevin Lau -- Kevin is a founder of few web apps with a focus in AWS cloud, iOS and Lift.
+* Kevin Lau, who's a founder of few web apps with a focus in AWS cloud, iOS, and Lift.
 
-* Tony Kay
+* Tony Kay.
 
 [[jointhem]]
 You should join them: <<AddRecipe>> tells you how.
@@ -82,7 +82,7 @@ This icon indicates a warning or caution.
 
 === Using Code Examples
 
-This book is here to help you get your job done. In general, if this book includes code examples, you may use the code in this book in your programs and documentation. You do not need to contact us for permission unless you’re reproducing a significant portion of the code. For example, writing a program that uses several chunks of code from this book does not require permission. Selling or distributing a CD-ROM of examples from O’Reilly books does require permission. Answering a question by citing this book and quoting example code does not require permission. Incorporating a significant amount of example code from this book into your product’s documentation does require permission.
+This book is here to help you get your job done. In general, if this book includes code examples, you may use the code in this book in your programs and documentation. You do not need to contact us for permission unless you’re reproducing a significant portion of the code. For example, writing a program that uses several chunks of code from this book does not require permission. Selling or distributing a CD-ROM of examples from O’Reilly books does require permission. Answering a question by citing this book and quoting example code does not require permission. Incorporating a significant amount of example code from this book into your product’s documentation does require pass:[<phrase role='keep-together'>permission.</phrase>]
 
 We appreciate, but do not require, attribution. An attribution usually includes the title, author, publisher, and ISBN. For example: “_Lift Cookbook_ by Richard Dallaway (O’Reilly). Copyright 2013 Richard Dallaway, 978-1-4493-6268-3.”
 
@@ -98,7 +98,7 @@ pass:[<ulink role="orm:hideurl:ital" url="http://my.safaribooksonline.com/?porta
 
 Technology professionals, software developers, web designers, and business and creative professionals use Safari Books Online as their primary resource for research, problem solving, learning, and certification training.
 
-Safari Books Online offers a range of pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/subscriptions">product mixes</ulink>] and pricing programs for pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/organizations-teams">organizations</ulink>], pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/government">government agencies</ulink>], and pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/individuals">individuals</ulink>]. Subscribers have access to thousands of books, training videos, and prepublication manuscripts in one fully searchable database from publishers like O’Reilly Media, Prentice Hall Professional, Addison-Wesley Professional, Microsoft Press, Sams, Que, Peachpit Press, Focal Press, Cisco Press, John Wiley & Sons, Syngress, Morgan Kaufmann, IBM Redbooks, Packt, Adobe Press, FT Press, Apress, Manning, New Riders, McGraw-Hill, Jones & Bartlett, Course Technology, and dozens pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/publishers">more</ulink>]. For more information about Safari Books Online, please visit us pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/">online</ulink>].
+Safari Books Online offers a range of pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/subscriptions">product mixes</ulink>] and pricing programs for pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/organizations-teams">organizations</ulink>], pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/government">government agencies</ulink>], and pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/individuals">individuals</ulink>]. Subscribers have access to thousands of books, training videos, and prepublication manuscripts in one fully searchable database from publishers like O’Reilly Media, Prentice Hall Professional, Addison-Wesley Professional, Microsoft Press, Sams, Que, Peachpit Press, Focal Press, Cisco Press, John Wiley & Sons, Syngress, Morgan Kaufmann, IBM Redbooks, Packt, Adobe Press, FT Press, Apress, Manning, New Riders, McGraw-Hill, Jones & Bartlett, Course pass:[<phrase role='keep-together'>Technology,</phrase>] and dozens pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/publishers">more</ulink>]. For more information about Safari Books Online, please visit us pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/">online</ulink>].
 
 === How to Contact Us
 
@@ -115,7 +115,7 @@ Please address comments and questions concerning this book to the publisher:
 </simplelist>
 ++++
 
-We have a web page for this book, where we list errata, examples, and any additional information. You can access this page at link:$$http://www.oreilly.com/catalog/0636920029151$$[].
+We have a web page for this book, where we list errata, examples, and any additional information. You can access this page at link:$$http://oreil.ly/lift-cookbook$$[].
 
 To comment or ask technical questions about this book, send email to pass:[<email>bookquestions@oreilly.com</email>].
 
@@ -129,9 +129,9 @@ Watch us on YouTube: link:$$http://www.youtube.com/oreillymedia$$[]
 
 === Acknowledgments
 
-These recipes existing because of the many contributions on the Lift mailing list, where _Liftafarians_, as they are known, generously give their time to ask questions, put together example projects, give answers, share alternatives and chip in with comments. Thank you.
+These recipes exist because of the many contributions on the Lift mailing list, where _Liftafarians_, as they are known, generously give their time to ask questions, put together example projects, give answers, share alternatives, and chip in with comments. Thank you.
 
-I also want to thank those who have provided corrections to the recipes, on the mailing list, Github, and Twitter.  No matter what else it means, writing on the web and publishing on the web has meant I've received some prompt high-quality feedback.
+I also want to thank those who have provided corrections to the recipes, on the mailing list, GitHub, and Twitter.  No matter what else it means, writing on the Web and publishing on the Web has meant I've received some prompt, high-quality feedback.
 
 I am indebted to the contributors who have taken the trouble to write new recipes for this book.
 
