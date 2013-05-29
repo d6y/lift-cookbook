@@ -1454,7 +1454,7 @@ This structure has been adopted because modules have their own release cycle, in
 See Also
 ^^^^^^^^
 
-There's no real specification of what Textile is, but there are references available which cover the typical kinds of mark up to enter and what HTML you can expect to see: http://redcloth.org/hobix.com/textile/[http://redcloth.org/hobix.com/textile/].
+There's no real specification of what Textile is, but there are references available which cover the typical kinds of markup to enter and what HTML you can expect to see: http://redcloth.org/hobix.com/textile/[http://redcloth.org/hobix.com/textile/].
 
 The home of the Textile module: https://github.com/liftmodules/textile[https://github.com/liftmodules/textile].
 
