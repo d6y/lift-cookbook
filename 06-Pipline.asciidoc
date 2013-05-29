@@ -154,7 +154,7 @@ The full list of session hooks is:
 `onAboutToShutdownSession`:: This will be called just before a session is shutdown, (for example, when a session expires or the Lift application is being shutdown).
 `onShutdownSession`:: This will be called after all `onAboutToShutdownSession` functions have been run.
 
-If you are testing testing these hooks, you might want to make session expire faster than the 30 minutes of inactivity used by default in Lift.  To do this, supply a millisecond value to `LiftRules.sessionInactivityTimeout`:
+If you are testing these hooks, you might want to make the session expire faster than the 30 minutes of inactivity used by default in Lift.  To do this, supply a millisecond value to `LiftRules.sessionInactivityTimeout`:
 
 [source,scala]
 ------------------------------------------------------------
@@ -162,9 +162,9 @@ If you are testing testing these hooks, you might want to make session expire fa
 LiftRules.sessionInactivityTimeout.default.set(Full(1000L * 30))
 ------------------------------------------------------------
 
-There are two other hooks in `LiftSession`: `onSessionActivate` and `onSessionPassivate`. These may be of use if you are working with a servlet container in distributed mode, and want to be notified when the servlet HTTP session is about to be serialized (passivated) and de-serialized (activated) between container instances. These hooks are rarely used.
+There are two other hooks in `LiftSession`: `onSessionActivate` and `onSessionPassivate`. These may be of use if you are working with a servlet container in distributed mode, and want to be notified when the servlet HTTP session is about to be serialized (passivated) and deserialized (activated) between container instances. These hooks are rarely used.
 
-Note that the Lift session is not the same as the HTTP Session. Lift bridges from the HTTP session to its own session management.  This is described in some detail in _Exploring Lift_.
+Note that the Lift session is not the same as the HTTP session. Lift bridges from the HTTP session to its own session management.  This is described in some detail in _Exploring Lift_.
 
 See Also
 ^^^^^^^^
@@ -188,7 +188,7 @@ shutting down.
 Solution
 ^^^^^^^^
 
-Append to `LiftRules.unloadHooks`.
+Append to `LiftRules.unloadHooks`:
 
 [source,scala]
 --------------------------------------------------------------
@@ -205,12 +205,12 @@ being handled.
 
 This is triggered, in the words of the Java servlet
 specification, "by the web container to indicate to a filter that it is
-being taken out of service".
+being taken out of service."
 
 See Also
 ^^^^^^^^
 
-<<RunTasksPeriodically>> includes an example of using a unload hook.
+<<RunTasksPeriodically>> includes an example of using an unload hook.
 
 
 
@@ -263,16 +263,16 @@ LiftRules.statelessReqTest.append {
 }
 -----------------------------------------------------------------
 
-This example would only make the index page and any GIFs, JavaScript and
-CSS files stateless. The `httpReq` part is a `HTTPRequest` instance,
+This example would only make the index page and any GIFs, JavaScript, and
+CSS files stateless. The `httpReq` part is an `HTTPRequest` instance,
 allowing you to base the decision on the content of the request
 (cookies, user agent, etc).
 
-Another option is `LiftRules.statelessDispatch` which allows you to
-register a function which returns a `LiftResponse`. This will be
-executed without a session, and convenient for REST-based services.
+Another option is `LiftRules.statelessDispatch`, which allows you to
+register a function that returns a `LiftResponse`. This will be
+executed without a session, and is convenient for REST-based services.
 
-If you just need to mark an entry in Sitemap as being stateless, you can:
+If you just need to mark an entry in `SiteMap` as being stateless, you can:
 
 [source,scala]
 -----------------------------------------------------------------
@@ -287,7 +287,7 @@ See Also
 
 <<REST>> contains recipes for REST-based services in Lift.
 
-The Lift Wiki gives further details on the processing of stateless requests: http://www.assembla.com/wiki/show/liftweb/Stateless_Requests[http://www.assembla.com/wiki/show/liftweb/Stateless_Requests].
+The Lift wiki gives further details on the processing of stateless requests: http://www.assembla.com/wiki/show/liftweb/Stateless_Requests[http://www.assembla.com/wiki/show/liftweb/Stateless_Requests].
 
 This stateless request control was introduced in Lift 2.2.  The announcement on the mailing list gives more details: http://bit.ly/lift-stateless[http://bit.ly/lift-stateless].
 
@@ -327,14 +327,14 @@ The partial function you add to `exceptionHandler` needs to return a
 `LiftResponse` (i.e., something to send to the browser). The default
 behaviour is to return an `XhtmlResponse`, which in
 `Props.RunModes.Development` gives details of the exception, and in all
-other run modes simply says: "Something unexpected happened".
+other run modes simply says: "Something unexpected happened."
 
 You can return any kind of `LiftResponse`, including `RedirectResponse`,
-`JsonResponse`, `XmlResponse`, `JavaScriptResponse` and so on.
+`JsonResponse`, `XmlResponse`, `JavaScriptResponse`, and so on.
 
 The example above just sends a standard 500 error. That won't be very helpful to your users.
-An alternative is to render a custom message, but retain the 500 status code which will be
-useful for external site monitoring services if you use them:
+An alternative is to render a custom message, but retain the 500 status code that will be
+useful for external site-monitoring services, if you use them:
 
 [source,scala]
 --------------------------------------------------
@@ -404,7 +404,7 @@ This Ajax example will jump in before Lift's default behaviour for Ajax
 errors. The default is to retry the Ajax command three times
 (`LiftRules.ajaxRetryCount`), and then execute
 `LiftRules.ajaxDefaultFailure`, which will pop up a dialog saying: "The
-server cannot be contacted at this time"
+server cannot be contacted at this time."
 
 See Also
 ^^^^^^^^
@@ -475,20 +475,20 @@ Discussion
 
 `OutputStreamResponse` expects a function of type `OutputStream => Unit`. The
 `OutputStream` argument is the output stream to the client.  This means the bytes
-we write to the stream are written to the client. In the above example...
+we write to the stream are written to the client. In the previous example:
 
 [source,scala]
 -----------------------------------
 OutputStreamResponse(out => infinite.foreach(out.write))
 -----------------------------------
 
-...we are making use of the `write(byte[])` method on Java's `OutputStream` (`out`), and sending it
+we are making use of the `write(byte[])` method on `out`, a Java `OutputStream`, and sending it
 the `Array[Byte]` being generated from our `infinite` stream.
 
 Be aware that `OutputStreamResponse` is executed outside of the scope of `S`. This means if you need to access anything in the session, do so outside of the function you pass to `OutputStreamResponse`.
 
 
-For more control over status codes, headers and cookies, there are a
+For more control over status codes, headers, and cookies, there are a
 variety of signatures for the `OutputStreamResponse` object. For the
 most control, create an instance of the `OutputStreamResponse` class:
 
