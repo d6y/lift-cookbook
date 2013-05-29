@@ -2,9 +2,10 @@
 Request Pipeline
 ----------------
 
-When a request reaches Lift there are a number of points where you can jump in an control what Lift does,  send back a different kind of response, or control access.  This chapter looks at the pipeline through examples of different kinds of `LiftResponse` and configurations.
+When a request reaches Lift there are a number of points where you can jump in and control what Lift does,  sending back a different kind of response or controlling access.  This chapter looks at the pipeline through examples of different kinds of 
+++LiftResponse++s and configurations.
 
-You can get a great overview of the pipeline, including diagrams, from the Lift pipeline Wiki page at
+You can get a great overview of the pipeline, including diagrams, from the Lift pipeline wiki page at
 http://www.assembla.com/spaces/liftweb/wiki/HTTP_Pipeline[http://www.assembla.com/spaces/liftweb/wiki/HTTP_Pipeline].
 
 See https://github.com/LiftCookbook/cookbook_pipeline[https://github.com/LiftCookbook/cookbook_pipeline] for the source code that accompanies this chapter.
@@ -49,9 +50,9 @@ LiftRules.onBeginServicing.append {
 }
 -----------------------------------------------------
 
-This pattern will match any request starting _/paypal_, and we're ignoring the suffix on the request if any, and the type of request (e.g., GET, POST or so on).
+This pattern will match any request starting _/paypal_, and we're ignoring the suffix on the request, if any, and the type of request (e.g., GET, POST, or so on).
 
-There's also `LiftRules.early` which is called before `onBeginServicing`.  It expects a `HTTPRequest => Unit` function, so is a little lower-level than the `Req` used in `onBeginServicing`.  However, it will be called by all requests that pass through Lift. To see the difference, you could mark a request as something that the container should handle by itself:
+There's also `LiftRules.early`, which is called before `onBeginServicing`.  It expects an `HTTPRequest => Unit` function, so is a little lower-level than the `Req` used in `onBeginServicing`.  However, it will be called by all requests that pass through Lift. To see the difference, you could mark a request as something that the container should handle by itself:
 
 [source,scala]
 -----------------------------------------------------
@@ -60,7 +61,7 @@ LiftRules.liftRequest.append {
 }
 -----------------------------------------------------
 
-Which this in place a request for _robots.txt_ will be logged by `LiftRules.early` but won't make it to any of the other methods described in this recipe.
+With this in place a request for _robots.txt_ will be logged by `LiftRules.early` but won't make it to any of the other methods described in this recipe.
 
 If you need access to state (e.g., `S`), use `earlyInStateful`, which is based on a `Box[Req]` not a `Req`:
 
@@ -82,31 +83,31 @@ LiftRules.earlyInStateful.append {
 }
 -----------------------------------------------------
 
-Finally, there's also `earlyInStateless` which like `earlyInStateful` works on a `Box[Req]` but in other respects is the same as `onBeginServicing`. It is triggered after `early` and before `earlyInStateful`.
+Finally, there's also `earlyInStateless`, which like `earlyInStateful` works on a `Box[Req]` but in other respects is the same as `onBeginServicing`. It is triggered after `early` and before `earlyInStateful`.
 
 As a summary, the functions described in this recipe are called in this order:
 
-* `LiftRules.early`
-* `LiftRules.onBeginServicing`
-* `LiftRules.earlyInStateless`
-* `LiftRules.earlyInStateful`
+. `LiftRules.early`
+. `LiftRules.onBeginServicing`
+. `LiftRules.earlyInStateless`
+. `LiftRules.earlyInStateful`
 
 
 
 See Also
 ^^^^^^^^
 
-If you need to catch the end of a request, there is also an `onEndServicing` which can be given functions of type
+If you need to catch the end of a request, there is also an `onEndServicing` that can be given functions of type
 `(Req, Box[LiftResponse]) => Unit`.
 
-<<RunningStateless>> describe show to force requests to be stateless.
+<<RunningStateless>> describes how to force requests to be stateless.
 
 
 
 
 
 [[OnSession]]
-Running Code when Sessions are Created (or Destroyed)
+Running Code when Sessions Are Created (or Destroyed)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -131,7 +132,7 @@ LiftSession.onShutdownSession ::=
  ( (s:LiftSession) => println("Session going away") )
 ------------------------------------------------------------
 
-If the request path has been marked as being stateless via
+If the request path is marked as being stateless via
 `LiftRules.statelessReqTest`, the above example would only execute the
 `onBeginServicing` functions.
 
@@ -141,17 +142,17 @@ Discussion
 The hooks in `LiftSession` allow you to insert code at various points in
 the session lifecycle: when the session is created, at the start of
 servicing the request, after servicing, when the session is about to
-shutdown, at shutdown... the pipeline diagrams mentioned at the start of this chapter
+shutdown, at shutdown, etc. The pipeline diagrams mentioned at the start of this chapter
 are a useful guide to these stages.
 
 The full list of session hooks is:
 
-* `onSetupSession` -- this will be the first hook called when a session is created.
-* `afterSessionCreate` -- called after all `onSetupSession` functions have been called.
-* `onBeginServicing` -- at the start of the request processing.
-* `onEndServicing` -- and the end of request processing.
-* `onAboutToShutdownSession` -- called just before a session is shutdown, for example when a session expires or the Lift application is being shutdown.
-* `onShutdownSession` -- called after all `onAboutToShutdownSession` functions have been run.
+`onSetupSession`:: This will be the first hook called when a session is created.
+`afterSessionCreate`:: This will be called after all `onSetupSession` functions have been called.
+`onBeginServicing`:: This will be called at the start of the request processing.
+`onEndServicing`:: This will be called at the end of request processing.
+`onAboutToShutdownSession`:: This will be called just before a session is shutdown, (for example, when a session expires or the Lift application is being shutdown).
+`onShutdownSession`:: This will be called after all `onAboutToShutdownSession` functions have been run.
 
 If you are testing testing these hooks, you might want to make session expire faster than the 30 minutes of inactivity used by default in Lift.  To do this, supply a millisecond value to `LiftRules.sessionInactivityTimeout`:
 
