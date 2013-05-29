@@ -2,9 +2,9 @@
 Relational Database Persistence with Record and Squeryl
 -------------------------------------------------------
 
-Squeryl is an object-relational mapping library.  It converts Scala classes into tables, rows and columns in a relational database, and provides a way to write SQL-like queries that are type-checked by the Scala compiler. The Lift Squeryl Record module integrates Squeryl with Record, meaning your Lift application can use Squeryl to store and fetch data while making use of the features of record, such as data validation.
+Squeryl is an object-relational mapping library.  It converts Scala classes into tables, rows, and columns in a relational database, and provides a way to write SQL-like queries that are type-checked by the Scala compiler. The Lift Squeryl Record module integrates Squeryl with Record, meaning your Lift application can use Squeryl to store and fetch data while making use of the features of record, such as data validation.
 
-The code in this chapter can be found at: https://github.com/LiftCookbook/cookbook_squeryl[https://github.com/LiftCookbook/cookbook_squeryl].
+The code in this chapter can be found at https://github.com/LiftCookbook/cookbook_squeryl[https://github.com/LiftCookbook/cookbook_squeryl].
 
 [[ConfiguringSqueryl]]
 Configuring Squeryl and Record
@@ -79,16 +79,16 @@ S.addAround(new LoanWrapper {
 })
 ---------------------------------------------------------------
 
-This arranges for requests to be handled in the `inTransaction` scope. As Lift uses an exception for redirects, we catch this exception and throw it after the transaction completes, avoiding rollbacks after a `S.redirectTo` or similar.
+This arranges for requests to be handled in the `inTransaction` scope. As Lift uses an exception for redirects, we catch this exception and throw it after the transaction completes, avoiding rollbacks after an `S.redirectTo` or similar.
 
 Discussion
 ^^^^^^^^^^
 
-You can use any JVM persistence mechanism with Lift. What Lift Record provides is a light interface around persistence with bindings to Lift's CSS transforms, screens and wizards. Squeryl-Record is a concrete implementation to connect Record with Squeryl.  This means you can use standard Record objects, which are effectively your schema, with Squeryl and write queries which are validated at compile time.
+You can use any JVM persistence mechanism with Lift. What Lift Record provides is a light interface around persistence with bindings to Lift's CSS transforms, screens, and wizards. Squeryl-Record is a concrete implementation to connect Record with Squeryl.  This means you can use standard Record objects, which are effectively your schema, with Squeryl and write queries which are validated at compile time.
 
 Plugging into Squeryl means initializing Squeryl's session management, which allows us to wrap queries in Squeryl's `transaction` and `inTransaction` functions.  The difference between these two calls is that `inTransaction` will start a new transaction if one doesn't exist, whereas `transaction` always creates a new transaction.
 
-By ensuring a transaction is available for all HTTP requests via `addAround`, we can write queries in Lift and for the most part not have to establish transactions ourselves unless we want to.  For example:
+By ensuring a transaction is available for all HTTP requests via `addAround`, we can write queries in Lift and for the most part do not have to establish transactions ourselves unless we want to. For example:
 
 [source,scala]
 ------------------------------------------------------------
@@ -96,7 +96,7 @@ import net.liftweb.squerylrecord.RecordTypeMode._
 val r = myTable.insert(MyRecord.createRecord.myField(aValue))
 ------------------------------------------------------------
 
-In this recipe, the `PostgreSqlAdapter` is being used. Squeryl also supports: `OracleAdapter`, `MySQLInnoDBAdapter` and `MySQLAdapter`, `MSSQLServer`, `H2Adapter`, `DB2Adapter` and `DerbyAdapter`.
+In this recipe, the `PostgreSqlAdapter` is being used. Squeryl also supports: `OracleAdapter`, `MySQLInnoDBAdapter` and `MySQLAdapter`, `MSSQLServer`, `H2Adapter`, `DB2Adapter`, and `DerbyAdapter`.
 
 
 See Also
@@ -115,13 +115,13 @@ Using a JNDI Datasource
 Problem
 ^^^^^^^
 
-You want to use a _Java Naming and Directory Interface_ (JNDI) data source for your Record+Squeryl Lift
+You want to use a _Java Naming and Directory Interface_ (JNDI) data source for your Record-Squeryl Lift
 application.
 
 Solution
 ^^^^^^^^
 
-In _Boot.scala_ call `initWithSquerylSession` with a `DataSource` looked up from the JDNI context:
+In _Boot.scala_ call `initWithSquerylSession` with a `DataSource` looked up from the JNDI context:
 
 [source,scala]
 ------------------------------------------------------------
@@ -133,7 +133,7 @@ SquerylRecord.initWithSquerylSession(
   Session.create(ds.getConnection(), new MySQLAdapter) )
 ------------------------------------------------------------
 
-...replacing `mydb` with the name given to your database in your JNDI
+replacing `mydb` with the name given to your database in your JNDI
 configuration, and replacing `MySQLAdapter` with the appropriate adapter
 for the database you are using.
 
@@ -141,8 +141,8 @@ Discussion
 ^^^^^^^^^^
 
 JNDI is a service provided by
-the web container (e.g., Jetty, Tomcat) which allows you to
-configure a database connection in the container and then refer the
+the web container (e.g., Jetty, Tomcat) that allows you to
+configure a database connection in the container and then refer to the
 connection by name in your application. One advantage of this is that
 you can avoid including database credentials to your Lift source base.
 
