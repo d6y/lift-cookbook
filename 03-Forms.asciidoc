@@ -196,13 +196,13 @@ The `data-lift="form.ajax"` part of this recipe ensures that Lift adds the Ajax 
 </form>
 ---------------------------------------------------------
 
-In other words, when the form is asked to submit, Lift will serialise the form via Ajax.  This means you don't necessarily need the submit button at all.  In this example with a single text field, if you omit the submit button you can trigger serialisation by pressing _return_.  This will trigger the `s => name = s` function which was bound in our regular `data-lift="EchoForm"` snippet. In other words, the value `name` will be assigned even without a submit button.
+In other words, when the form is asked to submit, Lift will serialise the form via Ajax.  This means you don't necessarily need the submit button at all.  In this example with a single text field, if you omit the submit button you can trigger serialisation by pressing Return.  This will trigger the `s => name = s` function, which was bound in our regular `data-lift="EchoForm"` snippet. In other words, the value `name` will be assigned even without a submit button.
 
 Adding in a submit button gives us a way to perform actions once all the field's functions have been executed.
 
-Notice that Lift's approach is to serialise the form to the server, execute the functions associated with the fields, execute the submit function (if any), then return a JavaScript result to the client.  The default serialisation process is to use jQuery's `serialization` method on the form.  This serializes fields except submit buttons and file uploads.
+Notice that Lift's approach is to serialise the form to the server, execute the functions associated with the fields, execute the submit function (if any), then return a JavaScript result to the client.  The default serialisation process is to use jQuery's `serialization` method on the form.  This serialises fields except submit buttons and file uploads.
 
-Submit Styling
+Submit styling
 ++++++++++++++
 
 The `SHtml.ajaxSubmit` function generates a `<input type="submit">` element for the page. You may prefer to use a styled button for submit. For example, with Twitter Bootstrap, a button with an icon would require the following markup:
@@ -214,7 +214,7 @@ The `SHtml.ajaxSubmit` function generates a `<input type="submit">` element for 
 </button>
 ---------------------------------------------------------
 
-Pressing a `<button>` inside a form triggers the submit. However, if you bound that button with `Shtml.ajaxSubmit` the content, and therefore the styling, would be lost.
+Pressing a `<button>` inside a form triggers the submit. However, if you bound that button with `SHtml.ajaxSubmit`, the content, and therefore the styling, would be lost.
 
 To fix this you can assign a function to a hidden field. This function will be called when the form is submitted just like any other field.  The only part of our snippet that changes is the CSS selector binding:
 
@@ -226,7 +226,7 @@ import net.liftweb.http.SHtml.hidden
 "button *+" #> hidden(process)
 ---------------------------------------------------------
 
-The `*+` replacement rule means append a value to the child node of the button. This will include a hidden field in the form, something like...
+The `*+` replacement rule means append a value to the child node of the button. This will include a hidden field in the form, something like this:
 
 [source,scala]
 ---------------------------------------------------------
@@ -234,7 +234,7 @@ The `*+` replacement rule means append a value to the child node of the button. 
 ---------------------------------------------------------
 
 
-...and when the form is submitted, the hidden field is submitted, and like any field, Lift will call the function associated with it: `process` in this case.
+and when the form is submitted, the hidden field is submitted, and like any field, Lift will call the function associated with it: `process` in this case.
 
 The effect is something like `ajaxSubmit`, but not exactly the same. In this instance we're appending a hidden field after the `<button>`, but you could place it anywhere on the form you find convenient. However, there's one complication: when is `process` called? Is it before the `name` has been assigned or after? That depends on the order the fields are rendered.  That's to say, in your HTML template, placing the button before the text field (and therefore moving the hidden field's position in this example), the `process` function is called before the name has been set.
 
@@ -262,7 +262,7 @@ See Also
 
 Function order is discussed in the Lift Cool Tips wiki page: http://www.assembla.com/spaces/liftweb/wiki/cool_tips[http://www.assembla.com/spaces/liftweb/wiki/cool_tips].
 
-Form serialization is described at http://api.jquery.com/serialize/[http://api.jquery.com/serialize/].
+Form serialisation is described at http://api.jquery.com/serialize/[http://api.jquery.com/serialize/].
 
 <<AjaxFileUpload>> describes Ajax file uploads.
 
@@ -284,7 +284,7 @@ Solution
 
 Make use of Lift's _jlift.js_ JavaScript library and `JsonHandler` class.
 
-As an example we can create a "motto server" that will accept an institution name and the institution's motto
+As an example, we can create a "motto server" that will accept an institution name and the institution's motto
 and perform some action on these values. We're just going to echo the name and motto back to the client.
 
 Consider this HTML, which is not in a form, but includes _jlift.js_:
@@ -335,7 +335,7 @@ Consider this HTML, which is not in a form, but includes _jlift.js_:
 </html>
 ---------------------------------------------------------
 
-This HTML presents the user with two fields, a name and a motto, wrapped in a div called `jsonForm`. There's also a placeholder for some results, and you'll  notice a `jsonScript` placeholder for some JavaScript code. The `jsonForm` will be manipulated to ensure it is sent via Ajax, and the `jsonScript` will be replaced with Lift's code to perform the serialisation. This happens in the snippet code:
+This HTML presents the user with two fields, a name and a motto, wrapped in a `<div>` called `jsonForm`. There's also a placeholder for some results, and you'll  notice a `jsonScript` placeholder for some JavaScript code. The `jsonForm` will be manipulated to ensure it is sent via Ajax, and the `jsonScript` will be replaced with Lift's code to perform the serialisation. This happens in the snippet code:
 
 [source,scala]
 ---------------------------------------------------------
@@ -369,7 +369,7 @@ object JsonForm {
 }
 ---------------------------------------------------------
 
-Like many snippets, this Scala code contains a `render` method which binds to elements on the page. Specifically, `jsonForm` is being replaced with `SHtml.jsonForm`, which will take a `NodeSeq` (which are the input fields) turns it into a form that will submit the values as JSON. The submission will be to our `MottoServer` code.
+Like many snippets, this Scala code contains a `render` method that binds to elements on the page. Specifically, `jsonForm` is being replaced with `SHtml.jsonForm`, which will take a `NodeSeq` (which are the input fields) turns it into a form that will submit the values as JSON. The submission will be to our `MottoServer` code.
 
 The `jsonScript` element is bound to JavaScript that will perform the transmission and encoding of the values to the server.
 
@@ -386,31 +386,31 @@ the following sent to the server:
 
 This is the value of the `all` parameter in the `JsonCmd` being pattern matched against in `MottoServer.apply`. Lift has taken care of the plumbing to make this happen.
 
-The result of the pattern match in the example is to pick out the to field values, and send back JavaScript to update the `results` div with:
-"The motto of the Royal Society is Nullius in verba".
+The result of the pattern match in the example is to pick out the two field values, and send back JavaScript to update the `results` `<div>` with:
+"The motto of the Royal Society is Nullius in verba."
 
 
 Discussion
 ^^^^^^^^^^
 
-The `JsonHandler` class and the `SHtml.jsonForm` method are together performing a lot of work for us.  The `jsonForm` method is arranging for form fields to be encoded as JSON and sent, via Ajax, to our `MottoServer` as a `JsonCmd`. In fact, it's a `JsonCmd` with a default command name of "processForm".
+The `JsonHandler` class and the `SHtml.jsonForm` method are together performing a lot of work for us.  The `jsonForm` method is arranging for form fields to be encoded as JSON and sent, via Ajax, to our `MottoServer` as a `JsonCmd`. In fact, it's a `JsonCmd` with a default command name of `"processForm"`.
 
-Our `MottoServer` class is looking for (matching on) this `JsonCmd`, extracting the values of the form fields, and echoing these back to the client as a `JsCmd` that updates a div on the page.
+Our `MottoServer` class is looking for (matching on) this `JsonCmd`, extracting the values of the form fields, and echoing these back to the client as a `JsCmd` that updates a `<div>` on the page.
 
 The `MottoServer.jsCmd` part is generating the JavaScript required to deliver the form fields to the server.  As we will see later, this is providing a general purpose function we can use to send different JSON values and commands to the server.
 
-Notice also, from the network traffic, that the form fields sent are serialised with the names they are given on the page. There are no "F..." values sent which map to function calls on the server. A consequence of this is that any fields dynamically added to the page will also be serialised to the server, where they can be picked up in the `MottoServer`.
+Notice also, from the network traffic, that the form fields sent are serialised with the names they are given on the page. There are no "F..." values sent that map to function calls on the server. A consequence of this is that any fields dynamically added to the page will also be serialised to the server, where they can be picked up in the `MottoServer`.
 
 The script _jlift.js_ is providing the plumbing to make much of this happen.
 
-Before going on, convince yourself that we're generating JavaScript on the server-side (`MottoServer.jsCmd`), which is executed on the client side when the form is submitted, to deliver results to the server.
+Before going on, convince yourself that we're generating JavaScript on the server side (`MottoServer.jsCmd`), which is executed on the client side when the form is submitted, to deliver results to the server.
 
-Additional Commands
+Additional commands
 +++++++++++++++++++
 
-In the above example we match on a `JsonCmd` with a command name of "processForm".  You may be wondering what other command can can supplied, or what the meaning of the "target" value is.
+In the above example, we match on a `JsonCmd` with a command name of `"processForm"`.  You may be wondering what other command can be supplied, or what the meaning of the "target" value is.
 
-To demonstrate how you can implement other commands, we can add two additional buttons. These buttons will just convert the motto to upper case or lower case.  The server side `render` method changes as follows:
+To demonstrate how you can implement other commands, we can add two additional buttons. These buttons will just convert the motto to upper- or lowercase.  The server-side `render` method changes as follows:
 
 [source,scala]
 ---------------------------------------------------------
@@ -426,7 +426,7 @@ def render =
 ---------------------------------------------------------
 
 The `JsonForm` is unchanged. We still include `MottoServer.jsCmd`, and we still want to wrap the fields and submit them as before. What we've added
-is an extra JavaScript function called "changeCase", which takes one argument called "direction" and as a body calls the `MottoServer` with various parameters.  When it is rendered on the page it would appear as something like this:
+is an extra JavaScript function called `"changeCase"`, which takes one argument called `"direction"` and as a body calls the `MottoServer` with various parameters.  When it is rendered on the page it would appear as something like this:
 
 [source,javascript]
 ---------------------------------------------------------
@@ -438,8 +438,8 @@ function changeCase(direction) {
 
 The `F299202CYGIL` function (or similar name) is generated by Lift as part of `MottoServer.jsCmd`, and it is responsible for delivering data
 to the server.  The data it is delivering, in this case, is a JSON structure consisting of a different command ("processCase"), a target of whatever
-the JavaScript value `direction` evaluates to, and a parameter which is the result of the jQuery expression for the value
-of the "#motto" form field.
+the JavaScript value `direction` evaluates to, and a parameter that is the result of the jQuery expression for the value
+of the `"#motto"` form field.
 
 When is the `changeCase` function called?  That's up to us, and one very simple way to call the function would be by this addition to the HTML:
 
@@ -449,7 +449,7 @@ When is the `changeCase` function called?  That's up to us, and one very simple 
 <button onclick="javascript:changeCase('lower')">Lower case the Motto</button>
 ---------------------------------------------------------
 
-When either of these buttons are pressed, the result will be a JSON value sent to the server with the command of "processCase" and the "direction" and "params" set accordingly.  All that is left is to modify our `MottoServer` to pick up this `JsonCmd` on the server:
+When either of these buttons are pressed, the result will be a JSON value sent to the server with the command of `"processCase"` and the `"direction"` and `"params"` set accordingly.  All that is left is to modify our `MottoServer` to pick up this `JsonCmd` on the server:
 
 [source,scala]
 ---------------------------------------------------------
@@ -473,7 +473,7 @@ object MottoServer extends JsonHandler {
 }
 ---------------------------------------------------------
 
-The first `JsonCmd` is unchanged. The second matches on the parameters sent and results in updating the form fields with an upper- or lower-case version of the motto.
+The first `JsonCmd` is unchanged. The second matches on the parameters sent and results in updating the form fields with an upper- or lowercase version of the motto.
 
 
 
@@ -484,7 +484,7 @@ There are further examples of `JsonHandler` at http://demo.liftweb.net/json_more
 
 If you want to process JSON via REST, take a look at the examples at http://demo.liftweb.net/stateless_json[http://demo.liftweb.net/stateless_json].
 
-_Lift in Action_, section 9.1.4 discusses "Using JSON forms with AJAX", as does section 10.4 of _Exploring Lift_ at http://exploring.liftweb.net[http://exploring.liftweb.net].
+_Lift in Action_, section 9.1.4 discusses "Using JSON forms with AJAX," as does section 10.4 of _Exploring Lift_ at http://exploring.liftweb.net[http://exploring.liftweb.net].
 
 
 
@@ -501,7 +501,7 @@ dates to your forms.
 Solution
 ^^^^^^^^
 
-Use a standard Lift `SHtml.text` input field and attach a JavaScript date picker to it.  In this example we will use the jQuery UI date picker.
+Use a standard Lift `SHtml.text` input field and attach a JavaScript date picker to it.  In this example, we will use the jQuery UI date picker.
 
 Our form will include an input field called `birthday` to be used as a date picker, and also the jQuery UI JavaScript and CSS:
 
@@ -518,7 +518,8 @@ Our form will include an input field called `birthday` to be used as a date pick
   <h3>When's your birthday?</h3>
 
   <link data-lift="head" type="text/css" rel="stylesheet"
-    href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.2/css/smoothness/jquery-ui-1.10.2.custom.min.css">
+    href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.2/css/smoothness
+          /jquery-ui-1.10.2.custom.min.css">
   </link>
 
   <script data-lift="tail"
@@ -571,7 +572,7 @@ class JqDatePicker extends Loggable {
 }
 ---------------------------------------------------------
 
-Notice in `render` we are binding a regular `SHtml.text` field to the element with the ID of "birthday", but also appending  JavaScript to the page.  That JavaScript selects the birthday input field and attaches a configured date picker to it.
+Notice in `render` we are binding a regular `SHtml.text` field to the element with the ID of "birthday," but also appending JavaScript to the page.  That JavaScript selects the birthday input field and attaches a configured date picker to it.
 
 When the field is submitted, the `logDate` method is called with the value of the text field. We parse the text into a `java.util.Date` object.  The `tryo` Lift helper will catch any `ParseException` and return a `Box[Date]` which we open, or default to the current date if a bad date is supplied.
 
