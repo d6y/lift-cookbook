@@ -997,7 +997,7 @@ In the REST service, the uploaded files are available via the `uploadedFiles` me
 
 By default, uploaded files are held in memory, but that can be changed (see <<UploadToDisk>> in <<FileUpload>>).
 
-In the recipe we return a 200 (`OkResponse`).  If we wanted to signal to the widget that a file was rejected we can return another code. For example, perhaps we want to reject all files except PNG images.  On the server-side we can do that by replacing the `OkResponse` with a test:
+In the recipe, we return a 200 (`OkResponse`).  If we wanted to signal to the widget that a file was rejected, we can return another code. For example, perhaps we want to reject all files except PNG images.  On the server-side we can do that by replacing the `OkResponse` with a test:
 
 [source,scala]
 ---------------------------------------------------------
@@ -1018,12 +1018,12 @@ fail: function (e, data) {
 }
 ---------------------------------------------------------
 
-If we uploaded, say a JPEG, the browser would show an alert dialog reporting "Only PNGs".
+If we uploaded, say, a JPEG, the browser would show an alert dialog reporting "Only PNGs."
 
 See Also
 ^^^^^^^^
 
-Diego Medina has posted a Gist of Lift REST code to integrate more fully with the image upload and image reviewing features of the widget, specifically implementing the JSON response that the widget expects for that functionality.  You'll find it on GitHub via: http://bit.ly/lift-restupload[http://bit.ly/lift-restupload].
+Diego Medina has posted a Gist of Lift REST code to integrate more fully with the image upload and image reviewing features of the widget, specifically implementing the JSON response that the widget expects for that functionality.  You'll find it on GitHub via http://bit.ly/lift-restupload[http://bit.ly/lift-restupload].
 
 <<FileUpload>> describes the basic file upload behaviour of Lift and how to control where files are stored.
 
@@ -1036,14 +1036,14 @@ Format A Wired Cell
 Problem
 ^^^^^^^
 
-You want a wired UI element to have a different format than plain conversion to a string. For example, you'd like display a floating point value as a currency.
+You want a wired UI element to have a different format than plain conversion to a string. For example, you'd like to display a floating-point value as a currency.
 
 Solution
 ^^^^^^^^
 
 Use the `WiringUI.toNode` method to create a wiring node that can render the output formatted as you desire.
 
-As an example consider a HTML template to display the quantity of an item being purchased and the subtotal:
+As an example, consider an HTML template to display the quantity of an item being purchased and the subtotal:
 
 [source,html]
 ---------------------------------------------------------
@@ -1102,28 +1102,28 @@ class Wiring {
 }
 ---------------------------------------------------------
 
-We have defined a `currency` method to format the `subtotal` not as a `Double` but as currency amount using the Java number formatting capabilities.  This will result in values like "$19.90" being shown rather than "19.9".
+We have defined a `currency` method to format the `subtotal` not as a `Double` but as a currency amount using the Java number-formatting capabilities.  This will result in values like "$19.90" being shown rather than "19.9."
 
 
 Discussion
 ^^^^^^^^^^
 
 The primary `WiringUI` class makes it easy to bind a cell as text. The `asText` method works by converting a value to a `String` and wrapping it in a `Text` node. This is done via `toNode`, however we can use the `toNode` method directly
-to generate a transform function that is both hooked into the wiring UI, and
+to generate a transform function that is both hooked into the wiring UI and
 uses our code for the translation of the item.
 
-The mechanism is type-safe. In this example `cost` is a `Double` cell, `quantity` is an `Int` cell, and `subtotal` is inferred as a `Cell[Double]`.  This is why our formatting function is passed `value` as a `Double`.
+The mechanism is type-safe. In this example, `cost` is a `Double` cell, `quantity` is an `Int` cell, and `subtotal` is inferred as a `Cell[Double]`.  This is why our formatting function is passed `value` as a `Double`.
 
 Note that the function passed to `toNode` must return a node sequence. This gives a great deal of flexibility as you can return any kind of markup in a `NodeSeq`. Our example complies with this signature by wrapping a text value in a `Text` object.
 
-The `WiringUI.toNode` requires a `(T, NodeSeq) => NodeSeq`.  In the example above, we ignore the `NodeSeq`, but the value would be the contents of the element we've bound to.  Given the input...
+The `WiringUI.toNode` requires a `(T, NodeSeq) => NodeSeq`.  In the example above, we ignore the `NodeSeq`, but the value would be the contents of the element we've bound to.  Given the input:
 
 [source,html]
 ---------------------------------------------------------
 <td id="subtotal">?</td>
 ---------------------------------------------------------
 
-...this would mean the `NodeSeq` passed to us would just be the text node representing "?".  With a richer template we can use CSS selectors. For example, we can modify the template...
+this would mean the `NodeSeq` passed to us would just be the text node representing "?".  With a richer template we can use CSS selectors. For example, we can modify the template:
 
 [source,html]
 ---------------------------------------------------------
@@ -1132,7 +1132,7 @@ The `WiringUI.toNode` requires a `(T, NodeSeq) => NodeSeq`.  In the example abov
 </td>
 ---------------------------------------------------------
 
-...and apply a CSS selector to change the "amount" element:
+and apply a CSS selector to change the "amount" element:
 
 [source,scala]
 ---------------------------------------------------------
@@ -1143,6 +1143,6 @@ The `WiringUI.toNode` requires a `(T, NodeSeq) => NodeSeq`.  In the example abov
 See Also
 ^^^^^^^^
 
-Chapter 6 of _Simply Lift_ describes Lift's Wiring mechanism, and gives a detailed shopping example. http://simply.liftweb.net/[http://simply.liftweb.net/].
+Chapter 6 of _Simply Lift_ describes Lift's Wiring mechanism, and gives a detailed shopping example: http://simply.liftweb.net/[http://simply.liftweb.net/].
 
 
