@@ -2,11 +2,11 @@
 JavaScript, Ajax, Comet
 -----------------------
 
-Lift is known for its great Ajax and comet support, and in this chapter we'll explore these.
+Lift is known for its great Ajax and Comet support, and in this chapter we'll explore these.
 
-For an introduction to Lift's Ajax and Comet features, see _Simply Lift_ at http://simply.liftweb.net[http://simply.liftweb.net], chapter 9 of _Lift in Action_ (Perrett, 2012, Manning Publications Co.), or watch Diego Medina's video presentation at https://fmpwizard.telegr.am/blog/comet-actors-presentation[https://fmpwizard.telegr.am/blog/comet-actors-presentation].
+For an introduction to Lift's Ajax and Comet features, see _Simply Lift_ at http://simply.liftweb.net[http://simply.liftweb.net], Chapter 9 of _Lift in Action_ (Perrett, 2012, Manning Publications, Co.), or watch Diego Medina's video presentation at https://fmpwizard.telegr.am/blog/comet-actors-presentation[https://fmpwizard.telegr.am/blog/comet-actors-presentation].
 
-The source code for this chapter is: https://github.com/LiftCookbook/cookbook_ajax[https://github.com/LiftCookbook/cookbook_ajax].
+The source code for this chapter is https://github.com/LiftCookbook/cookbook_ajax[https://github.com/LiftCookbook/cookbook_ajax].
 
 
 [[ButtonTriggerServerCode]]
@@ -44,7 +44,7 @@ object AjaxInvoke extends Loggable {
 }
 ----
 
-In this snippet we are binding the click event of a button to an `ajaxInvoke`: when the button is pressed, Lift
+In this snippet, we are binding the click event of a button to an `ajaxInvoke`: when the button is pressed, Lift
 arranges for the function you gave `ajaxInvoke` to be executed.
 
 That function, `callback`, is just logging a message and returning a JavaScript alert to the browser. The corresponding HTML might include:
@@ -70,20 +70,20 @@ the DOM exposes.
 
 Related to `ajaxInvoke` are the following functions:
 
-* `SHtml.onEvent` which calls a function with the signature `String => JsCmd` because it
-is passed the `value` of the node it is attached to. In the above
+`SHtml.onEvent`:: Calls a function with the signature `String => JsCmd` because it
+is passed the `value` of the node it is attached to. In the previous
 example, this would be the empty string as the button has no value.
-* `SHtml.ajaxCall` is more general than `onEvent`, as you give it the expression you want passed to your server-side code.
-* `SHtml.jsonCall`  is even more general still: you give it a function
+`SHtml.ajaxCall`:: This is more general than `onEvent`, as you give it the expression you want passed to your server-side code.
+`SHtml.jsonCall`::  This is even more general still: you give it a function
 that will return a JSON object when executed on the client, and this
 object will be passed to your server-side function.
 
 Let's look at each of these in turn.
 
-onEvent -- Receiving the `value` of a DOM Element
+onEvent: receiving the value of a DOM element
 +++++++++++++++++++++++++++++++++++++++++++++++++
 
-You can use `onEvent` with any element that has a `value` attribute and responds to the event you choose to bind to. The function you supply to `onEvent` is called with the element's value. As an example, we can write a snippet which presents a challenge to the user, and validates the response:
+You can use `onEvent` with any element that has a `value` attribute and responds to the event you choose to bind to. The function you supply to `onEvent` is called with the element's value. As an example, we can write a snippet that presents a challenge to the user, and validates the response:
 
 [source,scala]
 ----
@@ -120,15 +120,15 @@ This snippet prompts the user to add the two random numbers presented in the `<p
 </div>
 ----
 
-When `onchange` is triggered (by pressing return or the tab key, for example), the text entered is sent to our `onEvent` function as a `String`. On the server-side we chance the answer and send back "Correct!" or "Try again" as a JavaScript alert.
+When `onchange` is triggered (by pressing Return or the Tab key, for example), the text entered is sent to our `onEvent` function as a `String`. On the server-side, we check the answer and send back "Correct!" or "Try again" as a JavaScript alert.
 
 
-ajaxCall -- Receiving an Arbitrary Client-Side String
+ajaxCall: receiving an arbitrary client-side string
 +++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Where `onEvent` sends `this.value` to your server-side code, `ajaxCall` allows you to specify the client-side expression used to produce a value.
 
-To demonstrate this we can create a template that includes two elements: a button and a text field.  We'll bind our function to the button, but read a value from the input field:
+To demonstrate this, we can create a template that includes two elements: a button and a text field.  We'll bind our function to the button, but read a value from the input field:
 
 [source,html]
 ----
@@ -161,16 +161,16 @@ object AjaxCall {
 ----
 
 The first argument to `ajaxCall` is the expression that will produce a value for our function. It can be any `JsExp`, and we've
-used `ValById` which looks up the value of an element by the ID attribute.  We could have used a regular jQuery expression to achieve the same effect with: `JsRaw("$('#num').val()")`.
+used `ValById`, which looks up the value of an element by the ID attribute.  We could have used a regular jQuery expression to achieve the same effect with `JsRaw("$('#num').val()")`.
 
-Our second argument to `ajaxCall` takes the value of the `JsExp` expression as a `String`. We're using one of Lift's JavaScript command to replaces the value with a new value. The new value is the result of incrementing the number (providing it is a number).
+Our second argument to `ajaxCall` takes the value of the `JsExp` expression as a `String`. We're using one of Lift's JavaScript commands to replace the value with a new value. The new value is the result of incrementing the number (providing it is a number).
 
-The end result is that you press the button, and the number updates. It should go without saying that these are simple illustrations, and you probably don't want a server round-trip to add one to a number. The techniques come into their own when there is some action of value to perform on the server.
+The end result is that you press the button and the number updates. It should go without saying that these are simple illustrations, and you probably don't want a server round-trip to add one to a number. The techniques come into their own when there is some action of value to perform on the server.
 
 You may have guessed that `onEvent` is implemented as an `ajaxCall` for `JsRaw("this.value")`.
 
 
-jsonCall -- Receiving a JSON Value
+jsonCall: receiving a JSON value
 ++++++++++++++++++++++++++++++++++
 
 Both `ajaxCall` and `onEvent` end up evaluating a `String => JsCmd` function. By contrast, `jsonCall` has the signature `JValue => JsCmd`, meaning you can pass more complex data structures from JavaScript to your Lift application.
@@ -200,7 +200,7 @@ function currentQuestion() {
 // ]]>
 ----
 
-The `currentQuestion` function is creating an object, which will be turned into a JSON string when sent to the server. On the server we'll check that this JSON represents a valid integer addition problem:
+The `currentQuestion` function is creating an object, which will be turned into a JSON string when sent to the server. On the server, we'll check that this JSON represents a valid integer addition problem:
 
 [source,scala]
 ----
@@ -239,11 +239,11 @@ object JsonCall extends Loggable {
 }
 ----
 
-Working from the bottom of this snippet up, we see a binding of the `<button>` to the `jsonCall`. The value we'll be working on is the value provided by the JavaScript function called `currentQuestion`.  This was defined on the template page.  When the button is clicked the JavaScript function is called and the resulting value will be presented to `validate`, which is our `JValue => JsCmd` function.
+Working from the bottom of this snippet up, we see a binding of the `<button>` to the `jsonCall`. The value we'll be working on is the value provided by the JavaScript function called `currentQuestion`.  This was defined on the template page.  When the button is clicked, the JavaScript function is called and the resulting value will be presented to `validate`, which is our `JValue => JsCmd` function.
 
-All `validate` does is log the JSON data and alert back if the question looks correct or not.  To do this we use the Lift JSON ability to extract JSON to a case class and call the `valid_?` test to see if the numbers add up.  This will evaluate to `Some(true)` if the addition works, `Some(false)` if the addition isn't correct or `None` if the input is missing or not a valid integer.
+All `validate` does is log the JSON data and alert back if the question looks correct or not.  To do this we use the Lift JSON ability to extract JSON to a case class and call the `valid_?` test to see if the numbers add up.  This will evaluate to `Some(true)` if the addition works, `Some(false)` if the addition isn't correct, or `None` if the input is missing or not a valid integer.
 
-Running the code and entering 1, 2 and 3 into the text fields will produce the following in the server log:
+Running the code and entering 1, 2, and 3 into the text fields will produce the following in the server log:
 
 [source,scala]
 ----
@@ -256,9 +256,9 @@ This is the `JValue` representation of the JSON.
 See Also
 ^^^^^^^^
 
-<<SelectOptionChange>> includes an example of `SHtml.onEvents` which will bind a function to a number of events on a `NodeSeq`.
+<<SelectOptionChange>> includes an example of `SHtml.onEvents`, which will bind a function to a number of events on a `NodeSeq`.
 
-For another example of `AjaxInvoke` take a look at the _Call Scala code from JavaScript_ section of Diego Medina's blog at: http://blog.fmpwizard.com/scala-lift-custom-wizard[http://blog.fmpwizard.com/scala-lift-custom-wizard].
+For another example of `AjaxInvoke` take a look at the _Call Scala code from JavaScript_ section of Diego Medina's blog at http://blog.fmpwizard.com/scala-lift-custom-wizard[http://blog.fmpwizard.com/scala-lift-custom-wizard].
 
 _Exploring Lift_, chapter 10, lists various `JsExp` classes you can use for `ajaxCall`: http://exploring.liftweb.net/master/index-10.html[http://exploring.liftweb.net/master/index-10.html].
 
@@ -266,13 +266,13 @@ _Exploring Lift_, chapter 10, lists various `JsExp` classes you can use for `aja
 
 
 [[SelectOptionChange]]
-Call Server when Select Option Changes
+Call Server When Select Option Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
 
-When a HTML select option is selected, you want to trigger a function on the server.
+When an HTML select option is selected, you want to trigger a function on the server.
 
 
 Solution
@@ -280,7 +280,7 @@ Solution
 
 Register a `String => JsCmd` function with `SHtml.ajaxSelect`.
 
-In this example we will lookup the distance from Earth to the planet a user selects.  This lookup will
+In this example, we will look up the distance from Earth to the planet a user selects.  This lookup will
 happen on the server and update the browser with the result. The interface is:
 
 [source, html]
@@ -368,10 +368,10 @@ To understand what's going on here, take a look at the HTML that Lift produces:
 </select>
 -----
 
-The `handler` function has been stored by Lift under the identifier of "F470183993611Y15ZJU" (in this particular rendering). An "onchange" event handler is attached to the select element and is responsible for transporting the selected value to the server, and bringing a value back. The `lift_ajaxHandler` JavaScript function is defined in _liftAjax.js_ which is automatically added to your page.
+The `handler` function has been stored by Lift under the identifier of `F470183993611Y15ZJU` (in this particular rendering). An `onchange` event handler is attached to the `<select>` element and is responsible for transporting the selected value to the server, and bringing a value back. The `lift_ajaxHandler` JavaScript function is defined in _liftAjax.js_, which is automatically added to your page.
 
 
-Collecting the Value on Form Submission
+Collecting the value on form submission
 +++++++++++++++++++++++++++++++++++++++
 
 If you need to additionally capture the selected value on a regular form submission, you can make use of `SHtml.onEvents`.  This attaches event listeners to a `NodeSeq`, triggering a server-side function when the event occurs.  We can use this with a regular form with a regular select box, but wire in Ajax calls to the server when the select changes.
@@ -388,7 +388,7 @@ var selectedValue : String = ""
 "type=submit" #> onSubmitUnit( () => S.notice("Destination "+selectedValue))
 ----
 
-We are arranging for the same `handler` function to be called when an "onchange" event is triggered.  This event binding is applied to a regular `SHtml.select`, which is storing the `selectedValue` when the form is submitted. We also bind a submit button to a function which generates a notice of which planet was selected.
+We are arranging for the same `handler` function to be called when an `onchange` event is triggered.  This event binding is applied to a regular `SHtml.select`, which is storing the `selectedValue` when the form is submitted. We also bind a submit button to a function that generates a notice of which planet was selected.
 
 The corresponding HTML also changes little.  We need to add a button and make sure the snippet is marked as a form with `?form`:
 
@@ -446,7 +446,7 @@ object ClientSide {
 }
 ----
 
-In the template we'd perhaps say:
+In the template, we'd perhaps say:
 
 [source,html]
 ----
@@ -465,9 +465,9 @@ Lift will render the page as:
 Discussion
 ^^^^^^^^^^
 
-Lift includes a JavaScript abstraction which you can use to build up
+Lift includes a JavaScript abstraction that you can use to build up
 more elaborate expressions for the client-side. For example you can
-combine basic commands...
+combine basic commands:
 
 [source,scala]
 ----
@@ -477,7 +477,7 @@ def render = "button [onclick]" #>
   (Alert("Here we go...") & RedirectTo("http://liftweb.net"))
 ----
 
-...which pops up an alert dialog and then sends you to _http://liftweb.net_. The HTML would be rendered as:
+which pops up an alert dialog and then sends you to _http://liftweb.net_. The HTML would be rendered as:
 
 [source,html]
 ----
@@ -530,7 +530,7 @@ Focus on a Field on Page Load
 Problem
 ^^^^^^^
 
-When a page loads you want the browser to select a particular field for
+When a page loads, you want the browser to select a particular field for
 input from the keyboard.
 
 Solution
@@ -566,17 +566,17 @@ The JavaScript that performs the focus simply looks up the node in the DOM by ID
 
 There are two related `JsCmd`:
 
-* `Focus` -- takes an element ID and sets focus on the element.
-* `SetValueAndFocus` -- which is like `Focus` but takes an additional
-`String` value to populate the element with.
+`Focus`:: Takes an element ID and sets focus on the element
+`SetValueAndFocus`:: Similar to `Focus`, but takes an additional
+`String` value to populate the element with
 
 These two are useful if you need to set focus from Ajax or Comet
-components dynamically.
+components pass:[<phrase role='keep-together'>dynamically.</phrase>]
 
 See Also
 ^^^^^^^^
 
-The source for `FocusOnLoad` is worth checking out to understand how it, and related commands, are constructed.  This may help you package your own JavaScript functionality up into commands that can be used in CSS binding expressions: https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/js/JsCommands.scala[https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/js/JsCommands.scala].
+The source for `FocusOnLoad` is worth checking out to understand how it and related commands are constructed.  This may help you package your own JavaScript functionality up into commands that can be used in CSS binding expressions: https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/js/JsCommands.scala[https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/js/JsCommands.scala].
 
 
 [[CSSClassOnAjaxForm]]
@@ -624,7 +624,7 @@ Running a Template via JavaScript
 Problem
 ^^^^^^^
 
-You want to load an entire page -- a template with snippets -- inside of the current page (i.e., without a browser refresh).
+You want to load an entire page--a template with snippets--inside of the current page (i.e., without a browser refresh).
 
 Solution
 ^^^^^^^^
@@ -668,7 +668,7 @@ loaded into the `inject` element.
 Discussion
 ^^^^^^^^^^
 
-`Templates` produces a `Box[NodeSeq]`.  In the example above, we map this content into a `JsCmd` which will populate the `inject` div.
+`Templates` produces a `Box[NodeSeq]`.  In the example above, we map this content into a `JsCmd` that will populate the `inject` `<div>`.
 
 If you write unit tests to access templates, be aware that you may need to modify your development or testing environment to include the _webapps_ folder.  To do this for SBT, add the following to _build.sbt_:
 
@@ -677,7 +677,7 @@ If you write unit tests to access templates, be aware that you may need to modif
 unmanagedResourceDirectories in Test <+= (baseDirectory) { _ / "src/main/webapp" }
 ----
 
-For this to work in your IDE you'll need to add _webapp_ as a source folder to locate templates.
+For this to work in your IDE, you'll need to add _webapp_ as a source folder to locate templates.
 
 See Also
 ^^^^^^^^
@@ -697,9 +697,9 @@ You want the JavaScript created in your snippet to be included at the end of the
 Solution
 ^^^^^^^^
 
-Use `S.appendJs` which places your JavaScript just before the closing `</body>` tag, along with other JavaScript produced by Lift.
+Use `S.appendJs`, which places your JavaScript just before the closing `</body>` tag, along with other JavaScript produced by Lift.
 
-In this HTML we have placed a `<script>` tag in the middle of the page, and marked it with a snippet called `JavaScriptTail`:
+In this HTML, we have placed a `<script>` tag in the middle of the page, and marked it with a snippet called `JavaScriptTail`:
 
 [source,html]
 -----
@@ -726,7 +726,7 @@ In this HTML we have placed a `<script>` tag in the middle of the page, and mark
 -----
 
 The `<script>` content will be generated by a snippet.
-It doesn't need to be a `<script>` tag: the snippet just replaces the content with nothing, but
+It doesn't need to be a `<script>` tag; the snippet just replaces the content with nothing, but
 hanging the snippet on the `<script>` tag is a reminder of the purpose of the snippet:
 
 [source, scala]
@@ -780,7 +780,7 @@ class JavascriptTail {
 }
 -----
 
-Note that `lift:tail` is a general-purpose Lift snippet and be used to move various kinds of content to the end of the page, not just JavaScript.
+Note that `lift:tail` is a general purpose Lift snippet and can be used to move various kinds of content to the end of the page, not just JavaScript.
 
 
 See Also
@@ -798,14 +798,14 @@ Run JavaScript on Comet Session Loss
 Problem
 ^^^^^^^
 
-You're using a comet actor and you want to arrange for some JavaScript to be executed in the event of the session being lost.
+You're using a Comet actor and you want to arrange for some JavaScript to be executed in the event of the session being lost.
 
 Solution
 ^^^^^^^^
 
 Configure your JavaScript via `LiftRules.noCometSessionCmd`.
 
-As an example we can modify the standard Lift chat demo to save the message being typed in the event of the session loss.  In the style of the demo we would have a Ajax form for entering a message and the comet chat area for displaying messages received:
+As an example, we can modify the standard Lift chat demo to save the message being typed in the event of the session loss.  In the style of the demo, we would have an Ajax form for entering a message and the Comet chat area for displaying messages received:
 
 [source, html]
 -----
@@ -821,7 +821,7 @@ As an example we can modify the standard Lift chat demo to save the message bein
 </div>
 -----
 
-To this we can add a function, `stash`, which we want to be called in the event of a comet session being lost:
+To this we can add a function, `stash`, which we want to be called in the event of a Comet session being lost:
 
 [source, html]
 -----
@@ -843,7 +843,7 @@ jQuery(document).ready(function() {
 </script>
 -----
 
-Our `stash` function will save the current value of the input field in a cookie called "stashed".  We arrange, on page load, to check for that cookie and insert the value into our message field.
+Our `stash` function will save the current value of the input field in a cookie called `stashed`.  We arrange, on page load, to check for that cookie and insert the value into our message field.
 
 The final part is to modify _Boot.scala_ to register our `stash` function:
 
@@ -854,23 +854,23 @@ import net.liftweb.http.js.JsCmds.Run
 LiftRules.noCometSessionCmd.default.set( () => Run("stash()") )
 -----
 
-In this way, if a session is lost while composing a chat message, the browser will stash the message, and when the page re-loads the message will be recovered.
+In this way, if a session is lost while composing a chat message, the browser will stash the message, and when the page reloads the message will be recovered.
 
 To test the example, type a message into the message field, then restart your Lift application.  Wait 10 seconds, and you'll see the effect.
 
 Discussion
 ^^^^^^^^^^
 
-Without changing `noCometSessionCmd`, the default behavior of Lift is to arrange for the browser to load the page `LiftRules.noCometSessionPage` -- which will be _/_ unless you change it.  This is carried out via the JavaScript function `lift_sessionLost` in _cometAjax.js_.
+Without changing `noCometSessionCmd`, the default behaviour of Lift is to arrange for the browser to load the home page, which is controlled by the `LiftRules.noCometSessionPage` setting. This is carried out via the JavaScript function `lift_sessionLost` in the file _cometAjax.js_.
 
-By providing our own `() => JsCmd` function to `LiftRules.noCometSessionCmd`, Lift arranges to call this function and deliver the `JsCmd`  to the browser, rather than `lift_sessionLost`.  If you watch the HTTP traffic between your browser and Lift, you'll see the `stash` function call being returned in response to a comet request.
+By providing our own `() => JsCmd` function to `LiftRules.noCometSessionCmd`, Lift arranges to call this function and deliver the `JsCmd`  to the browser, rather than `lift_sessionLost`.  If you watch the HTTP traffic between your browser and Lift, you'll see the `stash` function call being returned in response to a Comet request.
 
 .Factory
 ****
 The `noCometSessionCmd.default.set` call is making use of Lift's dependency injection. Specifically, it's setting up the supply side of the dependency. Although we're setting a default here, it's possible in Lift to supply different behaviours with different scopes: request or session.  See https://www.assembla.com/spaces/liftweb/wiki/Dependency_Injection[https://www.assembla.com/spaces/liftweb/wiki/Dependency_Injection].
 ****
 
-This recipe has focused on the handling of loss of session for Comet, and for Ajax, there's a corresponding `LiftRules.noAjaxSessionCmd` setting.
+This recipe has focused on the handling of loss of session for Comet; for Ajax, there's a corresponding `LiftRules.noAjaxSessionCmd` setting.
 
 See Also
 ^^^^^^^^
@@ -889,7 +889,7 @@ Ajax File Upload
 Problem
 ^^^^^^^
 
-You want to offer your users an Ajax file upload tool, with progress bars and drag and drop support.
+You want to offer your users an Ajax file upload tool, with progress bars and drag-and-drop support.
 
 Solution
 ^^^^^^^^
@@ -984,20 +984,20 @@ As with all REST services, it needs to be registered in _Boot.scala_:
 LiftRules.dispatch.append(code.rest.AjaxFileUpload)
 ---------------------------------------------------------
 
-By default the widget makes the whole HTML page a drop-target for files, meaning you can drag a file onto the page and it will immediately be uploaded to your Lift application.
+By default, the widget makes the whole HTML page a drop-target for files, meaning you can drag a file onto the page and it will immediately be uploaded to your Lift application.
 
 Discussion
 ^^^^^^^^^^
 
-In this recipe we've shown just the basic integration of the widget with a Lift application.  The demo site for the widget, http://blueimp.github.com/jQuery-File-Upload/[http://blueimp.github.com/jQuery-File-Upload/], shows other capabilities, and provides documentation on how to integrate them.
+In this recipe, we've shown just the basic integration of the widget with a Lift application.  The demo site for the widget, http://blueimp.github.com/jQuery-File-Upload/[http://blueimp.github.com/jQuery-File-Upload/], shows other capabilities, and provides documentation on how to integrate them.
 
-Many of the features just require JavaScript configuration.  For example, we've used the widget's `add`, `progressall`, and `done` handlers to show, update and then fade out a progress bar.  When the upload is completed, the name of the uploaded file is appended to the page.
+Many of the features just require JavaScript configuration.  For example, we've used the widget's `add`, `progressall`, and `done` handlers to show, update, and then fade out a progress bar.  When the upload is completed, the name of the uploaded file is appended to the page.
 
-In the REST service the uploaded file are available via the `uploadedFiles` method on the request. When Lift receives a multi-part form it automatically extracts files as `uploadedFiles`, each of which is a `FileParamHolder` which gives us access to the `fileName`, `length`, `mimeType` and `fileStream`.
+In the REST service, the uploaded files are available via the `uploadedFiles` method on the request. When Lift receives a multipart form, it automatically extracts files as pass:[<phrase role='keep-together'><literal>uploadedFiles</literal>,</phrase>] each of which is a `FileParamHolder` that gives us access to the `fileName`, `length`, `mimeType`, and `fileStream`.
 
-By default uploaded files are held in memory, but that can be changed (see <<UploadToDisk>> in <<FileUpload>>).
+By default, uploaded files are held in memory, but that can be changed (see <<UploadToDisk>> in <<FileUpload>>).
 
-In the recipe we return a 200 (`OkResponse`).  If we wanted to signal to the widget that a file was rejected we can return another code. For example, perhaps we want to reject all files except PNG images.  On the server-side we can do that by replacing the `OkResponse` with a test:
+In the recipe, we return a 200 (`OkResponse`).  If we wanted to signal to the widget that a file was rejected, we can return another code. For example, perhaps we want to reject all files except PNG images.  On the server-side we can do that by replacing the `OkResponse` with a test:
 
 [source,scala]
 ---------------------------------------------------------
@@ -1018,12 +1018,12 @@ fail: function (e, data) {
 }
 ---------------------------------------------------------
 
-If we uploaded, say a JPEG, the browser would show an alert dialog reporting "Only PNGs".
+If we uploaded, say, a JPEG, the browser would show an alert dialog reporting "Only PNGs."
 
 See Also
 ^^^^^^^^
 
-Diego Medina has posted a Gist of Lift REST code to integrate more fully with the image upload and image reviewing features of the widget, specifically implementing the JSON response that the widget expects for that functionality.  You'll find it on GitHub via: http://bit.ly/lift-restupload[http://bit.ly/lift-restupload].
+Diego Medina has posted a Gist of Lift REST code to integrate more fully with the image upload and image reviewing features of the widget, specifically implementing the JSON response that the widget expects for that functionality.  You'll find it on GitHub via http://bit.ly/lift-restupload[http://bit.ly/lift-restupload].
 
 <<FileUpload>> describes the basic file upload behaviour of Lift and how to control where files are stored.
 
@@ -1036,14 +1036,14 @@ Format A Wired Cell
 Problem
 ^^^^^^^
 
-You want a wired UI element to have a different format than plain conversion to a string. For example, you'd like display a floating point value as a currency.
+You want a wired UI element to have a different format than plain conversion to a string. For example, you'd like to display a floating-point value as a currency.
 
 Solution
 ^^^^^^^^
 
 Use the `WiringUI.toNode` method to create a wiring node that can render the output formatted as you desire.
 
-As an example consider a HTML template to display the quantity of an item being purchased and the subtotal:
+As an example, consider an HTML template to display the quantity of an item being purchased and the subtotal:
 
 [source,html]
 ---------------------------------------------------------
@@ -1102,28 +1102,28 @@ class Wiring {
 }
 ---------------------------------------------------------
 
-We have defined a `currency` method to format the `subtotal` not as a `Double` but as currency amount using the Java number formatting capabilities.  This will result in values like "$19.90" being shown rather than "19.9".
+We have defined a `currency` method to format the `subtotal` not as a `Double` but as a currency amount using the Java number-formatting capabilities.  This will result in values like "$19.90" being shown rather than "19.9."
 
 
 Discussion
 ^^^^^^^^^^
 
 The primary `WiringUI` class makes it easy to bind a cell as text. The `asText` method works by converting a value to a `String` and wrapping it in a `Text` node. This is done via `toNode`, however we can use the `toNode` method directly
-to generate a transform function that is both hooked into the wiring UI, and
+to generate a transform function that is both hooked into the wiring UI and
 uses our code for the translation of the item.
 
-The mechanism is type-safe. In this example `cost` is a `Double` cell, `quantity` is an `Int` cell, and `subtotal` is inferred as a `Cell[Double]`.  This is why our formatting function is passed `value` as a `Double`.
+The mechanism is type-safe. In this example, `cost` is a `Double` cell, `quantity` is an `Int` cell, and `subtotal` is inferred as a `Cell[Double]`.  This is why our formatting function is passed `value` as a `Double`.
 
 Note that the function passed to `toNode` must return a node sequence. This gives a great deal of flexibility as you can return any kind of markup in a `NodeSeq`. Our example complies with this signature by wrapping a text value in a `Text` object.
 
-The `WiringUI.toNode` requires a `(T, NodeSeq) => NodeSeq`.  In the example above, we ignore the `NodeSeq`, but the value would be the contents of the element we've bound to.  Given the input...
+The `WiringUI.toNode` requires a `(T, NodeSeq) => NodeSeq`.  In the example above, we ignore the `NodeSeq`, but the value would be the contents of the element we've bound to.  Given the input:
 
 [source,html]
 ---------------------------------------------------------
 <td id="subtotal">?</td>
 ---------------------------------------------------------
 
-...this would mean the `NodeSeq` passed to us would just be the text node representing "?".  With a richer template we can use CSS selectors. For example, we can modify the template...
+this would mean the `NodeSeq` passed to us would just be the text node representing "?".  With a richer template we can use CSS selectors. For example, we can modify the template:
 
 [source,html]
 ---------------------------------------------------------
@@ -1132,7 +1132,7 @@ The `WiringUI.toNode` requires a `(T, NodeSeq) => NodeSeq`.  In the example abov
 </td>
 ---------------------------------------------------------
 
-...and apply a CSS selector to change the "amount" element:
+and apply a CSS selector to change the "amount" element:
 
 [source,scala]
 ---------------------------------------------------------
@@ -1143,6 +1143,6 @@ The `WiringUI.toNode` requires a `(T, NodeSeq) => NodeSeq`.  In the example abov
 See Also
 ^^^^^^^^
 
-Chapter 6 of _Simply Lift_ describes Lift's Wiring mechanism, and gives a detailed shopping example. http://simply.liftweb.net/[http://simply.liftweb.net/].
+Chapter 6 of _Simply Lift_ describes Lift's Wiring mechanism, and gives a detailed shopping example: http://simply.liftweb.net/[http://simply.liftweb.net/].
 
 

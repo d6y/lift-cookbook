@@ -2,9 +2,10 @@
 Request Pipeline
 ----------------
 
-When a request reaches Lift there are a number of points where you can jump in an control what Lift does,  send back a different kind of response, or control access.  This chapter looks at the pipeline through examples of different kinds of `LiftResponse` and configurations.
+When a request reaches Lift there are a number of points where you can jump in and control what Lift does,  sending back a different kind of response or controlling access.  This chapter looks at the pipeline through examples of different kinds of 
+++LiftResponse++s and configurations.
 
-You can get a great overview of the pipeline, including diagrams, from the Lift pipeline Wiki page at
+You can get a great overview of the pipeline, including diagrams, from the Lift pipeline wiki page at
 http://www.assembla.com/spaces/liftweb/wiki/HTTP_Pipeline[http://www.assembla.com/spaces/liftweb/wiki/HTTP_Pipeline].
 
 See https://github.com/LiftCookbook/cookbook_pipeline[https://github.com/LiftCookbook/cookbook_pipeline] for the source code that accompanies this chapter.
@@ -49,9 +50,9 @@ LiftRules.onBeginServicing.append {
 }
 -----------------------------------------------------
 
-This pattern will match any request starting _/paypal_, and we're ignoring the suffix on the request if any, and the type of request (e.g., GET, POST or so on).
+This pattern will match any request starting _/paypal_, and we're ignoring the suffix on the request, if any, and the type of request (e.g., GET, POST, or so on).
 
-There's also `LiftRules.early` which is called before `onBeginServicing`.  It expects a `HTTPRequest => Unit` function, so is a little lower-level than the `Req` used in `onBeginServicing`.  However, it will be called by all requests that pass through Lift. To see the difference, you could mark a request as something that the container should handle by itself:
+There's also `LiftRules.early`, which is called before `onBeginServicing`.  It expects an `HTTPRequest => Unit` function, so is a little lower-level than the `Req` used in `onBeginServicing`.  However, it will be called by all requests that pass through Lift. To see the difference, you could mark a request as something that the container should handle by itself:
 
 [source,scala]
 -----------------------------------------------------
@@ -60,7 +61,7 @@ LiftRules.liftRequest.append {
 }
 -----------------------------------------------------
 
-Which this in place a request for _robots.txt_ will be logged by `LiftRules.early` but won't make it to any of the other methods described in this recipe.
+With this in place a request for _robots.txt_ will be logged by `LiftRules.early` but won't make it to any of the other methods described in this recipe.
 
 If you need access to state (e.g., `S`), use `earlyInStateful`, which is based on a `Box[Req]` not a `Req`:
 
@@ -82,31 +83,31 @@ LiftRules.earlyInStateful.append {
 }
 -----------------------------------------------------
 
-Finally, there's also `earlyInStateless` which like `earlyInStateful` works on a `Box[Req]` but in other respects is the same as `onBeginServicing`. It is triggered after `early` and before `earlyInStateful`.
+Finally, there's also `earlyInStateless`, which like `earlyInStateful` works on a `Box[Req]` but in other respects is the same as `onBeginServicing`. It is triggered after `early` and before `earlyInStateful`.
 
 As a summary, the functions described in this recipe are called in this order:
 
-* `LiftRules.early`
-* `LiftRules.onBeginServicing`
-* `LiftRules.earlyInStateless`
-* `LiftRules.earlyInStateful`
+. `LiftRules.early`
+. `LiftRules.onBeginServicing`
+. `LiftRules.earlyInStateless`
+. `LiftRules.earlyInStateful`
 
 
 
 See Also
 ^^^^^^^^
 
-If you need to catch the end of a request, there is also an `onEndServicing` which can be given functions of type
+If you need to catch the end of a request, there is also an `onEndServicing` that can be given functions of type
 `(Req, Box[LiftResponse]) => Unit`.
 
-<<RunningStateless>> describe show to force requests to be stateless.
+<<RunningStateless>> describes how to force requests to be stateless.
 
 
 
 
 
 [[OnSession]]
-Running Code when Sessions are Created (or Destroyed)
+Running Code when Sessions Are Created (or Destroyed)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -131,7 +132,7 @@ LiftSession.onShutdownSession ::=
  ( (s:LiftSession) => println("Session going away") )
 ------------------------------------------------------------
 
-If the request path has been marked as being stateless via
+If the request path is marked as being stateless via
 `LiftRules.statelessReqTest`, the above example would only execute the
 `onBeginServicing` functions.
 
@@ -141,19 +142,19 @@ Discussion
 The hooks in `LiftSession` allow you to insert code at various points in
 the session lifecycle: when the session is created, at the start of
 servicing the request, after servicing, when the session is about to
-shutdown, at shutdown... the pipeline diagrams mentioned at the start of this chapter
+shutdown, at shutdown, etc. The pipeline diagrams mentioned at the start of this chapter
 are a useful guide to these stages.
 
 The full list of session hooks is:
 
-* `onSetupSession` -- this will be the first hook called when a session is created.
-* `afterSessionCreate` -- called after all `onSetupSession` functions have been called.
-* `onBeginServicing` -- at the start of the request processing.
-* `onEndServicing` -- and the end of request processing.
-* `onAboutToShutdownSession` -- called just before a session is shutdown, for example when a session expires or the Lift application is being shutdown.
-* `onShutdownSession` -- called after all `onAboutToShutdownSession` functions have been run.
+`onSetupSession`:: This will be the first hook called when a session is created.
+`afterSessionCreate`:: This will be called after all `onSetupSession` functions have been called.
+`onBeginServicing`:: This will be called at the start of the request processing.
+`onEndServicing`:: This will be called at the end of request processing.
+`onAboutToShutdownSession`:: This will be called just before a session is shutdown, (for example, when a session expires or the Lift application is being shutdown).
+`onShutdownSession`:: This will be called after all `onAboutToShutdownSession` functions have been run.
 
-If you are testing testing these hooks, you might want to make session expire faster than the 30 minutes of inactivity used by default in Lift.  To do this, supply a millisecond value to `LiftRules.sessionInactivityTimeout`:
+If you are testing these hooks, you might want to make the session expire faster than the 30 minutes of inactivity used by default in Lift.  To do this, supply a millisecond value to `LiftRules.sessionInactivityTimeout`:
 
 [source,scala]
 ------------------------------------------------------------
@@ -161,9 +162,9 @@ If you are testing testing these hooks, you might want to make session expire fa
 LiftRules.sessionInactivityTimeout.default.set(Full(1000L * 30))
 ------------------------------------------------------------
 
-There are two other hooks in `LiftSession`: `onSessionActivate` and `onSessionPassivate`. These may be of use if you are working with a servlet container in distributed mode, and want to be notified when the servlet HTTP session is about to be serialized (passivated) and de-serialized (activated) between container instances. These hooks are rarely used.
+There are two other hooks in `LiftSession`: `onSessionActivate` and `onSessionPassivate`. These may be of use if you are working with a servlet container in distributed mode, and want to be notified when the servlet HTTP session is about to be serialized (passivated) and deserialized (activated) between container instances. These hooks are rarely used.
 
-Note that the Lift session is not the same as the HTTP Session. Lift bridges from the HTTP session to its own session management.  This is described in some detail in _Exploring Lift_.
+Note that the Lift session is not the same as the HTTP session. Lift bridges from the HTTP session to its own session management.  This is described in some detail in _Exploring Lift_.
 
 See Also
 ^^^^^^^^
@@ -187,7 +188,7 @@ shutting down.
 Solution
 ^^^^^^^^
 
-Append to `LiftRules.unloadHooks`.
+Append to `LiftRules.unloadHooks`:
 
 [source,scala]
 --------------------------------------------------------------
@@ -204,12 +205,12 @@ being handled.
 
 This is triggered, in the words of the Java servlet
 specification, "by the web container to indicate to a filter that it is
-being taken out of service".
+being taken out of service."
 
 See Also
 ^^^^^^^^
 
-<<RunTasksPeriodically>> includes an example of using a unload hook.
+<<RunTasksPeriodically>> includes an example of using an unload hook.
 
 
 
@@ -262,16 +263,16 @@ LiftRules.statelessReqTest.append {
 }
 -----------------------------------------------------------------
 
-This example would only make the index page and any GIFs, JavaScript and
-CSS files stateless. The `httpReq` part is a `HTTPRequest` instance,
+This example would only make the index page and any GIFs, JavaScript, and
+CSS files stateless. The `httpReq` part is an `HTTPRequest` instance,
 allowing you to base the decision on the content of the request
 (cookies, user agent, etc).
 
-Another option is `LiftRules.statelessDispatch` which allows you to
-register a function which returns a `LiftResponse`. This will be
-executed without a session, and convenient for REST-based services.
+Another option is `LiftRules.statelessDispatch`, which allows you to
+register a function that returns a `LiftResponse`. This will be
+executed without a session, and is convenient for REST-based services.
 
-If you just need to mark an entry in Sitemap as being stateless, you can:
+If you just need to mark an entry in `SiteMap` as being stateless, you can:
 
 [source,scala]
 -----------------------------------------------------------------
@@ -286,7 +287,7 @@ See Also
 
 <<REST>> contains recipes for REST-based services in Lift.
 
-The Lift Wiki gives further details on the processing of stateless requests: http://www.assembla.com/wiki/show/liftweb/Stateless_Requests[http://www.assembla.com/wiki/show/liftweb/Stateless_Requests].
+The Lift wiki gives further details on the processing of stateless requests: http://www.assembla.com/wiki/show/liftweb/Stateless_Requests[http://www.assembla.com/wiki/show/liftweb/Stateless_Requests].
 
 This stateless request control was introduced in Lift 2.2.  The announcement on the mailing list gives more details: http://bit.ly/lift-stateless[http://bit.ly/lift-stateless].
 
@@ -326,14 +327,14 @@ The partial function you add to `exceptionHandler` needs to return a
 `LiftResponse` (i.e., something to send to the browser). The default
 behaviour is to return an `XhtmlResponse`, which in
 `Props.RunModes.Development` gives details of the exception, and in all
-other run modes simply says: "Something unexpected happened".
+other run modes simply says: "Something unexpected happened."
 
 You can return any kind of `LiftResponse`, including `RedirectResponse`,
-`JsonResponse`, `XmlResponse`, `JavaScriptResponse` and so on.
+`JsonResponse`, `XmlResponse`, `JavaScriptResponse`, and so on.
 
 The example above just sends a standard 500 error. That won't be very helpful to your users.
-An alternative is to render a custom message, but retain the 500 status code which will be
-useful for external site monitoring services if you use them:
+An alternative is to render a custom message, but retain the 500 status code that will be
+useful for external site-monitoring services, if you use them:
 
 [source,scala]
 --------------------------------------------------
@@ -403,7 +404,7 @@ This Ajax example will jump in before Lift's default behaviour for Ajax
 errors. The default is to retry the Ajax command three times
 (`LiftRules.ajaxRetryCount`), and then execute
 `LiftRules.ajaxDefaultFailure`, which will pop up a dialog saying: "The
-server cannot be contacted at this time"
+server cannot be contacted at this time."
 
 See Also
 ^^^^^^^^
@@ -474,20 +475,20 @@ Discussion
 
 `OutputStreamResponse` expects a function of type `OutputStream => Unit`. The
 `OutputStream` argument is the output stream to the client.  This means the bytes
-we write to the stream are written to the client. In the above example...
+we write to the stream are written to the client. In the previous example:
 
 [source,scala]
 -----------------------------------
 OutputStreamResponse(out => infinite.foreach(out.write))
 -----------------------------------
 
-...we are making use of the `write(byte[])` method on Java's `OutputStream` (`out`), and sending it
+we are making use of the `write(byte[])` method on `out`, a Java `OutputStream`, and sending it
 the `Array[Byte]` being generated from our `infinite` stream.
 
 Be aware that `OutputStreamResponse` is executed outside of the scope of `S`. This means if you need to access anything in the session, do so outside of the function you pass to `OutputStreamResponse`.
 
 
-For more control over status codes, headers and cookies, there are a
+For more control over status codes, headers, and cookies, there are a
 variety of signatures for the `OutputStreamResponse` object. For the
 most control, create an instance of the `OutputStreamResponse` class:
 
@@ -568,12 +569,12 @@ case class StreamingResponse(
 Notice the use of a structural type for the `data` parameter. Anything
 with a matching `read` method can be given here, including
 `java.io.InputStream`-like objects, meaning `StreamingResponse` can act
-as a pipe from input to output. Lift pulls 8k chunks from your
+as a pipe from input to output. Lift pulls 8 K chunks from your
 `StreamingResponse` to send to the client.
 
 Your `data` `read` function should follow the semantics of Java IO and
-return "the total number of bytes read into the buffer, or -1 is there
-is no more data because the end of the stream has been reached".
+return "the total number of bytes read into the buffer, or –1 if there
+is no more data because the end of the stream has been reached."
 
 See Also
 ^^^^^^^^
@@ -629,7 +630,7 @@ object DownloadService extends RestHelper {
 
 We are allowing users to download "known" files. That is, files which we
 approve of for access. We do this because opening up the file system to
-any unfiltered end-user input pretty much means your server will be
+any unfiltered end user input pretty much means your server will be
 compromised.
 
 For our example, `Known` is checking a static list of names:
@@ -673,15 +674,15 @@ LiftRules.dispatch.append(DownloadService)
 Discussion
 ^^^^^^^^^^
 
-By turning the request into a `Box[LiftResponse]` we are able to serve
+By turning the request into a `Box[LiftResponse]`, we are able to serve
 up the file, send the user to a different page, and also allow Lift to
 handle the 404 (`Empty`) cases.
 
 If we added a test to see if the file existed on disk in `fileResponse`
 that would cause the method to evaluate to `Empty` for missing files,
 which triggers a 404. As the code stands, if the file does not exist,
-the `tryo` would give us a `Failure` which would turn into a 404 error
-with a body of "/tmp/important (No such file or directory)".
+the `tryo` would give us a `Failure` that would turn into a 404 error
+with a body of "/tmp/important (No such file or directory)."
 
 Because we are testing for known resources via the `Known` extractor as
 part of the pattern for _/download/_, unknown resources will not be
@@ -698,7 +699,7 @@ serve {
 }
 ----------------------------------------------------------------------------
 
-You can mix and match extractors, guards and conditions in your response
+You can mix and match extractors, guards, and conditions in your response
 to best fit the way you want the code to look and work.
 
 See Also
@@ -716,13 +717,13 @@ Access Restriction by HTTP Header
 Problem
 ^^^^^^^
 
-You need to control access to a page based on the value of a HTTP
+You need to control access to a page based on the value of an HTTP
 header.
 
 Solution
 ^^^^^^^^
 
-Use a custom `If` in SiteMap:
+Use a custom `If` in `SiteMap`:
 
 [source,scala]
 ----
@@ -737,10 +738,10 @@ val entries = List(
 )
 ----
 
-In this example _header-required.html_ can only be viewed if the request
-includes a HTTP header called `ALLOWED` with a value of `YES`. Any other
+In this example, _header-required.html_ can only be viewed if the request
+includes an HTTP header called `ALLOWED` with a value of `YES`. Any other
 request for the page will be redirected with a Lift error notice of
-"Access not allowed".
+"Access not allowed."
 
 This can be tested from the command line using a tool like cURL:
 
@@ -753,11 +754,11 @@ Discussion
 
 The `If` test ensures the `() => Boolean` function you supply as a first
 argument returns `true` before the page it applies to is shown. In this example
-we'll get `true` if the request contains a header called "ALLOWED", and the optional
-value of that header is `Full("YES")`.  This is a `LocParam` (location parameter) which
-modifies the site map item. It can be appended to any menu items you want using the `>>` method.
+we'll get `true` if the request contains a header called `ALLOWED`, and the optional
+value of that header is `Full("YES")`.  This is a `LocParam` (location parameter) that
+modifies the `SiteMap` item. It can be appended to any menu items you want using the `>>` method.
 
-Note that without the header, the test will be false. This will mean with link to the page will not appear the
+Note that without the header, the test will be false. This will mean links to the page will not appear in the
 menu generated by `Menu.builder`.
 
 The second argument to the `If()` is what Lift does if the test isn't true when the user tries to access the page.  It's
@@ -767,7 +768,7 @@ from a `String` ("Access not allowed") to a notice with a redirection that will 
 the user to the home page.
 
 If you visit the page without a header, you'll
-see a notice saying "Access not allowed".  This will be the home page of the site, but
+see a notice saying "Access not allowed." This will be the home page of the site, but
 that's just the default. You can request that Lift show a different page by setting `LiftRules.siteMapFailRedirectLocation` in _Boot.scala_:
 
 [source,scala]
@@ -782,22 +783,22 @@ whatever you put in that page.
 See Also
 ^^^^^^^^
 
-The Lift wiki gives a summary of Lift's Site Map and the tests you can include in site map entries: https://www.assembla.com/wiki/show/liftweb/SiteMap[https://www.assembla.com/wiki/show/liftweb/SiteMap].
+The Lift wiki gives a summary of Lift's `SiteMap` and the tests you can include in site map entries: https://www.assembla.com/wiki/show/liftweb/SiteMap[https://www.assembla.com/wiki/show/liftweb/SiteMap].
 
-There are further details in chapter 7 of _Exploring Lift_ at http://exploring.liftweb.net[http://exploring.liftweb.net], and "SiteMap and access control", chapter 7 of _Lift in Action_ (Perrett, 2012, Manning Publications Co.).
+There are further details in chapter 7 of _Exploring Lift_ at http://exploring.liftweb.net[http://exploring.liftweb.net], and "SiteMap and access control," Chapter 7 of _Lift in Action_ (Perrett, 2012, Manning Publications, Co.).
 
 
 
 
 
 [[HttpServletRequest]]
-Accessing `HttpServletRequest`
+Accessing HttpServletRequest
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
 
-To satisfy some API you need access to the `HttpServletRequest`.
+You have an API to call that requires access to the `HttpServletRequest`.
 
 Solution
 ^^^^^^^^
@@ -828,10 +829,10 @@ Discussion
 
 Lift abstracts away from the low-level HTTP request, and from the details of the
 servlet container your application is running in.  However, it's reassuring to know, if you
-absolutely need it, there is a way to get back down to the low-level.
+absolutely need it, there is a way to get back down to the low level.
 
 Note that the results of `servletRequest` is a `Box` because there might not be a request
-when you evaluate `servletRequest` -- or you might one day port to a
+when you evaluate ++servletRequest++—or you might one day port to a
 different deployment environment and not be running on a standard Java
 servlet container.
 
@@ -855,7 +856,7 @@ Force HTTPS Requests
 Problem
 ^^^^^^^
 
-You want to ensure clients are using HTTPs.
+You want to ensure clients are using HTTPS.
 
 Solution
 ^^^^^^^^
@@ -867,7 +868,8 @@ equivalents. For example:
 ---------------------------------------------------------------------------------------
 LiftRules.earlyResponse.append { (req: Req) =>
   if (req.request.scheme != "https") {
-    val uriAndQuery = req.uri + (req.request.queryString.map(s => "?"+s) openOr "")
+    val uriAndQuery = req.uri + (req.request.queryString.map(s => "?"+s)
+        openOr "")
     val uri = "https://%s%s".format(req.request.serverName, uriAndQuery)
     Full(PermRedirectResponse(uri, req, req.cookies: _*))
   }
@@ -883,9 +885,9 @@ used to execute code before a request is handled and, if required, exit the
 pipeline and return a response. The function signature expected is
 `Req => Box[LiftResponse]`.
 
-In this example we are testing for a request that is not "https", and then
+In this example, we are testing for a request that is not "https", and then
 formulating a new URL that starts "https" and appends to it the rest of the
-original URL and any query parameters. With this created, we return a redirections
+original URL and any query parameters. With this created, we return a redirection
 to the new URL, along with any cookies that were set.
 
 By evaluating to `Empty` for other requests (i.e., HTTPS requests), Lift will continue passing the request
@@ -894,7 +896,7 @@ through the pipeline as usual.
 The ideal method to ensure requests are served using the correct scheme
 would be via web server configuration, such as Apache or Nginx. This
 isn't possible in some cases, such as when your application is deployed
-to a PaaS such as CloudBees.
+to a Platform as a Service (PaaS) such as CloudBees.
 
 Amazon Load Balancer
 ++++++++++++++++++++
