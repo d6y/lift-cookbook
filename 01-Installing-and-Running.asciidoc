@@ -629,16 +629,16 @@ Solution
 Use the web interface included as part of H2. Here are the steps:
 
 * Locate the H2 JAR file. For me, this was: _~/.ivy2/cache/com.h2database/h2/jars/h2-1.2.147.jar_.
-* Start the server from a terminal window using the JAR file you found: `java -cp /path/to/h2-version.jar org.h2.tools.Server`
+* Start the server from a Terminal window using the JAR file you just found: `java -cp /path/to/h2-version.jar org.h2.tools.Server`
 * This should launch your web browser, asking you to login.
-* Select "Generic H2 Server" in "Saved Settings".
-* Enter _jdbc:h2:/path/to/youapp/lift_proto.db;AUTO_SERVER=TRUE_ for "JDBC URL", adjusting the path for the location of your database, and adjusting the name of the database ("lift_proto.db") if different in your _Boot.scala_.
+* Select "Generic H2 Server" in "Saved Settings."
+* Enter _jdbc:h2:/path/to/youapp/lift_proto.db;AUTO_SERVER=TRUE_ for "JDBC URL," adjusting the path for the location of your database, and adjusting the name of the database (_lift_proto.db_) if different in your _Boot.scala_.
 * Press "Connect" to view and edit your database.
 
 Discussion
 ^^^^^^^^^^
 
-The default Lift projects that include a database, such as _lift_basic_, use the H2 relational database as it can be included as an SBT dependency and requires no external installation or configuration. It's a fine product, although production deployments typically use standalone databases, such as PostgreSQL or MySQL.
+The default Lift projects that include a database, such as _lift_basic_, use the H2 relational database, as it can be included as an SBT dependency and requires no external installation or configuration. It's a fine product, although production deployments typically use standalone databases, such as PostgreSQL or MySQL.
 
 Even if you're deploying to a non-H2 database it may be useful to keep H2 around because it has an in-memory mode, which is great for unit tests. This means you can create a database in-memory, and throw it away when your unit tests ends.
 
