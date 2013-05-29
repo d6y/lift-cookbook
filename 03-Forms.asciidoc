@@ -1156,7 +1156,7 @@ ChoiceHolder.htmlize = c => LabelStyle.htmlize(c)
 This works because `toForm` on `ChoiceHolder` defers to `ChoiceHolder.htmlize`, and `ChoiceHolder.htmlize` is a variable you can assign to.
 
 
-String Values
+String values
 +++++++++++++
 
 If you want to work directly with `String` values for options, you can use `SHtml.radio`.  Although it too produces a `ChoiceHolder`, it differs from `radioElem` in that it uses the same `String` as both the label and the value. The function associated with each option is only called if a value is selected by the user.
@@ -1194,7 +1194,7 @@ Solution
 Create a CSS selector transform to add the disabled attribute, and apply
 it to your checkbox transform.
 
-For example, suppose you have a simple checkbox...
+For example, suppose you have a simple checkbox:
 
 [source,scala]
 ---------------------------------------------------------
@@ -1205,7 +1205,7 @@ class Likes {
 }
 ---------------------------------------------------------
 
-...and a corresponding template:
+and a corresponding template:
 
 [source,html]
 ---------------------------------------------------------
@@ -1325,7 +1325,7 @@ class MultiSelect extends Loggable {
 }
 ----
 
-In this example the user is being presented with a list of three items, with the first one selected, as shown in <<MultiSelectExample>>.  When the form is submitted the `selection` function is called, with a list of the selected option values.
+In this example, the user is being presented with a list of three items, with the first one selected, as shown in <<MultiSelectExample>>.  When the form is submitted, the `selection` function is called, with a list of the selected option values.
 
 [[MultiSelectExample]]
 .Selecting from multiple options.
@@ -1364,15 +1364,15 @@ Discussion
 ^^^^^^^^^^
 
 Recall that an HTML select consists of a set of options, each of which
-has a value and a name. To reflect this, the above examples takes our
-`inventory` of objects and turns it into a list of (value,name) string
+has a value and a name. To reflect this, the above example takes our
+`inventory` of objects and turns it into a list of string
 pairs, called `options`.
 
 The function given to `SHtml.multiSelect` will receive the values (IDs), not
 the names, of the options. That is, if you ran the above code, and
-selected "Coffee" and "Milk" the function would see `List("a", "b")`.
+selected "Coffee" and "Milk," the function would see `List("a", "b")`.
 
-Selected No Options
+Selected no options
 +++++++++++++++++++
 
 Be aware that if no options are selected, your handling function is
@@ -1426,14 +1426,14 @@ class MultiSelectStateful extends StatefulSnippet with Loggable {
 
 The template is unchanged, and the snippet has been modified to introduce a `current` value and a hidden function to reset the value.  We've bound the submit button to simply log the selected values when the form is submitted.
 
-Each time the form is submited the `current` list of IDs is set to
+Each time the form is submitted the `current` list of IDs is set to
 whatever you have selected in the browser. But note that we have started
 with a hidden function that resets `current` to the empty list. This means
-that if the receiving function in `multiSelect` is never called, because nothing is selected, that the value store in current would reflect this and be `Nil`.
+that if the receiving function in `multiSelect` is never called, because nothing is selected, the value stored in `current` would reflect this and be `Nil`.
 
 That may be useful, depending on what behaviour you need in your application.
 
-Type-safe Options
+Type-safe options
 +++++++++++++++++
 
 If you don't want to work in terms of `String` values for an option, you
@@ -1451,7 +1451,7 @@ val options : List[(Item,String)] =
 val default = inventory.head :: Nil
 ---------------------------------------------------------
 
-The call to generate the multi-select from this data is similar, but
+The call to generate the multiselect from this data is similar, but
 note our `selection` function now receives a list of `Item`:
 
 [source,scala]
@@ -1512,13 +1512,13 @@ The enumeration version works in the same way as the type-safe version.
 See Also
 ^^^^^^^^
 
-The "Submit Styling" discussion section in <<AjaxFormProcessing>> discusses the use of hidden fields as function calls.
+The "Submit styling" discussion section in <<AjaxFormProcessing>> discusses the use of hidden fields as function calls.
 
 <<SelectOptionChange>> describes how to trigger a server-side action when a selection changes in the browser.
 
-Chapter 6 of _Exploring Lift_, "Forms in Lift", discusses multiselect and other types of form elements at http://exploring.liftweb.net/[http://exploring.liftweb.net/].
+Chapter 6 of _Exploring Lift_, "Forms in Lift," discusses multiselect and other types of form elements at http://exploring.liftweb.net/[http://exploring.liftweb.net/].
 
-The issue relating to no options being selected is on Github: https://github.com/lift/framework/issues/1139[https://github.com/lift/framework/issues/1139]
+The issue relating to no options being selected is on GitHub: https://github.com/lift/framework/issues/1139[https://github.com/lift/framework/issues/1139]
 
 
 [[FileUpload]]
@@ -1535,14 +1535,15 @@ Solution
 
 Use a `FileParamHolder` in your snippet, and extract file information from it when the form is submitted.
 
-Start with a form which is marked as "multipart=true":
+Start with a form that is marked as `"multipart=true"`:
 
 [source,html]
 ---------------------------------------------------------
 <html>
 <head>
   <title>File Upload</title>
-  <script id="jquery" src="/classpath/jquery.js" type="text/javascript"></script>
+  <script id="jquery" src="/classpath/jquery.js" type="text/javascript">
+  </script>
   <script id="json" src="/classpath/json.js" type="text/javascript"></script>
 </head>
 <body>
@@ -1594,7 +1595,7 @@ The `fileUpload` binding ensures that the file is assigned to the `upload` varia
 Discussion
 ^^^^^^^^^^
 
-HTTP includes an encoding type of "multipart/form-data" which was introduced to support binary data uploads.  The `?form=post;multipart=true` parameters in the template mark the form with this encoding, and the HTML generated will look
+HTTP includes an encoding type of `"multipart/form-data"` that was introduced to support binary data uploads.  The `?form=post;multipart=true` parameters in the template mark the form with this encoding, and the HTML generated will look
 like this:
 
 [source,html]
@@ -1602,7 +1603,7 @@ like this:
 <form enctype="multipart/form-data" method="post" action="/fileupload">
 ---------------------------------------------------------
 
-When the browser submits the form, Lift detects the "multipart/form-data" encoding and extracts any files from the request.  These are available as `uploadedFiles` on a `Req` object, for example:
+When the browser submits the form, Lift detects the `"multipart/form-data"` encoding and extracts any files from the request.  These are available as `uploadedFiles` on a `Req` object, for example:
 
 [source, scala]
 ---------------------------------------------------------
@@ -1611,15 +1612,15 @@ val files : List[FileParamHolder] = S.request.map(_.uploadedFiles) openOr Nil
 
 However, as we're dealing with a form with a single upload field it's easier to use `SHtml.fileUpload` to bind the input to our `upload` variable.  Lift arranges for the function `f => upload = Full(f)` to be called when a file is selected and uploaded via this field. If the file is zero length, the function is not called.
 
-The default behaviour for Lift is to read the file into memory and present it as a `FileParamHolder`.  In this recipe we're pattern matching on the fields of the `FileParamHolder` and simply printing out what we know about the file.  We're ignoring the first parameter which will be Lift's generated name for the field, but capturing the mime type, original filename and the raw data that was in the file.
+The default behaviour for Lift is to read the file into memory and present it as a `FileParamHolder`.  In this recipe we're pattern matching on the fields of the `FileParamHolder` and simply printing out what we know about the file.  We're ignoring the first parameter, which will be Lift's generated name for the field, but capturing the mime type, original filename, and the raw data that was in the file.
 
-You probably don't want to use this method for very large files.  In fact, `LiftRules` provides a number of size restrictions which you can control:
+You probably don't want to use this method for very large files.  In fact, `LiftRules` provides a number of size restrictions that you can control:
 
-* `LiftRules.maxMimeFileSize` -- the maximum size of any single file uploaded (7MB by default).
+`LiftRules.maxMimeFileSize`:: The maximum size of any single file uploaded (7 MB by default)
 
-* `LiftRules.maxMimeSize` -- the maximum size of the multi-part upload in total (8MB by default)
+`LiftRules.maxMimeSize`:: The maximum size of the multipart upload in total (8 MB by default)
 
-Why two settings?  Because when the form is submitted, there may be a number of fields on the form.  For example, in the recipe the value of the submit button is send as one of the parts, and the file is sent as another. Hence, you might want to limit file size, but allow for some field values, or multiple files, to be submitted.
+Why two settings?  Because when the form is submitted, there may be a number of fields on the form.  For example, in the recipe the value of the submit button is sent as one of the parts, and the file is sent as another. Hence, you might want to limit file size, but allow for some field values, or multiple files, to be submitted.
 
 If you hit the size limit an exception will be thrown from the underlying file upload library. You can catch the exception, as described in <<CatchException>>:
 
@@ -1634,14 +1635,14 @@ LiftRules.exceptionHandler.prepend {
 Be aware that the container (Jetty, Tomcat) or any web server (Apache, NGINX) may also have limits on file upload sizes.
 
 [[UploadToDisk]]
-Uploading a file into memory may be fine for some situations, but you may want to upload larger items to disk and then processes them in Lift as a stream.  Lift supports this via the following setting:
+Uploading a file into memory may be fine for some situations, but you may want to upload larger items to disk and then process them in Lift as a stream.  Lift supports this via the following setting:
 
 [source,scala]
 ---------------------------------------------------------
 LiftRules.handleMimeFile = OnDiskFileParamHolder.apply
 ---------------------------------------------------------
 
-The `handleMimeFile` variable expects to be given a function that takes a field name, mime type, filename and `InputStream` and returns a `FileParamHolder`.  The default implementation of this is the `InMemFileParamHolder`, but changing to `OnDiskFileParamHolder` means Lift will write the file to disk first. You can of course implement your own handler in addition to using `OnDiskFileParamHolder` or `InMemFileParamHolder`.
+The `handleMimeFile` variable expects to be given a function that takes a field name, mime type, filename, and `InputStream` and returns a `FileParamHolder`.  The default implementation of this is the `InMemFileParamHolder`, but changing to `OnDiskFileParamHolder` means Lift will write the file to disk first. You can of course implement your own handler in addition to using `OnDiskFileParamHolder` or `InMemFileParamHolder`.
 
 With `OnDiskFileParamHolder`, the file will be written to a temporary location (`System.getProperty("java.io.tmpdir")`) but it's up to you to remove it when you're done with the file. For example, our snippet could change to:
 
@@ -1659,9 +1660,9 @@ def processForm() = upload match {
 }
 ---------------------------------------------------------
 
-Be aware that `OnDiskFileParamHolder` implements `FileParamHolder` so would  match the original `FileParamHolder` pattern used in the recipe. However, if you access the `file` field of `OnDiskFileParamHolder`, you'll bring the file into memory, which would defeat the point of storing it on disk to process it as a stream.
+Be aware that `OnDiskFileParamHolder` implements `FileParamHolder`, so would match the original `FileParamHolder` pattern used in the recipe. However, if you access the `file` field of `OnDiskFileParamHolder`, you'll bring the file into memory, which would defeat the point of storing it on disk to process it as a stream.
 
-If you want to monitor the progress of the upload on the server side, you can. There's a hook in `LiftRules` which is called as the upload is running:
+If you want to monitor the progress of the upload on the server side, you can. There's a hook in `LiftRules` that is called as the upload is running:
 
 [source,scala]
 ---------------------------------------------------------
@@ -1672,14 +1673,14 @@ def progressPrinter(bytesRead: Long, contentLength: Long, fieldIndex: Int) {
 LiftRules.progressListener = progressPrinter
 ---------------------------------------------------------
 
-This is the progress of the whole multi-part upload, not just the file being uploaded.  In particular, the `contentLength` may not be known (in which case it will be `-1`), but if it is known it is the size of the complete multi-part upload. In the example in this recipe that would include the size of the file, but also the submit button value.  This also explains the `fieldIndex`, which is a counter as to which part is being processed. It will take on the values of 0 and 1 for the two parts in this example.
+This is the progress of the whole multipart upload, not just the file being uploaded.  In particular, the `contentLength` may not be known (in which case it will be `-1`), but if it is known it is the size of the complete multipart upload. In the example in this recipe that would include the size of the file, but also the submit button value.  This also explains the `fieldIndex`, which is a counter as to which part is being processed. It will take on the values of 0 and 1 for the two parts in this example.
 
 
 See Also
 ^^^^^^^^
 
 The HTTP file upload mechanics are described in RFC 1867, _Form-based File Upload in HTML_:
-http://tools.ietf.org/html/rfc1867[http://tools.ietf.org/html/rfc1867]
+http://tools.ietf.org/html/rfc1867[http://tools.ietf.org/html/rfc1867].
 
 <<RestBinaryData>> discusses file upload in the context of a REST service.
 
