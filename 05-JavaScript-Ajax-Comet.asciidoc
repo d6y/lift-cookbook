@@ -2,11 +2,11 @@
 JavaScript, Ajax, Comet
 -----------------------
 
-Lift is known for its great Ajax and comet support, and in this chapter we'll explore these.
+Lift is known for its great Ajax and Comet support, and in this chapter we'll explore these.
 
-For an introduction to Lift's Ajax and Comet features, see _Simply Lift_ at http://simply.liftweb.net[http://simply.liftweb.net], chapter 9 of _Lift in Action_ (Perrett, 2012, Manning Publications Co.), or watch Diego Medina's video presentation at https://fmpwizard.telegr.am/blog/comet-actors-presentation[https://fmpwizard.telegr.am/blog/comet-actors-presentation].
+For an introduction to Lift's Ajax and Comet features, see _Simply Lift_ at http://simply.liftweb.net[http://simply.liftweb.net], Chapter 9 of _Lift in Action_ (Perrett, 2012, Manning Publications, Co.), or watch Diego Medina's video presentation at https://fmpwizard.telegr.am/blog/comet-actors-presentation[https://fmpwizard.telegr.am/blog/comet-actors-presentation].
 
-The source code for this chapter is: https://github.com/LiftCookbook/cookbook_ajax[https://github.com/LiftCookbook/cookbook_ajax].
+The source code for this chapter is https://github.com/LiftCookbook/cookbook_ajax[https://github.com/LiftCookbook/cookbook_ajax].
 
 
 [[ButtonTriggerServerCode]]
@@ -44,7 +44,7 @@ object AjaxInvoke extends Loggable {
 }
 ----
 
-In this snippet we are binding the click event of a button to an `ajaxInvoke`: when the button is pressed, Lift
+In this snippet, we are binding the click event of a button to an `ajaxInvoke`: when the button is pressed, Lift
 arranges for the function you gave `ajaxInvoke` to be executed.
 
 That function, `callback`, is just logging a message and returning a JavaScript alert to the browser. The corresponding HTML might include:
@@ -70,20 +70,20 @@ the DOM exposes.
 
 Related to `ajaxInvoke` are the following functions:
 
-* `SHtml.onEvent` which calls a function with the signature `String => JsCmd` because it
-is passed the `value` of the node it is attached to. In the above
+`SHtml.onEvent`:: Calls a function with the signature `String => JsCmd` because it
+is passed the `value` of the node it is attached to. In the previous
 example, this would be the empty string as the button has no value.
-* `SHtml.ajaxCall` is more general than `onEvent`, as you give it the expression you want passed to your server-side code.
-* `SHtml.jsonCall`  is even more general still: you give it a function
+`SHtml.ajaxCall`:: This is more general than `onEvent`, as you give it the expression you want passed to your server-side code.
+`SHtml.jsonCall`::  This is even more general still: you give it a function
 that will return a JSON object when executed on the client, and this
 object will be passed to your server-side function.
 
 Let's look at each of these in turn.
 
-onEvent -- Receiving the `value` of a DOM Element
+onEvent: receiving the value of a DOM element
 +++++++++++++++++++++++++++++++++++++++++++++++++
 
-You can use `onEvent` with any element that has a `value` attribute and responds to the event you choose to bind to. The function you supply to `onEvent` is called with the element's value. As an example, we can write a snippet which presents a challenge to the user, and validates the response:
+You can use `onEvent` with any element that has a `value` attribute and responds to the event you choose to bind to. The function you supply to `onEvent` is called with the element's value. As an example, we can write a snippet that presents a challenge to the user, and validates the response:
 
 [source,scala]
 ----
@@ -120,15 +120,15 @@ This snippet prompts the user to add the two random numbers presented in the `<p
 </div>
 ----
 
-When `onchange` is triggered (by pressing return or the tab key, for example), the text entered is sent to our `onEvent` function as a `String`. On the server-side we chance the answer and send back "Correct!" or "Try again" as a JavaScript alert.
+When `onchange` is triggered (by pressing Return or the Tab key, for example), the text entered is sent to our `onEvent` function as a `String`. On the server-side, we check the answer and send back "Correct!" or "Try again" as a JavaScript alert.
 
 
-ajaxCall -- Receiving an Arbitrary Client-Side String
+ajaxCall: receiving an arbitrary client-side string
 +++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Where `onEvent` sends `this.value` to your server-side code, `ajaxCall` allows you to specify the client-side expression used to produce a value.
 
-To demonstrate this we can create a template that includes two elements: a button and a text field.  We'll bind our function to the button, but read a value from the input field:
+To demonstrate this, we can create a template that includes two elements: a button and a text field.  We'll bind our function to the button, but read a value from the input field:
 
 [source,html]
 ----
@@ -161,16 +161,16 @@ object AjaxCall {
 ----
 
 The first argument to `ajaxCall` is the expression that will produce a value for our function. It can be any `JsExp`, and we've
-used `ValById` which looks up the value of an element by the ID attribute.  We could have used a regular jQuery expression to achieve the same effect with: `JsRaw("$('#num').val()")`.
+used `ValById`, which looks up the value of an element by the ID attribute.  We could have used a regular jQuery expression to achieve the same effect with `JsRaw("$('#num').val()")`.
 
-Our second argument to `ajaxCall` takes the value of the `JsExp` expression as a `String`. We're using one of Lift's JavaScript command to replaces the value with a new value. The new value is the result of incrementing the number (providing it is a number).
+Our second argument to `ajaxCall` takes the value of the `JsExp` expression as a `String`. We're using one of Lift's JavaScript commands to replace the value with a new value. The new value is the result of incrementing the number (providing it is a number).
 
-The end result is that you press the button, and the number updates. It should go without saying that these are simple illustrations, and you probably don't want a server round-trip to add one to a number. The techniques come into their own when there is some action of value to perform on the server.
+The end result is that you press the button and the number updates. It should go without saying that these are simple illustrations, and you probably don't want a server round-trip to add one to a number. The techniques come into their own when there is some action of value to perform on the server.
 
 You may have guessed that `onEvent` is implemented as an `ajaxCall` for `JsRaw("this.value")`.
 
 
-jsonCall -- Receiving a JSON Value
+jsonCall: receiving a JSON value
 ++++++++++++++++++++++++++++++++++
 
 Both `ajaxCall` and `onEvent` end up evaluating a `String => JsCmd` function. By contrast, `jsonCall` has the signature `JValue => JsCmd`, meaning you can pass more complex data structures from JavaScript to your Lift application.
@@ -200,7 +200,7 @@ function currentQuestion() {
 // ]]>
 ----
 
-The `currentQuestion` function is creating an object, which will be turned into a JSON string when sent to the server. On the server we'll check that this JSON represents a valid integer addition problem:
+The `currentQuestion` function is creating an object, which will be turned into a JSON string when sent to the server. On the server, we'll check that this JSON represents a valid integer addition problem:
 
 [source,scala]
 ----
