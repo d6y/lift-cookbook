@@ -640,7 +640,7 @@ Discussion
 
 The default Lift projects that include a database, such as _lift_basic_, use the H2 relational database, as it can be included as an SBT dependency and requires no external installation or configuration. It's a fine product, although production deployments typically use standalone databases, such as PostgreSQL or MySQL.
 
-Even if you're deploying to a non-H2 database it may be useful to keep H2 around because it has an in-memory mode, which is great for unit tests. This means you can create a database in-memory, and throw it away when your unit tests ends.
+Even if you're deploying to a non-H2 database it may be useful to keep H2 around because it has an in-memory mode, which is great for unit tests. This means you can create a database in-memory, and throw it away when your unit test ends.
 
 If you don't like the web interface, the connection settings described in this recipe should give you the information you need to configure other SQL tools.
 
@@ -654,7 +654,7 @@ If you're using the console frequently, consider making it accessible from your 
 The example Lift project for <<Squeryl>> has the H2 console enabled. The source is: https://github.com/LiftCookbook/cookbook_squeryl[https://github.com/LiftCookbook/cookbook_squeryl].
 
 [[snapshot]]
-Using the Latest Lift build
+Using the Latest Lift Build
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -666,7 +666,7 @@ Solution
 ^^^^^^^^
 
 You need to make two changes to your _build.sbt_ file. First, reference
-the snapshot repository:
+the snapshot pass:[<phrase role='keep-together'>repository:</phrase>]
 
 [source,scala]
 ----
@@ -674,7 +674,7 @@ resolvers += "snapshots" at
   "http://oss.sonatype.org/content/repositories/snapshots"
 ----
 
-Second, change the `liftVersion` in your build to be the latest version. For this example, let's use the 2.6-SNAPSHOT version of Lift:
+Second, change the `liftVersion` in your build to be the latest version. For this example, let's use the 2.6 snapshot version of Lift:
 
 [source,scala]
 --------------------------------
@@ -687,7 +687,7 @@ of the latest build.
 Discussion
 ^^^^^^^^^^
 
-Production releases of Lift (e.g., "2.4", "2.5"), as well as milestone releases
+Production releases of Lift (e.g., "2.4," "2.5"), as well as milestone releases
 (e.g., "2.5-M3") and release candidates (e.g., "2.5-RC1") are published
 into a releases repository. When SBT downloads them, they are downloaded
 once.
@@ -699,7 +699,7 @@ versions by running the command `clean` and then `update`.
 See Also
 ^^^^^^^^
 
-To learn the detail of SNAPSHOT versions, dig into the Maven Complete Reference at http://www.sonatype.com/books/mvnref-book/reference/pom-relationships-sect-pom-syntax.html[http://www.sonatype.com/books/mvnref-book/reference/pom-relationships-sect-pom-syntax.html].
+To learn the detail of snapshot versions, dig into the Maven Complete Reference at http://www.sonatype.com/books/mvnref-book/reference/pom-relationships-sect-pom-syntax.html[http://www.sonatype.com/books/mvnref-book/reference/pom-relationships-sect-pom-syntax.html].
 
 
 [[NewScala]]
@@ -760,17 +760,17 @@ This works because the two different Scala versions are binary compatible.
 Discussion
 ^^^^^^^^^^
 
-Dependencies have a particular naming convention.  For example, the `lift-webkit` library for Lift 2.5-RC5 is called _lift-webkit_2.9.1-2.5-RC5.jar_.  Normally in _build.sbt_ we simply refer to `"net.liftweb" %% "lift-webkit"` and SBT turns that into the name of a file that can be downloaded.
+Dependencies have a particular naming convention.  For example, the `lift-webkit` library for Lift 2.5-RC5 is called _lift-webkit_2.9.1-2.5-RC5.jar_.  Normally, in _build.sbt_ we simply refer to `"net.liftweb" %% "lift-webkit"` and SBT turns that into the name of a file that can be downloaded.
 
 However, in this recipe we have forced SBT to explicitly fetch the 2.9.1 version
 of the Lift resources rather than allow it to compute the URL to the
 Lift components.  This is the difference between using `%%` and `%` in a
-dependency: with `%%` you do not specify the Scala version as SBT will append
+dependency: with `%%` you do not specify the Scala version, as SBT will append
 the `scalaVersion` number automatically; with '%' this automatic change is not made,
 so we have to manually specify more details for the name of the library.
 
 Please note this only works for minor releases of Scala: major releases
-break compatibility.  For example Scala 2.9.1 is compatible with Scala 2.9.0, but not 2.10.
+break compatibility.  For example, Scala 2.9.1 is compatible with Scala 2.9.0, but not 2.10.
 
 See Also
 ^^^^^^^^
