@@ -239,11 +239,11 @@ object JsonCall extends Loggable {
 }
 ----
 
-Working from the bottom of this snippet up, we see a binding of the `<button>` to the `jsonCall`. The value we'll be working on is the value provided by the JavaScript function called `currentQuestion`.  This was defined on the template page.  When the button is clicked the JavaScript function is called and the resulting value will be presented to `validate`, which is our `JValue => JsCmd` function.
+Working from the bottom of this snippet up, we see a binding of the `<button>` to the `jsonCall`. The value we'll be working on is the value provided by the JavaScript function called `currentQuestion`.  This was defined on the template page.  When the button is clicked, the JavaScript function is called and the resulting value will be presented to `validate`, which is our `JValue => JsCmd` function.
 
-All `validate` does is log the JSON data and alert back if the question looks correct or not.  To do this we use the Lift JSON ability to extract JSON to a case class and call the `valid_?` test to see if the numbers add up.  This will evaluate to `Some(true)` if the addition works, `Some(false)` if the addition isn't correct or `None` if the input is missing or not a valid integer.
+All `validate` does is log the JSON data and alert back if the question looks correct or not.  To do this we use the Lift JSON ability to extract JSON to a case class and call the `valid_?` test to see if the numbers add up.  This will evaluate to `Some(true)` if the addition works, `Some(false)` if the addition isn't correct, or `None` if the input is missing or not a valid integer.
 
-Running the code and entering 1, 2 and 3 into the text fields will produce the following in the server log:
+Running the code and entering 1, 2, and 3 into the text fields will produce the following in the server log:
 
 [source,scala]
 ----
@@ -256,9 +256,9 @@ This is the `JValue` representation of the JSON.
 See Also
 ^^^^^^^^
 
-<<SelectOptionChange>> includes an example of `SHtml.onEvents` which will bind a function to a number of events on a `NodeSeq`.
+<<SelectOptionChange>> includes an example of `SHtml.onEvents`, which will bind a function to a number of events on a `NodeSeq`.
 
-For another example of `AjaxInvoke` take a look at the _Call Scala code from JavaScript_ section of Diego Medina's blog at: http://blog.fmpwizard.com/scala-lift-custom-wizard[http://blog.fmpwizard.com/scala-lift-custom-wizard].
+For another example of `AjaxInvoke` take a look at the _Call Scala code from JavaScript_ section of Diego Medina's blog at http://blog.fmpwizard.com/scala-lift-custom-wizard[http://blog.fmpwizard.com/scala-lift-custom-wizard].
 
 _Exploring Lift_, chapter 10, lists various `JsExp` classes you can use for `ajaxCall`: http://exploring.liftweb.net/master/index-10.html[http://exploring.liftweb.net/master/index-10.html].
 
@@ -266,7 +266,7 @@ _Exploring Lift_, chapter 10, lists various `JsExp` classes you can use for `aja
 
 
 [[SelectOptionChange]]
-Call Server when Select Option Changes
+Call Server When Select Option Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
