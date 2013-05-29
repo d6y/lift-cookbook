@@ -854,23 +854,23 @@ import net.liftweb.http.js.JsCmds.Run
 LiftRules.noCometSessionCmd.default.set( () => Run("stash()") )
 -----
 
-In this way, if a session is lost while composing a chat message, the browser will stash the message, and when the page re-loads the message will be recovered.
+In this way, if a session is lost while composing a chat message, the browser will stash the message, and when the page reloads the message will be recovered.
 
 To test the example, type a message into the message field, then restart your Lift application.  Wait 10 seconds, and you'll see the effect.
 
 Discussion
 ^^^^^^^^^^
 
-Without changing `noCometSessionCmd`, the default behavior of Lift is to arrange for the browser to load the page `LiftRules.noCometSessionPage` -- which will be _/_ unless you change it.  This is carried out via the JavaScript function `lift_sessionLost` in _cometAjax.js_.
+Without changing `noCometSessionCmd`, the default behaviour of Lift is to arrange for the browser to load the home page, which is controlled by the `LiftRules.noCometSessionPage` setting. This is carried out via the JavaScript function `lift_sessionLost` in the file _cometAjax.js_.
 
-By providing our own `() => JsCmd` function to `LiftRules.noCometSessionCmd`, Lift arranges to call this function and deliver the `JsCmd`  to the browser, rather than `lift_sessionLost`.  If you watch the HTTP traffic between your browser and Lift, you'll see the `stash` function call being returned in response to a comet request.
+By providing our own `() => JsCmd` function to `LiftRules.noCometSessionCmd`, Lift arranges to call this function and deliver the `JsCmd`  to the browser, rather than `lift_sessionLost`.  If you watch the HTTP traffic between your browser and Lift, you'll see the `stash` function call being returned in response to a Comet request.
 
 .Factory
 ****
 The `noCometSessionCmd.default.set` call is making use of Lift's dependency injection. Specifically, it's setting up the supply side of the dependency. Although we're setting a default here, it's possible in Lift to supply different behaviours with different scopes: request or session.  See https://www.assembla.com/spaces/liftweb/wiki/Dependency_Injection[https://www.assembla.com/spaces/liftweb/wiki/Dependency_Injection].
 ****
 
-This recipe has focused on the handling of loss of session for Comet, and for Ajax, there's a corresponding `LiftRules.noAjaxSessionCmd` setting.
+This recipe has focused on the handling of loss of session for Comet; for Ajax, there's a corresponding `LiftRules.noAjaxSessionCmd` setting.
 
 See Also
 ^^^^^^^^
@@ -889,7 +889,7 @@ Ajax File Upload
 Problem
 ^^^^^^^
 
-You want to offer your users an Ajax file upload tool, with progress bars and drag and drop support.
+You want to offer your users an Ajax file upload tool, with progress bars and drag-and-drop support.
 
 Solution
 ^^^^^^^^
@@ -984,18 +984,18 @@ As with all REST services, it needs to be registered in _Boot.scala_:
 LiftRules.dispatch.append(code.rest.AjaxFileUpload)
 ---------------------------------------------------------
 
-By default the widget makes the whole HTML page a drop-target for files, meaning you can drag a file onto the page and it will immediately be uploaded to your Lift application.
+By default, the widget makes the whole HTML page a drop-target for files, meaning you can drag a file onto the page and it will immediately be uploaded to your Lift application.
 
 Discussion
 ^^^^^^^^^^
 
-In this recipe we've shown just the basic integration of the widget with a Lift application.  The demo site for the widget, http://blueimp.github.com/jQuery-File-Upload/[http://blueimp.github.com/jQuery-File-Upload/], shows other capabilities, and provides documentation on how to integrate them.
+In this recipe, we've shown just the basic integration of the widget with a Lift application.  The demo site for the widget, http://blueimp.github.com/jQuery-File-Upload/[http://blueimp.github.com/jQuery-File-Upload/], shows other capabilities, and provides documentation on how to integrate them.
 
-Many of the features just require JavaScript configuration.  For example, we've used the widget's `add`, `progressall`, and `done` handlers to show, update and then fade out a progress bar.  When the upload is completed, the name of the uploaded file is appended to the page.
+Many of the features just require JavaScript configuration.  For example, we've used the widget's `add`, `progressall`, and `done` handlers to show, update, and then fade out a progress bar.  When the upload is completed, the name of the uploaded file is appended to the page.
 
-In the REST service the uploaded file are available via the `uploadedFiles` method on the request. When Lift receives a multi-part form it automatically extracts files as `uploadedFiles`, each of which is a `FileParamHolder` which gives us access to the `fileName`, `length`, `mimeType` and `fileStream`.
+In the REST service, the uploaded files are available via the `uploadedFiles` method on the request. When Lift receives a multipart form, it automatically extracts files as pass:[<phrase role='keep-together'><literal>uploadedFiles</literal>,</phrase>] each of which is a `FileParamHolder` that gives us access to the `fileName`, `length`, `mimeType`, and `fileStream`.
 
-By default uploaded files are held in memory, but that can be changed (see <<UploadToDisk>> in <<FileUpload>>).
+By default, uploaded files are held in memory, but that can be changed (see <<UploadToDisk>> in <<FileUpload>>).
 
 In the recipe we return a 200 (`OkResponse`).  If we wanted to signal to the widget that a file was rejected we can return another code. For example, perhaps we want to reject all files except PNG images.  On the server-side we can do that by replacing the `OkResponse` with a test:
 
