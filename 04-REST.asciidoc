@@ -57,7 +57,7 @@ IssuesService.init()
 
 We can test the service with cURL:
 
-[source,bash]
+[source,xml]
 ------------------
 $ curl -H 'Content-Type: application/xml'
     http://localhost:8080/issues/by-state/open
@@ -138,7 +138,7 @@ We are matching on _download_ but rather than using the `file` value directly, w
 Requesting this URL with a command like cURL will show you the filename
 as expected:
 
-[source,bash]
+[source,xml]
 ----
 $ curl http://127.0.0.1:8080/download/123.png
 <?xml version="1.0" encoding="UTF-8"?>
@@ -201,7 +201,7 @@ object Reunite extends RestHelper  {
 
 Calling this service would check the HTTP `Accept` header before deciding what resource to send:
 
-[source,bash]
+[source,xml]
 -------------------
 $ curl http://localhost:8080/negotiate/123
 <?xml version="1.0" encoding="UTF-8"?>
@@ -275,7 +275,7 @@ object Suffix extends RestHelper {
 
 With this service `init` method called in _Boot.scala_, we could then make requests and observe the issue:
 
-[source,bash]
+[source,xml]
 ----------------
 $ curl http://localhost:8080/email/you@example.com/send
 <?xml version="1.0" encoding="UTF-8"?>
@@ -408,7 +408,7 @@ Upload.init()
 
 Test this service using a tool like cURL:
 
-[source,bash]
+[source,xml]
 ----------------------
 $ curl -X POST --data-binary "@dog.jpg" -H 'Content-Type: image/jpg'
     http://127.0.0.1:8080/upload
