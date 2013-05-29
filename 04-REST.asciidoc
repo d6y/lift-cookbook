@@ -14,7 +14,7 @@ DRY URLs
 Problem
 ^^^^^^^
 
-You found yourself repeating parts of URL paths in your `RestHelper`, and
+You find yourself repeating parts of URL paths in your `RestHelper`, and
 you Don't want to Repeat Yourself.
 
 Solution
@@ -57,6 +57,7 @@ IssuesService.init()
 
 We can test the service with cURL:
 
+[source,bash]
 ------------------
 $ curl -H 'Content-Type: application/xml'
     http://localhost:8080/issues/by-state/open
@@ -75,7 +76,7 @@ Discussion
 You can have many `serve` blocks in your `RestHelper`, which helps give
 your REST service structure.
 
-In this example we've arbitrarily decided to return XML and to match on an XML request using `XmlGet` and `XmlDelete`.  The test for an XML request requires a content-type of _text/xml_ or _application/xml_, a request for a path that ends with _.xml_.   This is why the cURL request includes a header with with the `-H` flag.  If we hadn't included that, the request would not match any of our patterns, and the result would be a 404 response.
+In this example, we've arbitrarily decided to return XML and to match on an XML request using `XmlGet` and `XmlDelete`.  The test for an XML request requires a content type of _text/xml_ or _application/xml_, and a request for a path that ends with _.xml_.   This is why the cURL request includes a header with with the `-H` flag.  If we hadn't included that, the request would not match any of our patterns, and the result would be a 404 response.
 
 
 
@@ -104,7 +105,7 @@ Solution
 Access `req.path.suffix` to recover the suffix.
 
 For example, when
-processing _/download/123.png_ you want to be able reconstruct
+processing _/download/123.png_, you want to be able reconstruct
 _123.png_:
 
 [source,scala]
@@ -137,6 +138,7 @@ We are matching on _download_ but rather than using the `file` value directly, w
 Requesting this URL with a command like cURL will show you the filename
 as expected:
 
+[source,bash]
 ----
 $ curl http://127.0.0.1:8080/download/123.png
 <?xml version="1.0" encoding="UTF-8"?>
@@ -154,12 +156,12 @@ particular situation.
 
 Only those suffixes defined in `LiftRules.explicitlyParsedSuffixes` are
 split from the filename. This includes many of the common file suffixes
-(such as "png", "atom", "json") and also some you may not be so familiar
-with, such as "com".
+(such as _.png_, _.atom_, _.json_) and also some you may not be so familiar
+with, such as _.com_.
 
 Note that if the suffix is not in `explicitlyParsedSuffixes`, the suffix
-will be an empty String and the `name` (in the above example) will be
-the file name with the suffix still attached.
+will be an empty string and the `name` (in the above example) will be
+the filename with the suffix still attached.
 
 Depending on your needs, you could alternatively add a guard condition to check for the file suffix:
 
@@ -169,7 +171,7 @@ case "download" :: file :: Nil Get req if req.path.suffix == "png" =>
   Text("You requested PNG file called "+file)
 -------
 
-Or rather than simply attaching the suffix back on, you could take the opportunity do some computation to decide what to send back.  For example, if the client supports the WebP image format, you might prefer to send that:
+Or rather than simply attaching the suffix back on, you could take the opportunity to do some computation and decide what to send back.  For example, if the client supports the WebP image format, you might prefer to send that:
 
 [source, scala]
 -------
@@ -197,8 +199,9 @@ object Reunite extends RestHelper  {
 }
 -------
 
-Calling this service would check the HTTP Accept header before deciding what resource to send:
+Calling this service would check the HTTP `Accept` header before deciding what resource to send:
 
+[source,bash]
 -------------------
 $ curl http://localhost:8080/negotiate/123
 <?xml version="1.0" encoding="UTF-8"?>
@@ -215,8 +218,7 @@ See Also
 
 <<MissingDotCom>> shows how to remove items from `explicitlyParsedSuffixes`.
 
-The source for `HttpHelpers.scala` contains the `explicitlyParsedSuffixes` list, which is the default list of suffixes that Lift parses from a URL:  https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/HttpHelpers.scala[https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/HttpHelpers.scala
-].
+The source for `HttpHelpers.scala` contains the `explicitlyParsedSuffixes` list, which is the default list of suffixes that Lift parses from a URL: https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/HttpHelpers.scala[https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/HttpHelpers.scala].
 
 
 
@@ -224,12 +226,12 @@ The source for `HttpHelpers.scala` contains the `explicitlyParsedSuffixes` list,
 Missing .com from Email Addresses
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When submitting an email address to a REST service, a domain ending ".com" is stripped before your REST service can handle the request.
+When submitting an email address to a REST service, a domain ending _.com_ is stripped before your REST service can handle the request.
 
 Solution
 ^^^^^^^^
 
-Modify `LiftRules.explicitlyParsedSuffixes` so that Lift doesn't change URLs that end with ".com".
+Modify `LiftRules.explicitlyParsedSuffixes` so that Lift doesn't change URLs that end with _.com_.
 
 In _Boot.scala_:
 
@@ -242,7 +244,7 @@ LiftRules.explicitlyParsedSuffixes = Helpers.knownSuffixes &~ (Set("com"))
 Discussion
 ^^^^^^^^^^
 
-By default Lift will strip off file suffixes from URLs to make it easy to match on suffixes. An example would be needing to match on all requests ending in ".xml" or ".pdf".  However, ".com" is also registered as one of those suffixes, but this is inconvenient if you have URLs that end with email addresses.
+By default, Lift will strip off file suffixes from URLs to make it easy to match on suffixes. An example would be needing to match on all requests ending in _.xml_ or _.pdf_.  However, _.com_ is also registered as one of those suffixes, but this is inconvenient if you have URLs that end with email addresses.
 
 Note that this doesn't impact email addresses in the middle of URLs.  For example, consider the following REST service:
 
@@ -271,8 +273,9 @@ object Suffix extends RestHelper {
 }
 ----
 
-With this service `init` method called in _Boot.scala_ we could then make requests and observe the issue:
+With this service `init` method called in _Boot.scala_, we could then make requests and observe the issue:
 
+[source,bash]
 ----------------
 $ curl http://localhost:8080/email/you@example.com/send
 <?xml version="1.0" encoding="UTF-8"?>
@@ -283,9 +286,9 @@ $ curl http://localhost:8080/email/you@example.com
 At end: you@example
 ----------------
 
-The ".com" is being treated as a file suffix, which is why the solution of removing it from the list of suffixes will resolve this problem.
+The _.com_ is being treated as a file suffix, which is why the solution of removing it from the list of suffixes will resolve this problem.
 
-Note that because other top-level domains, such as ".uk", ".nl", ".gov", are not in `explicitlyParsedSuffixes`, those email addresses are left untouched.
+Note that because other top-level domains, such as _.uk_, _.nl_, _.gov_, are not in `explicitlyParsedSuffixes`, those email addresses are left untouched.
 
 
 See Also
@@ -322,9 +325,9 @@ case Req("reports" :: name :: Nil, "csv", GetRequest) =>
 ----
 
 You're expecting _/reports/foo.csv_ to produce "Here's your CSV report
-for foo", but you get a 404.
+for foo," but you get a 404.
 
-To resolve this, include "csv" as a file suffix that Lift knows to split from URLs.  In _Boot.scala_ call:
+To resolve this, include `"csv"` as a file suffix that Lift knows to split from URLs.  In _Boot.scala_, call:
 
 [source,scala]
 ----
@@ -336,7 +339,7 @@ The pattern will now match.
 Discussion
 ^^^^^^^^^^
 
-Without adding "csv" to the `explicitlyParsedSuffixes`, the example URL
+Without adding `"csv"` to the `explicitlyParsedSuffixes`, the example URL
 would match with:
 
 [source,scala]
@@ -345,7 +348,7 @@ case Req("reports" :: name :: Nil, "", GetRequest) =>
   Text("Here's your CSV report for "+name)
 ----
 
-Here we're matching on no suffix (`""`). In this case `name` would be set to "foo.csv".  This is because Lift separates file suffixes from the end of URLs only for file suffixes that are registered with `explicitlyParsedSuffixes`.  Because "csv" is not one of the default registered suffixes, "foo.csv" is not split. That's why "csv" in the suffix position of `Req` pattern match won't match the request, but an empty string in that position will.
+Here we're matching on no suffix (`""`). In this case, `name` would be set to `"foo.csv"`.  This is because Lift separates file suffixes from the end of URLs only for file suffixes that are registered with `explicitlyParsedSuffixes`.  Because "csv" is not one of the default registered suffixes, `"foo.csv"` is not split. That's why "csv" in the suffix position of `Req` pattern match won't match the request, but an empty string in that position will.
 
 
 See Also
@@ -358,7 +361,7 @@ See Also
 
 
 [[RestBinaryData]]
-Accept binary data in a REST service
+Accept Binary Data in a REST Service
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -405,6 +408,7 @@ Upload.init()
 
 Test this service using a tool like cURL:
 
+[source,bash]
 ----------------------
 $ curl -X POST --data-binary "@dog.jpg" -H 'Content-Type: image/jpg'
     http://127.0.0.1:8080/upload
@@ -415,13 +419,13 @@ $ curl -X POST --data-binary "@dog.jpg" -H 'Content-Type: image/jpg'
 Discussion
 ^^^^^^^^^^
 
-In the above example the binary data is accessed via the `req.body`, which returns
+In the previous example, the binary data is accessed via the `req.body`, which returns
  a `Box[Array[Byte]]`.  We turn this into a `Box[Elem]` to send back to the client.
  Implicits in `RestHelper` turn this into an `XmlResponse` for Lift to handle.
 
 Note that web containers, such as Jetty and Tomcat, may place limits on
 the size of an upload. You will recognise this situation by an error
-such as "java.lang.IllegalStateException: Form too large705784>200000".
+such as `java.lang.IllegalStateException: Form too large705784>200000`.
 Check with documentation for the container for changing these limits.
 
 To restrict the type of image you accept, you could add a _guard condition_ to the match, but you may find you have more readable code by moving the logic into an `unapply` method on an object.  For example, to restrict an upload to just a JPEG you could say:
