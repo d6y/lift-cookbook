@@ -686,14 +686,14 @@ Discussion
 
 You may be wondering why we've used REST here, when we could have used a regular HTML template and snippet. The reason is that we want XML rather than HTML output.  We use the same mechanism, but invoke it and wrap it in an `XmlResponse`.
 
-The `S.render` method takes a `NodeSeq` and a `HTTPRequst`. The first we supply by running the _sitemap.html_ snippet; the second is simply the current request.  `XmlResponse` requires a `Node` rather than a `NodeSeq`, which is why we call `head` -- as there's only one node in the response, this does what we need.
+The `S.render` method takes a `NodeSeq` and an `HTTPRequst`. The first we supply by running the _sitemap.html_ snippet; the second is simply the current request.  `XmlResponse` requires a `Node` rather than a `NodeSeq`, which is why we call ++head++—as there's only one node in the response, this does what we need.
 
-Note that Google Sitemaps need dates to be in ISO 8601 format. The built-in `java.text.SimpleDateFormat` does not support this format prior to Java 7. If you are using Java 6 you need to use `org.joda.time.DateTime` as we are in this example.
+Note that Google Sitemaps needs dates to be in ISO 8601 format. The built-in `java.text.SimpleDateFormat` does not support this format prior to Java 7. If you are using Java 6, you need to use `org.joda.time.DateTime` as we are in this example.
 
 See Also
 ^^^^^^^^
 
-Sitemaps are described at: http://support.google.com/webmasters/bin/answer.py?hl=en&answer=156184[http://support.google.com/webmasters/bin/answer.py?hl=en&answer=156184].
+Sitemaps are described at http://support.google.com/webmasters/bin/answer.py?hl=en&answer=156184[http://support.google.com/webmasters/bin/answer.py?hl=en&answer=156184].
 
 
 
@@ -705,13 +705,13 @@ Calling REST Service from a Native iOS Application
 Problem
 ^^^^^^^
 
-You want to make a HTTP POST from a native iOS device to a Lift REST service.
+You want to make an HTTP POST from a native iOS device to a Lift REST service.
 
 
 Solution
 ^^^^^^^^
 
-Use `NSURLConnection` ensuring you set the content-type to _application/json_.
+Use `NSURLConnection` ensuring you set the `content-type` to `application/json`.
 
 For example, suppose we want to call this service:
 
@@ -737,15 +737,16 @@ object Shouty extends RestHelper {
 }
 ---------------------------------------------------------
 
-The service expects a JSON post with a parameter of "name", and it returns a greeting as a JSON object.  To demonstrate the data to and from the service, we can include the service in _Boot.scala_...
+The service expects a JSON post with a parameter of `name`, and it returns a greeting as a JSON object.  To demonstrate the data to and from the service, we can include the service in _Boot.scala_:
 
 [source,scala]
 ---------------------------------------------------------
 LiftRules.statelessDispatch.append(Shouty)
 ---------------------------------------------------------
 
-...and then call it from the command line:
+and then call it from the command line:
 
+[source,json]
 -----
 $ curl -d '{ "name" : "Richard" }' -X POST -H 'Content-type: application/json'
    http://127.0.0.1:8080/shout
@@ -808,7 +809,7 @@ static NSString *url = @"http://localhost:8080/shout";
 }
 ---------------------------------------------------------
 
-Obviously in this example we've used hard-coded values and URLs, but this will hopefully
+Obviously in this example we've used hardcoded values and URLs, but this will hopefully
 be a starting point for use in your application.
 
 
@@ -816,9 +817,9 @@ be a starting point for use in your application.
 Discussion
 ^^^^^^^^^^
 
-There are many ways to do HTTP POST from iOS and it can be confusing to identify the correct way that works, especially without the aid of external library. The example above uses the iOS native API.
+There are many ways to do HTTP POST from iOS and it can be confusing to identify the correct way that works, especially without the aid of an external library. The example above uses the iOS native API.
 
-Another way is to use _AFNetworking_. This is a popular external library for iOS development, can cope with many scenarios and is simple to use:
+Another way is to use _AFNetworking_. This is a popular external library for iOS development, can cope with many scenarios, and is simple to use:
 
 [source, objc]
 ---------------------------------------------------------
@@ -872,7 +873,7 @@ static NSString *url = @"http://localhost:8080/shout";
 }
 ---------------------------------------------------------
 
-The `NSURLConnection` approach is more versatile and gives you starting point to craft your own solution, such as by making the content type more specific. However, `AFNetworking` is popular and you may prefer that route.
+The `NSURLConnection` approach is more versatile and gives you a starting point to craft your own solution, such as by making the content type more specific. However, `AFNetworking` is popular and you may prefer that route.
 
 
 See Also
