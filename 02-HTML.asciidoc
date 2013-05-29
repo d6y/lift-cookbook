@@ -907,11 +907,11 @@ Use `LiftRules.responseTransformers` to match against the response and
 supply an alternative.
 
 As an example, suppose we want to provide a custom page for 403
-("Forbidden") statuses created in our Lift application.  Further suppose that
+("Forbidden") statuses created in our Lift application.  Further, suppose that
 this page might contain snippets so will need to pass through the Lift
 rendering flow.
 
-To do this in _Boot.scala_ we define the `LiftResponse` we want to generate
+To do this in _Boot.scala_, we define the `LiftResponse` we want to generate
 and use the response when a 403 status is about to be produced by Lift:
 
 [source,scala]
@@ -931,7 +931,7 @@ LiftRules.responseTransformers.append {
 ----
 
 The file _src/main/webapp/403.html_ will now be served for requests that
-generate 403 status codes. Other, non-403, responses are left untouched.
+generate 403 status codes. Other non-403 responses are left untouched.
 
 Discussion
 ^^^^^^^^^^
@@ -939,11 +939,11 @@ Discussion
 `LiftRules.responseTransformers` allows you to supply
 `LiftResponse => LiftResponse` functions to change a response right at the end
 of the HTTP processing cycle. This is a very general mechanism: in this
-example we are matching on a status code, but we could match on anything
+example, we are matching on a status code, but we could match on anything
 exposed by `LiftResponse`.
 
 
-In the recipe we respond with a template, but you may find
+In the recipe, we respond with a template, but you may find
 situations where other kinds of response make sense, such as an `InMemoryResponse`.
 
 You could even simplify the example to just this:
@@ -990,7 +990,7 @@ object Customised {
 }
 ----
 
-The convention in `Customised` is that we have a HTML file in _src/main/webapp_ which matches
+The convention in `Customised` is that we have an HTML file in _src/main/webapp_ that matches
 the status code we want to show, but of course you can change that by using a different
 pattern in the argument to `Templates`.
 
@@ -1030,7 +1030,7 @@ Links in Notices
 Problem
 ^^^^^^^
 
-You want to include a clickable link in your `S.error`, `S.notice` or
+You want to include a clickable link in your `S.error`, `S.notice`, or
 `S.warning` messages.
 
 Solution
@@ -1064,7 +1064,7 @@ to a `scala.xml.Text` kind of `NodeSeq`.
 See Also
 ^^^^^^^^
 
-Lift notices are described on the Wiki: http://www.assembla.com/spaces/liftweb/wiki/Lift_Notices_and_Auto_Fadeout[http://www.assembla.com/spaces/liftweb/wiki/Lift_Notices_and_Auto_Fadeout].
+Lift notices are described on the wiki: http://www.assembla.com/spaces/liftweb/wiki/Lift_Notices_and_Auto_Fadeout[http://www.assembla.com/spaces/liftweb/wiki/Lift_Notices_and_Auto_Fadeout].
 
 
 
@@ -1076,7 +1076,7 @@ Link to Download Data
 Problem
 ^^^^^^^
 
-You want a button or a link which, which clicked, will trigger a download in the browser rather than visiting a page.
+You want a button or a link that, when clicked, will trigger a download in the browser rather than visiting a page.
 
 Solution
 ^^^^^^^^
@@ -1099,7 +1099,7 @@ As an example, we will create a snippet that shows the user a poem and provides 
 </div>
 -------------------------------------------------------------
 
-The snippet itself will render the poem and replace the download link with one which will send a
+The snippet itself will render the poem and replace the download link with one that will send a
 response that the browser will interpret as a file to download:
 
 [source, scala]
@@ -1139,20 +1139,20 @@ class DownloadLink {
 Recall that `SHtml.link` generates a link and executes a function you supply before following the link.
 
 The trick here is that wrapping the `LiftResponse` in a `ResponseShortcutException` will indicate
-to Lift that the response is complete, so the page being linked to (`notused`) won't be processed. The browser is happy: it has a response to the link the user clicked on, and will render it how it wants to, which in this case will probably be by saving the file to disk.
+to Lift that the response is complete, so the page being linked to (in this case, `notused`) won't be processed. The browser is happy: it has a response to the link the user clicked on, and will render it how it wants to, which in this case will probably be by saving the file to disk.
 
 Discussion
 ^^^^^^^^^^
 
-`SHtml.link` works by generating a URL which Lift associates with the function you give it. On a page called `downloadlink`, the URL will look something like:
+`SHtml.link` works by generating a URL that Lift associates with the function you give it. On a page called `downloadlink`, the URL will look something like:
 
 ---------------------------------------------
 downloadlink?F845451240716XSXE3G=_#notused
 ---------------------------------------------
 
-When that link is followed, Lift looks up the function and executes it, before processing the linked-to resource. However, in this case, we are short-cutting the Lift pipeline by throwing this particular exception.  This is caught by Lift and the response wrapped by the exception is taken as the final response from the request.
+When that link is followed, Lift looks up the function and executes it, before processing the linked-to resource. However, in this case, we are shortcutting the Lift pipeline by throwing this particular exception.  This is caught by Lift and the response wrapped by the exception is taken as the final response from the request.
 
-This short-cutting is used by `S.redirectTo` via `ResponseShortcutException.redirect`. This companion object also defines `shortcutResponse` which you can use like this:
+This shortcutting is used by `S.redirectTo` via `ResponseShortcutException.redirect`. This companion object also defines `shortcutResponse`, which you can use like this:
 
 [source, scala]
 ----------------------------------------------------
@@ -1167,9 +1167,9 @@ def downloadLink =
     Text("Download") )
 ----------------------------------------------------
 
-We've included a `S.notice` to highlight that `throw shortcutResponse` will process Lift notices when the page next loads, whereas `throw new ResponseShortcutException` does not.  In this case, the notice will not appear when the user downloads the file, but it will be included the next time notices are shown, such as when the user navigates to another page.  For many situations, the difference is immaterial.
+We've included an `S.notice` to highlight that `throw shortcutResponse` will process Lift notices when the page next loads, whereas `throw new ResponseShortcutException` does not.  In this case, the notice will not appear when the user downloads the file, but it will be included the next time notices are shown, such as when the user navigates to another page.  For many situations, the difference is immaterial.
 
-This recipe has used Lift's stateful features.  You can see how useful it is to be able to close over state (the poem), and offer the data for download from memory.  If you've created a report from a database, you can offer it as a download without having to re-generate the items from the database.
+This recipe has used Lift's stateful features.  You can see how useful it is to be able to close over state (the poem), and offer the data for download from memory.  If you've created a report from a database, you can offer it as a download without having to regenerate the items from the database.
 
 However, in other situations you might want to avoid holding this data as a function on a link. In that case, you'll want to create a REST service that returns a `LiftResponse`.
 
@@ -1178,7 +1178,7 @@ See Also
 
 <<REST>> looks at REST-based services in Lift.
 
-<<RestStreamContent>> discusses `InMemoryResponse` and similar responses to return content to the browser
+<<RestStreamContent>> discusses `InMemoryResponse` and similar responses to return content to the browser.
 
 For reports, the Apache POI project, http://poi.apache.org/[http://poi.apache.org/], includes libraries for generating Excel files; and OpenCSV, http://opencsv.sourceforge.net[http://opencsv.sourceforge.net], is a library for generating CSV files.
 
@@ -1207,7 +1207,7 @@ libraryDependencies += "net.liftweb" %% "lift-testkit" % "2.5-RC5" % "test"
 -------
 
 To demonstrate how to use `testReq` we will test a function that detects a Google crawler. Google identifies
-crawlers via various "User-Agent" header on a request, so the function we want to test would look like this:
+crawlers via various `User-Agent` header on a request, so the function we want to test would look like this:
 
 [source, scala]
 -------
@@ -1232,7 +1232,7 @@ object RobotDetector {
 
 We have the list of magic `botNames` that Google sends as a user agent, and we define a check, `known_?`, that takes the user agent string and looks to see if any robot satisfies the condition of being contained in that user agent string.
 
-The `googlebot_?` method is given a Lift `Req` object and from this we look up the header.  This evaluates to a `Box[String]` as it's possible there is no header. We find the answer by seeing if there exists in the `Box` a value that satisfies the `known_?` condition.
+The `googlebot_?` method is given a Lift `Req` object and from this we look up the header.  This evaluates to a `Box[String]`, as it's possible there is no header. We find the answer by seeing if there exists in the `Box` a value that satisfies the `known_?` condition.
 
 To test this, we create a user agent string, prepare a `MockHttpServletRequest` with the header, and use Lift's `MockWeb` to turn the low-level request into a Lift `Req` for us to test with:
 
@@ -1287,12 +1287,12 @@ Although `MockWeb.testReq` is handling the creation of a `Req` for us, the envir
 
 Aside from HTTP headers, you can set cookies, content type, query parameters, the HTTP method, authentication type, and the body.  There are variations on the `body` assignment, which conveniently set the content type depending on the value you assign:
 
-* `JValue` will use content type of _application/json_.
-* `NodeSeq` will use _text/xml_ (or you can supply an alternative).
-* `String` uses _text/plain_ (unless you supply an alternative).
+* `JValue` will use content type of `application/json`.
+* `NodeSeq` will use `text/xml` (or you can supply an alternative).
+* `String` uses `text/plain` (unless you supply an alternative).
 * `Array[Byte]` does not set the content type.
 
-Data Table
+Data table
 ++++++++++
 
 In the example test above it would be tedious to have to set up the same code repeatedly for different user agents.  Specs2's _Data Table_ provides a compact way to run different example values through the same test:
@@ -1380,7 +1380,7 @@ following to the list of dependencies:
 
 You can then use the module to render Textile using the `toHtml` method.
 
-For example, starting SBT after adding the module and running the SBT _console_ command allows you to try out the module:
+For example, starting SBT after adding the module and running the SBT `console` command allows you to try out the module:
 
 [source,scala]
 ---------------------------------------------------------
@@ -1398,6 +1398,9 @@ scala> TextileParser.toHtml("""
  | """)
 res0: scala.xml.NodeSeq =
 NodeSeq(, <h1>Hi!</h1>,
+---------------------------------------------------------
+[source,html]
+---------------------------------------------------------
 , <p>The module in <a href="http://www.liftweb.net">Lift</a> for turning Textile
   markup<br></br>into HTML is pretty easy to use.</p>,
 , <ul><li> As you can see.</li>
@@ -1416,6 +1419,9 @@ pp: scala.xml.PrettyPrinter = scala.xml.PrettyPrinter@54c19de8
 
 scala> pp.formatNodes(res0)
 res1: String =
+---------------------------------------------------------
+[source,html]
+---------------------------------------------------------
 <h1>Hi!</h1><p>
   The module in
   <a href="http://www.liftweb.net">
@@ -1435,7 +1441,7 @@ Discussion
 
 There's nothing special code has to do to become a Lift module, although there are common conventions: they typically are packaged as _net.liftmodules_, but don't have to be; they usually depend on a version of Lift; they sometimes use the hooks provided by `LiftRules` to provide a particular behaviour.  Anyone can create and publish a Lift module, and anyone can contribute to existing modules. In the end, they are declared as dependencies in SBT, and pulled into your code just like any other dependency.
 
-The dependency name is made up of two elements: the name and the "edition" of Lift that the module is compatible with, as shown in <<ModuleVersioning>>. By "edition" we just mean the first part of the Lift version number. This implies the module is compatible with any Lift release that starts "2.5".
+The dependency name is made up of two elements: the name and the "edition" of Lift that the module is compatible with, as shown in <<ModuleVersioning>>. By "edition" we just mean the first part of the Lift version number. This implies the module is compatible with any Lift release that starts "2.5."
 
 [[ModuleVersioning]]
 .The structure of a module version.
