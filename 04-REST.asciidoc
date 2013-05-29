@@ -446,16 +446,16 @@ object JPeg {
 }
 ----------------------
 
-We have defined an extractor called `JPeg` which returns `Some[Req]` if the content type of the upload is _image/jpg_; otherwise the result will be `None`.  This is used in the REST pattern match as `JPeg(req)`.  Note that the `unapply` needs to return `Option[Req]` as this is what's expected by the `Post` extractor.
+We have defined an extractor called `JPeg` that returns `Some[Req]` if the content type of the upload is _image/jpg_; otherwise the result will be `None`.  This is used in the REST pattern match as `JPeg(req)`.  Note that the `unapply` needs to return `Option[Req]` as this is what's expected by the `Post` extractor.
 
 
 See Also
 ^^^^^^^^
 
-Odersky _et al._, (2008), _Programming in Scala_, chapter 24, discusses extractors in detail: http://www.artima.com/pins1ed/extractors.html[http://www.artima.com/pins1ed/extractors.html].
+Odersky, _et al._, (2008), _Programming in Scala_, chapter 24, discusses extractors in detail: http://www.artima.com/pins1ed/extractors.html[http://www.artima.com/pins1ed/extractors.html].
 
 
-<<FileUpload>> describes form-based (multi-part) file uploads
+<<FileUpload>> describes form-based (multipart) file uploads
 
 
 
@@ -472,7 +472,7 @@ You want to return JSON from a REST call.
 Solution
 ^^^^^^^^
 
-Use the Lift JSON domain specific language (DSL). For example:
+Use the Lift JSON domain-specific language (DSL). For example:
 
 [source,scala]
 ----
@@ -491,8 +491,8 @@ object QuotationsAPI extends RestHelper {
 
   serve {
     case "quotation" :: Nil JsonGet req =>
-      ("text" -> "A beach house isn't just real estate. It's a state of mind.") ~
-        ("by" -> "Douglas Adams") : JValue
+     ("text" -> "A beach house isn't just real estate. It's a state of mind.") ~
+     ("by" -> "Douglas Adams") : JValue
   }
 
 }
@@ -508,6 +508,7 @@ QuotationsAPI.init()
 
 Running this example produces:
 
+[source,json]
 ----
 $ curl -H 'Content-type: text/json' http://127.0.0.1:8080/quotation
 {
@@ -521,11 +522,11 @@ Discussion
 
 The _type ascription_ at the end of the JSON expression (`: JValue`)
 tells the compiler that the expression is expected to be of type
-`JValue`. This is required to allow the DSL to apply. If would not be
+`JValue`. This is required to allow the DSL to apply. It would not be
 required if, for example, you were calling a function that was defined
 to return a `JValue`.
 
-The JSON DSL allows you to created nested structures, lists and
+The JSON DSL allows you to created nested structures, lists, and
 everything else you expect of JSON.
 
 In addition to the DSL, you can also create JSON from a case class by using the `Extraction.decompose` method:
@@ -558,7 +559,7 @@ This will also produce a `JValue`, which when printed will be:
 See Also
 ^^^^^^^^
 
-The README file for the lift-json project is a great source of examples for using the JSON DSL: https://github.com/lift/framework/tree/master/core/json[https://github.com/lift/framework/tree/master/core/json].
+The README file for the _lift-json_ project is a great source of examples for using the JSON DSL: https://github.com/lift/framework/tree/master/core/json[https://github.com/lift/framework/tree/master/core/json].
 
 
 
@@ -658,7 +659,7 @@ LiftRules.statelessDispatch.append(code.rest.Sitemap)
 
 Test this service using a tool like cURL:
 
-[source,bash]
+[source,xml]
 ----
 $ curl http://127.0.0.1:8080/sitemap
 
