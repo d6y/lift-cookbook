@@ -15,7 +15,7 @@ You're stuck on something in Lift and you'd like some help.
 Solution
 ^^^^^^^^
 
-Ask a question on the Lift mailing list at https://groups.google.com/group/liftweb[https://groups.google.com/group/liftweb].
+Ask a question on the https://groups.google.com/group/liftweb[Lift mailing list].
 
 Discussion
 ^^^^^^^^^^
@@ -29,7 +29,7 @@ See Also
 
 The Lift community is one of the things that makes Lift what it is. Please take a look at http://liftweb.net/community[http://liftweb.net/community] before posting: you'll get the best response with a polite question.
 
-If you need paid consulting, development, or SLA-backed support, there's a list of organizations on the wiki at https://www.assembla.com/spaces/liftweb/wiki/Commercial_Support[https://www.assembla.com/spaces/liftweb/wiki/Commercial_Support].
+If you need paid consulting, development, or SLA-backed support, there's a list of organizations on the https://www.assembla.com/spaces/liftweb/wiki/Commercial_Support[wiki].
 
 
 [[HowToReportBugs]]
@@ -73,11 +73,11 @@ A great way to get help with the issue you have, or getting a bug fixed, is to p
 See Also
 ^^^^^^^^
 
-You'll find a list of tickets at http://ticket.liftweb.net/[http://ticket.liftweb.net/].
+You'll find a list of tickets http://ticket.liftweb.net/[here].
 
-If you're asked to, or want to, post example code there's a guide at http://www.assembla.com/wiki/show/liftweb/Posting_example_code[http://www.assembla.com/wiki/show/liftweb/Posting_example_code].
+If you're asked to, or want to, post example code there's a guide http://www.assembla.com/wiki/show/liftweb/Posting_example_code[here].
 
-If you've found a bug, and you're asked to create a ticket, the main thing to do is include a link to the mailing list discussion of the issue, as described at http://www.assembla.com/wiki/show/liftweb/Creating_tickets[http://www.assembla.com/wiki/show/liftweb/Creating_tickets].
+If you've found a bug, and you're asked to create a ticket, the main thing to do is include a link to the mailing list discussion of the issue, as described http://www.assembla.com/wiki/show/liftweb/Creating_tickets[here].
 
 
 [[LiftCodeContributions]]
@@ -118,13 +118,13 @@ What's a small change? That's a good question, and if you're unsure, talk about 
 See Also
 ^^^^^^^^
 
-This contribution policy was introduced in November 2012, and can be read about at http://www.lift.la/blog/new_contribution_policy[http://www.lift.la/blog/new_contribution_policy].
+This contribution policy was introduced in November 2012, and can be read about http://www.lift.la/blog/new_contribution_policy[here].
 
-The _contributors.md_ file is found at https://github.com/lift/framework/blob/master/contributors.md[https://github.com/lift/framework/blob/master/contributors.md].
+The _contributors.md_ file is found https://github.com/lift/framework/blob/master/contributors.md[on GitHub].
 
-The Lift source is on GitHub at https://github.com/lift/[https://github.com/lift/].  The _framework_ project is probably the one you want, although you'll also find Git repositories for examples and Lift websites there.
+The Lift source is https://github.com/lift/[on GitHub].  The _framework_ project is probably the one you want, although you'll also find Git repositories for examples and Lift websites there.
 
-GitHub provides an introduction to pull requests at https://help.github.com/articles/using-pull-requests[https://help.github.com/articles/using-pull-requests].
+GitHub provides an introduction to https://help.github.com/articles/using-pull-requests[pull requests].
 
 <<modules>> describes how to share code of any size via Lift modules.
 
@@ -142,7 +142,7 @@ You'd like to contribute documentation to Lift.
 Solution
 ^^^^^^^^
 
-Update or add to the Lift wiki at https://www.assembla.com/wiki/show/liftweb[https://www.assembla.com/wiki/show/liftweb].
+Update or add to the https://www.assembla.com/wiki/show/liftweb[Lift wiki].
 
 You'll need to sign in, or create a free account, with Assembla, the company that hosts the wiki. You then need to become a _watcher_ of the Lift wiki, which is offered as a link on the top right of the Lift wiki page.  As a watcher, you can edit pages and create new pages.
 
@@ -159,7 +159,7 @@ One limitation of the watcher role on Assembla is that you cannot move pages. If
 See Also
 ^^^^^^^^
 
-The markup format for the wiki pages is Textile. A reference guide can be found at http://redcloth.org/hobix.com/textile/[http://redcloth.org/hobix.com/textile/].
+The markup format for the wiki pages is http://redcloth.org/hobix.com/textile/[Textile].
 
 
 [[AddRecipe]]
@@ -178,9 +178,9 @@ If you're comfortable using Git, you can fork the repository and send a
 pull request.
 
 Alternatively, download a template file, write your recipe, and email it
-to the Lift mailing list at https://groups.google.com/group/liftweb[https://groups.google.com/group/liftweb].
+to the https://groups.google.com/group/liftweb[Lift mailing list].
 
-You can find the template file at https://raw.github.com/d6y/lift-cookbook/master/etc/template.asciidoc[https://raw.github.com/d6y/lift-cookbook/master/etc/template.asciidoc].
+You can find the template file https://raw.github.com/d6y/lift-cookbook/master/etc/template.asciidoc[here].
 
 Discussion
 ^^^^^^^^^^
@@ -210,9 +210,9 @@ See Also
 
 The source to this book is at https://github.com/d6y/lift-cookbook/[https://github.com/d6y/lift-cookbook/].
 
-The AsciiDoc cheatsheet at http://powerman.name/doc/asciidoc[http://powerman.name/doc/asciidoc] is a quick way to get into AsciiDoc, but if you need more, the AsciiDoc home page has the details: http://www.methods.co.nz/asciidoc/[http://www.methods.co.nz/asciidoc/].
+http://powerman.name/doc/asciidoc[The AsciiDoc cheatsheet] is a quick way to get into AsciiDoc, but if you need more, the http://www.methods.co.nz/asciidoc/[AsciiDoc home page has the details].
 
-GitHub provides an introduction to pull requests at https://help.github.com/articles/using-pull-requests[https://help.github.com/articles/using-pull-requests].
+GitHub provides an introduction to https://help.github.com/articles/using-pull-requests[pull requests].
 
 <<wiki>> describes other ways to contribute documentation to Lift.
 
@@ -239,7 +239,7 @@ For our snowstorm, we're going to package some JavaScript and inject the script 
 
 Starting with the _lift_blank_ template downloaded from _liftweb.net_, we can remove all the source and HTML files as this won't be a runnable Lift application in itself. However, it will leave us with the regular Lift structure and build configuration.
 
-Our module will need the snowstorm JavaScript file from https://github.com/scottschiller/snowstorm/[https://github.com/scottschiller/snowstorm/] copied as _resources/toserve/snowstorm.js_.  This will place the JavaScript file on the classpath of our Lift application.
+Our module will need the https://github.com/scottschiller/snowstorm/[snowstorm JavaScript file] copied as _resources/toserve/snowstorm.js_.  This will place the JavaScript file on the classpath of our Lift application.
 
 The final piece of the module is to ensure the JavaScript is included on every page:
 
@@ -400,7 +400,7 @@ libraryDependencies <++= liftVersion { v =>
 
 Note the `"provided"` configuration for Lift in the build file. This means that when your module is used, the version of Lift's WebKit will be the version provided by the application being built by the person using your module.
 
-What the above gives you is a way for your module to depend on Lift ("2.5"), without locking your module into a specific release if it happens to be built with "2.5-SNAPSHOT." By using a setting of `liftVersion`, we can control the version via a script for all modules.  This is what we do to publish a range of Lift modules after each Lift release, as described at https://www.assembla.com/spaces/liftweb/wiki/Releasing_the_modules[https://www.assembla.com/spaces/liftweb/wiki/Releasing_the_modules].
+What the above gives you is a way for your module to depend on Lift ("2.5"), without locking your module into a specific release if it happens to be built with "2.5-SNAPSHOT." By using a setting of `liftVersion`, we can control the version via a script for all modules.  This is what we do to publish a range of Lift modules after each Lift release, as described https://www.assembla.com/spaces/liftweb/wiki/Releasing_the_modules[here].
 
 When your module is built, don't forget to announce it on the Lift mailing list.
 
@@ -425,15 +425,15 @@ We are assuming that the snowstorm source can be found at _../snowstorm_ relativ
 See Also
 ^^^^^^^^
 
-Originally, Lift included a set of modules, but these have been separated out to individual projects at https://github.com/liftmodules/[https://github.com/liftmodules/].  The Lift contributor policy outlined in <<LiftCodeContributions>> doesn't apply to Lift modules: you're free to contribute to these modules as you would any other open source project.
+Originally, Lift included a set of modules, but these have been separated out to https://github.com/liftmodules/[individual projects].  The Lift contributor policy outlined in <<LiftCodeContributions>> doesn't apply to Lift modules: you're free to contribute to these modules as you would any other open source project.
 
 The Lift wiki pages for modules can be reached via http://liftmodules.net[http://liftmodules.net].
 
-The Snowstorm project ("setting CPUs on fire worldwide every winter since 2003") is at https://github.com/scottschiller/snowstorm/[https://github.com/scottschiller/snowstorm/] and the module developed for this recipe is at https://github.com/LiftCookbook/snowstorm-example-module[https://github.com/LiftCookbook/snowstorm-example-module].
+The Snowstorm project ("setting CPUs on fire worldwide every winter since 2003") is https://github.com/scottschiller/snowstorm/[here] and the module developed for this recipe is https://github.com/LiftCookbook/snowstorm-example-module[here].
 
-To publish to Sonatype, take a look at their guide: https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide[https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide]. CloudBees offers an open source repository, which you can learn about via http://www.cloudbees.com/foss/foss-dev.cb[http://www.cloudbees.com/foss/foss-dev.cb].
+To publish to Sonatype, take a look at https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide[their guide]. CloudBees offers an http://www.cloudbees.com/foss/foss-dev.cb[open source repository].
 
-There are other ways to structure common code between Lift applications. For an example that uses SBT modules and Git, see the mailing list discussion on "Modularize Lift Applications" via http://bit.ly/lift-moduleapp[http://bit.ly/lift-moduleapp].
+There are other ways to structure common code between Lift applications. For an example that uses SBT modules and Git, see the http://bit.ly/lift-moduleapp[mailing list discussion on "Modularize Lift Applications"].
 
 
 
