@@ -4,9 +4,9 @@ JavaScript, Ajax, Comet
 
 Lift is known for its great Ajax and Comet support, and in this chapter we'll explore these.
 
-For an introduction to Lift's Ajax and Comet features, see _Simply Lift_ at http://simply.liftweb.net[http://simply.liftweb.net], Chapter 9 of _Lift in Action_ (Perrett, 2012, Manning Publications, Co.), or watch Diego Medina's video presentation at https://fmpwizard.telegr.am/blog/comet-actors-presentation[https://fmpwizard.telegr.am/blog/comet-actors-presentation].
+For an introduction to Lift's Ajax and Comet features, see http://simply.liftweb.net[_Simply Lift_], Chapter 9 of _Lift in Action_ (Perrett, 2012, Manning Publications, Co.), or watch https://fmpwizard.telegr.am/blog/comet-actors-presentation[Diego Medina's video presentation].
 
-The source code for this chapter is https://github.com/LiftCookbook/cookbook_ajax[https://github.com/LiftCookbook/cookbook_ajax].
+The source code for this chapter is at https://github.com/LiftCookbook/cookbook_ajax[https://github.com/LiftCookbook/cookbook_ajax].
 
 
 [[ButtonTriggerServerCode]]
@@ -258,9 +258,9 @@ See Also
 
 <<SelectOptionChange>> includes an example of `SHtml.onEvents`, which will bind a function to a number of events on a `NodeSeq`.
 
-For another example of `AjaxInvoke` take a look at the _Call Scala code from JavaScript_ section of Diego Medina's blog at http://blog.fmpwizard.com/scala-lift-custom-wizard[http://blog.fmpwizard.com/scala-lift-custom-wizard].
+For another example of `AjaxInvoke` take a look at the http://blog.fmpwizard.com/scala-lift-custom-wizard[_Call Scala code from JavaScript_ section] of Diego Medina's blog.
 
-_Exploring Lift_, chapter 10, lists various `JsExp` classes you can use for `ajaxCall`: http://exploring.liftweb.net/master/index-10.html[http://exploring.liftweb.net/master/index-10.html].
+http://exploring.liftweb.net/master/index-10.html[_Exploring Lift_, chapter 10], lists various `JsExp` classes you can use for `ajaxCall`.
 
 <<JsonForms>> using `JsonHandler` to send JSON data from a form to the server.
 
@@ -520,7 +520,7 @@ Note that the types `String` and `Int` have been preserved in the JavaScript syn
 See Also
 ^^^^^^^^
 
-Chapter 10 of _Exploring Lift_ at http://exploring.liftweb.net/[http://exploring.liftweb.net/] gives a list of `JsCmds` and `JE` expressions.
+http://exploring.liftweb.net/[Chapter 10 of _Exploring Lift_] gives a list of `JsCmds` and `JE` expressions.
 
 
 [[FocusOnLoad]]
@@ -576,7 +576,7 @@ components pass:[<phrase role='keep-together'>dynamically.</phrase>]
 See Also
 ^^^^^^^^
 
-The source for `FocusOnLoad` is worth checking out to understand how it and related commands are constructed.  This may help you package your own JavaScript functionality up into commands that can be used in CSS binding expressions: https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/js/JsCommands.scala[https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/js/JsCommands.scala].
+https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/js/JsCommands.scala[The source for `FocusOnLoad`] is worth checking out to understand how it and related commands are constructed.  This may help you package your own JavaScript functionality up into commands that can be used in CSS binding expressions.
 
 
 [[CSSClassOnAjaxForm]]
@@ -867,7 +867,7 @@ By providing our own `() => JsCmd` function to `LiftRules.noCometSessionCmd`, Li
 
 .Factory
 ****
-The `noCometSessionCmd.default.set` call is making use of Lift's dependency injection. Specifically, it's setting up the supply side of the dependency. Although we're setting a default here, it's possible in Lift to supply different behaviours with different scopes: request or session.  See https://www.assembla.com/spaces/liftweb/wiki/Dependency_Injection[https://www.assembla.com/spaces/liftweb/wiki/Dependency_Injection].
+The `noCometSessionCmd.default.set` call is making use of Lift's https://www.assembla.com/spaces/liftweb/wiki/Dependency_Injection[dependency injection]. Specifically, it's setting up the supply side of the dependency. Although we're setting a default here, it's possible in Lift to supply different behaviours with different scopes: request or session.
 ****
 
 This recipe has focused on the handling of loss of session for Comet; for Ajax, there's a corresponding `LiftRules.noAjaxSessionCmd` setting.
@@ -875,9 +875,9 @@ This recipe has focused on the handling of loss of session for Comet; for Ajax, 
 See Also
 ^^^^^^^^
 
-You'll find the _The ubiquitous Chat app_ in _Simply Lift_: http://simply.liftweb.net/[http://simply.liftweb.net/].
+You'll find the _The ubiquitous Chat app_ in http://simply.liftweb.net/[_Simply Lift_].
 
-Being able to debug HTTP traffic is a useful way to understand how your Comet or Ajax application is performing.  There are many plugins and products to help with this, such as the _HttpFox_ plugin for Firefox: https://addons.mozilla.org/en-us/firefox/addon/httpfox/[https://addons.mozilla.org/en-us/firefox/addon/httpfox/].
+Being able to debug HTTP traffic is a useful way to understand how your Comet or Ajax application is performing.  There are many plugins and products to help with this, such as the https://addons.mozilla.org/en-us/firefox/addon/httpfox/[_HttpFox_ plugin for Firefox].
 
 
 
@@ -894,7 +894,7 @@ You want to offer your users an Ajax file upload tool, with progress bars and dr
 Solution
 ^^^^^^^^
 
-Add Sebastian Tschan's _jQuery File Upload_ widget (https://github.com/blueimp/jQuery-File-Upload[https://github.com/blueimp/jQuery-File-Upload]) to your project, and implement a REST end point to receive files.
+Add Sebastian Tschan's https://github.com/blueimp/jQuery-File-Upload[_jQuery File Upload_ widget] to your project, and implement a REST end point to receive files.
 
 The first step is to download the widget, and drag the _js_ folder into your application as _src/main/webapp/js_.  We can then use the JavaScript in a template:
 
@@ -989,7 +989,7 @@ By default, the widget makes the whole HTML page a drop-target for files, meanin
 Discussion
 ^^^^^^^^^^
 
-In this recipe, we've shown just the basic integration of the widget with a Lift application.  The demo site for the widget, http://blueimp.github.com/jQuery-File-Upload/[http://blueimp.github.com/jQuery-File-Upload/], shows other capabilities, and provides documentation on how to integrate them.
+In this recipe, we've shown just the basic integration of the widget with a Lift application. http://blueimp.github.com/jQuery-File-Upload/[The demo site for the widget] shows other capabilities, and provides documentation on how to integrate them.
 
 Many of the features just require JavaScript configuration.  For example, we've used the widget's `add`, `progressall`, and `done` handlers to show, update, and then fade out a progress bar.  When the upload is completed, the name of the uploaded file is appended to the page.
 
@@ -1023,11 +1023,11 @@ If we uploaded, say, a JPEG, the browser would show an alert dialog reporting "O
 See Also
 ^^^^^^^^
 
-Diego Medina has posted a Gist of Lift REST code to integrate more fully with the image upload and image reviewing features of the widget, specifically implementing the JSON response that the widget expects for that functionality.  You'll find it on GitHub via http://bit.ly/lift-restupload[http://bit.ly/lift-restupload].
+Diego Medina has posted a http://bit.ly/lift-restupload[Gist of Lift REST code] to integrate more fully with the image upload and image reviewing features of the widget, specifically implementing the JSON response that the widget expects for that functionality.
 
 <<FileUpload>> describes the basic file upload behaviour of Lift and how to control where files are stored.
 
-Antonio Salazar Cardozo has posted example code for performing Ajax file upload using Lift's Ajax mechanisms. This avoids external JavaScript libraries. You can find a description and link to the code on the mailing list: http://bit.ly/lift-ajaxupload[http://bit.ly/lift-ajaxupload].
+Antonio Salazar Cardozo has posted example code for performing Ajax file upload using Lift's Ajax mechanisms. This avoids external JavaScript libraries. You can find a description and link to the code on the http://bit.ly/lift-ajaxupload[mailing list].
 
 [[FormatWiring]]
 Format A Wired Cell
@@ -1123,7 +1123,7 @@ The `WiringUI.toNode` requires a `(T, NodeSeq) => NodeSeq`.  In the example abov
 <td id="subtotal">?</td>
 ---------------------------------------------------------
 
-this would mean the `NodeSeq` passed to us would just be the text node representing "?".  With a richer template we can use CSS selectors. For example, we can modify the template:
+this would mean the `NodeSeq` passed to us would just be the text node representing "?".  With a richer template we can use CSS selectors. For example, we can modify the pass:[<phrase role='keep-together'>template:</phrase>]
 
 [source,html]
 ---------------------------------------------------------
@@ -1143,6 +1143,6 @@ and apply a CSS selector to change the "amount" element:
 See Also
 ^^^^^^^^
 
-Chapter 6 of _Simply Lift_ describes Lift's Wiring mechanism, and gives a detailed shopping example: http://simply.liftweb.net/[http://simply.liftweb.net/].
+http://simply.liftweb.net/[Chapter 6 of _Simply Lift_] describes Lift's Wiring mechanism, and gives a detailed shopping example.
 
 
