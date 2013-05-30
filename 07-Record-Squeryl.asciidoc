@@ -1146,11 +1146,11 @@ case class InMemoryDB() extends Around with DBTestKit with TestLiftSession {
 }
 --------------------------------------------
 
-In summary, this trail provides an `InMemoryDB` _context_ for Specs2. This context ensures that the database is configured, the schema created and a transaction is supplied around your test.
+In summary, this trail provides an `InMemoryDB` _context_ for Specs2. This context ensures that the database is configured, the schema created, and a transaction is supplied around your test.
 
 Finally, mix the trait into your test and execute in the scope of the `InMemoryDB` context.
 
-As an example, using the schema from <<SquerylOneToMany>> we can test that the planet Mars has two moons:
+As an example, using the schema from <<SquerylOneToMany>>, we can test that the planet Mars has two moons:
 
 [source, scala]
 --------------------------------------------
@@ -1204,7 +1204,7 @@ Discussion
 
 The `DBTestKit` trait has to do quite a lot of work for us.  At the lowest level, it loads the H2 driver and configures Squeryl with an in-memory connection. The `mem` part of the JDBC connection string (`jdbc:h2:mem:dbname;DB_CLOSE_DELAY=-1`) means that H2 won't try to persist the data to disk.  The database just resides in memory, so there are no files in disk to maintain, and it runs quickly.
 
-By default, when a connection is closed, the in-memory database is destroyed. In this recipe we've disabled that by adding the `DB_CLOSE_DELAY=-1`, which will allow us to write unit tests that span connections if we want to.
+By default, when a connection is closed, the in-memory database is destroyed. In this recipe, we've disabled that by adding the `DB_CLOSE_DELAY=-1`, which will allow us to write unit tests that span connections if we want to.
 
 The next step up from connection management is the creation of the database schema in memory. We do this in `createDb` by throwing away the schema and any data when we start a test, and create it afresh.  If you have very common test datasets, this might be a good place to insert that data before your test runs.
 
@@ -1256,7 +1256,7 @@ See Also
 
 See http://www.h2database.com/html/features.html#in_memory_databases[http://www.h2database.com/html/features.html#in_memory_databases] for more about H2's in-memory database settings.
 
-<<MongoUnitTest>> discusses unit testing with MongoDB, but the comments on SBT's other testing commands and testing in an IDE would apply to this recipe too.
+<<MongoUnitTest>> discusses unit testing with MongoDB, but the comments on SBT's other testing commands and testing in an IDE would apply to this recipe, too.
 
 
 [[RandomValueColumn]]
@@ -1279,7 +1279,7 @@ import net.liftweb.record.field.UniqueIdField
 val randomId = new UniqueIdField(this, 32) {}
 --------------------------------------------
 
-Note the `{}` in the example: this is required as `UniqueIdField` is an
+Note the `{}` in the example; this is required as `UniqueIdField` is an
 abstract class.
 
 The size value, 32, indicates how many random characters to create.
@@ -1318,7 +1318,7 @@ This will automatically insert values of the form "6481a844-460a-a4e0-9191-c808e
 See Also
 ^^^^^^^^
 
-Java's UUID support is described at http://docs.oracle.com/javase/7/docs/api/java/util/UUID.html[http://docs.oracle.com/javase/7/docs/api/java/util/UUID.html] and includes a link to RFC 4122 which defines UUIDs.
+Java's UUID support is described at http://docs.oracle.com/javase/7/docs/api/java/util/UUID.html[http://docs.oracle.com/javase/7/docs/api/java/util/UUID.html] and includes a link to RFC 4122, which defines UUIDs.
 
 
 
@@ -1400,12 +1400,12 @@ Discussion
 ^^^^^^^^^^
 
 Although there is a built-in `net.liftweb.record.LifecycleCallbacks`
-trait which allows you trigger behaviour `onUpdate`, `afterDelete` and so
+trait that allows you to trigger behaviour `onUpdate`, `afterDelete`, and so
 on, it is only for use on individual fields, rather than records. As our
-goal is to update the `updated` field when any part of the Record
+goal is to update the `updated` field when any part of the record
 changes, we can't use the `LiftcycleCallbacks` here.
 
-Instead, the `CreatedUpdated` trait simplifies adding an `updated` and
+Instead, the `CreatedUpdated` trait simplifies adding `updated` and
 `created` fields to a Record, but we do need to remember to add a hook
 into the schema to ensure the `updated` value is changed when a record
 is modified. This is why we set the `callbacks` on the Schema.
@@ -1420,7 +1420,7 @@ created timestamp not null
 
 The `timestamp` is used for the H2 database.  For other databases the type may be different.
 
-The values can be accessed like any other record field.  Using the example data from <<SquerylOneToMany>> we could run the following:
+The values can be accessed like any other record field.  Using the example data from <<SquerylOneToMany>>, we could run the following:
 
 [source,scala]
 -----------------------------------------------
@@ -1445,7 +1445,7 @@ callbacks support these triggered behaviours:
 See Also
 ^^^^^^^^
 
-For a discussion of the difference between partial and full updates in Squeryl, see : http://squeryl.org/inserts-updates-delete.html[http://squeryl.org/inserts-updates-delete.html].
+For a discussion of the difference between partial and full updates in Squeryl, see http://squeryl.org/inserts-updates-delete.html[http://squeryl.org/inserts-updates-delete.html].
 
 
 [[SquerylLogging]]
@@ -1460,7 +1460,7 @@ You want to see the SQL being executed by Squeryl.
 Solution
 ^^^^^^^^
 
-Add the following anytime you have a Squeryl season, such as just before
+Add the following any time you have a Squeryl season, such as just before
 your query:
 
 [source,scala]
@@ -1510,7 +1510,7 @@ S.addAround(new LoanWrapper {
 See Also
 ^^^^^^^^
 
-Squeryl `setLogger` is documented at: http://squeryl.org/miscellaneous.html[http://squeryl.org/miscellaneous.html].
+Squeryl `setLogger` is documented at http://squeryl.org/miscellaneous.html[http://squeryl.org/miscellaneous.html].
 
 You can learn about logging in Lift from the Logging wiki page: https://www.assembla.com/spaces/liftweb/wiki/Logging[https://www.assembla.com/spaces/liftweb/wiki/Logging].
 
@@ -1559,7 +1559,7 @@ Discussion
 
 This recipe points towards the flexibility available with Squeryl's schema definition DSL.  The column attribute in this example is just one of a variety of adjustments you can make to the default choices that Squeryl uses.
 
-For example, you can use the syntax to chain column attributes for a single column, and also defined multiple columns at the same time:
+For example, you can use the syntax to chain column attributes for a single column, and also define multiple columns at the same time:
 
 [source,scala]
 ------------------------------------------
@@ -1601,9 +1601,9 @@ Ensure that:
 Discussion
 ^^^^^^^^^^
 
-There are a number of interactions here which can impact characters going into, and coming out of, a MySQL database.  The basic problem is that bytes transferred across networks have no meaning unless you know the encoding.
+There are a number of interactions here that can impact characters going into, and coming out of, a MySQL database.  The basic problem is that bytes transferred across networks have no meaning unless you know the encoding.
 
-The `setCharacterEncoding("UTF-8")` call in _Boot.scala_ is being applied to every `HTTPRequest` which ultimately, in a servlet container, is applied to a `ServletRequest`. This is how parameters in a request are going to be interpreted by the servlet container when received.
+The `setCharacterEncoding("UTF-8")` call in _Boot.scala_ is being applied to every `HTTPRequest` that ultimately, in a servlet container, is applied to a `ServletRequest`. This is how parameters in a request are going to be interpreted by the servlet container when received.
 
 The flip side of this is that responses from Lift are encoded as UTF-8.  You'll see this in a number of places. For example, `templates-hidden/default` includes:
 
@@ -1626,7 +1626,7 @@ CREATE DATABASE myDb CHARACTER SET utf8
 See Also
 ^^^^^^^^
 
-The MySQL JDBC configuration guide is at: http://dev.mysql.com/doc/refman/5.6/en/connector-j-reference-configuration-properties.html[http://dev.mysql.com/doc/refman/5.6/en/connector-j-reference-configuration-properties.html].
+The MySQL JDBC configuration guide is at http://dev.mysql.com/doc/refman/5.6/en/connector-j-reference-configuration-properties.html[http://dev.mysql.com/doc/refman/5.6/en/connector-j-reference-configuration-properties.html].
 
 
 
