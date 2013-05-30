@@ -1,5 +1,6 @@
 :bookseries: cookbook
 
+[[preface]]
 == Preface
 
 This is a collection of solutions to questions you might have while developing
