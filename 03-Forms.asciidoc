@@ -6,7 +6,7 @@ This chapter looks at how to process form data with Lift: submitting forms, work
 
 To the extent that form processing is passing data to a server, there are also recipes in <<Ajax>> that are relevant to form processing.
 
-You'll find many of the examples from this chapter as source code at: https://github.com/LiftCookbook/cookbook_forms[https://github.com/LiftCookbook/cookbook_forms].
+You'll find many of the examples from this chapter as source code at https://github.com/LiftCookbook/cookbook_forms[https://github.com/LiftCookbook/cookbook_forms].
 
 
 [[PlainFormProcessing]]
@@ -114,7 +114,7 @@ recipe.
 See Also
 ^^^^^^^^
 
-_Simply Lift_ covers a variety of ways of processing forms.  See: http://simply.liftweb.net[http://simply.liftweb.net].
+http://simply.liftweb.net[_Simply Lift_] covers a variety of ways of processing forms.
 
 
 
@@ -253,16 +253,16 @@ The `formGroup` addition manipulates the function identifier to ensure it sorts 
 
 [NOTE]
 Lift 2.6 and 3.0 may contain `ajaxOnSubmit`, which will give the reliability of `ajaxSubmit` and the flexibility of the hidden-field approach.  If you want to try it in Lift 2.5,
-Antonio Salazar Cardozo has created a helper you can include in your project: https://gist.github.com/Shadowfiend/5042131[https://gist.github.com/Shadowfiend/5042131].
+Antonio Salazar Cardozo has created a https://gist.github.com/Shadowfiend/5042131[helper you can include in your project].
 
 
 
 See Also
 ^^^^^^^^
 
-Function order is discussed in the Lift Cool Tips wiki page: http://www.assembla.com/spaces/liftweb/wiki/cool_tips[http://www.assembla.com/spaces/liftweb/wiki/cool_tips].
+Function order is discussed in the http://www.assembla.com/spaces/liftweb/wiki/cool_tips[Lift Cool Tips wiki page].
 
-Form serialisation is described at http://api.jquery.com/serialize/[http://api.jquery.com/serialize/].
+http://api.jquery.com/serialize/[Form serialisation]
 
 <<AjaxFileUpload>> describes Ajax file uploads.
 
@@ -480,11 +480,11 @@ The first `JsonCmd` is unchanged. The second matches on the parameters sent and 
 See Also
 ^^^^^^^^
 
-There are further examples of `JsonHandler` at http://demo.liftweb.net/json_more[http://demo.liftweb.net/json_more].
+There are http://demo.liftweb.net/json_more[further examples of `JsonHandler`].
 
-If you want to process JSON via REST, take a look at the examples at http://demo.liftweb.net/stateless_json[http://demo.liftweb.net/stateless_json].
+If you want to process JSON via REST, take a look at http://demo.liftweb.net/stateless_json[these examples].
 
-_Lift in Action_, section 9.1.4 discusses "Using JSON forms with AJAX," as does section 10.4 of _Exploring Lift_ at http://exploring.liftweb.net[http://exploring.liftweb.net].
+_Lift in Action_, section 9.1.4 discusses "Using JSON forms with AJAX," as does section 10.4 of http://exploring.liftweb.net[_Exploring Lift_].
 
 
 
@@ -645,12 +645,11 @@ When this snippet runs, and the page is rendered, the jQuery UI date picker will
 See Also
 ^^^^^^^^
 
-_Dive into HTML5_, at http://diveintohtml5.info[http://diveintohtml5.info]
-, describes how to detect browser pass:[<phrase role='keep-together'>features.</phrase>]
+http://diveintohtml5.info[_Dive into HTML5_] describes how to detect browser pass:[<phrase role='keep-together'>features.</phrase>]
 
-jQuery UI's date picker has many configuration options, which are described at http://api.jqueryui.com/datepicker/[http://api.jqueryui.com/datepicker/].
+http://api.jqueryui.com/datepicker/[jQuery UI's date picker] has many configuration options.
 
-The HTML5 date input types submit dates in RFC 3339 format. These are specified at http://tools.ietf.org/html/rfc3339[http://tools.ietf.org/html/rfc3339]
+The HTML5 date input types submit dates in http://tools.ietf.org/html/rfc3339[RFC 3339 format].
 
 
 
