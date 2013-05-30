@@ -102,7 +102,7 @@ In this recipe, the `PostgreSqlAdapter` is being used. Squeryl also supports: `O
 See Also
 ^^^^^^^^
 
-The Squeryl _Getting Started Guide_ links to more information about session management and configuration: http://squeryl.org/getting-started.html[http://squeryl.org/getting-started.html].
+http://squeryl.org/getting-started.html[The Squeryl _Getting Started Guide_] links to more information about session management and configuration.
 
 See <<SquerylJNDI>> for configuring connections via Java Naming and Directory Interface (JNDI).
 
@@ -168,11 +168,11 @@ See Also
 
 Resources for JNDI configuration include:
 
-* An example on the Lift wiki for Apache and Jetty configuration at http://www.assembla.com/spaces/liftweb/wiki/Apache_and_Jetty_Configuration[http://www.assembla.com/spaces/liftweb/wiki/Apache_and_Jetty_Configuration].
+* http://www.assembla.com/spaces/liftweb/wiki/Apache_and_Jetty_Configuration[An example on the Lift wiki] for Apache and Jetty configuration.
 
-* The documentation for Jetty gives examples for various databases: http://www.eclipse.org/jetty/documentation/current/jndi-datasource-examples.html[http://www.eclipse.org/jetty/documentation/current/jndi-datasource-examples.html].
+* http://www.eclipse.org/jetty/documentation/current/jndi-datasource-examples.html[The documentation for Jetty] gives examples for various databases.
 
-* For Tomcat, the JNDI configuration guide is http://tomcat.apache.org/tomcat-7.0-doc/jndi-resources-howto.html#JDBC_Data_Sources[http://tomcat.apache.org/tomcat-7.0-doc/jndi-resources-howto.html#JDBC_Data_Sources].
+* For Tomcat, the JNDI configuration guide is http://tomcat.apache.org/tomcat-7.0-doc/jndi-resources-howto.html#JDBC_Data_Sources[here].
 
 
 [[SquerylOneToMany]]
@@ -383,7 +383,7 @@ Which version should you use? That will depend on your application, but you can 
 See Also
 ^^^^^^^^
 
-Squeryl relations are documented at http://squeryl.org/relations.html[http://squeryl.org/relations.html].
+Squeryl relations are documented at http://squeryl.org/relations.html[here].
 
 
 
@@ -718,7 +718,7 @@ See Also
 
 <<SquerylOneToMany>>, on one-to-many relationships, discusses `leftStateful` and `rightStateful` relations, which are also applicable for many-to-many relationships.
 
-Foreign keys, cascading deletes, are described at http://squeryl.org/relations.html[http://squeryl.org/relations.html].
+Foreign keys and cascading deletes are described at http://squeryl.org/relations.html[here].
 
 
 
@@ -871,7 +871,7 @@ case class FieldError(field: FieldIdentifier, msg: NodeSeq) {
 See Also
 ^^^^^^^^
 
-The `BaseField.scala` class in the Lift source code contains the definition of the built-in `StringValidators`. Find the source at https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/BaseField.scala[https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/BaseField.scala].
+https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/BaseField.scala[The `BaseField.scala` class in the Lift source code] contains the definition of the built-in `StringValidators`.
 
 <<Forms>> describes form processing, notices, and errors.
 
@@ -978,7 +978,7 @@ See Also
 
 <<FieldValidation>> discusses field validation and the built-in validations.
 
-Text localisation is discussed on the Lift wiki at https://www.assembla.com/wiki/show/liftweb/Localization[https://www.assembla.com/wiki/show/liftweb/Localization].
+Text localisation is discussed on the https://www.assembla.com/wiki/show/liftweb/Localization[Lift wiki].
 
 
 [[SquerylFilter]]
@@ -1047,9 +1047,9 @@ a user entering "jaglan beta" as a planet name would see it stored in the databa
 See Also
 ^^^^^^^^
 
-The best place to understand the filters is the trait `StringValidators` in the source for `BaseField`: https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/BaseField.scala[https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/BaseField.scala].
+The best place to understand the filters is the trait `StringValidators` in the https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/BaseField.scala[source for `BaseField`].
 
-If you really do need to apply title case to a value, the Apache Commons `WordUtils` class provides ready-made functions for this.  See: http://commons.apache.org/lang/[http://commons.apache.org/lang/].
+If you really do need to apply title case to a value, http://commons.apache.org/lang/[the Apache Commons `WordUtils` class] provides ready-made functions for this.
 
 
 [[SquerylUnitTest]]
@@ -1254,7 +1254,7 @@ We've used a database with an in-memory mode for the advantages of speed and no 
 See Also
 ^^^^^^^^
 
-See http://www.h2database.com/html/features.html#in_memory_databases[http://www.h2database.com/html/features.html#in_memory_databases] for more about H2's in-memory database settings.
+See http://www.h2database.com/html/features.html#in_memory_databases[the H2 database website] for more about H2's in-memory database settings.
 
 <<MongoUnitTest>> discusses unit testing with MongoDB, but the comments on SBT's other testing commands and testing in an IDE would apply to this recipe, too.
 
@@ -1318,7 +1318,7 @@ This will automatically insert values of the form "6481a844-460a-a4e0-9191-c808e
 See Also
 ^^^^^^^^
 
-Java's UUID support is described at http://docs.oracle.com/javase/7/docs/api/java/util/UUID.html[http://docs.oracle.com/javase/7/docs/api/java/util/UUID.html] and includes a link to RFC 4122, which defines UUIDs.
+http://docs.oracle.com/javase/7/docs/api/java/util/UUID.html[Java's UUID support] includes a link to RFC 4122, which defines UUIDs.
 
 
 
@@ -1445,7 +1445,7 @@ callbacks support these triggered behaviours:
 See Also
 ^^^^^^^^
 
-For a discussion of the difference between partial and full updates in Squeryl, see http://squeryl.org/inserts-updates-delete.html[http://squeryl.org/inserts-updates-delete.html].
+For a discussion of the difference between partial and full updates in Squeryl, see http://squeryl.org/inserts-updates-delete.html[this website].
 
 
 [[SquerylLogging]]
@@ -1510,9 +1510,9 @@ S.addAround(new LoanWrapper {
 See Also
 ^^^^^^^^
 
-Squeryl `setLogger` is documented at http://squeryl.org/miscellaneous.html[http://squeryl.org/miscellaneous.html].
+Squeryl `setLogger` is documented http://squeryl.org/miscellaneous.html[here].
 
-You can learn about logging in Lift from the Logging wiki page: https://www.assembla.com/spaces/liftweb/wiki/Logging[https://www.assembla.com/spaces/liftweb/wiki/Logging].
+You can learn about logging in Lift from the https://www.assembla.com/spaces/liftweb/wiki/Logging[Logging wiki page].
 
 
 
@@ -1575,7 +1575,7 @@ object MySchema extends Schema {
 See Also
 ^^^^^^^^
 
-The schema definition page for Squeryl gives examples of attributes you can apply to tables and columns: http://squeryl.org/schema-definition.html[http://squeryl.org/schema-definition.html].
+http://squeryl.org/schema-definition.html[The schema definition page for Squeryl] gives examples of attributes you can apply to tables and columns.
 
 
 
@@ -1626,7 +1626,7 @@ CREATE DATABASE myDb CHARACTER SET utf8
 See Also
 ^^^^^^^^
 
-The MySQL JDBC configuration guide is at http://dev.mysql.com/doc/refman/5.6/en/connector-j-reference-configuration-properties.html[http://dev.mysql.com/doc/refman/5.6/en/connector-j-reference-configuration-properties.html].
+http://dev.mysql.com/doc/refman/5.6/en/connector-j-reference-configuration-properties.html[The MySQL JDBC configuration guide]
 
 
 
