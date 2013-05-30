@@ -815,7 +815,7 @@ See Also
 
 <<JavaScriptTail>> describes how to move JavaScript to the end of the page with the `tail` snippet.
 
-The W3C HTML validator is a useful tool for tracking down HTML markup issues that may cause problems with content being moved into the head of your page: http://validator.w3.org/[http://validator.w3.org/].
+The http://validator.w3.org/[W3C HTML validator] is a useful tool for tracking down HTML markup issues that may cause problems with content being moved into the head of your page.
 
 
 
@@ -1064,7 +1064,7 @@ to a `scala.xml.Text` kind of `NodeSeq`.
 See Also
 ^^^^^^^^
 
-Lift notices are described on the wiki: http://www.assembla.com/spaces/liftweb/wiki/Lift_Notices_and_Auto_Fadeout[http://www.assembla.com/spaces/liftweb/wiki/Lift_Notices_and_Auto_Fadeout].
+Lift notices are described on http://www.assembla.com/spaces/liftweb/wiki/Lift_Notices_and_Auto_Fadeout[the wiki].
 
 
 
@@ -1180,7 +1180,7 @@ See Also
 
 <<RestStreamContent>> discusses `InMemoryResponse` and similar responses to return content to the browser.
 
-For reports, the Apache POI project, http://poi.apache.org/[http://poi.apache.org/], includes libraries for generating Excel files; and OpenCSV, http://opencsv.sourceforge.net[http://opencsv.sourceforge.net], is a library for generating CSV files.
+For reports, http://poi.apache.org/[the Apache POI project] includes libraries for generating Excel files; and http://opencsv.sourceforge.net[OpenCSV] is a library for generating CSV files.
 
 
 
@@ -1354,7 +1354,7 @@ Although the expected value appears first in our table, there's no requirement t
 See Also
 ^^^^^^^^
 
-The Lift wiki discusses this topic and also other approaches such as testing with Selenium. https://www.assembla.com/spaces/liftweb/wiki/Testing_Lift_Applications[https://www.assembla.com/spaces/liftweb/wiki/Testing_Lift_Applications].
+https://www.assembla.com/spaces/liftweb/wiki/Testing_Lift_Applications[The Lift wiki] discusses this topic and also other approaches such as testing with pass:[<phrase role='keep-together'>Selenium.</phrase>]
 
 
 
@@ -1444,7 +1444,7 @@ There's nothing special code has to do to become a Lift module, although there a
 The dependency name is made up of two elements: the name and the "edition" of Lift that the module is compatible with, as shown in <<ModuleVersioning>>. By "edition" we just mean the first part of the Lift version number. This implies the module is compatible with any Lift release that starts "2.5."
 
 [[ModuleVersioning]]
-.The structure of a module version.
+.The structure of a module version
 image::images/lfcb_0201.png[]
 
 This structure has been adopted because modules have their own release cycle, independent of Lift. However, modules may also depend on certain features of Lift, and Lift may change APIs between major releases, hence the need to use part of the Lift version number to identify the module.
@@ -1454,11 +1454,11 @@ This structure has been adopted because modules have their own release cycle, in
 See Also
 ^^^^^^^^
 
-There's no real specification of what Textile is, but there are references available which cover the typical kinds of markup to enter and what HTML you can expect to see: http://redcloth.org/hobix.com/textile/[http://redcloth.org/hobix.com/textile/].
+There's no real specification of what Textile is, but there are http://redcloth.org/hobix.com/textile/[references available] that cover the typical kinds of markup to enter and what HTML you can expect to see.
 
-The home of the Textile module: https://github.com/liftmodules/textile[https://github.com/liftmodules/textile].
+https://github.com/liftmodules/textile[The home of the Textile module]
 
-The unit tests for the Textile module give you a good set of examples of what is supported: https://github.com/liftmodules/textile/blob/master/src/test/scala/net/liftmodules/textile/TextileSpec.scala[https://github.com/liftmodules/textile/blob/master/src/test/scala/net/liftmodules/textile/TextileSpec.scala].
+https://github.com/liftmodules/textile/blob/master/src/test/scala/net/liftmodules/textile/TextileSpec.scala[The unit tests for the Textile module] give you a good set of examples of what is supported.
 
 <<modules>> describes how to create modules.
 
