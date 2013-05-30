@@ -814,7 +814,7 @@ RemoteReceiver ! AMQPAddListener(ChatServer)
 
 This is attaching the `ChatServer` as a listener for AMQP messages from the pass:[<phrase role='keep-together'><literal>RemoteReciver</literal>.</phrase>]
 
-The final change is to the `ChatServer` itself.  The regular behaviour of the `ChatServer` is to receive a `String` message from a client and update all the screens attached to the comet server:
+The final change is to the `ChatServer` itself.  The regular behaviour of the `ChatServer` is to receive a `String` message from a client and update all the screens attached to the Comet server:
 
 [source, scala]
 -----------------------------------------
@@ -833,7 +833,7 @@ override def lowPriority = {
 }
 -----------------------------------------
 
-This change means all our comet chat messages go out to RabbitMQ where they are distributed to all the instances of our Lift application, and all the instances receive the messages back as `AMQPMessage` instances and update chat clients as normal.
+This change means all our Comet chat messages go out to RabbitMQ where they are distributed to all the instances of our Lift application, and all the instances receive the messages back as `AMQPMessage` instances and update chat clients as normal.
 
 Discussion
 ^^^^^^^^^^
@@ -851,9 +851,9 @@ $ sbt
 
 You can then visit one application at _http://127.0.0.1:8080_ and another at _http://127.0.0.1:9090_.
 
-In the example code, you can see that `AMQPSender[T]` and `AMQPDispatcher[T]` take care of most of the work for us, and we provide some configuration.  In the case of `RemoteSend` we're configuring the `AMQPSender` to work with `String` messages and to work with an _exchange_ called "lift.chat". In RabbitMQ the exchange is the entity we send messages to, and the exchange has the responsibility for passing on the message.  In this case the exchange is a _fanout_ (a simple kind of topic) where each subscriber receives a copy of any messages sent to the exchange.  This is clearly what we want to get our chat messages sent to all connected Lift instances of the chat application.
+In the example code, you can see that `AMQPSender[T]` and `AMQPDispatcher[T]` take care of most of the work for us, and we provide some configuration.  In the case of `RemoteSend` we're configuring the `AMQPSender` to work with `String` messages and to work with an _exchange_ called "lift.chat." In RabbitMQ, the exchange is the entity we send messages to, and the exchange has the responsibility for passing on the message.  In this case, the exchange is a _fanout_ (a simple kind of topic) where each subscriber receives a copy of any messages sent to the exchange.  This is clearly what we want to get our chat messages sent to all connected Lift instances of the chat application.
 
-The `RemoteReceiver` is also configured to receive `String` messages, although the configuration is a little longer. Here, as well as indicating the exchange to be used, we declare a _temporary queue_ for our Lift instance.  The queue is the place where RabbitMQ sends messages, and what we're saying here is that each receiver has its own queue. The fanout exchange will ensure any message sent to the exchange is placed into every queue. The queue has a random name assigned by RabbitMQ and is destroyed we disconnect from it.
+The `RemoteReceiver` is also configured to receive `String` messages, although the configuration is a little longer. Here, as well as indicating the exchange to be used, we declare a _temporary queue_ for our Lift instance.  The queue is the place where RabbitMQ sends messages, and what we're saying here is that each receiver has its own queue. The fanout exchange will ensure any message sent to the exchange is placed into every queue. The queue has a random name assigned by RabbitMQ and is destroyed when we disconnect from it.
 
 The final part of the `RemoteReceiver` is to specify how we consume messages. The default behaviour of `RemoteSend` is to serialise objects, so we mirror that in the receiver by using the `SerializedConsumer` class provided by the AMQP module.
 
@@ -863,9 +863,9 @@ To see the behaviour of RabbitMQ, it's useful to install the management web cons
 $ ./sbin/rabbitmq-plugins enable rabbitmq_management
 -----------------------------------------
 
-Visit the administrative web interface at _http://127.0.0.1:15672/_ and login.  The default username and password is "guest".
+Visit the administrative web interface at _http://127.0.0.1:15672/_ and login.  The default username and password is "guest."
 
-Having to have RabbitMQ (or other type of pubsub solution) running during development may be inconvenient. In that case, you can simply not initialize the service in _Boot.scala_:
+Needing to have RabbitMQ (or other types of pubsub solutions) running during development may be inconvenient. In that case, you can simply not initialize the service in _Boot.scala_:
 
 [source, scala]
 -----------------------------------------
@@ -885,19 +885,19 @@ override def lowPriority = {
   }
 -----------------------------------------
 
-Note that `Props.productionMode` is `true` for the run modes of `Production`, `Staging` and `Pilot`.
+Note that `Props.productionMode` is `true` for the run modes of `Production`, `Staging`, and `Pilot`.
 
 
 See Also
 ^^^^^^^^
 
-The Lift Chat example is described in _Simply Lift_ at http://simply.liftweb.net/[http://simply.liftweb.net/]. The source code used in this recipe can be found at: https://github.com/LiftCookbook/rabbitmq_chat[https://github.com/LiftCookbook/rabbitmq_chat].
+The Lift Chat example is described in _Simply Lift_ at http://simply.liftweb.net/[http://simply.liftweb.net/]. The source code used in this recipe can be found at https://github.com/LiftCookbook/rabbitmq_chat[https://github.com/LiftCookbook/rabbitmq_chat].
 
 The Lift AMQP module is: https://github.com/liftmodules/amqp[https://github.com/liftmodules/amqp].
 
-If you want to learn more about RabbitMQ, take a look at the tutorials (http://www.rabbitmq.com/tutorials/tutorial-five-java.html[http://www.rabbitmq.com/tutorials/tutorial-five-java.html]) or Alvaro Videla and Jason J.W. Williams (2012), _RabbitMQ in Action: Distributed Messaging for Everyone_, Manning Publications.
+If you want to learn more about RabbitMQ, take a look at the tutorials (http://www.rabbitmq.com/tutorials/tutorial-five-java.html[http://www.rabbitmq.com/tutorials/tutorial-five-java.html]) or Alvaro Videla and Jason J.W. Williams's _RabbitMQ in Action: Distributed Messaging for Everyone_, Manning Publications.
 
-Diego Medina has implemented a distributed comet solution using CouchDB, and has described it in a blog post at https://fmpwizard.telegr.am/blog/distributed-comet-chat-lift[https://fmpwizard.telegr.am/blog/distributed-comet-chat-lift].
+Diego Medina has implemented a distributed Comet solution using CouchDB, and has described it in a blog post at https://fmpwizard.telegr.am/blog/distributed-comet-chat-lift[https://fmpwizard.telegr.am/blog/distributed-comet-chat-lift].
 
 Amazon's Simple Notification Service (SNS) is a fanout facility so can also be used to implement this pattern. You can find a Lift module for SNS at https://github.com/SpiralArm/liftmodules-aws-sns[https://github.com/SpiralArm/liftmodules-aws-sns].
 
