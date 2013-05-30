@@ -41,9 +41,9 @@ You should join them: <<AddRecipe>> tells you how.
 
 === Source
 
-The text of this cookbook is at: https://github.com/d6y/lift-cookbook[https://github.com/d6y/lift-cookbook].
+The text of this cookbook is at https://github.com/d6y/lift-cookbook[https://github.com/d6y/lift-cookbook].
 
-You'll find projects for each chapter at GitHub: https://github.com/LiftCookbook/[https://github.com/LiftCookbook/].
+You'll find projects for each chapter at https://github.com/LiftCookbook/[GitHub].
 
 
 === Updates
