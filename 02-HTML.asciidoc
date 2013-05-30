@@ -71,7 +71,7 @@ If you use an IDE that supports a _worksheet_, which both Eclipse and IntelliJ I
 See Also
 ^^^^^^^^
 
-The syntax for selectors is best described in _Simply Lift_ at http://simply.liftweb.net/[http://simply.liftweb.net/].
+The syntax for selectors is best described in http://simply.liftweb.net/[_Simply Lift_].
 
 See <<eclipse>> and <<idea>> for how to work with Eclipse and IntelliJ IDEA.
 
@@ -144,7 +144,7 @@ and so adds nothing to the results of `render`.
 See Also
 ^^^^^^^^
 
-The Lift wiki page for CSS selectors also describes this use of `andThen`: https://www.assembla.com/spaces/liftweb/wiki/Binding_via_CSS_Selectors[https://www.assembla.com/spaces/liftweb/wiki/Binding_via_CSS_Selectors].
+https://www.assembla.com/spaces/liftweb/wiki/Binding_via_CSS_Selectors[The Lift wiki page for CSS selectors] also describes this use of `andThen`.
 
 
 
@@ -188,7 +188,7 @@ There are two other replacement rules useful for manipulating attributes:
 * `[content!]` to remove an attribute with a matching value.
 * `[content+]` to append to the value.
 
-Examples of these would be...
+Examples of these would be:
 
 [source,scala]
 ----
@@ -206,7 +206,7 @@ scala> remove(in)
 res0: scala.xml.NodeSeq = NodeSeq(<meta name="keywords"></meta>)
 ----
 
-...and...
+and:
 
 [source,scala]
 ----
@@ -220,7 +220,7 @@ res1: scala.xml.NodeSeq = NodeSeq(<meta content="words, here, please, thank you"
 ----
 
 Appending to a class attribute
-++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++
 
 Although not directly relevant to `meta` tags, you should be aware that there is one convenient special case for appending to an attribute. If the attribute is `class`, a space is added together with your class value. As a demonstration of that, here's an example of appending a class called "btn-primary" to a `div`:
 
@@ -237,7 +237,7 @@ res0: scala.xml.NodeSeq = NodeSeq(<div class="btn btn-primary"></div>)
 See Also
 ^^^^^^^^
 
-The syntax for selectors is best described in _Simply Lift_ at http://simply.liftweb.net/[http://simply.liftweb.net/].
+The syntax for selectors is best described in http://simply.liftweb.net/[_Simply Lift_].
 
 See <<TestingAndDebuggingSelectors>> for how to run selectors from the REPL.
 
@@ -316,7 +316,7 @@ See Also
 
 <<SnippetNotFound>> describes the different ways to reference a snippet, such as `data-lift` and `<lift: ... />`.
 
-At https://www.assembla.com/spaces/liftweb/wiki/SiteMap[https://www.assembla.com/spaces/liftweb/wiki/SiteMap] there's more about `SiteMap` and the `Menu` snippets.
+At https://www.assembla.com/spaces/liftweb/wiki/SiteMap[the Assembla website], there's more about `SiteMap` and the `Menu` snippets.
 
 
 [[ConditionalIncludes]]
@@ -390,7 +390,7 @@ object IEOnly {
 }
 ----
 
-It would be used like this...
+It would be used like this:
 
 [source,html]
 ----
@@ -399,7 +399,7 @@ It would be used like this...
 </div>
 ----
 
-...and produces output like this:
+and produces output like this:
 
 [source,html]
 ----
@@ -430,9 +430,9 @@ The `+` symbol is the the URL encoding for a space, resulting in:
 See Also
 ^^^^^^^^
 
-The `IEOnly` example is derived from a posting on the mailing list from Antonio Salazar Cardozo: http://bit.ly/lift-ieonly[http://bit.ly/lift-ieonly].
+The `IEOnly` example is derived from a http://bit.ly/lift-ieonly[posting on the mailing list from Antonio Salazar Cardozo].
 
-The html5shim project can be found at: http://code.google.com/p/html5shim/[http://code.google.com/p/html5shim/].
+http://code.google.com/p/html5shim/[The html5shim project]
 
 
 
@@ -572,7 +572,7 @@ There are three popular ways of referencing a snippet:
 See Also
 ^^^^^^^^
 
-The key differences between the XHTML and HTML5 parser are outlined on the mailing list at http://bit.ly/lift-parsers[http://bit.ly/lift-parsers].
+The key differences between the XHTML and HTML5 parser are outlined on http://bit.ly/lift-parsers[the mailing list].
 
 
 
@@ -697,11 +697,11 @@ Looking at the `RewriteRequest` first, this expects three arguments: the path, w
 See Also
 ^^^^^^^^
 
-The source for `LiftRules` shows the default implementation of `attachResourceId`: https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/LiftRules.scala[https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/LiftRules.scala].
+https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/LiftRules.scala[The source for `LiftRules`] shows the default implementation of `attachResourceId`.
 
-Google's _Optimize caching_ notes are a good source of information about browser behaviour: https://developers.google.com/speed/docs/best-practices/caching[https://developers.google.com/speed/docs/best-practices/caching].
+https://developers.google.com/speed/docs/best-practices/caching[Google's _Optimize caching_ notes] are a good source of information about browser behaviour.
 
-You can learn more about URL rewriting at the Lift wiki: https://www.assembla.com/spaces/liftweb/wiki/URL_Rewriting[https://www.assembla.com/spaces/liftweb/wiki/URL_Rewriting].
+You can learn more about URL rewriting at the https://www.assembla.com/spaces/liftweb/wiki/URL_Rewriting[Lift wiki].
 
 
 
