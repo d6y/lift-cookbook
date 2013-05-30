@@ -2,9 +2,9 @@
 REST
 ----
 
-This chapter looks at recipes around REST web services, via Lift's `RestHelper` trait. For an introduction, take a look at the Lift wiki page at https://www.assembla.com/spaces/liftweb/wiki/REST_Web_Services[https://www.assembla.com/spaces/liftweb/wiki/REST_Web_Services] and chapter 5 of _Simply Lift_ at http://simply.liftweb.net[http://simply.liftweb.net].
+This chapter looks at recipes around REST web services, via Lift's `RestHelper` trait. For an introduction, take a look at the https://www.assembla.com/spaces/liftweb/wiki/REST_Web_Services[Lift wiki page] and http://simply.liftweb.net[chapter 5 of _Simply Lift_].
 
-The sample code from this chapter is at: https://github.com/LiftCookbook/cookbook_rest[https://github.com/LiftCookbook/cookbook_rest].
+The sample code from this chapter is at https://github.com/LiftCookbook/cookbook_rest[https://github.com/LiftCookbook/cookbook_rest].
 
 
 [[DRYURLs]]
@@ -218,7 +218,7 @@ See Also
 
 <<MissingDotCom>> shows how to remove items from `explicitlyParsedSuffixes`.
 
-The source for `HttpHelpers.scala` contains the `explicitlyParsedSuffixes` list, which is the default list of suffixes that Lift parses from a URL: https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/HttpHelpers.scala[https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/HttpHelpers.scala].
+https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/HttpHelpers.scala[The source for `HttpHelpers.scala`] contains the `explicitlyParsedSuffixes` list, which is the default list of suffixes that Lift parses from a URL.
 
 
 
@@ -452,7 +452,7 @@ We have defined an extractor called `JPeg` that returns `Some[Req]` if the conte
 See Also
 ^^^^^^^^
 
-Odersky, _et al._, (2008), _Programming in Scala_, chapter 24, discusses extractors in detail: http://www.artima.com/pins1ed/extractors.html[http://www.artima.com/pins1ed/extractors.html].
+http://www.artima.com/pins1ed/extractors.html[Odersky, _et al._, (2008), _Programming in Scala_, chapter 24], discusses extractors in detail.
 
 
 <<FileUpload>> describes form-based (multipart) file uploads
@@ -559,7 +559,7 @@ This will also produce a `JValue`, which when printed will be:
 See Also
 ^^^^^^^^
 
-The README file for the _lift-json_ project is a great source of examples for using the JSON DSL: https://github.com/lift/framework/tree/master/core/json[https://github.com/lift/framework/tree/master/core/json].
+https://github.com/lift/framework/tree/master/core/json[The README file for the _lift-json_ project] is a great source of examples for using the JSON DSL.
 
 
 
@@ -693,7 +693,7 @@ Note that Google Sitemaps needs dates to be in ISO 8601 format. The built-in `ja
 See Also
 ^^^^^^^^
 
-Sitemaps are described at http://support.google.com/webmasters/bin/answer.py?hl=en&answer=156184[http://support.google.com/webmasters/bin/answer.py?hl=en&answer=156184].
+Sitemaps are described http://support.google.com/webmasters/bin/answer.py?hl=en&answer=156184[here].
 
 
 
@@ -879,7 +879,7 @@ The `NSURLConnection` approach is more versatile and gives you a starting point 
 See Also
 ^^^^^^^^
 
-You may find the "Complete REST Example" in _Simply Lift_ to be a good test ground for your calls to Lift. http://simply.liftweb.net/index-5.4.html[http://simply.liftweb.net/index-5.4.html].
+You may find the http://simply.liftweb.net/index-5.4.html["Complete REST Example" in _Simply Lift_] to be a good test ground for your calls to Lift.
 
 
 
