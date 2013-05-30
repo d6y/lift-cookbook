@@ -5,8 +5,7 @@ Request Pipeline
 When a request reaches Lift there are a number of points where you can jump in and control what Lift does,  sending back a different kind of response or controlling access.  This chapter looks at the pipeline through examples of different kinds of 
 ++LiftResponse++s and configurations.
 
-You can get a great overview of the pipeline, including diagrams, from the Lift pipeline wiki page at
-http://www.assembla.com/spaces/liftweb/wiki/HTTP_Pipeline[http://www.assembla.com/spaces/liftweb/wiki/HTTP_Pipeline].
+You can get a great overview of the pipeline, including diagrams, from the http://www.assembla.com/spaces/liftweb/wiki/HTTP_Pipeline[Lift pipeline wiki page].
 
 See https://github.com/LiftCookbook/cookbook_pipeline[https://github.com/LiftCookbook/cookbook_pipeline] for the source code that accompanies this chapter.
 
@@ -169,7 +168,7 @@ Note that the Lift session is not the same as the HTTP session. Lift bridges fro
 See Also
 ^^^^^^^^
 
-Session management is discussed in section 9.5 of _Exploring Lift_: http://exploring.liftweb.net/[http://exploring.liftweb.net/].
+Session management is discussed in section 9.5 of http://exploring.liftweb.net/[_Exploring Lift_].
 
 <<RunningStateless>> shows how to run without state.
 
@@ -287,9 +286,9 @@ See Also
 
 <<REST>> contains recipes for REST-based services in Lift.
 
-The Lift wiki gives further details on the processing of stateless requests: http://www.assembla.com/wiki/show/liftweb/Stateless_Requests[http://www.assembla.com/wiki/show/liftweb/Stateless_Requests].
+http://www.assembla.com/wiki/show/liftweb/Stateless_Requests[The Lift wiki] gives further details on the processing of stateless requests.
 
-This stateless request control was introduced in Lift 2.2.  The announcement on the mailing list gives more details: http://bit.ly/lift-stateless[http://bit.ly/lift-stateless].
+This stateless request control was introduced in Lift 2.2. http://bit.ly/lift-stateless[The announcement on the mailing list] gives more details.
 
 
 [[CatchException]]
@@ -579,7 +578,7 @@ is no more data because the end of the stream has been reached."
 See Also
 ^^^^^^^^
 
-The contract for Java IO is described at http://docs.oracle.com/javase/6/docs/api/java/io/InputStream.html[http://docs.oracle.com/javase/6/docs/api/java/io/InputStream.html].
+The contract for Java IO is described http://docs.oracle.com/javase/6/docs/api/java/io/InputStream.html[here].
 
 
 
@@ -705,7 +704,7 @@ to best fit the way you want the code to look and work.
 See Also
 ^^^^^^^^
 
-_Chatper 24: Extractors_ from _Programming in Scala_: http://www.artima.com/pins1ed/extractors.html[http://www.artima.com/pins1ed/extractors.html].
+http://www.artima.com/pins1ed/extractors.html[_Chatper 24: Extractors_ from _Programming in Scala_]
 
 
 
@@ -783,9 +782,9 @@ whatever you put in that page.
 See Also
 ^^^^^^^^
 
-The Lift wiki gives a summary of Lift's `SiteMap` and the tests you can include in site map entries: https://www.assembla.com/wiki/show/liftweb/SiteMap[https://www.assembla.com/wiki/show/liftweb/SiteMap].
+https://www.assembla.com/wiki/show/liftweb/SiteMap[The Lift wiki] gives a summary of Lift's `SiteMap` and the tests you can include in site map entries.
 
-There are further details in chapter 7 of _Exploring Lift_ at http://exploring.liftweb.net[http://exploring.liftweb.net], and "SiteMap and access control," Chapter 7 of _Lift in Action_ (Perrett, 2012, Manning Publications, Co.).
+There are further details in http://exploring.liftweb.net[chapter 7 of _Exploring Lift_], and "SiteMap and access control," Chapter 7 of _Lift in Action_ (Perrett, 2012, Manning Publications, Co.).
 
 
 
@@ -920,6 +919,6 @@ req.header("X-Forwarded-Proto") != Full("https")
 See Also
 ^^^^^^^^
 
-The _Overview of Elastic Load Balancing_ can be found at: http://docs.amazonwebservices.com/ElasticLoadBalancing/latest/DeveloperGuide/arch-loadbalancing.html[http://docs.amazonwebservices.com/ElasticLoadBalancing/latest/DeveloperGuide/arch-loadbalancing.html].
+http://docs.amazonwebservices.com/ElasticLoadBalancing/latest/DeveloperGuide/arch-loadbalancing.html[The _Overview of Elastic Load Balancing_]
 
 
