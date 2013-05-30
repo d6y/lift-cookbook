@@ -10,11 +10,11 @@ The aim is to give a single, short answer to a specific question. When there's m
 
 <<InstallAndRunning>> will get you up and running with Lift, but in other respects this cookbook is aimed at practitioners and the questions they have asked. If this is the first time you've heard of Lift, you'll want to look at:
 
-* http://simply.liftweb.net[_Simply Lift_].
+* http://simply.liftweb.net[_Simply Lift_]
 
-* Torsten Uhlmann's _Instant Lift Web Applications How-to_ (PACKT Publishing).
+* Torsten Uhlmann's _Instant Lift Web Applications How-to_ (PACKT Publishing)
 
-* Timothy Perrett's _Lift in Action_ (Manning Publications).
+* Timothy Perrett's _Lift in Action_ (Manning Publications)
 
 
 [[Contributors]]
@@ -29,7 +29,7 @@ I've mined the Lift mailing list for these recipes, but I'm not the only one.  R
 
 * Marek Żebrowski.
 
-* Peter Robinett, who's a web and mobile developer and a Lift committer. He can be found on the Web at http://www.bubblefoundry.com[http://www.bubblefoundry.com] and on Twitter at http://twitter.com/pr1001[http://twitter.com/pr1001].
+* Peter Robinett, who's a web and mobile developer and a Lift committer. He can be found http://www.bubblefoundry.com[on the Web] and http://twitter.com/pr1001[on Twitter].
 
 * Kevin Lau, who's a founder of few web apps with a focus in AWS cloud, iOS, and Lift.
 
@@ -85,7 +85,7 @@ This icon indicates a warning or caution.
 
 This book is here to help you get your job done. In general, if this book includes code examples, you may use the code in this book in your programs and documentation. You do not need to contact us for permission unless you’re reproducing a significant portion of the code. For example, writing a program that uses several chunks of code from this book does not require permission. Selling or distributing a CD-ROM of examples from O’Reilly books does require permission. Answering a question by citing this book and quoting example code does not require permission. Incorporating a significant amount of example code from this book into your product’s documentation does require pass:[<phrase role='keep-together'>permission.</phrase>]
 
-We appreciate, but do not require, attribution. An attribution usually includes the title, author, publisher, and ISBN. For example: “_Lift Cookbook_ by Richard Dallaway (O’Reilly). Copyright 2013 Richard Dallaway, 978-1-4493-6268-3.”
+We appreciate, but do not require, attribution. An attribution usually includes the title, author, publisher, and ISBN. For example: “_Lift Cookbook_ by Richard Dallaway (O’Reilly). Copyright 2013 Richard Dallaway, 978-1-449-36268-3.”
 
 If you feel your use of code examples falls outside fair use or the permission given above, feel free to contact us at pass:[<email>permissions@oreilly.com</email>].
 
