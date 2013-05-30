@@ -3,7 +3,7 @@ MongoDB Persistence with Record
 -------------------------------
 
 This chapter gives recipes for making use of MongoDB in your Lift
-application. Many of the code examples in this chapter can be found in https://github.com/LiftCookbook/cookbook_mongo[https://github.com/LiftCookbook/cookbook_mongo].
+application. Many of the code examples in this chapter can be found at https://github.com/LiftCookbook/cookbook_mongo[https://github.com/LiftCookbook/cookbook_mongo].
 
 
 [[ConnectingToMongo]]
@@ -111,9 +111,9 @@ The `lift-mongodb-record` dependency itself depends on another Lift module, `lif
 See Also
 ^^^^^^^^
 
-Connection configuration that includes replica sets and MongoDB options, such as timeout settings, are described on the Lift wiki at https://www.assembla.com/wiki/show/liftweb/Mongo_Configuration[https://www.assembla.com/wiki/show/liftweb/Mongo_Configuration].
+Connection configuration that includes replica sets and MongoDB options, such as timeout settings, are described on the https://www.assembla.com/wiki/show/liftweb/Mongo_Configuration[Lift wiki].
 
-The full specification for MongoDB connection URLs is http://docs.mongodb.org/manual/reference/connection-string/[http://docs.mongodb.org/manual/reference/connection-string/].
+The full specification for MongoDB connection URLs is http://docs.mongodb.org/manual/reference/connection-string/[here].
 
 
 
@@ -286,7 +286,7 @@ runtime.
 See Also
 ^^^^^^^^
 
-A discussion on the mailing list regarding the limited type support in `MongoMapField` and a possible way around it by overriding `asDBObject` can be found via: http://bit.ly/lift-mongomap[http://bit.ly/lift-mongomap].
+A discussion on the mailing list regarding the limited type support in `MongoMapField` and a possible way around it by overriding `asDBObject` can be found http://bit.ly/lift-mongomap[here].
 
 
 
@@ -492,7 +492,7 @@ object image extends BsonRecordField(this, Image) {
 See Also
 ^^^^^^^^
 
-The Lift wiki describes `BsonRecord` in more detail at https://www.assembla.com/spaces/liftweb/wiki/Mongo_Record_Embedded_Objects[https://www.assembla.com/spaces/liftweb/wiki/Mongo_Record_Embedded_Objects].
+https://www.assembla.com/spaces/liftweb/wiki/Mongo_Record_Embedded_Objects[The Lift wiki] describes `BsonRecord` in more detail.
 
 
 
@@ -682,7 +682,7 @@ The example uses a `StringRefField`, as the MongoDB records themselves use `Stri
 See Also
 ^^^^^^^^
 
-10Gen, Inc.'s _Data Modeling Decisions_ describes embedding of documents compared to referencing objects. You'll find the article at http://docs.mongodb.org/manual/core/data-modeling/[http://docs.mongodb.org/manual/core/data-modeling/].
+http://docs.mongodb.org/manual/core/data-modeling/[10Gen, Inc.'s _Data Modeling Decisions_] describes embedding of documents compared to referencing objects.
 
 
 
@@ -768,9 +768,7 @@ The query language itself is expressive, and the best place to explore the varie
 
 
 [NOTE]
-Rogue is working towards a version 2 release that introduces a number of new concepts. If you want to give it a try, take a look at the
-instructions and comments on the Rogue
-mailing list via: http://bit.ly/rogue2-announce[http://bit.ly/rogue2-announce].
+Rogue is working towards a version 2 release that introduces a number of new concepts. If you want to give it a try, take a look at the instructions and comments on the http://bit.ly/rogue2-announce[Rogue mailing list].
 
 
 See Also
@@ -778,9 +776,9 @@ See Also
 
 For geospacial queries, see <<MongoGeospatial>>.
 
-The README page for Rogue is a great starting point, and includes a link to `QueryTest` giving plenty of example queries to crib from: https://github.com/foursquare/rogue[https://github.com/foursquare/rogue].
+https://github.com/foursquare/rogue[The README page for Rogue] is a great starting point, and includes a link to `QueryTest` giving plenty of example queries to crib.
 
-The motivation for Rogue is described in a Foursquare engineering blog post: http://engineering.foursquare.com/2011/01/21/rogue-a-type-safe-scala-dsl-for-querying-mongodb/[http://engineering.foursquare.com/2011/01/21/rogue-a-type-safe-scala-dsl-for-querying-mongodb/].
+The motivation for Rogue is described in a http://engineering.foursquare.com/2011/01/21/rogue-a-type-safe-scala-dsl-for-querying-mongodb/[Foursquare engineering blog post].
 
 
 
@@ -924,10 +922,10 @@ us an angle in radians. We convert this to `Degrees` as required by Rogue.
 See Also
 ^^^^^^^^
 
-The MongoDB manual discusses geospatial indexes at http://docs.mongodb.org/manual/core/geospatial-indexes/[http://docs.mongodb.org/manual/core/geospatial-indexes/].
+http://docs.mongodb.org/manual/core/geospatial-indexes/[The MongoDB manual] discusses geospatial indexes.
 
-You can learn more about write concerns at http://docs.mongodb.org/manual/core/write-operations/[http://docs.mongodb.org/manual/core/write-operations/], and
-the various values to pass to `save` are described in the Java MongoDB driver: http://api.mongodb.org/java/current/[http://api.mongodb.org/java/current/].
+You can learn more about http://docs.mongodb.org/manual/core/write-operations/[write concerns], and
+the various values to pass to `save` are described in the http://api.mongodb.org/java/current/[Java MongoDB driver].
 
 
 
@@ -1190,18 +1188,17 @@ You can then "Run As..." the class in Eclipse.
 See Also
 ^^^^^^^^
 
-Specs2 is documented at http://specs2.org/[http://specs2.org/].
+Specs2 is documented at http://specs2.org/[here].
 
-If you prefer to use the Scala Test framework (http://www.scalatest.org[http://www.scalatest.org]), take a look at Tim Nelson's _Mongo Auth_ Lift module at https://github.com/eltimn/lift-mongoauth[https://github.com/eltimn/lift-mongoauth]. It includes tests using that framework that run against MongoDB.  Much of what Tim has written there has been adapted to produce this recipe for Specs2.
+If you prefer to use the http://www.scalatest.org[Scala Test framework], take a look at https://github.com/eltimn/lift-mongoauth[Tim Nelson's _Mongo Auth_ Lift module]. It includes tests using that framework that run against MongoDB.  Much of what Tim has written there has been adapted to produce this recipe for Specs2.
 
-The Lift MongoDB Record library includes a variation on testing with Specs2, using just `Before` and `After` rather than the `around` example used in this recipe. If you prefer that approach, you'll find the code in: https://github.com/lift/framework/tree/master/persistence/mongodb-record/src/test/scala/net/liftweb/mongodb/record[https://github.com/lift/framework/tree/master/persistence/mongodb-record/src/test/scala/net/liftweb/mongodb/record].
+https://github.com/lift/framework/tree/master/persistence/mongodb-record/src/test/scala/net/liftweb/mongodb/record[The Lift MongoDB Record library] includes a variation on testing with Specs2, using just `Before` and `After` rather than the `around` example used in this recipe.
 
-Flapdoodle (https://github.com/flapdoodle-oss/embedmongo.flapdoodle.de[https://github.com/flapdoodle-oss/embedmongo.flapdoodle.de]) provides a way to automate the download, install, setup, and cleanup of a MongoDB database. This automation is something you can wrap around your unit tests, and a Specs2 integration is included using the same `Before` and `After` approach to testing used by Lift MongoDB Record: https://github.com/athieriot/specs2-embedmongo[https://github.com/athieriot/specs2-embedmongo].
+https://github.com/flapdoodle-oss/embedmongo.flapdoodle.de[Flapdoodle] provides a way to automate the download, install, setup, and cleanup of a MongoDB database. This automation is something you can wrap around your unit tests, and a Specs2 integration is included using the same `Before` and `After` approach to testing used by https://github.com/athieriot/specs2-embedmongo[Lift MongoDB Record].
 
-The test interface provided by SBT, such as the `test` command, also supports the ability to fork tests, set specific configurations for test cases, and ways to select which tests are run. You'll find it at http://www.scala-sbt.org/release/docs/Detailed-Topics/Testing[http://www.scala-sbt.org/release/docs/Detailed-Topics/Testing].
+http://www.scala-sbt.org/release/docs/Detailed-Topics/Testing[The test interface provided by SBT], such as the `test` command, also supports the ability to fork tests, set specific configurations for test cases, and ways to select which tests are run.
 
-The Lift wiki describes more about unit testing and Lift sessions:
-https://www.assembla.com/wiki/show/liftweb/Unit_Testing_Snippets_With_A_Logged_In_User[https://www.assembla.com/wiki/show/liftweb/Unit_Testing_Snippets_With_A_Logged_In_User].
+https://www.assembla.com/wiki/show/liftweb/Unit_Testing_Snippets_With_A_Logged_In_User[The Lift wiki] describes more about unit testing and Lift sessions.
 
 
 
