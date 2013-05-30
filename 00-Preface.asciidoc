@@ -9,7 +9,7 @@ The aim is to give a single, short answer to a specific question. When there's m
 
 <<InstallAndRunning>> will get you up and running with Lift, but in other respects this cookbook is aimed at practitioners and the questions they have asked. If this is the first time you've heard of Lift, you'll want to look at:
 
-* _Simply Lift_, online at http://simply.liftweb.net[http://simply.liftweb.net].
+* http://simply.liftweb.net[_Simply Lift_].
 
 * Torsten Uhlmann's _Instant Lift Web Applications How-to_ (PACKT Publishing).
 
