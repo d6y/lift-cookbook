@@ -906,14 +906,14 @@ val radius = Degrees( (500 / 6378.137).toDegrees )
 val nearby = City.where( _.loc near (centre.lat, centre.long, radius) ).fetch()
 -----------------------------------------------------------
 
-This would query MongoDB with this clause...
+This would query MongoDB with this clause:
 
-[json,json]
+[source,json]
 -----------------------------------------------------------
 { "loc" : { "$near" : [ 51.5 , -0.166667 , 4.491576420597608]}}
 -----------------------------------------------------------
 
-...which will identify London, Brighton, and Paris as near to London.
+which will identify London, Brighton, and Paris as near to London.
 
 The form of the query is a centre point and a spherical radius.  Records falling
 inside that radius match the query and are returned closest first. We calculate
