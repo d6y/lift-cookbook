@@ -274,7 +274,7 @@ val sf : Option[Int] = uk.population.is.get("San Francisco")
 ------------------------------------------------------------
 
 What a MongoMapField can contain
-+++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++
 
 You should be aware that `MongoMapField` supports only primitive types.
 
