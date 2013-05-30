@@ -2,19 +2,19 @@
 Around Lift
 -----------
 
-This chapter looks at interacting with other systems from within Lift, such as sending email, calling URLs or scheduling tasks.
+This chapter looks at interacting with other systems from within Lift, such as sending email, calling URLs, or scheduling tasks.
 
-Many of the recipes in this chapter have code examples in a project at Github: https://github.com/LiftCookbook/cookbook_around[https://github.com/LiftCookbook/cookbook_around].
+Many of the recipes in this chapter have code examples in a project at GitHub: https://github.com/LiftCookbook/cookbook_around[https://github.com/LiftCookbook/cookbook_around].
 
 
 [[SendTextEmail]]
-Sending Plain Text Email
+Sending Plain-Text Email
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
 
-You want to send a plain text email from your Lift application.
+You want to send a plain-text email from your Lift application.
 
 Solution
 ^^^^^^^^
@@ -45,22 +45,23 @@ By default, the SMTP server used will be _localhost_. You can change
 this by setting the `mail.smtp.host` property.
 For example, edit _src/mail/resources/props/default.props_ and add the line:
 
+[source,java]
 --------------------------------
 mail.smtp.host=smtp.example.org
 --------------------------------
 
-The signature of `sendMail` requires a `From`, `Subject` and then any
+The signature of `sendMail` requires a `From`, `Subject`, and then any
 number of `MailTypes`:
 
-* `To`, `CC` and `BCC` -- the recipient email address.
-* `ReplyTo` -- the address mail clients should use for replies.
-* `MessageHeader` -- key/value pairs to include as headers in the message.
-* `PlainMailBodyType` -- a plain text email sent with UTF-8 encoding.
-* `PlainPlusBodyType` -- a plain text email, where you specify the encoding.
-* `XHTMLMailBodyType` -- for HTML email (<<HTMLEmail>>).
-* `XHTMLPlusImages` -- for attachments (<<EmailWithAttachments>>).
+`To`, `CC`, and `BCC`:: The recipient email address
+`ReplyTo`:: The address that mail clients should use for replies
+`MessageHeader`:: Key/value pairs to include as headers in the message
+`PlainMailBodyType`:: A plain-text email sent with UTF-8 encoding
+`PlainPlusBodyType`:: A plain-text email, where you specify the encoding
+`XHTMLMailBodyType`:: For HTML email (<<HTMLEmail>>)
+`XHTMLPlusImages`:: For attachments (<<EmailWithAttachments>>)
 
-In the example above we added two types:`PlainMailBodyType`
+In the example above we added two types: `PlainMailBodyType`
 and `To`.  Adding more is as you'd expect:
 
 [source,scala]
@@ -100,7 +101,7 @@ For HTML email, see <<HTMLEmail>>.
 
 
 [[LogEmail]]
-Logging Email Rather Than Sending
+Logging Email Rather than Sending
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -137,14 +138,14 @@ Discussion
 The key part of this recipe is setting a
 `MimeMessage => Unit` function on `Mailer.devModeSend`.  We happen to be logging, but you can use this function to handle the email any way you want.
 
-The Lift Mailer allows you to control how email is sent at each run mode:
+The Lift `Mailer` allows you to control how email is sent at each run mode:
 
-* `devModeSend` -- will send email by default.
-* `testModeSend` -- only log that a message would have been sent.
-* `stagingModeSend` -- will send email by default.
-* `productionModeSend` -- will send email by default.
-* `pilotModeSend` -- will send email by default.
-* `profileModeSend` -- will send email by default.
+`devModeSend`:: Sends email by default
+`testModeSend`:: Logs only that a message would have been sent
+`stagingModeSend`:: Sends email by default
+`productionModeSend`:: Sends email by default
+`pilotModeSend`:: Sends email by default
+`profileModeSend`:: Sends email by default
 
 The `testModeSend` logs a reference to the `MimeMessage`, meaning your log
 would show a message like:
@@ -204,7 +205,7 @@ Subject: Hello
 Hello from Lift
 ---------------------------------------------------------
 
-This example `display` function is long mostly straight-forward. The `body` value handles multi-part messages by extracting the each body part.  This is triggered when sending more structured emails, such as the HTML emails described in <<HTMLEmail>>.
+This example `display` function is long but mostly straightforward. The `body` value handles multipart messages by extracting each body part.  This is triggered when sending more structured emails, such as the HTML emails described in <<HTMLEmail>>.
 
 If you want to debug the mail system while it's actually sending the email, enable the Java Mail debug mode.  In _default.props_ add:
 
@@ -226,11 +227,11 @@ DEBUG SMTP: trying to connect to host "localhost", port 25, isSSL false
 See Also
 ^^^^^^^^
 
-Run modes are described at: https://www.assembla.com/spaces/liftweb/wiki/Run_Modes[https://www.assembla.com/spaces/liftweb/wiki/Run_Modes].
+Run modes are described at https://www.assembla.com/spaces/liftweb/wiki/Run_Modes[https://www.assembla.com/spaces/liftweb/wiki/Run_Modes].
 
 
 [[HTMLEmail]]
-Sending HTML email
+Sending HTML Email
 ~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -267,9 +268,9 @@ Mailer.sendMail(
 Discussion
 ^^^^^^^^^^
 
-An implicit converts the `NodeSeq` into a `XHTMLMailBodyType`. This
-ensures the mime type of the email is _text/html_. Despite the name of
-"XHTML", the message is to converted for transmission using
+An implicit converts the `NodeSeq` into an `XHTMLMailBodyType`. This
+ensures the mime type of the email is `text/html`. Despite the name of
+"XHTML," the message is converted for transmission using
 HTML5 semantics.
 
 The character encoding for HTML email, UTF-8, can be changed by setting
@@ -299,7 +300,7 @@ Mailer.sendMail(
 )
 ---------------------------------------------------
 
-This message would be sent as a _multipart/alternative_:
+This message would be sent as a `multipart/alternative`:
 
 ------------------------------------------
 Content-Type: multipart/alternative;
@@ -369,7 +370,7 @@ Mailer.authenticator = for {
 }
 --------------------------------------------------------
 
-In this example we expect the username and password to come from Lift
+In this example, we expect the username and password to come from Lift
 properties, so we need to modify
 _src/main/resources/props/default.props_ to include them:
 
@@ -393,15 +394,15 @@ authentication settings, but our _production.default.props_ did, then no
 authentication would happen in development mode, ensuring we can't
 accidentally send email outside of a production environment.
 
-You don't have to use a properties file for this: the Lift Mailer
-also supports JNDI, or you could lookup a username and password some other way and set `Mailer.authenticator` when you have the values.
+You don't have to use a properties file for this: the Lift `Mailer`
+also supports JNDI, or you could look up a username and password some other way and set `Mailer.authenticator` when you have the values.
 
 However, some mail services such as SendGrid do require `mail.smtp.auth=true` to be set, and that should go into your Lift properties file or set as a JVM argument: `-Dmail.smtp.auth=true`.
 
 See Also
 ^^^^^^^^
 
-As well as `mail.smtp.auth` there are a range of settings to control the Java Mail API. examples include controlling port numbers and timeouts.  These are listed at: http://javamail.kenai.com/nonav/javadocs/com/sun/mail/smtp/package-summary.html[http://javamail.kenai.com/nonav/javadocs/com/sun/mail/smtp/package-summary.html].
+As well as `mail.smtp.auth`, there are a range of settings to control the Java Mail API. Examples include controlling port numbers and timeouts.  These are listed at http://javamail.kenai.com/nonav/javadocs/com/sun/mail/smtp/package-summary.html[http://javamail.kenai.com/nonav/javadocs/com/sun/mail/smtp/package-summary.html].
 
 
 [[EmailWithAttachments]]
@@ -445,7 +446,7 @@ Mailer.sendMail(
 --------------------------------------------------------------
 
 What's happening here is that our message is an `XHTMLPlusImages` instance, which accepts
-a body message and attachment.  The attachment, the `PlusImageHolder`, is an `Array[Byte]`, mime-type and a filename.
+a body message and attachment.  The attachment, the `PlusImageHolder`, is an `Array[Byte]`, mime type, and a filename.
 
 
 Discussion
@@ -454,7 +455,7 @@ Discussion
 `XHTMLPlusImages` can also accept more than one `PlusImageHolder` if you
 have more than one file to attach.  Although the name `PlusImageHolder` may suggest it is for attachment images, you can attach any kind of data as an `Array[Byte]` with an appropriate mime type.
 
-By default the attachment is sent with an "inline" disposition. This controls the `Content-Disposition` header in the message, and "inline" means the content is intended for display automatically when the message is shown.  The alternative is "attachment", and this can be indicated with a option final parameter to `PlusImageHolder`:
+By default the attachment is sent with an "inline" disposition. This controls the `Content-Disposition` header in the message, and "inline" means the content is intended for display automatically when the message is shown.  The alternative is "attachment," and this can be indicated with an optional final parameter to `PlusImageHolder`:
 
 [source,scala]
 --------------------------------------------------------------
@@ -464,7 +465,7 @@ PlusImageHolder(attach.filename, attach.mime, attach.bytes, attachment=true)
 In reality, the mail client will display the message how it wants to, but this extra parameter may give you a little more control.
 
 
-To attach a pre-made file, you can use `LiftRules.loadResource` to fetch content from the classpath.  As an example, if our project contained a file called _Kepler-22b_System_Diagram.jpg_ in the _src/main/resources/_ folder, we could load and attach it like this:
+To attach a premade file, you can use `LiftRules.loadResource` to fetch content from the classpath.  As an example, if our project contained a file called _Kepler-22b_System_Diagram.jpg_ in the _src/main/resources/_ folder, we could load and attach it like this:
 
 [source,scala]
 --------------------------------------------------------------
@@ -497,7 +498,7 @@ The `loadResource` returns a `Box[Array[Byte]]` as we have no guarantee the file
 See Also
 ^^^^^^^^
 
-Messages are sent using the _multipart/related_ mime heading, with an "inline" disposition.  Lift ticket #1197 links to a discussion regarding "multipart/mixed" which may be preferable for working around issues with Microsoft Exchange. See: https://github.com/lift/framework/issues/1197[https://github.com/lift/framework/issues/1197].
+Messages are sent using the `multipart/related` mime heading, with an "inline" disposition.  Lift ticket #1197 links to a discussion regarding "multipart/mixed" that may be preferable for working around issues with Microsoft Exchange. See: https://github.com/lift/framework/issues/1197[https://github.com/lift/framework/issues/1197].
 
 RFC 2183 describes the "Content-Disposition" header: http://www.ietf.org/rfc/rfc2183.txt[http://www.ietf.org/rfc/rfc2183.txt].
 
@@ -531,7 +532,7 @@ seconds from now.
 Discussion
 ^^^^^^^^^^
 
-The signature for `Schedule` used above expects a function of type `() => Unit`, which is the thing we want to happen in the future, and a `TimeSpan` from Lift's `TimeHelpers` which is when we want it to happen.  The `30 seconds` value gives us a `TimeSpan` via the `Helpers._` import, but there's a variation called `perform` which accepts a `Long` millisecond value if you prefer that:
+The signature for `Schedule` used above expects a function of type `() => Unit`, which is the thing we want to happen in the future, and a `TimeSpan` from Lift's `TimeHelpers` which is when we want it to happen.  The `30 seconds` value gives us a `TimeSpan` via the `Helpers._` import, but there's a variation called `perform` that accepts a `Long` millisecond value if you prefer that:
 
 [source,scala]
 ------------------------------------------------
@@ -542,7 +543,7 @@ Behind the scenes, Lift is making use of the `ScheduledExecutorService` from `ja
 
 It may be a surprise to find that you can call `Schedule` with just a function as an argument, and not a delay value.  This version runs the function immediately, but on a worker thread.  This is a convenient way to asynchronously run other tasks without going to the trouble of creating an actor for the purpose.
 
-There is also a `Schedule.schedule` method which will send a specified
+There is also a `Schedule.schedule` method that will send a specified
 actor a specified message after a given delay.  This takes a `TimeSpan` delay, but again there's also a `Schedule.perform` version that accepts a `Long` as a delay.
 
 
@@ -551,7 +552,7 @@ See Also
 
 <<RunTasksPeriodically>> includes an example of scheduling with actors.
 
-`ScheduledFuture` is documented via the Java Doc for `Future` at: http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html[http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html].  If you're building complex, low-level, cancellable concurrency functions, it's advisable to have a copy of _Java Concurrency in Practice_ close by (Goetz _et al._, 2006, Addison-Wesley Professional).
+`ScheduledFuture` is documented via the Java Doc for `Future` at http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html[http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html].  If you're building complex, low-level, cancellable concurrency functions, it's advisable to have a copy of _Java Concurrency in Practice_ close by (written by Goetz, _et al._, Addison-Wesley Professional).
 
 
 
@@ -570,7 +571,7 @@ Solution
 ^^^^^^^^
 
 Use `net.liftweb.util.Schedule` ensuring that you call `schedule` again
-during your task to re-schedule it. For example, using an actor:
+during your task to reschedule it. For example, using an actor:
 
 [source,scala]
 -------------------------------------------------
@@ -597,7 +598,7 @@ object MyScheduledTask extends LiftActor {
 -------------------------------------------------
 
 The example creates a `LiftActor` for the work to be done. On receipt of
-a `DoIt` message, the actor re-schedules itself before doing whatever
+a `DoIt` message, the actor reschedules itself before doing whatever
 useful work needs to be done. In this way, the actor will be called
 every 10 minutes.
 
@@ -617,7 +618,7 @@ MyScheduledTask ! MyScheduledTask.DoIt
 
 To ensure the process stops correctly when Lift shuts down, we register
 a shutdown hook in _Boot.scala_ to send the `Stop` message to prevent
-future re-schedules:
+future reschedules:
 
 [source,scala]
 ----------------------------------------------------------------------------
@@ -635,7 +636,7 @@ library, which allows you to `cancel` the activity.
 See Also
 ^^^^^^^^
 
-Chapter 1 of _Lift in Action_ (Perrett, 2011, Manning Publications Co) includes a Comet Actor clock example that uses `Schedule`.
+Chapter 1 of _Lift in Action_ by Perrett, (Manning Publications, Co.) includes a Comet Actor clock example that uses `Schedule`.
 
 
 
@@ -646,12 +647,12 @@ Fetching URLs
 Problem
 ^^^^^^^
 
-You want your Lift application to fetch a URL, and process it as text, JSON, XML or HTML.
+You want your Lift application to fetch a URL, and process it as text, JSON, XML, or HTML.
 
 Solution
 ^^^^^^^^
 
-Use _Dispatch_, "a library for asynchronous HTTP interaction".
+Use _Dispatch_, "a library for asynchronous HTTP interaction."
 
 Before you start, include Dispatch dependency in _build.sbt_:
 
@@ -660,7 +661,7 @@ Before you start, include Dispatch dependency in _build.sbt_:
 libraryDependencies += "net.databinder.dispatch" %% "dispatch-core" % "0.9.5"
 -------------------------------------------------
 
-Using the example from the Dispatch documentation, we can make a HTTP request to try to determine the country from the service at http://www.hostip.info/use.html[http://www.hostip.info/use.html]:
+Using the example from the Dispatch documentation, we can make an HTTP request to try to determine the country from the service at http://www.hostip.info/use.html[http://www.hostip.info/use.html]:
 
 [source,scala]
 ------------------------------------------
@@ -680,7 +681,7 @@ Discussion
 
 This short example expects a 200 (OK) status result and turns the result into a `String`, but that's a tiny part of what Dispatch is capable of.  We'll explore further in this section.
 
-What if the request doesn't return a 200? In that case, with the code we have, we'd get an exception such as: "Unexpected response status: 404". There are a few ways to change that.
+What if the request doesn't return a 200? In that case, with the code we have, we'd get an exception such as: "Unexpected response status: 404." There are a few ways to change that.
 
 We can ask for an `Option`:
 
@@ -708,7 +709,7 @@ country.either() match {
 
 This will print a result as we are forcing the evaluation with an apply via `either()`.
 
-`Promise[T]` implements `map`, `flatMap`, `filter`, `fold` and all the usual methods you'd expect to allow you to compose.  This means you can use the promise with a for comprehension:
+`Promise[T]` implements `map`, `flatMap`, `filter`, `fold` and all the usual methods you'd expect to allow you to compose.  This means you can use the promise with a `for` pass:[<phrase role='keep-together'>comprehension:</phrase>]
 
 [source,scala]
 ------------------------------------------
@@ -717,12 +718,12 @@ val codeLength = for (cc <- country) yield cc.length
 
 Note that `codeLength` is a `Promise[Int]`.  To get the value you can evaluate `codeLength()` and you'll get a result of `2`.
 
-As well as extracting string values with `as.String` there are other options, including...
+As well as extracting string values with `as.String`, there are other options, including:
 
-* `as.Bytes` -- to work with `Promise[Array[Byte]]`.
-* `as.File` -- to write to a file, as in `Http(svc > as.File(new File("/tmp/cc")) )`.
-* `as.Response` -- to allow you to provide a `client.Response => T` function to use on the response.
-* `as.xml.Elem` -- to parse XML response.
+`as.Bytes`:: To work with `Promise[Array[Byte]]`.
+`as.File`:: To write to a file, as in `Http(svc > as.File(new File("/tmp/cc")) )`.
+`as.Response`:: To allow you to provide a `client.Response => T` function to use on the response
+`as.xml.Elem`:: To parse an XML response
 
 As an example of `as.xml.Elem`:
 
@@ -733,7 +734,7 @@ val country  = Http(svc > as.xml.Elem)
 println(country.map(_ \\ "description")())
 ------------------------------------------
 
-This example is parsing the XML response to the request, which returns a `Promise[scala.xml.Elem]`.  We're picking out the description node of the XML via a `map`, which will be a `Promise[NodeSeq]` which we then force to evaluate.  The output is something like:
+This example is parsing the XML response to the request, which returns a `Promise[scala.xml.Elem]`.  We're picking out the description node of the XML via a `map`, which will be a `Promise[NodeSeq]` that we then force to evaluate.  The output is something like:
 
 [source,xml]
 ------------------------------------------
@@ -744,7 +745,7 @@ This example is parsing the XML response to the request, which returns a `Promis
 </gml:description>
 ------------------------------------------
 
-That example assumes the request is going to be well-formed. In addition to the core Databinder library, there are extensions for JSoup and TagSoup to assist in parsing HTML that isn't necessarily well-formed.
+That example assumes the request is going to be well formed. In addition to the core Databinder library, there are extensions for JSoup and TagSoup to assist in parsing HTML that isn't necessarily well formed.
 
 For example, to use JSoup, include the dependency:
 
@@ -764,7 +765,7 @@ val title = Http(svc > as.jsoup.Document).map(_.select("h1").text).option
 println( title() getOrElse "unknown title" )
 -------------------------------------------------
 
-Here we are applying JSoup's `select` function to pick out the `<h1>` element on the page, taking the text of the element which we turn into a `Promise[Option[String]]`.  The result, unless _example.org_ has changed, will be "Example Domain".
+Here we are applying JSoup's `select` function to pick out the `<h1>` element on the page, taking the text of the element which we turn into a `Promise[Option[String]]`.  The result, unless _example.org_ has changed, will be "Example Domain."
 
 As a final example of using Dispatch, we can pipe a request into Lift's JSON library:
 
@@ -802,7 +803,7 @@ HostInfo(UNITED KINGDOM,GB)
 See Also
 ^^^^^^^^
 
-The Dispatch documentation is well-written and guides you through the way Dispatch approaches HTTP.  Do spend some time with it at: http://dispatch.databinder.net/Dispatch.html[http://dispatch.databinder.net/Dispatch.html].
+The Dispatch documentation is well written and guides you through the way Dispatch approaches HTTP.  Do spend some time with it at http://dispatch.databinder.net/Dispatch.html[http://dispatch.databinder.net/Dispatch.html].
 
 To see what's available on Dispatch's `Promise`, browse the source: https://github.com/dispatch/reboot/blob/master/core/src/main/scala/promise.scala[https://github.com/dispatch/reboot/blob/master/core/src/main/scala/promise.scala].
 
