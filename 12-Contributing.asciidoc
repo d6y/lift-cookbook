@@ -1,6 +1,6 @@
 [[ContributingAndHelp]]
 Contributing, Bug Reports, and Getting Help
-----------------------------------------
+-------------------------------------------
 
 
 [[GettingHelp]]
