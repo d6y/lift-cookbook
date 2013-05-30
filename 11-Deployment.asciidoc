@@ -6,7 +6,7 @@ Deploying a Lift application to production means little more than packaging it a
 
 You can also install and run a _container_ such as Tomcat or Jetty on your own servers. Containers were introduced in <<RunningYourApplication>>. This brings with it the need to understand how to install, configure, start, stop, and manage each container, and how to integrate it with load balancers or other frontends. These are large topics, and you can find out more from such sources as:
 
-* The deployment section of the Lift wiki at https://www.assembla.com/spaces/liftweb/wiki/Deployment[https://www.assembla.com/spaces/liftweb/wiki/Deployment].
+* The deployment section of the https://www.assembla.com/spaces/liftweb/wiki/Deployment[Lift wiki].
 
 * Timothy Perrett, _Lift in Action_, Chapter 15, "Deployment and Scaling," Manning Publications, Co.
 
@@ -14,7 +14,7 @@ You can also install and run a _container_ such as Tomcat or Jetty on your own s
 
 * Tanuj Khare, _Apache Tomcat 7 Essentials_, Packt Publishing.
 
-The Lift wiki includes a page on Tomcat configuration options relevant to Lift: https://www.assembla.com/spaces/liftweb/wiki/Tomcat[https://www.assembla.com/spaces/liftweb/wiki/Tomcat].
+The Lift wiki includes a page on https://www.assembla.com/spaces/liftweb/wiki/Tomcat[Tomcat configuration options relevant to Lift].
 
 
 [[CloudBees]]
@@ -169,7 +169,7 @@ Host IP and port number
 
 Generally, you don't need to know about your deployed instance's public host name and port number. Requests to your application URL are routed to the specific instance by CloudBees. However there are situations, especially when you have multiple instances, where you do need to find this out. For example, if you want to receive messages from Amazon's Simple Notification Service (SNS), then each instance will need to give a direct URL to SNS when the application boots.
 
-To get the public hostname, you need to make an HTTP request to _http://instance-data/latest/meta-data/public-hostname_, as documented at https://developer.cloudbees.com/bin/view/Main/Finding+out+app+port+and+hostname[https://developer.cloudbees.com/bin/view/Main/Finding+out+app+port+and+hostname].  For example:
+To get the public hostname, you need to make an https://developer.cloudbees.com/bin/view/Main/Finding+out+app+port+and+hostname[HTTP request to _http://instance-data/latest/meta-data/public-hostname_]. For example:
 
 [source, scala]
 ------------------------------------------------------------
@@ -302,17 +302,17 @@ To access the Git source repository created for you, you'll need to upload an SS
 
 The build that's created for you will automatically build and deploy your application to CloudBees when you push changes to your Git repository.
 
-If all of that's a good match to the technologies and services you want to use, ClickStart is a great way to deploy your application. Alternatively, it gives you a starting point from which you can modify elements; or you could fork the CloudBees Lift template and create your own from https://github.com/CloudBees-community/lift_template[https://github.com/CloudBees-community/lift_template].
+If all of that's a good match to the technologies and services you want to use, ClickStart is a great way to deploy your application. Alternatively, it gives you a starting point from which you can modify elements; or you could https://github.com/CloudBees-community/lift_template[fork the CloudBees Lift template and create your own].
 
 
 See Also
 ^^^^^^^^
 
-The CloudBees SDK provides command-line tools for configuring and controlling applications. It can be found at https://wiki.cloudbees.com/bin/view/RUN/BeesSDK[https://wiki.cloudbees.com/bin/view/RUN/BeesSDK].
+https://wiki.cloudbees.com/bin/view/RUN/BeesSDK[The CloudBees SDK] provides command-line tools for configuring and controlling applications.
 
-The CloudBees developer portal (https://developer.cloudbees.com[https://developer.cloudbees.com]) contains a "Resources" section that provides details of the CloudBees services.
+https://developer.cloudbees.com[The CloudBees developer portal] contains a "Resources" section that provides details of the CloudBees services.
 
-The JVM PermGen settings for CloudBees are described at https://wiki.cloudbees.com/bin/view/RUN/JVM+PermGen+Space[https://wiki.cloudbees.com/bin/view/RUN/JVM+PermGen+Space], and settings for which JVM is used can be found at https://developer.cloudbees.com/bin/view/RUN/JVMVersion[https://developer.cloudbees.com/bin/view/RUN/JVMVersion]. For information about the containers, see: https://developer.cloudbees.com/bin/view/RUN/ClickStack[https://developer.cloudbees.com/bin/view/RUN/ClickStack].
+The JVM PermGen settings for CloudBees are described https://wiki.cloudbees.com/bin/view/RUN/JVM+PermGen+Space[here], and settings for which JVM is used can be found https://developer.cloudbees.com/bin/view/RUN/JVMVersion[here]. For information about the containers, see: https://developer.cloudbees.com/bin/view/RUN/ClickStack[this site].
 
 
 //////////////////////////////////////////
@@ -429,11 +429,11 @@ val connection = {
 See Also
 ^^^^^^^^
 
-Amazon provided a walk-through with screen shots, showing how to create a Beanstalk application.  It's at http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/GettingStarted.Walkthrough.html[http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/GettingStarted.Walkthrough.html].
+Amazon provided a http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/GettingStarted.Walkthrough.html[walk-through with screen shots], showing how to create a Beanstalk application.
 
 pass:[<emphasis><ulink role="orm:hideurl" url="http://shop.oreilly.com/product/0636920020561.do">Elastic Beanstalk</ulink></emphasis>], by van Vliet _et al._ (O'Reilly Media, Inc.) goes into the details of the Beanstalk infrastructure, how to work with Eclipse, enabling continuous integration, and how to hack the instance (for example, to use Nginx as a frontend to Beanstalk).
 
-The Amazon documentation for "Configuring Databases with AWS Elastic Beanstalk" describes the RDS settings in more detail: http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/using-features.managing.db.html[http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/using-features.managing.db.html].
+http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/using-features.managing.db.html[The Amazon documentation for "Configuring Databases with AWS Elastic Beanstalk"] describes the RDS settings in more detail.
 
 
 //////////////////////////////////////////
@@ -598,7 +598,7 @@ $ heroku ps --app glacial-waters-6292
 web.1: up 2013/01/01 22:37:35 (~ 31s ago)
 ---------------------------
 
-Here we see a Java process executing a JAR file called _webapp-runner-7.0.29.3.jar_ that is passed our WAR file as an argument. This is not identical to the Tomcat _catalina.sh_ script you may be more familiar with, but instead is this launcher process: https://github.com/jsimone/webapp-runner[https://github.com/jsimone/webapp-runner]. As it does not register a handler to deal with _SIGTERM_, we will have to if we need to release any resources during shutdown.
+Here we see a Java process executing a JAR file called _webapp-runner-7.0.29.3.jar_ that is passed our WAR file as an argument. This is not identical to the Tomcat _catalina.sh_ script you may be more familiar with, but instead is https://github.com/jsimone/webapp-runner[this launcher process]. As it does not register a handler to deal with _SIGTERM_, we will have to if we need to release any resources during shutdown.
 
 All of this means that if you want to launch a Lift application in a different way, you can. You'd need to wrap an appropriate container (Jetty or Tomcat, for example), and provide a `main` method for Heroku to call. This is sometimes called _containerless deployment_.
 
@@ -701,15 +701,15 @@ jdbc:postgresql://ec2-54-243-230-119.compute-1.amazonaws.com:5432/d44nsahps11hda
 See Also
 ^^^^^^^^
 
-Both the Scala and Java articles at Heroku are useful to learn more of the details described in this recipe: https://devcenter.heroku.com/categories/scala[https://devcenter.heroku.com/categories/scala] and https://devcenter.heroku.com/categories/java[https://devcenter.heroku.com/categories/java].
+Both the https://devcenter.heroku.com/categories/scala[Scala] and https://devcenter.heroku.com/categories/java[Java] articles at Heroku are useful to learn more of the details described in this recipe.
 
-_Dynos and the Dyno Manifold_ are described at https://devcenter.heroku.com/articles/dynos[https://devcenter.heroku.com/articles/dynos].
+_Dynos and the Dyno Manifold_ are described https://devcenter.heroku.com/articles/dynos[here].
 
-The JVM shutdown hooks are described in the JDK documentation: http://docs.oracle.com/javase/7/docs/api/java/lang/Runtime.html[http://docs.oracle.com/javase/7/docs/api/java/lang/Runtime.html].
+The JVM shutdown hooks are described in the http://docs.oracle.com/javase/7/docs/api/java/lang/Runtime.html[JDK documentation].
 
-Heroku's guide to containerless deployment makes use of Maven to package your application, as is documented at https://devcenter.heroku.com/articles/java-webapp-runner[https://devcenter.heroku.com/articles/java-webapp-runner].  There is also a template SBT project from Matthew Henderson that includes a `JettyLauncher` class: https://github.com/ghostm/lift_blank_heroku[https://github.com/ghostm/lift_blank_heroku].
+https://devcenter.heroku.com/articles/java-webapp-runner[Heroku's guide to containerless deployment] makes use of Maven to package your application.  There is also a https://github.com/ghostm/lift_blank_heroku[template SBT project from Matthew Henderson] that includes a `JettyLauncher` class.
 
-The way Heroku deals with Comet long-polling is described at https://devcenter.heroku.com/articles/request-timeout[https://devcenter.heroku.com/articles/request-timeout].
+The way Heroku deals with Comet long-polling is described https://devcenter.heroku.com/articles/request-timeout[here].
 
 /////////////////////////////////////////
 
@@ -744,7 +744,7 @@ Regardless of the technology, the principle is illustrated in <<DistributedComet
 .Comet events originating on one server are distributed via a topic
 image::images/lfcb_1002.png[]
 
-The first step is to download and install RabbitMQ from http://rabbitmq.com/[http://rabbitmq.com/]. Then start the server:
+The first step is to download and install http://rabbitmq.com/[RabbitMQ]. Then start the server:
 
 -----------------------------------------
 $ ./sbin/rabbitmq-server -detatched
@@ -891,15 +891,15 @@ Note that `Props.productionMode` is `true` for the run modes of `Production`, `S
 See Also
 ^^^^^^^^
 
-The Lift Chat example is described in _Simply Lift_ at http://simply.liftweb.net/[http://simply.liftweb.net/]. The source code used in this recipe can be found at https://github.com/LiftCookbook/rabbitmq_chat[https://github.com/LiftCookbook/rabbitmq_chat].
+The Lift Chat example is described in http://simply.liftweb.net/[_Simply Lift_]. The source code used in this recipe can be found https://github.com/LiftCookbook/rabbitmq_chat[here].
 
-The Lift AMQP module is: https://github.com/liftmodules/amqp[https://github.com/liftmodules/amqp].
+https://github.com/liftmodules/amqp[The Lift AMQP module]
 
-If you want to learn more about RabbitMQ, take a look at the tutorials (http://www.rabbitmq.com/tutorials/tutorial-five-java.html[http://www.rabbitmq.com/tutorials/tutorial-five-java.html]) or Alvaro Videla and Jason J.W. Williams's _RabbitMQ in Action: Distributed Messaging for Everyone_, Manning Publications.
+If you want to learn more about RabbitMQ, take a look at the http://www.rabbitmq.com/tutorials/tutorial-five-java.html[tutorials] or Alvaro Videla and Jason J.W. Williams's _RabbitMQ in Action: Distributed Messaging for Everyone_, Manning Publications.
 
-Diego Medina has implemented a distributed Comet solution using CouchDB, and has described it in a blog post at https://fmpwizard.telegr.am/blog/distributed-comet-chat-lift[https://fmpwizard.telegr.am/blog/distributed-comet-chat-lift].
+Diego Medina has implemented a distributed Comet solution using CouchDB, and has described it in a https://fmpwizard.telegr.am/blog/distributed-comet-chat-lift[blog post].
 
-Amazon's Simple Notification Service (SNS) is a fanout facility so can also be used to implement this pattern. You can find a Lift module for SNS at https://github.com/SpiralArm/liftmodules-aws-sns[https://github.com/SpiralArm/liftmodules-aws-sns].
+Amazon's Simple Notification Service (SNS) is a fanout facility so can also be used to implement this pattern. You can find a Lift module for SNS https://github.com/SpiralArm/liftmodules-aws-sns[on GitHub].
 
 
 
