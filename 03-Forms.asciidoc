@@ -938,11 +938,11 @@ See Also
 
 <<ButtonTriggerServerCode>> describes `jsonCall`.
 
-The behaviour of the widget module with respect to new values is described in a ticket on the module's GitHub page: https://github.com/liftmodules/widgets/issues/4[https://github.com/liftmodules/widgets/issues/4]. Enhancing modules is one route to get involved with Lift, and <<ContributingAndHelp>> describes other ways to contribute.
+The behaviour of the widget module with respect to new values is described in a ticket on the https://github.com/liftmodules/widgets/issues/4[module's GitHub page]. Enhancing modules is one route to get involved with Lift, and <<ContributingAndHelp>> describes other ways to contribute.
 
-The jQuery UI Autocomplete widget is documented at http://jqueryui.com/autocomplete/[http://jqueryui.com/autocomplete/].  The version included with the Lift widgets module is version 1.0.2.
+The jQuery UI Autocomplete widget is documented http://jqueryui.com/autocomplete/[here]. The version included with the Lift widgets module is version 1.0.2.
 
-You can find documentation for Twitter Bootstrap Typeahead at http://twitter.github.io/bootstrap/javascript.html#typeahead[http://twitter.github.io/bootstrap/javascript.html#typeahead].
+You can find documentation for Twitter Bootstrap Typeahead http://twitter.github.io/bootstrap/javascript.html#typeahead[here].
 
 [[Radio]]
 Offering Choices with Radio Buttons
@@ -1327,7 +1327,7 @@ class MultiSelect extends Loggable {
 In this example, the user is being presented with a list of three items, with the first one selected, as shown in <<MultiSelectExample>>.  When the form is submitted, the `selection` function is called, with a list of the selected option values.
 
 [[MultiSelectExample]]
-.Selecting from multiple options.
+.Selecting from multiple options
 image::images/lfcb_0303.png[]
 
 
@@ -1515,9 +1515,9 @@ The "Submit styling" discussion section in <<AjaxFormProcessing>> discusses the 
 
 <<SelectOptionChange>> describes how to trigger a server-side action when a selection changes in the browser.
 
-Chapter 6 of _Exploring Lift_, "Forms in Lift," discusses multiselect and other types of form elements at http://exploring.liftweb.net/[http://exploring.liftweb.net/].
+http://exploring.liftweb.net/[Chapter 6 of _Exploring Lift_], "Forms in Lift," discusses multiselect and other types of form elements.
 
-The issue relating to no options being selected is on GitHub: https://github.com/lift/framework/issues/1139[https://github.com/lift/framework/issues/1139]
+The issue relating to no options being selected is on https://github.com/lift/framework/issues/1139[GitHub].
 
 
 [[FileUpload]]
@@ -1678,8 +1678,7 @@ This is the progress of the whole multipart upload, not just the file being uplo
 See Also
 ^^^^^^^^
 
-The HTTP file upload mechanics are described in RFC 1867, _Form-based File Upload in HTML_:
-http://tools.ietf.org/html/rfc1867[http://tools.ietf.org/html/rfc1867].
+The HTTP file upload mechanics are described in http://tools.ietf.org/html/rfc1867[RFC 1867, _Form-based File Upload in HTML_].
 
 <<RestBinaryData>> discusses file upload in the context of a REST service.
 
