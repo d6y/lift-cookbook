@@ -1076,7 +1076,7 @@ Link to Download Data
 Problem
 ^^^^^^^
 
-You want a button or a link that, when clicked, will trigger a download in the browser rather than visiting a page.
+You want a button or a link that, when clicked, will trigger a download in the browser rather than visiting a page.((("browsers", "downloads vs. visits")))
 
 Solution
 ^^^^^^^^
