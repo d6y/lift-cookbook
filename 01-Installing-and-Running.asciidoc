@@ -83,7 +83,7 @@ Typing `sbt` starts a _Simple Build Tool_ used by Scala projects (it's not speci
 This download happens once, and the downloaded
 files are stored on disk in _.ivy2_ under your home folder.
 
-Your application build is configured by _build.sbt_.  Looking inside, you'll see:
+Your application build is configured by _build.sbt_.  Looking inside, you'll see((("build.sbt, contents"))):
 
 * Basic information about your application, including a name and version;
 * Resolvers, which inform SBT where to fetch dependencies from;
