@@ -14,7 +14,7 @@ Testing and Debugging CSS Selectors
 Problem
 ^^^^^^^
 
-You want to explore or debug CSS selectors interactively.((("CSS selectors", "testing/debugging")))
+You want to explore or debug CSS selectors interactively.((("CSS selectors", "testing/debugging")))((("interactive development", "CSS selector debugging")))
 
 Solution
 ^^^^^^^^
