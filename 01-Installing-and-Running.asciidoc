@@ -447,7 +447,7 @@ Even with JRebel you will need to restart your applications from time to time, b
 
 But there are also other situations that JRebel cannot help with, such as when a superclass changes. Generally, JRebel will emit a warning about this in the console window.  If that happens, stop and start your application.(((superclass changes)))
 
-The `-Drebel.lift_plugin=true` setting adds Lift-specific functionality to JRebel.  Specifically, it allows JRebel to reload changes to `LiftScreen`, `Wizard`, and `RestHelper`. This means you can change fields or screens, and change REST `serve` code.((("Drebel plugin)))(((LiftScreen)))(((Wizard)))(((RestHelper)))
+The `-Drebel.lift_plugin=true` setting adds Lift-specific functionality to JRebel.  Specifically, it allows JRebel to reload changes to `LiftScreen`, `Wizard`, and `RestHelper`. This means you can change fields or screens, and change REST `serve` code.(((Drebel plugin)))(((LiftScreen)))(((Wizard)))(((RestHelper)))
 
 
 Purchased licenses
