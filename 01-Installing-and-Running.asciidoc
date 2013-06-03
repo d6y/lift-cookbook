@@ -453,7 +453,7 @@ The `-Drebel.lift_plugin=true` setting adds Lift-specific functionality to JRebe
 Purchased licenses
 ++++++++++++++++++
 
-This recipe uses a free Scala license for a service called myJRebel. This communicates with JRebel servers via the activation code.  If you have purchased a license from ZeroTurnaround, the situation is slightly different.  In this case, you will have a license key that you store in a file called _jrebel.lic_. You can place the file in a _.jrebel_ folder in your home directory, or alongside _jrebel.jar_ (e.g., in the _/opt/zt/jrebel/_ folder if that's where you installed JRebel), or you can specify some other location.  For the latter option, modify the _sbt_ script and specify the location of the file by adding another Java setting((("license, for Scala")))(((Scala, license for))):
+This recipe uses a free Scala license for a service called myJRebel. This communicates with JRebel servers via the activation code.  If you have purchased a license from ZeroTurnaround, the situation is slightly different.  In this case, you will have a license key that you store in a file called _jrebel.lic_. You can place the file in a _.jrebel_ folder in your home directory, or alongside _jrebel.jar_ (e.g., in the _/opt/zt/jrebel/_ folder if that's where you installed JRebel), or you can specify some other location.  For the latter option, modify the _sbt_ script and specify the location of the file by adding another Java setting((("license, for Scala")))(((Scala, license for)))(((ZeroTurnaround))):
 
 -----------------------------------
 -Drebel.license=/path/to/jrebel.lic
