@@ -60,7 +60,7 @@ Lift 2.5 is also available for Scala 2.10.
 
 === Conventions Used in This Book
 
-The following typographical conventions are used in this book:
+The following typographical conventions are used in this book((("Lift Cookbook", "typographical conventions used"))):
 
 _Italic_:: Indicates new terms, URLs, email addresses, filenames, and file extensions.
 
