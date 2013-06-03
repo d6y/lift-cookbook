@@ -238,7 +238,7 @@ and when the form is submitted, the hidden field is submitted, and like any fiel
 
 The effect is something like `ajaxSubmit`, but not exactly the same. In this instance we're appending a hidden field after the `<button>`, but you could place it anywhere on the form you find convenient. However, there's one complication: when is `process` called? Is it before the `name` has been assigned or after? That depends on the order the fields are rendered.  That's to say, in your HTML template, placing the button before the text field (and therefore moving the hidden field's position in this example), the `process` function is called before the name has been set.
 
-There are a couple of ways around that.  Either, ensure your hidden fields used in this way appear late in your form, or make sure the function is called late with a `formGroup`:
+There are a couple of ways around that.  Either, ensure your hidden fields used in this way appear late in your form, or make sure the function is called late(((formGroup function))) with a `formGroup`:
 
 [source,scala]
 ---------------------------------------------------------
