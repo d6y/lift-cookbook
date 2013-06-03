@@ -1086,7 +1086,7 @@ By using random values, Lift has helped us by protecting against a range of form
 
 Each of the random radio button values is associated, on the server, with a `BirthGender` value from our `options` sequence. When the form is submitted, Lift picks out the selected value (if any), looks up the corresponding `BirthGender` value, and calls our function.
 
-The hidden field ensures that the function will be called even if no radio button is selected. This is because the browser will at least submit the hidden field, and this is enough to trigger the server-side function.
+The hidden field ensures that the function will be called even if no radio button is selected. This is because the browser will at least submit the hidden field, and this is enough to trigger the server-side function.(((hidden fields)))
 
 
 Customising the HTML
