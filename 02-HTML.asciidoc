@@ -796,7 +796,7 @@ Discussion
 ^^^^^^^^^^
 
 If you find your tags not appearing in the `<head>` section, check that
-the HTML in your template and page is valid HTML5.
+the HTML in your template and page is valid HTML5.(((HTML5 markup issues)))
 
 You can also use `<lift:head>...</lift:head>` to wrap a number of
 expressions, and will see `<head_merge>...</head_merge>` used in code
