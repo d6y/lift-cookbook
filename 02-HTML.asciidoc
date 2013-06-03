@@ -566,7 +566,7 @@ There are three popular ways of referencing a snippet:
 
 * Using the `lift` attribute, as in: `lift="MySnippet"`. This won't strictly validate against HTML 5, but you may see it.
 
-* The XHTML namespace version: `<lift:MySnippet />`. You'll see the usage of this tag in templates declining because of the way it interacts with the HTML5 parser. However, it works just fine outside of a template, for example when embedding a snippet invocation in your server-side code (<<SetPageTitle>> includes an example of this for `Menu.title`).(((XHTML namepsace)))
+* The XHTML namespace version: `<lift:MySnippet />`. You'll see the usage of this tag in templates declining because of the way it interacts with the HTML5 parser. However, it works just fine outside of a template, for example when embedding a snippet invocation in your server-side code (<<SetPageTitle>> includes an example of this for `Menu.title`).(((XHTML parser)))
 
 
 See Also
