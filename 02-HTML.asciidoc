@@ -1169,7 +1169,7 @@ def downloadLink =
 
 We've included an `S.notice` to highlight that `throw shortcutResponse` will process Lift notices when the page next loads, whereas `throw new ResponseShortcutException` does not.  In this case, the notice will not appear when the user downloads the file, but it will be included the next time notices are shown, such as when the user navigates to another page.  For many situations, the difference is immaterial.
 
-This recipe has used Lift's stateful features.  You can see how useful it is to be able to close over state (the poem), and offer the data for download from memory.  If you've created a report from a database, you can offer it as a download without having to regenerate the items from the database.((("Lift Web Framework", "stateful features of")))
+This recipe has used Lift's stateful features.  You can see how useful it is to be able to close over state (the poem), and offer the data for download from memory.  If you've created a report from a database, you can offer it as a download without having to regenerate the items from the database.((("Lift Web Framework", "stateful features of")))(((REST web services, and report generation")))
 
 However, in other situations you might want to avoid holding this data as a function on a link. In that case, you'll want to create a REST service that returns a `LiftResponse`.
 
