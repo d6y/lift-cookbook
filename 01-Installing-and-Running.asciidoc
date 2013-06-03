@@ -555,7 +555,7 @@ Developing Using IntelliJ IDEA
 Problem
 ^^^^^^^
 
-You want to use the IntelliJ IDEA development environment when writing your Lift application.
+You want to use the IntelliJ IDEA development environment when writing your Lift application.(((Lift applications, IntelliJ IDEA development)))((("IntelliJ IDEA development environment")))
 
 Solution
 ^^^^^^^^
