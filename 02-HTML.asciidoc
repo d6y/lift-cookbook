@@ -535,7 +535,7 @@ Found" error.((("error messages", "Class Not Found")))(((Class Not Found error m
 Solution
 ^^^^^^^^
 
-Switch to the designer-friendly snippet invocation mechanism. For example:
+Switch to the designer-friendly snippet invocation mechanism. For example((("Lift Web Framework", "as designer-friendly"))):
 
 [source,html]
 ----
