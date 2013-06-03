@@ -55,7 +55,7 @@ The `Helpers._` import brings in the CSS selector functionality, which we then e
 Discussion
 ^^^^^^^^^^
 
-CSS selector transforms are one of the distinguishing features of Lift. They succinctly describe a node in your template (lefthand side) and give a replacement (operation, the righthand side). They do take a little while to get used to, so being able to test them at the Scala REPL is useful.
+CSS selector transforms are one of the distinguishing features of Lift. They succinctly describe a node in your template (lefthand side) and give a replacement (operation, the righthand side). They do take a little while to get used to, so being able to test them at the Scala REPL is useful.((("Lift Web Framework", "CSS selector transforms")))
 
 It may help to know that prior to CSS selectors, Lift snippets were typically defined in terms
 of a function that took a `NodeSeq` and returned a `NodeSeq`, often via a method called `bind`. Lift would take your template, which would be the input `NodeSeq`, apply the function, and return a new `NodeSeq`.  You won't see that usage so often any more, but the principle is the same.
