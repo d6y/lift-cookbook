@@ -585,7 +585,7 @@ Problem
 
 You've modified CSS or JavaScript in your application, but web browsers
 have cached your resources and are using the older versions. You'd like
-to avoid this browser caching.((("browsers", "avoiding caching")))
+to avoid this browser caching.((("browsers", "avoiding caching")))(((CSS caching)))(((JavaScript caching)))
 
 Solution
 ^^^^^^^^
