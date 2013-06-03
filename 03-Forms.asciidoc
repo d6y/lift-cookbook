@@ -942,7 +942,7 @@ The behaviour of the widget module with respect to new values is described in a 
 
 The jQuery UI Autocomplete widget is documented http://jqueryui.com/autocomplete/[here]. The version included with the Lift widgets module is version 1.0.2.(((range="endofrange", startref="ix_FPauto")))(((range="endofrange", startref="ix_autocomp")))
 
-You can find documentation for Twitter Bootstrap Typeahead http://twitter.github.io/bootstrap/javascript.html#typeahead[here].
+You can find documentation for Twitter Bootstrap Typeahead http://twitter.github.io/bootstrap/javascript.html#typeahead[here].(((Typeahead component)))
 
 [[Radio]]
 Offering Choices with Radio Buttons
@@ -951,7 +951,7 @@ Offering Choices with Radio Buttons
 Problem
 ^^^^^^^
 
-You want users to select an option using radio buttons.
+You want users to select an option using radio buttons.((("forms processing", "radio buttons", id="ix_FPradbut", range="startofrange")))
 
 Solution
 ^^^^^^^^
