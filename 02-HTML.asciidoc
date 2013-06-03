@@ -1365,7 +1365,7 @@ Rendering Textile Markup
 Problem
 ^^^^^^^
 
-You want to render Textile markup in your web application.(((textile markup)))((("Lift Web Framework", "Textile module")))(((Lift applications, textile markup rendering)))
+You want to render Textile markup in your web application.(((Textile markup)))((("Lift Web Framework", "Textile module")))(((Lift applications, Textile markup rendering)))
 
 Solution
 ^^^^^^^^
