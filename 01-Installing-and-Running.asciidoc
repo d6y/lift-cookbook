@@ -710,7 +710,7 @@ Problem
 ^^^^^^^
 
 A new Scala version has just been released and you want to immediately
-use it in your Lift project.
+use it in your Lift project.(((Scala, newest version of)))
 
 Solution
 ^^^^^^^^
