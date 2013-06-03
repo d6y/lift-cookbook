@@ -205,7 +205,7 @@ Notice that Lift's approach is to serialise the form to the server, execute the 
 Submit styling
 ++++++++++++++
 
-The `SHtml.ajaxSubmit` function generates a `<input type="submit">` element for the page. You may prefer to use a styled button for submit. For example, with Twitter Bootstrap, a button with an icon would require the following markup:
+The `SHtml.ajaxSubmit` function generates a `<input type="submit">` element for the page. You may prefer to use a styled button for submit. For example, with Twitter Bootstrap, a button with an icon would require the following markup(((submit styling))):
 
 [source,html]
 ---------------------------------------------------------
