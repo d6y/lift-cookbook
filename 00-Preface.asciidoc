@@ -29,7 +29,7 @@ I've mined the Lift mailing list for these recipes, but I'm not the only one.  R
 
 * Marek Żebrowski.((("Żebrowski, Marek")))
 
-* Peter Robinett, who's a web and mobile developer and a Lift committer. He can be found http://www.bubblefoundry.com[on the Web] and http://twitter.com/pr1001[on Twitter].(((
+* Peter Robinett, who's a web and mobile developer and a Lift committer. He can be found http://www.bubblefoundry.com[on the Web] and http://twitter.com/pr1001[on Twitter].((("Robinett, Peter")))
 
 * Kevin Lau, who's a founder of few web apps with a focus in AWS cloud, iOS, and Lift.
 
