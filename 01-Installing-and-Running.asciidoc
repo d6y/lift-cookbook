@@ -441,7 +441,7 @@ That change is live, without having to restart the container.
 Discussion
 ^^^^^^^^^^
 
-JRebel is very likely to speed up your development. It updates code in a running Java virtual machine, without having to stop and restart it.  The effect is that, on the whole, you can compile a class, then hit reload in your browser to see the change in your Lift application.
+JRebel is very likely to speed up your development. It updates code in a running Java virtual machine, without having to stop and restart it.  The effect is that, on the whole, you can compile a class, then hit reload in your browser to see the change in your Lift application.((("Java Virtual Machine (JVM)", "troubleshooting")))
 
 Even with JRebel you will need to restart your applications from time to time, but JRebel usually reduces the number of restarts. For example, _Boot.scala_ is run when your application starts, so if you modify something in your _Boot.scala_, you'll need to stop and start your application. JRebel can't help with that.
 
