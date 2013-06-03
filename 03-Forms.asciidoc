@@ -63,7 +63,7 @@ The first time through this snippet there will be no parameter so we just pass b
 Discussion
 ^^^^^^^^^^
 
-Manually plucking parameters from a request isn't making the best use of Lift, but sometimes you need to do it, and `S.param` is the way you can process request parameters.
+Manually plucking parameters from a request isn't making the best use of Lift, but sometimes you need to do it, and `S.param` is the way you can process request parameters.((("parameters, manual selection of")))
 
 
 The result of `S.param` is a `Box[String]`, and in the above example we pattern match on this value.  With more than one parameter, you've probably seen `S.param` used in this way:
