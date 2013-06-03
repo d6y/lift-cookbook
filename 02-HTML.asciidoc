@@ -714,7 +714,7 @@ Problem
 ^^^^^^^
 
 You use a template for layout, but on one specific page you need to add
-something to the `<head>` section.((("templates", "adding to the head section")))
+something to the `<head>` section.((("templates", "adding to the head section")))((("head section, adding to")))
 
 Solution
 ^^^^^^^^
