@@ -20,7 +20,7 @@ The only prerequisite for installing and running Lift is to have Java
 1.5 or later installed. Instructions for installing Java can be found at
 http://java.com/[http://java.com/].
 
-You can find out if you have Java from the shell or command prompt by asking for the version you have installed:
+You can find out if you have Java from the shell or command prompt by asking for the version you have installed((("Java, installation of"))):
 
 ----------------------------------------------------------------
 $ java -version
