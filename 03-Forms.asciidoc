@@ -1158,7 +1158,7 @@ This works because `toForm` on `ChoiceHolder` defers to `ChoiceHolder.htmlize`, 
 String values
 +++++++++++++
 
-If you want to work directly with `String` values for options, you can use `SHtml.radio`.  Although it too produces a `ChoiceHolder`, it differs from `radioElem` in that it uses the same `String` as both the label and the value. The function associated with each option is only called if a value is selected by the user.
+If you want to work directly with `String` values for options, you can use `SHtml.radio`.  Although it too produces a `ChoiceHolder`, it differs from `radioElem` in that it uses the same `String` as both the label and the value. The function associated with each option is only called if a value is selected by the user.(((string values)))
 
 An `SHtml.radio` version of our example would look like this:
 
