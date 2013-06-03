@@ -198,7 +198,7 @@ The `data-lift="form.ajax"` part of this recipe ensures that Lift adds the Ajax 
 
 In other words, when the form is asked to submit, Lift will serialise the form via Ajax.  This means you don't necessarily need the submit button at all.  In this example with a single text field, if you omit the submit button you can trigger serialisation by pressing Return.  This will trigger the `s => name = s` function, which was bound in our regular `data-lift="EchoForm"` snippet. In other words, the value `name` will be assigned even without a submit button.
 
-Adding in a submit button gives us a way to perform actions once all the field's functions have been executed.
+Adding in a submit button gives us a way to perform actions once all the field's functions have been executed.(((submit buttons)))
 
 Notice that Lift's approach is to serialise the form to the server, execute the functions associated with the fields, execute the submit function (if any), then return a JavaScript result to the client.  The default serialisation process is to use jQuery's `serialization` method on the form.  This serialises fields except submit buttons and file uploads.
 
