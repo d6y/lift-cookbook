@@ -827,7 +827,7 @@ Custom 404 Page
 Problem
 ^^^^^^^
 
-You want to show a customised "404" (not found) page.((("error messages", "404 (not found) pages")))((("404 (not found) pages", sortas="fourzerofour")))((("404 (not found) pages")))
+You want to show a customised "404" (not found) page.((("error messages", "404 (not found) pages")))((("404 (not found) pages", sortas="fourzerofour")))((("404 (not found) pages")))((("not found (404 error) message")))
 
 Solution
 ^^^^^^^^
