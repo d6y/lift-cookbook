@@ -590,7 +590,7 @@ to avoid this browser caching.((("browsers", "avoiding caching")))(((CSS caching
 Solution
 ^^^^^^^^
 
-Add the `with-resource-id` attribute to script or link tags:
+Add the `with-resource-id` attribute to script or link tags(((resource ID attribute))):
 
 [source,html]
 ----
