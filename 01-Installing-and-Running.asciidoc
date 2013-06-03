@@ -690,7 +690,7 @@ Discussion
 Production releases of Lift (e.g., "2.4," "2.5"), as well as milestone releases
 (e.g., "2.5-M3") and release candidates (e.g., "2.5-RC1") are published
 into a releases repository. When SBT downloads them, they are downloaded
-once.
+once.(((production releases)))(((milestone releases)))(((release candidates)))(((releases repository)))
 
 Snapshot releases are different: they are the result of an automated
 build, and change often. You can force SBT to resolve the latest
