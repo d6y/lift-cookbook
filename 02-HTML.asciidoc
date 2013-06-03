@@ -1439,7 +1439,7 @@ res1: String =
 Discussion
 ^^^^^^^^^^
 
-There's nothing special code has to do to become a Lift module, although there are common conventions: they typically are packaged as _net.liftmodules_, but don't have to be; they usually depend on a version of Lift; they sometimes use the hooks provided by `LiftRules` to provide a particular behaviour.  Anyone can create and publish a Lift module, and anyone can contribute to existing modules. In the end, they are declared as dependencies in SBT, and pulled into your code just like any other dependency.
+There's nothing special code has to do to become a Lift module, although there are common conventions: they typically are packaged as _net.liftmodules_, but don't have to be; they usually depend on a version of Lift; they sometimes use the hooks provided by `LiftRules` to provide a particular behaviour.  Anyone can create and publish a Lift module, and anyone can contribute to existing modules. In the end, they are declared as dependencies in SBT, and pulled into your code just like any other dependency.(((Lift modules)))
 
 The dependency name is made up of two elements: the name and the "edition" of Lift that the module is compatible with, as shown in <<ModuleVersioning>>. By "edition" we just mean the first part of the Lift version number. This implies the module is compatible with any Lift release that starts "2.5."
 
