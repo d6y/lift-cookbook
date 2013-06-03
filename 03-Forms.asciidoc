@@ -277,7 +277,7 @@ Ajax JSON Form Processing
 Problem
 ^^^^^^^
 
-You want to process a form via Ajax, sending the data in JSON format.((("forms processing", "Ajax JSON format", id="ix_FPajxjson", range="startofrange")))
+You want to process a form via Ajax, sending the data in JSON format.((("forms processing", "Ajax JSON format", id="ix_FPajxjson", range="startofrange")))(((JSON format, form processing in)))
 
 Solution
 ^^^^^^^^
