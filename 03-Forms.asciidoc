@@ -501,7 +501,7 @@ dates to your forms.((("forms processing", "date picker input")))(((date pickers
 Solution
 ^^^^^^^^
 
-Use a standard Lift `SHtml.text` input field and attach a JavaScript date picker to it.  In this example, we will use the jQuery UI date picker.
+Use a standard Lift `SHtml.text` input field and attach a JavaScript date picker to it.  In this example, we will use the jQuery UI date picker.(((SHtml.text input field)))(((jQuery UI date picker)))
 
 Our form will include an input field called `birthday` to be used as a date picker, and also the jQuery UI JavaScript and CSS:
 
