@@ -1283,7 +1283,7 @@ Problem
 ^^^^^^^
 
 You want to show the user a number of options in a select box, and allow
-them to select multiple values.(((forms processing, mulitple values)))(((multiple values)))(((checkboxes, multiple values)))
+them to select multiple values.(((forms processing, mulitple values)))(((multiple options)))(((checkboxes, multiple values)))
 
 Solution
 ^^^^^^^^
