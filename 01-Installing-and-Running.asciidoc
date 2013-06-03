@@ -382,7 +382,7 @@ You want to avoid application restarts when you change a Scala source file by us
 Solutions
 ^^^^^^^^^
 
-There are three steps required: install JRebel once; each year request the free Scala license; and configure SBT to use JRebel.((("Simple Build Tool (SBT)", "using JRebel with")))(((Scala, free license for)))
+There are three steps required: install JRebel once; each year request the free Scala license; and configure SBT to use JRebel.((("Simple Build Tool (SBT)", "using JRebel with")))(((Scala, license for)))
 
 First, visit https://my.jrebel.com/plans[https://my.jrebel.com/plans] and request the free Scala license.
 
