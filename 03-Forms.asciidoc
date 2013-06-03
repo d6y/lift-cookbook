@@ -815,7 +815,7 @@ Alternative auto complete JavaScript
 
 Looking at the way the widget module builds autocomplete functionality may give you an insight into how you can incorporate other JavaScript autocomplete libraries into your Lift application.  The idea is to include the JavaScript library, connect it to an element on the page, and then arrange for the server to be called to generate suggestions.  Of course, if you only have a few items for the user to pick from, you could just include those items on the page, rather than making a round trip to the server.(((autocomplete suggestions, alternative libraries for)))
 
-As an example of server-generated suggestions, we can look at the _Typeahead_ component that is included in Twitter Bootstrap.
+As an example of server-generated suggestions, we can look at the _Typeahead_ component that is included in Twitter Bootstrap.(((Typeahead component)))
 
 To incorporate Typeahead, the template needs to change to include the library and mark the input field in the way Typeahead expects:
 
