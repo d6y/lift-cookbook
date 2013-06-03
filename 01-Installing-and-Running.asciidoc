@@ -760,7 +760,7 @@ This works because the two different Scala versions are binary compatible.
 Discussion
 ^^^^^^^^^^
 
-Dependencies have a particular naming convention.  For example, the `lift-webkit` library for Lift 2.5-RC5 is called _lift-webkit_2.9.1-2.5-RC5.jar_.  Normally, in _build.sbt_ we simply refer to `"net.liftweb" %% "lift-webkit"` and SBT turns that into the name of a file that can be downloaded.((("dependencies, naming conventions of")))
+Dependencies have a particular naming convention.  For example, the `lift-webkit` library for Lift 2.5-RC5 is called _lift-webkit_2.9.1-2.5-RC5.jar_.  Normally, in _build.sbt_ we simply refer to `"net.liftweb" %% "lift-webkit"` and SBT turns that into the name of a file that can be downloaded.((("dependencies, naming conventions of")))((("names/naming", "of dependencies")))
 
 However, in this recipe we have forced SBT to explicitly fetch the 2.9.1 version
 of the Lift resources rather than allow it to compute the URL to the
