@@ -4,7 +4,7 @@
 == Preface
 
 This is a collection of solutions to questions you might have while developing
-web applications with the Lift Web Framework.
+web applications with the Lift Web Framework.((("Lift Web Framework", "prerequisites")))
 
 The aim is to give a single, short answer to a specific question. When there's more than approach, or style, we'll give you one solution, but will point you at alternatives in the discussion.
 
