@@ -1185,7 +1185,7 @@ Problem
 ^^^^^^^
 
 You want to add the `disabled` attribute to a `SHtml.checkbox` based on
-a conditional check.
+a conditional check.(((forms processing, conditional disablement)))
 
 Solution
 ^^^^^^^^
