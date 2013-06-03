@@ -496,7 +496,7 @@ Problem
 ^^^^^^^
 
 You want to provide a date picker to make it easy for users to supply
-dates to your forms.
+dates to your forms.((("forms processing", "date picker input")))
 
 Solution
 ^^^^^^^^
