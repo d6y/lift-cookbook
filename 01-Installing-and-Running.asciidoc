@@ -327,7 +327,7 @@ When you run SBT in this way, you'll notice the following output:
 And indeed, if you do press Enter in the SBT window, you'll exit this _triggered
 execution_ mode and SBT will no longer be looking for file changes. However, while
 SBT is watching for changes, the output will indicate when this happens with something
-that looks a little like this:
+that looks a little like this(((triggered execution mode))):
 
 ----------------------------------------------------------------------------------
 [info] Compiling 1 Scala source to target/scala-2.9.1/classes...
