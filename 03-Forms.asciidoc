@@ -605,7 +605,7 @@ As more browsers implement these types it will become possible to depend on them
 .An input field with the jQuery UI date picker attached, compared to the browser-native date picker in Chrome
 image::images/lfcb_0301.png[]
 
-To detect if the browser supports `type="date"` inputs, we can use the _Modernizr_ library.  This is an additional script in our template:
+To detect if the browser supports `type="date"` inputs, we can use the _Modernizr_ library.  This is an additional script in our template((("browsers", "detecting features in"))):
 
 [source,html]
 ---------------------------------------------------------
