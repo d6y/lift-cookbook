@@ -951,7 +951,7 @@ Offering Choices with Radio Buttons
 Problem
 ^^^^^^^
 
-You want users to select an option using radio buttons.((("forms processing", "radio buttons", id="ix_FPradbut", range="startofrange")))
+You want users to select an option using radio buttons.((("forms processing", "radio buttons", id="ix_FPradbut", range="startofrange")))((("radio buttons", id="ix_radbut", range="startofrange")))
 
 Solution
 ^^^^^^^^
