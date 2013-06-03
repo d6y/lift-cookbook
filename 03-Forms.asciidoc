@@ -226,7 +226,7 @@ import net.liftweb.http.SHtml.hidden
 "button *+" #> hidden(process)
 ---------------------------------------------------------
 
-The `*+` replacement rule means append a value to the child node of the button. This will include a hidden field in the form, something like this:
+The `*+` replacement rule means append a value to the child node of the button. This will include a hidden field in the form, something like this(((replacement rules))):
 
 [source,scala]
 ---------------------------------------------------------
