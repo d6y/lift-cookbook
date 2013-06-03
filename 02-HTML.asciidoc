@@ -445,7 +445,7 @@ Problem
 ^^^^^^^
 
 You want a snippet to return the original markup associated with the
-snippet invocation.
+snippet invocation.(((snippets)))
 
 Solution
 ^^^^^^^^
