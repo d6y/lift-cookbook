@@ -30,7 +30,7 @@ Java HotSpot(TM) 64-Bit Server VM (build 23.7-b01, mixed mode)
 ----------------------------------------------------------------
 
 Once you have Java, the following instructions will download, build, and
-start a basic Lift application.
+start a basic Lift application.(((Lift applications, basic instructions)))
 
 For Mac and Linux
 +++++++++++++++++
