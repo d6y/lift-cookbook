@@ -181,7 +181,7 @@ Discussion
 
 The `@` selector selects all elements with the given name. It's useful in this case to change the `<meta name="keyword">` tag, but you may also see it used elsewhere. For example, in an HTML form you can select input fields such as `<input name="address">` with `"@address"`.(((forms processing, HTML input fields)))
 
-The `[content]` part is an example of a _replacement rule_ that can follow a selector. That's to say, it's not specific to the `@` selector and can be used with other selectors.  In this example, it replaces the value of the attribute called "content."  If the meta tag had no "content" attribute, it would be added.(((replacement rules)))
+The `[content]` part is an example of a _replacement rule_ that can follow a selector. That's to say, it's not specific to the `@` selector and can be used with other selectors.  In this example, it replaces the value of the attribute called "content."  If the meta tag had no "content" attribute, it would be added.(((replacement rules)))(((attributes)))
 
 There are two other replacement rules useful for manipulating attributes:
 
@@ -222,7 +222,7 @@ res1: scala.xml.NodeSeq = NodeSeq(<meta content="words, here, please, thank you"
 Appending to a class attribute
 ++++++++++++++++++++++++++++++
 
-Although not directly relevant to `meta` tags, you should be aware that there is one convenient special case for appending to an attribute. If the attribute is `class`, a space is added together with your class value. As a demonstration of that, here's an example of appending a class called "btn-primary" to a `div`:
+Although not directly relevant to `meta` tags, you should be aware that there is one convenient special case for appending to an attribute. If the attribute is `class`, a space is added together with your class value.(((class attributes))) As a demonstration of that, here's an example of appending a class called "btn-primary" to a `div`:
 
 [source,scala]
 ---------------------------------------------------------------------
