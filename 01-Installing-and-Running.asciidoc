@@ -128,7 +128,7 @@ You want want to create a Lift web project from scratch without using the ZIP fi
 Solution
 ^^^^^^^^
 
-You will need to configure SBT and the Lift project yourself. Luckily, only five small files are needed.((("Simple Build Tool (SBT)", "configuration of")))(((Lift applications, configuration of)))
+You will need to configure SBT and the Lift project yourself. Luckily, only five small files are needed.((("Simple Build Tool (SBT)", "configuration of")))(((Lift applications, creating from scratch)))
 
 First, create an SBT plug-in file at _project/plugins.sbt_ (all file names are given relative to the project root directory):
 
