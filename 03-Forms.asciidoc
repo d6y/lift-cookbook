@@ -2,7 +2,7 @@
 Forms Processing in Lift
 ------------------------
 
-This chapter looks at how to process form data with Lift: submitting forms, working with form elements. The end result of a form submission can be records being updated in a database, so you may also find <<Squeryl>> or <<MongoRecord>> useful, as they discuss relational databases and MongoDB, respectively.
+This chapter looks at how to process form data with Lift: submitting forms, working with form elements. The end result of a form submission can be records being updated in a database, so you may also find <<Squeryl>> or <<MongoRecord>> useful, as they discuss relational databases and MongoDB, respectively.((("Lift Web Framework", "form processing in", id="ix_LWFfp", range="startofrange")))
 
 To the extent that form processing is passing data to a server, there are also recipes in <<Ajax>> that are relevant to form processing.
 
@@ -282,7 +282,7 @@ You want to process a form via Ajax, sending the data in JSON format.((("forms p
 Solution
 ^^^^^^^^
 
-Make use of Lift's _jlift.js_ JavaScript library and `JsonHandler` class.
+Make use of Lift's _jlift.js_ JavaScript library and `JsonHandler` class.(((JsonHandler class)))
 
 As an example, we can create a "motto server" that will accept an institution name and the institution's motto
 and perform some action on these values. We're just going to echo the name and motto back to the client.
