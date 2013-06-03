@@ -48,7 +48,7 @@ You'll find projects for each chapter at https://github.com/LiftCookbook/[GitHub
 
 === Updates
 
-Follow https://twitter.com/liftcookbook[@LiftCookbook] on Twitter.
+Follow https://twitter.com/liftcookbook[@LiftCookbook] on Twitter.((("Lift Cookbook", "updates for")))
 
 === Software Versions
 
