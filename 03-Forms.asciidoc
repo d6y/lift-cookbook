@@ -1171,7 +1171,7 @@ SHtml.radio(
 )
 -----------------------------------------------
 
-This is a similar structure to `radioElem`: there's a list of options, a default, a function to call, and it produces a `ChoiceHolder[String]`.  When a form is submitted, our function is passed the `String` value of the selected option. If no radio buttons are selected, the function is not called.
+This is a similar structure to `radioElem`: there's a list of options, a default, a function to call, and it produces a `ChoiceHolder[String]`.  When a form is submitted, our function is passed the `String` value of the selected option. If no radio buttons are selected, the function is not called.(((range="endofrange", startref="ix_FPradbut")))
 
 ////
 There's no See Also
