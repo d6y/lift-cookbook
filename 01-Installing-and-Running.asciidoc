@@ -377,7 +377,7 @@ Incorporating JRebel
 Problem
 ^^^^^^^
 
-You want to avoid application restarts when you change a Scala source file by using JRebel.((("browsers, reloading")))
+You want to avoid application restarts when you change a Scala source file by using JRebel.
 
 Solutions
 ^^^^^^^^^
