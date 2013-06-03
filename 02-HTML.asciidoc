@@ -249,7 +249,7 @@ Setting the Page Title
 Problem
 ^^^^^^^
 
-You want to set the `<title>` of the page from a Lift snippet.(((element selectors)))(((page titles)))((("titles, page titles")))(((snippets)))
+You want to set the `<title>` of the page from a Lift snippet.(((element selectors)))(((page titles)))((("titles, page titles")))(((snippets)))((("names/naming", "page titles")))
 
 Solution
 ^^^^^^^^
