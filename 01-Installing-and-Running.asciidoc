@@ -99,7 +99,7 @@ passes requests to your Lift application. The word _container_ refers to the
 software you deploy your application into. There are a variety of containers (_Jetty_ and
 _Tomcat_ are probably the best known) all of which conform to a standard for deployment.
 The upshot is you can build your application and deploy to whichever one you prefer.
-The `container:start` command uses Jetty.(((Lift applications, running)))((("containers, types of")))(((Jetty)))(((Tomcat)))
+The `container:start` command uses Jetty.(((Lift applications, running)))((("containers", "types of")))(((Jetty)))(((Tomcat)))
 
 Source code
 +++++++++++
