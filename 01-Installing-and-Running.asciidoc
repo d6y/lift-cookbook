@@ -621,7 +621,7 @@ Problem
 ^^^^^^^
 
 You're developing using the default _lift_proto.db_ H2 database, and
-you would like to use a tool to look at the tables.(((Lift applications, lift_proto.db H2 database for)))((("lift basic H2 database")))(((H2 Database Engine)))((("tables, viewing")))
+you would like to use a tool to look at the tables.(((Lift applications, lift_proto.db H2 database for)))((("lift basic H2 database")))(((H2 Database Engine)))((("tables, viewing")))(((databases, viewing)))
 
 Solution
 ^^^^^^^^
@@ -638,7 +638,7 @@ Use the web interface included as part of H2. Here are the steps:
 Discussion
 ^^^^^^^^^^
 
-The default Lift projects that include a database, such as _lift_basic_, use the H2 relational database, as it can be included as an SBT dependency and requires no external installation or configuration. It's a fine product, although production deployments typically use standalone databases, such as PostgreSQL or MySQL.
+The default Lift projects that include a database, such as _lift_basic_, use the H2 relational database, as it can be included as an SBT dependency and requires no external installation or configuration. It's a fine product, although production deployments typically use standalone databases, such as PostgreSQL or MySQL.(((databases, alternative)))
 
 Even if you're deploying to a non-H2 database it may be useful to keep H2 around because it has an in-memory mode, which is great for unit tests. This means you can create a database in-memory, and throw it away when your unit test ends.
 
