@@ -827,7 +827,7 @@ Custom 404 Page
 Problem
 ^^^^^^^
 
-You want to show a customised "404" (not found) page.
+You want to show a customised "404" (not found) page.((("error messages", "404 (not found) pages")))
 
 Solution
 ^^^^^^^^
