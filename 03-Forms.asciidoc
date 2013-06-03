@@ -599,7 +599,7 @@ The HTML5 specification includes support for a variety of date input types: `dat
 
 This type of input field will submit a date in _yyyy-mm-dd_ format, which our snippet would be able to process.
 
-As more browsers implement these types it will become possible to depend on them.  However, you can default to the HTML5 browser-native date pickers today and fall back to a JavaScript library as required. The difference is shown in <<DatePickerScreenGrabs>>.
+As more browsers implement these types it will become possible to depend on them.  However, you can default to the HTML5 browser-native date pickers today and fall back to a JavaScript library as required.((("Safari, date picker format")))((("Chrome, date picker format"))) The difference is shown in <<DatePickerScreenGrabs>>.
 
 [[DatePickerScreenGrabs]]
 .An input field with the jQuery UI date picker attached, compared to the browser-native date picker in Chrome
