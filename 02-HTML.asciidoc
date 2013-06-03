@@ -898,7 +898,7 @@ Other Custom Status Pages
 Problem
 ^^^^^^^
 
-You want to show a customised page for certain HTTP status codes.(((HTTP status codes)))
+You want to show a customised page for certain HTTP status codes.(((HTTP status codes)))(((custom HTTP status pages)))
 
 Solution
 ^^^^^^^^
