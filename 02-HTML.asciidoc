@@ -1295,7 +1295,7 @@ Aside from HTTP headers, you can set cookies, content type, query parameters, th
 Data table
 ++++++++++
 
-In the example test above it would be tedious to have to set up the same code repeatedly for different user agents.  Specs2's _Data Table_ provides a compact way to run different example values through the same test:
+In the example test above it would be tedious to have to set up the same code repeatedly for different user agents.  Specs2's _Data Table_ provides a compact way to run different example values through the same test(((Specs2)))(((Data Table (Spec2)"))):
 
 [source, scala]
 -------
