@@ -358,7 +358,7 @@ One error you may run into is:
 java.lang.OutOfMemoryError: PermGen space
 ------------------------------------------
 
-The _permanent generation_ is a Java virtual machine concept. It's the area of memory used for storing classes (amongst other things).  It's a fixed size and once it is full this PermGen error appears.  As you might imagine, continually restarting a container causes many classes to be loaded and unloaded, but the process is not perfect, effectively leaking memory. The best you can do is stop and then restart SBT.  If you're seeing this error often, check the setting for `-XX:MaxPermSize` inside the _sbt_ (or _sbt.bat_) script, and if you can, double it.
+The _permanent generation_ is a Java virtual machine concept. It's the area of memory used for storing classes (amongst other things).  It's a fixed size and once it is full this PermGen error appears.  As you might imagine, continually restarting a container causes many classes to be loaded and unloaded, but the process is not perfect, effectively leaking memory. The best you can do is stop and then restart SBT.  If you're seeing this error often, check the setting for `-XX:MaxPermSize` inside the _sbt_ (or _sbt.bat_) script, and if you can, double it.((("Java Virtual Machine (JVM)", "troubleshooting")))
 
 See Also
 ^^^^^^^^
