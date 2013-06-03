@@ -1458,7 +1458,7 @@ There's no real specification of what Textile is, but there are http://redcloth.
 
 https://github.com/liftmodules/textile[The home of the Textile module]
 
-https://github.com/liftmodules/textile/blob/master/src/test/scala/net/liftmodules/textile/TextileSpec.scala[The unit tests for the Textile module] give you a good set of examples of what is supported.
+https://github.com/liftmodules/textile/blob/master/src/test/scala/net/liftmodules/textile/TextileSpec.scala[The unit tests for the Textile module] give you a good set of examples of what is supported.(((range="endofrange", startref="ix_LAhtml")))
 
 <<modules>> describes how to create modules.
 
