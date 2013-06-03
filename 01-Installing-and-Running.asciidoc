@@ -244,7 +244,7 @@ class Boot {
 
 Congratulations, you now have a working Lift project!
 
-You can verify that you have a working Lift project by launching the Jetty web container from the SBT console with the `container:start` command. First, the _Boot.scala_ file should be compiled and then you should be notified that Jetty has launched and is listening at _http://localhost:8080_. You should be able to go to the address in your web browser and see the rendered _index.html_ file you created earlier.
+You can verify that you have a working Lift project by launching the Jetty web container from the SBT console with the `container:start` command. First, the _Boot.scala_ file should be compiled and then you should be notified that Jetty has launched and is listening at _http://localhost:8080_. You should be able to go to the address in your web browser and see the rendered _index.html_ file you created earlier.(((Lift applications, verification of)))
 
 Discussion
 ^^^^^^^^^^
