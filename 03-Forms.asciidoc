@@ -21,7 +21,7 @@ You want to process form data in a regular, old-fashioned, non-Ajax, way.((("for
 Solution
 ^^^^^^^^
 
-Extract form values with `S.param`, process the values, and produce some output.
+Extract form values with `S.param`, process the values, and produce some output.((("S.param")))(((requests, processing with S.param)))
 
 For example, we can show a form, process an input value, and give a message back as a notice.  The template is a regular HTML form, with the addition of a snippet:
 
