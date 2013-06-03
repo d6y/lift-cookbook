@@ -127,7 +127,7 @@ Problem
 ^^^^^^^
 
 You want to process a form on the server via Ajax, without reloading the
-whole page.
+whole page.((("forms processing", "via Ajax")))
 
 Solution
 ^^^^^^^^
