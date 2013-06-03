@@ -282,7 +282,7 @@ You want to process a form via Ajax, sending the data in JSON format.((("forms p
 Solution
 ^^^^^^^^
 
-Make use of Lift's _jlift.js_ JavaScript library and `JsonHandler` class.(((JsonHandler class)))
+Make use of Lift's _jlift.js_ JavaScript library and `JsonHandler` class.(((JsonHandler class)))(((jlift.js JavaScript library)))
 
 As an example, we can create a "motto server" that will accept an institution name and the institution's motto
 and perform some action on these values. We're just going to echo the name and motto back to the client.
