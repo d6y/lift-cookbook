@@ -53,7 +53,7 @@ Follow https://twitter.com/liftcookbook[@LiftCookbook] on Twitter.((("Lift Cookb
 === Software Versions
 
 Except where otherwise indicated, the examples use Lift 2.5 with SBT
-0.12 and Scala 2.9.
+0.12 and Scala 2.9.((("Lift Cookbook", "software versions used")))
 
 Lift 2.5 is also available for Scala 2.10.
 
