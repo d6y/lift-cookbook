@@ -473,7 +473,7 @@ object MottoServer extends JsonHandler {
 }
 ---------------------------------------------------------
 
-The first `JsonCmd` is unchanged. The second matches on the parameters sent and results in updating the form fields with an upper- or lowercase version of the motto.(((range="endofrange", startref="ix_FPajxjson")))
+The first `JsonCmd` is unchanged. The second matches on the parameters sent and results in updating the form fields with an upper- or lowercase version of the motto.(((range="endofrange", startref="ix_FPajxjson")))(((range="endofrange", startref="ix_JSONfp")))
 
 
 
