@@ -156,7 +156,7 @@ Setting Meta Tag Contents
 Problem
 ^^^^^^^
 
-You want to set the content of an HTML meta tag from a snippet.
+You want to set the content of an HTML meta tag from a snippet.((("meta tag contents, setting")))(((snippets)))
 
 Solution
 ^^^^^^^^
