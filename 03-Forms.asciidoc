@@ -585,7 +585,7 @@ INFO  code.snippet.DatePicker - Birthday: Sun Apr 21 00:00:00 BST 2013
 Discussion
 ^^^^^^^^^^
 
-The approach outlined in this recipe can be used with other date picker libraries. The key point is to configure the date picker to submit a date in a format you can parse when the value is submitted to the server. This is the "wire format" of the date, and does not have to necessarily be the same format the user sees in the browser, depending on the browser or the JavaScript library being used.
+The approach outlined in this recipe can be used with other date picker libraries. The key point is to configure the date picker to submit a date in a format you can parse when the value is submitted to the server. This is the "wire format" of the date, and does not have to necessarily be the same format the user sees in the browser, depending on the browser or the JavaScript library being used.((("wire formats, for dates")))
 
 HTML5 Date Pickers
 +++++++++++++++++++
