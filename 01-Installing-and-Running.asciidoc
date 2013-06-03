@@ -445,7 +445,7 @@ JRebel is very likely to speed up your development. It updates code in a running
 
 Even with JRebel you will need to restart your applications from time to time, but JRebel usually reduces the number of restarts. For example, _Boot.scala_ is run when your application starts, so if you modify something in your _Boot.scala_, you'll need to stop and start your application. JRebel can't help with that.
 
-But there are also other situations that JRebel cannot help with, such as when a superclass changes. Generally, JRebel will emit a warning about this in the console window.  If that happens, stop and start your application.
+But there are also other situations that JRebel cannot help with, such as when a superclass changes. Generally, JRebel will emit a warning about this in the console window.  If that happens, stop and start your application.(((superclass changes)))
 
 The `-Drebel.lift_plugin=true` setting adds Lift-specific functionality to JRebel.  Specifically, it allows JRebel to reload changes to `LiftScreen`, `Wizard`, and `RestHelper`. This means you can change fields or screens, and change REST `serve` code.
 
