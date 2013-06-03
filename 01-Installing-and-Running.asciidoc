@@ -719,7 +719,7 @@ You may find that the latest snapshot of Lift is built using the latest
 Scala version. Failing that, and assuming you cannot wait for a build, you may still be in luck.
 Providing that the Scala version is _binary compatible_ with the latest
 version used by Lift, you can change your build file to force the Scala
-version.(((binary compatibility)))
+version.(((binary compatibility)))(((Scala, binary compatibility in)))
 
 For example, assuming your _build.sbt_ file is set up to use Lift 2.5
 with Scala 2.9.1:
