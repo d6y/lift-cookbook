@@ -84,7 +84,7 @@ Problem
 ^^^^^^^
 
 You want your CSS selector binding to apply to the results of earlier
-binding expressions.
+binding expressions.((("CSS selectors", "applying to earlier expressions")))
 
 Solution
 ^^^^^^^^
