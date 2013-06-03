@@ -350,7 +350,7 @@ Restarting the web container each time you edit a Scala file isn't ideal. You ca
 the need for restarts by integrating JRebel into your development environment, as described
 in <<jrebel>>.(((web containers)))((("browsers, reloading")))((("JRebel", "reducing restarts with")))
 
-However, if you are making a serious number of edits, you may prefer to issue a `container:stop` command until you're ready to run you application again with `container:start`. This will prevent SBT compiling and restarting your application over and over. The SBT console has a command history, and using the up and down keyboard arrows allows you to navigate to previous commands and run them by pressing the Return key.  That takes some of the tedium out of these long commands.
+However, if you are making a serious number of edits, you may prefer to issue a `container:stop` command until you're ready to run you application again with `container:start`. This will prevent SBT compiling and restarting your application over and over. The SBT console has a command history, and using the up and down keyboard arrows allows you to navigate to previous commands and run them by pressing the Return key.  That takes some of the tedium out of these long commands.((("Simple Build Tool (SBT)", "command history in")))
 
 One error you may run into is:
 
