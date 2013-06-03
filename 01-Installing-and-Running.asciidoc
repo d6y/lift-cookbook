@@ -480,7 +480,7 @@ reload in your browser to see changes.(((Lift applications, Eclipse IDE developm
 Solution
 ^^^^^^^^
 
-Use the "Scala IDE for Eclipse" plugin to Eclipse, and the _sbteclipse_ plugin for SBT.  This will give Eclipse the ability to understand Scala, and SBT the ability to create project files that Eclipse can load.
+Use the "Scala IDE for Eclipse" plugin to Eclipse, and the _sbteclipse_ plugin for SBT.  This will give Eclipse the ability to understand Scala, and SBT the ability to create project files that Eclipse can load.(((Scala IDE for Eclipse plugin)))
 
 The instructions for the Eclipse plugin are given at http://scala-ide.org[http://scala-ide.org]. There are a number of options to be aware of when picking an update site to use: there are different sites for Scala 2.9 and 2.10, and for different versions of Eclipse. Start with the _stable_ version of the plugin rather than a nightly or milestone version. This will give you an Eclipse perspective that knows about Scala.
 
