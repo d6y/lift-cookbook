@@ -660,7 +660,7 @@ Using the Latest Lift Build
 Problem
 ^^^^^^^
 
-You want to use the latest ("snapshot") build of Lift.((("Lift Web Framework", "latest build of")))
+You want to use the latest ("snapshot") build of Lift.((("Lift Web Framework", "latest build of")))(((snapshots)))
 
 Solution
 ^^^^^^^^
