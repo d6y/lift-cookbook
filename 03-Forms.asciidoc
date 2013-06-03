@@ -666,7 +666,7 @@ You want to provide an autocomplete widget, to give users suggestions as they ty
 Solution
 ^^^^^^^^
 
-Use a JavaScript autocomplete widget, for example the jQuery UI autocomplete via the `AutoComplete` class from the Lift Widgets module.
+Use a JavaScript autocomplete widget, for example the jQuery UI autocomplete via the `AutoComplete` class from the Lift Widgets module.(((jQuery UI autocomplete)))
 
 Start by adding the Lift widgets module to your _build.sbt_:
 
