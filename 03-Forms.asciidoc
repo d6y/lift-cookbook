@@ -940,7 +940,7 @@ See Also
 
 The behaviour of the widget module with respect to new values is described in a ticket on the https://github.com/liftmodules/widgets/issues/4[module's GitHub page]. Enhancing modules is one route to get involved with Lift, and <<ContributingAndHelp>> describes other ways to contribute.
 
-The jQuery UI Autocomplete widget is documented http://jqueryui.com/autocomplete/[here]. The version included with the Lift widgets module is version 1.0.2.(((range="endofrange", startref="ix_FPauto")))
+The jQuery UI Autocomplete widget is documented http://jqueryui.com/autocomplete/[here]. The version included with the Lift widgets module is version 1.0.2.(((range="endofrange", startref="ix_FPauto")))(((range="endofrange", startref="ix_autocomp")))
 
 You can find documentation for Twitter Bootstrap Typeahead http://twitter.github.io/bootstrap/javascript.html#typeahead[here].
 
