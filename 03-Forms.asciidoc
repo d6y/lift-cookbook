@@ -216,7 +216,7 @@ The `SHtml.ajaxSubmit` function generates a `<input type="submit">` element for 
 
 Pressing a `<button>` inside a form triggers the submit. However, if you bound that button with `SHtml.ajaxSubmit`, the content, and therefore the styling, would be lost.
 
-To fix this you can assign a function to a hidden field. This function will be called when the form is submitted just like any other field.  The only part of our snippet that changes is the CSS selector binding:
+To fix this you can assign a function to a hidden field. This function will be called when the form is submitted just like any other field.  The only part of our snippet that changes is the CSS selector binding(((hidden fields))):
 
 [source,scala]
 ---------------------------------------------------------
