@@ -78,7 +78,7 @@ Instead, you use standard build tools, such as SBT or Maven, to assemble your ap
 Simple Build Tool
 +++++++++++++++++
 
-Typing `sbt` starts a _Simple Build Tool_ used by Scala projects (it's not specific to Lift).  SBT will check the project definition and download any libraries required, which will include the Lift framework.
+Typing `sbt` starts a _Simple Build Tool_ used by Scala projects (it's not specific to Lift).  SBT will check the project definition and download any libraries required, which will include the Lift framework.((("Simple Build Tool (SBT)", "starting")))
 
 This download happens once, and the downloaded
 files are stored on disk in _.ivy2_ under your home folder.
