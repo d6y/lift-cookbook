@@ -621,7 +621,7 @@ Problem
 ^^^^^^^
 
 You're developing using the default _lift_proto.db_ H2 database, and
-you would like to use a tool to look at the tables.
+you would like to use a tool to look at the tables.(((Lift applications, lift_proto.db H2 database development)))
 
 Solution
 ^^^^^^^^
