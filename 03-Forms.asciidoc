@@ -1682,7 +1682,7 @@ The HTTP file upload mechanics are described in http://tools.ietf.org/html/rfc18
 
 <<RestBinaryData>> discusses file upload in the context of a REST service.
 
-See <<AjaxFileUpload>> for an example of an Ajax file upload through integration with a JavaScript library, providing progress indicators and drag-and-drop support.
+See <<AjaxFileUpload>> for an example of an Ajax file upload through integration with a JavaScript library, providing progress indicators and drag-and-drop support.(((range="endofrange", startref="ix_LWFfp")))
 
 
 
