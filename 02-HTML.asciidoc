@@ -909,7 +909,7 @@ supply an alternative.
 As an example, suppose we want to provide a custom page for 403
 ("Forbidden") statuses created in our Lift application.  Further, suppose that
 this page might contain snippets so will need to pass through the Lift
-rendering flow.((("403 (forbidden) statuses")))
+rendering flow.((("403 (forbidden) statuses")))((("403 (forbidden) statuses", sortas="fourzerothree")))
 
 To do this in _Boot.scala_, we define the `LiftResponse` we want to generate
 and use the response when a 403 status is about to be produced by Lift:
