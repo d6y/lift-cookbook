@@ -295,7 +295,7 @@ Problem
 ^^^^^^^
 
 You want to develop your Lift application using your favourite text
-editor, hitting reload in your browser to see changes.(((Lift applications, text editor development)))((("text editors, development with")))
+editor, hitting reload in your browser to see changes.(((Lift applications, text editor development)))((("text editors, development with")))((("browsers, reloading"
 
 Solution
 ^^^^^^^^
