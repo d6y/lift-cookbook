@@ -496,7 +496,7 @@ Discussion
 ^^^^^^^^^^
 
 `PassThru` is an _identity function_ of type `NodeSeq => NodeSeq`. It returns the input it
-is given:
+is given(((identity functions))):
 
 [source, scala]
 -----
