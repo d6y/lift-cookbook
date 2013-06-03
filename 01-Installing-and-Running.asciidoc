@@ -73,7 +73,7 @@ Discussion
 ^^^^^^^^^^
 
 Lift isn't installed in the usual sense of "installing software."
-Instead, you use standard build tools, such as SBT or Maven, to assemble your application with the Lift framework. In this recipe, we downloaded a ZIP file containing four fairly minimal Lift applications, and then started one of them via the build tool.
+Instead, you use standard build tools, such as SBT or Maven, to assemble your application with the Lift framework. In this recipe, we downloaded a ZIP file containing four fairly minimal Lift applications, and then started one of them via the build tool.((("Lift Web Framework", "vs. conventional software")))
 
 Simple Build Tool
 +++++++++++++++++
