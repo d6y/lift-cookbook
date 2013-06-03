@@ -2,7 +2,7 @@
 HTML
 ----
 
-Generating HTML is often a major component of web applications.  This chapter is concerned with Lift's _View First_ approach and use of _CSS Selectors_.  Later chapters focus more specifically on form processing, REST web services, JavaScript, Ajax, and Comet.
+Generating HTML is often a major component of web applications.  This chapter is concerned with Lift's _View First_ approach and use of _CSS Selectors_.  Later chapters focus more specifically on form processing, REST web services, JavaScript, Ajax, and Comet.((("Lift Web Framework", "view first approach of")))((("view first approach", "CSS Selectors and")))
 
 Code for this chapter is at https://github.com/LiftCookbook/cookbook_html[https://github.com/LiftCookbook/cookbook_html].
 
