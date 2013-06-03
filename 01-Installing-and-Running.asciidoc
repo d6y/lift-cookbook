@@ -775,7 +775,7 @@ break compatibility.  For example, Scala 2.9.1 is compatible with Scala 2.9.0, b
 See Also
 ^^^^^^^^
 
-Binary compatibility in Scala is discussed on the http://article.gmane.org/gmane.comp.lang.scala.user/39290[Scala user mailing list].
+Binary compatibility in Scala is discussed on the http://article.gmane.org/gmane.comp.lang.scala.user/39290[Scala user mailing list].(((binary compatibility)))
 
 http://www.scala-sbt.org/release/docs/Getting-Started/Library-Dependencies[The SBT behaviour]
 
