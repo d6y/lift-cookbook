@@ -1185,7 +1185,7 @@ Problem
 ^^^^^^^
 
 You want to add the `disabled` attribute to a `SHtml.checkbox` based on
-a conditional check.(((forms processing, conditional disablement)))(((checkboxes, conditional disablement of)))(((conditional checks)))
+a conditional check.(((forms processing, conditional disablement)))(((checkboxes, conditional disablement of)))(((conditional checks)))((("Lift Web Framework", "CSS selector transforms")))((("CSS selectors", "and disabled attribute")))
 
 Solution
 ^^^^^^^^
