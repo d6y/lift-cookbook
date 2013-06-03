@@ -239,7 +239,7 @@ See Also
 
 The syntax for selectors is best described in http://simply.liftweb.net/[_Simply Lift_].
 
-See <<TestingAndDebuggingSelectors>> for how to run selectors from the REPL.
+See <<TestingAndDebuggingSelectors>> for how to run selectors from the REPL.((("CSS selectors", "syntax for")))
 
 
 [[SetPageTitle]]
