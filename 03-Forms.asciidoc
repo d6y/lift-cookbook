@@ -369,7 +369,7 @@ object JsonForm {
 }
 ---------------------------------------------------------
 
-Like many snippets, this Scala code contains a `render` method that binds to elements on the page. Specifically, `jsonForm` is being replaced with `SHtml.jsonForm`, which will take a `NodeSeq` (which are the input fields) turns it into a form that will submit the values as JSON. The submission will be to our `MottoServer` code.
+Like many snippets, this Scala code contains a `render` method that binds to elements on the page. Specifically, `jsonForm` is being replaced with `SHtml.jsonForm`, which will take a `NodeSeq` (which are the input fields) turns it into a form that will submit the values as JSON. The submission will be to our `MottoServer` code.(((SHtml.jsonForm method)))
 
 The `jsonScript` element is bound to JavaScript that will perform the transmission and encoding of the values to the server.
 
@@ -393,7 +393,7 @@ The result of the pattern match in the example is to pick out the two field valu
 Discussion
 ^^^^^^^^^^
 
-The `JsonHandler` class and the `SHtml.jsonForm` method are together performing a lot of work for us.  The `jsonForm` method is arranging for form fields to be encoded as JSON and sent, via Ajax, to our `MottoServer` as a `JsonCmd`. In fact, it's a `JsonCmd` with a default command name of `"processForm"`.
+The `JsonHandler` class and the `SHtml.jsonForm` method are together performing a lot of work for us.  The `jsonForm` method is arranging for form fields to be encoded as JSON and sent, via Ajax, to our `MottoServer` as a `JsonCmd`. In fact, it's a `JsonCmd` with a default command name of `"processForm"`.(((SHtml.jsonForm method)))
 
 Our `MottoServer` class is looking for (matching on) this `JsonCmd`, extracting the values of the form fields, and echoing these back to the client as a `JsCmd` that updates a `<div>` on the page.
 
