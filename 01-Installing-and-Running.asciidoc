@@ -475,7 +475,7 @@ Problem
 ^^^^^^^
 
 You want to develop your Lift application using the Eclipse IDE, hitting
-reload in your browser to see changes.
+reload in your browser to see changes.(((Lift applications, Eclipse IDE development)))
 
 Solution
 ^^^^^^^^
