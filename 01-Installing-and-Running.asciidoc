@@ -516,7 +516,7 @@ Discussion
 One of the great benefits of an IDE is the ability to navigate source, by Cmd+click (Mac) or F3 (PC).
 You can ask the SBT `eclipse` command to download the Lift
 source and Scaladoc, allowing you to click through to the Lift source from
-methods and classes, which is a useful way to discover more about Lift.
+methods and classes, which is a useful way to discover more about Lift.((("Cmd+click shortcut")))((("F3 shortcut")))
 
 To achieve this in a project, run `eclipse with-source=true` in SBT, but if you want
 this to be the default behaviour, add the following to your _build.sbt_ file:
