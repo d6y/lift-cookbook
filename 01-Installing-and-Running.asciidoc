@@ -377,12 +377,12 @@ Incorporating JRebel
 Problem
 ^^^^^^^
 
-You want to avoid application restarts when you change a Scala source file by using JRebel.((("JRebel", "reducing restarts with")))
+You want to avoid application restarts when you change a Scala source file by using JRebel.((("JRebel", "reducing restarts with")))((("browsers, reloading")))
 
 Solutions
 ^^^^^^^^^
 
-There are three steps required: install JRebel once; each year request the free Scala license; and configure SBT to use JRebel.
+There are three steps required: install JRebel once; each year request the free Scala license; and configure SBT to use JRebel.((("Simple Build Tool (SBT)", "using JRebel with")))
 
 First, visit https://my.jrebel.com/plans[https://my.jrebel.com/plans] and request the free Scala license.
 
