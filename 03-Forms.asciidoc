@@ -661,7 +661,7 @@ Making Suggestions with Autocomplete
 Problem
 ^^^^^^^
 
-You want to provide an autocomplete widget, to give users suggestions as they type into a text field.
+You want to provide an autocomplete widget, to give users suggestions as they type into a text field.((("forms processing", "autocomplete suggestions", id="ix_FPauto", range="startofrange")))
 
 Solution
 ^^^^^^^^
