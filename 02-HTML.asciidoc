@@ -332,7 +332,7 @@ Solution
 ^^^^^^^^
 
 Put the markup in a snippet and include the snippet in your page or
-template.
+template.(((snippets)))
 
 For example, suppose we want to include the HTML5 Shiv (a.k.a. HTML5 Shim) JavaScript so we can use HTML5
 elements with legacy IE browsers.  To do that, our snippet would be:
