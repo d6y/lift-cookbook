@@ -1283,7 +1283,7 @@ Running this from SBT with the `test` command would produce:
 Discussion
 ^^^^^^^^^^
 
-Although `MockWeb.testReq` is handling the creation of a `Req` for us, the environment for that `Req` is supplied by the `MockHttpServletRequest`. To configure a request, create an instance of the mock and mutate the state of it as required before using it with `testReq`.
+Although `MockWeb.testReq` is handling the creation of a `Req` for us, the environment for that `Req` is supplied by the `MockHttpServletRequest`. To configure a request, create an instance of the mock and mutate the state of it as required before using it with `testReq`.(((requests, configuring)))
 
 Aside from HTTP headers, you can set cookies, content type, query parameters, the HTTP method, authentication type, and the body.  There are variations on the `body` assignment, which conveniently set the content type depending on the value you assign:
 
