@@ -326,7 +326,7 @@ HTML Conditional Comments
 Problem
 ^^^^^^^
 
-You want to make use of Internet Explorer HTML conditional comments(((HTML conditional comments)))((("Internet Explorer, conditional comments"))) in your pass:[<phrase role='keep-together'>templates.</phrase>]
+You want to make use of Internet Explorer HTML conditional comments(((HTML conditional comments)))((("Internet Explorer, conditional comments")))((("templates, using IE HTML conditional comments in"))) in your pass:[<phrase role='keep-together'>templates.</phrase>]
 
 Solution
 ^^^^^^^^
