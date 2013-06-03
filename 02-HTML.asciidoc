@@ -19,7 +19,7 @@ You want to explore or debug CSS selectors interactively.((("CSS selectors", "te
 Solution
 ^^^^^^^^
 
-You can use the Scala REPL to run your CSS selectors.
+You can use the Scala REPL to run your CSS selectors.(((Scala, REPL CSS selector testing)))
 
 Here's an example were we test out a CSS selector that adds an _href_ attribute to a link.
 Start from within SBT and use the `console` command to get into the REPL:
