@@ -17,12 +17,12 @@ Debugging a Request
 Problem
 ^^^^^^^
 
-You want to debug a request and see what's arriving to your Lift application.(((request pipeline, debugging requests)))(((debugging requests)))
+You want to debug a request and see what's arriving to your Lift application.(((request pipeline, debugging requests)))(((debugging requests)))(((requests, debugging)))
 
 Solution
 ^^^^^^^^
 
-Add an `onBeginServicing` function in _Boot.scala_ to log the request.
+Add an `onBeginServicing` function in _Boot.scala_ to log the request.(((onBeginServicing function)))
 For example:
 
 [source,scala]
