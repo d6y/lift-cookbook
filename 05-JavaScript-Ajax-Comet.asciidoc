@@ -532,7 +532,7 @@ Problem
 ^^^^^^^
 
 When a page loads, you want the browser to select a particular field for
-input from the keyboard.
+input from the keyboard.(((JavaScript, field focus with)))
 
 Solution
 ^^^^^^^^
