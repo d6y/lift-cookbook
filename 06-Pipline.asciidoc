@@ -187,7 +187,7 @@ shutting down.(((Lift applications, code execution at shutdown of)))((("shutdown
 Solution
 ^^^^^^^^
 
-Append to `LiftRules.unloadHooks`:
+Append to `LiftRules.unloadHooks`:((("LiftRules.unloadHooks")))
 
 [source,scala]
 --------------------------------------------------------------
