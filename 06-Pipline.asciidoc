@@ -299,7 +299,7 @@ Problem
 ^^^^^^^
 
 You want a wrapper around all requests to catch exceptions and display
-something to the user.
+something to the user.(((request pipeline, catching exceptions)))
 
 Solution
 ^^^^^^^^
