@@ -905,7 +905,7 @@ For Amazon Elastic Load Balancer note that you need to use
 _Overview of Elastic Load Balancing_ document, "Your server access logs
 contain only the protocol used between the server and the load balancer;
 they contain no information about the protocol used between the client
-and the load balancer."
+and the load balancer."(((Amazon Elastic Load Balancer)))(((load balancers)))
 
 In this situation modify the above test from
 `req.request.scheme != "https"` to:
