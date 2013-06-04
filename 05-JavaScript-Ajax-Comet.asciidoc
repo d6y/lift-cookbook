@@ -553,7 +553,7 @@ class Focus {
 
 The CSS transform in `render` will match against `name="username"` element in the HTML and
 replace it with a text input field that will be focused on automatically
-when the page loads.
+when the page loads.((("Lift Web Framework", "CSS selector transforms")))
 
 Although we're focusing on in-line HTML, this could be any `NodeSeq`, such as the one produced by `SHtml.text`.
 
@@ -587,7 +587,7 @@ Add CSS Class to an Ajax Form
 Problem
 ^^^^^^^
 
-You want to set the CSS class of an Ajax form.
+You want to set the CSS class of an Ajax form.((("Ajax", "setting CSS class")))
 
 Solution
 ^^^^^^^^
