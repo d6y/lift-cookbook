@@ -1469,7 +1469,7 @@ def render = {
 Enumerations
 ++++++++++++
 
-You can use `multiSelectObj` with enumerations:
+You can use `multiSelectObj` with enumerations(((enumerations))):
 
 [source,scala]
 ---------------------------------------------------------
