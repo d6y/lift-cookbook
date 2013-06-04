@@ -587,7 +587,7 @@ Add CSS Class to an Ajax Form
 Problem
 ^^^^^^^
 
-You want to set the CSS class of an Ajax form.((("Ajax", "setting CSS class")))((("CSS classes, setting on Ajax forms")))
+You want to set the CSS class of an Ajax form.((("Ajax", "setting CSS class")))((("CSS classes, setting on Ajax forms")))(((query parameters)))
 
 Solution
 ^^^^^^^^
