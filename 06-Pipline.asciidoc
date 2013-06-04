@@ -597,7 +597,7 @@ want to explain why.(((request pipeline, access controlled files)))(((files, acc
 Solution
 ^^^^^^^^
 
-Use `RestHelper` to serve the file or an explanation page.
+Use `RestHelper` to serve the file or an explanation page.(((RestHelper)))(((error messages, file access)))
 
 For example,
 suppose we have the file _/tmp/important_ and we only want selected
