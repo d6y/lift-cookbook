@@ -797,7 +797,7 @@ Accessing HttpServletRequest
 Problem
 ^^^^^^^
 
-You have an API to call that requires access to the `HttpServletRequest`.
+You have an API to call that requires access to the `HttpServletRequest`.(((request pipeline, HttpServletRequest access)))
 
 Solution
 ^^^^^^^^
