@@ -263,7 +263,7 @@ For another example of `AjaxInvoke` take a look at the http://blog.fmpwizard.com
 
 http://exploring.liftweb.net/master/index-10.html[_Exploring Lift_, chapter 10], lists various `JsExp` classes you can use for `ajaxCall`.
 
-<<JsonForms>> using `JsonHandler` to send JSON data from a form to the server.(((range="endofrange", startref="ix_AJssc")))
+<<JsonForms>> using `JsonHandler` to send JSON data from a form to the server.(((range="endofrange", startref="ix_AJssc")))(((range="endofrange", startref="ix_AIssc")))
 
 
 [[SelectOptionChange]]
