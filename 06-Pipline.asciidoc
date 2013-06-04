@@ -592,7 +592,7 @@ Problem
 
 You have a file on disk, you want to allow a user to download it, but
 only if they are allowed to. If they are not allowed to, you
-want to explain why.(((request pipeline, access controlled files)))(((files, access controlled)))(((controlled access)))(((access control)))
+want to explain why.(((request pipeline, access controlled files)))(((files, access control to)))(((controlled access)))(((access control)))
 
 Solution
 ^^^^^^^^
