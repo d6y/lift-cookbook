@@ -688,7 +688,7 @@ part of the pattern for _/download/_, unknown resources will not be
 passed through to our `File` access code. Again, Lift will return a 404
 for these.
 
-Guard expressions can also be useful for these kinds of situations:
+Guard expressions can also be useful for these kinds of situations(((guard conditions))):
 
 [source,scala]
 ----------------------------------------------------------------------------
@@ -717,7 +717,7 @@ Problem
 ^^^^^^^
 
 You need to control access to a page based on the value of an HTTP
-header.
+header.(((request pipeline, HTTP header access control)))(((HTTP header access control)))
 
 Solution
 ^^^^^^^^
