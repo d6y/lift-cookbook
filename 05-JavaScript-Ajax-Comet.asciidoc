@@ -1037,7 +1037,7 @@ Format A Wired Cell
 Problem
 ^^^^^^^
 
-You want a wired UI element to have a different format than plain conversion to a string. For example, you'd like to display a floating-point value as a currency.((("wired cells, formatting")))((("UI elements, wired")))(((floating-point value)))(((currency)))
+You want a wired UI element to have a different format than plain conversion to a string. For example, you'd like to display a floating-point value as a currency.((("wired cells, formatting")))((("UI elements, wired")))(((floating-point values)))(((currency)))(((WiringUI.toNode method)))
 
 Solution
 ^^^^^^^^
