@@ -764,7 +764,7 @@ The second argument to the `If()` is what Lift does if the test isn't true when 
 a `() => LiftResponse` function.  This means you can return whatever you
 like, including redirects to other pages.  In the example we are making use of a convenient implicit conversation
 from a `String` ("Access not allowed") to a notice with a redirection that will take
-the user to the home page.(((error messages, access not allowed)))
+the user to the home page.(((error messages, access not allowed)))(((access not allowed error message)))
 
 If you visit the page without a header, you'll
 see a notice saying "Access not allowed." This will be the home page of the site, but
