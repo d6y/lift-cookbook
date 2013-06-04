@@ -97,7 +97,7 @@ Problem
 ^^^^^^^
 
 Your `RestHelper` expects a filename as part of the URL, but the suffix
-(extension) is missing, and you need it.(((REST web services, recovering filename suffixes)))
+(extension) is missing, and you need it.(((REST web services, recovering filename suffixes)))((("names/naming", "recovering filename suffixes")))
 
 Solution
 ^^^^^^^^
