@@ -705,7 +705,7 @@ Calling REST Service from a Native iOS Application
 Problem
 ^^^^^^^
 
-You want to make an HTTP POST from a native iOS device to a Lift REST service.((("REST web services", "native iOS applications and")))(((HTTP POSTs)))(((iOS applications)))
+You want to make an HTTP POST from a native iOS device to a Lift REST service.((("REST web services", "native iOS applications and")))(((HTTP POSTs)))(((iOS applications, HTTP POSTs from)))
 
 
 Solution
