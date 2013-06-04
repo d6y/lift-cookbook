@@ -549,7 +549,7 @@ StreamingResponse
 +++++++++++++++++
 
 `StreamingResponse` pulls bytes into the output stream. This contrasts
-with `OutputStreamResponse`, where you are pushing data to the client.
+with `OutputStreamResponse`, where you are pushing data to the client.(((StreamingResponse)))
 
 Construct this type of response by providing a class with a `read` method that can be read
 from:
