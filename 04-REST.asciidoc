@@ -472,7 +472,7 @@ You want to return JSON from a REST call.((("REST web services", "returning JSON
 Solution
 ^^^^^^^^
 
-Use the Lift JSON domain-specific language (DSL). For example:
+Use the Lift JSON domain-specific language (DSL).((("Lift JSON domain-specific language (DSL)"))) For example:
 
 [source,scala]
 ----
