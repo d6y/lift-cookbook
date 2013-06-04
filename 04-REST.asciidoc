@@ -524,7 +524,7 @@ The _type ascription_ at the end of the JSON expression (`: JValue`)
 tells the compiler that the expression is expected to be of type
 `JValue`. This is required to allow the DSL to apply. It would not be
 required if, for example, you were calling a function that was defined
-to return a `JValue`.
+to return a `JValue`.(((type ascription)))
 
 The JSON DSL allows you to created nested structures, lists, and
 everything else you expect of JSON.
