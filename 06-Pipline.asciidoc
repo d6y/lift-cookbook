@@ -299,7 +299,7 @@ Problem
 ^^^^^^^
 
 You want a wrapper around all requests to catch exceptions and display
-something to the user.(((request pipeline, catching exceptions)))((("exceptions, catching")))(((exceptions handlers)))(((Boot.scala)))
+something to the user.(((request pipeline, catching exceptions)))((("exceptions, catching")))(((exception handlers)))(((Boot.scala)))
 
 Solution
 ^^^^^^^^
@@ -317,7 +317,7 @@ LiftRules.exceptionHandler.prepend {
 
 In the above example, all exceptions for all requests at all run modes
 are being matched, causing an error to be logged and a 500 (internal
-server error) to be returned to the browser.
+server error) to be returned to the browser.((("error messages", "500 (internal server)")))
 
 Discussion
 ^^^^^^^^^^
