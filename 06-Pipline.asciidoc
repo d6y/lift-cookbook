@@ -238,7 +238,7 @@ LiftRules.statelessReqTest.append { case _ => true }
 All requests will now be treated as stateless. Any attempt to use state,
 such as via `SessionVar` for example, will trigger a warning in
 developer mode: "Access to Lift's statefull features from Stateless mode.
-The operation on state will not complete."
+The operation on state will not complete."(((Lift Web Framework, stateful features of)))
 
 Discussion
 ^^^^^^^^^^
