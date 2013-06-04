@@ -112,7 +112,7 @@ Running Code when Sessions Are Created (or Destroyed)
 Problem
 ^^^^^^^
 
-You want to carry out actions when a session is created or destroyed.(((session hooks)))((("browsers", "running code on sessions creation/destruction")))
+You want to carry out actions when a session is created or destroyed.(((session hooks)))((("browsers", "running code on sessions creation/destruction")))(((hooks)))
 
 Solution
 ^^^^^^^^
