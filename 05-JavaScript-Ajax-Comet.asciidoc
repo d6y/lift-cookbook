@@ -17,7 +17,8 @@ Problem
 ^^^^^^^
 
 You want to trigger some server-side code when the user presses a
-button.
+button.((("Ajax", "server-side code triggering", id="ix_AJssc", range="startofrange")))
+
 
 Solution
 ^^^^^^^^
