@@ -1595,7 +1595,7 @@ Discussion
 ^^^^^^^^^^
 
 HTTP includes an encoding type of `"multipart/form-data"` that was introduced to support binary data uploads.  The `?form=post;multipart=true` parameters in the template mark the form with this encoding, and the HTML generated will look
-like this:
+like this(((binary data uploads))):
 
 [source,html]
 ---------------------------------------------------------
