@@ -631,7 +631,7 @@ Solution
 ^^^^^^^^
 
 Use `Template` to load the template, and `SetHtml` to place the content
-on the page.
+on the page.(((SetHtml)))
 
 Let's populate a `<div>` with the site home page when a button is pressed:
 
