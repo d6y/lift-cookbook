@@ -3,7 +3,7 @@ Request Pipeline
 ----------------
 
 When a request reaches Lift there are a number of points where you can jump in and control what Lift does,  sending back a different kind of response or controlling access.  This chapter looks at the pipeline through examples of different kinds of 
-++LiftResponse++s and configurations.
+++LiftResponse++s and configurations.(((request pipeline, controlling)))
 
 You can get a great overview of the pipeline, including diagrams, from the http://www.assembla.com/spaces/liftweb/wiki/HTTP_Pipeline[Lift pipeline wiki page].
 
