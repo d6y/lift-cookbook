@@ -182,7 +182,7 @@ Problem
 ^^^^^^^
 
 You want to have some code executed when your Lift application is
-shutting down.
+shutting down.(((Lift applications, run code at shutdown of)))
 
 Solution
 ^^^^^^^^
