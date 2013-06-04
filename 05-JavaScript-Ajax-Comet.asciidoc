@@ -1113,7 +1113,7 @@ The primary `WiringUI` class makes it easy to bind a cell as text. The `asText` 
 to generate a transform function that is both hooked into the wiring UI and
 uses our code for the translation of the item.
 
-The mechanism is type-safe. In this example, `cost` is a `Double` cell, `quantity` is an `Int` cell, and `subtotal` is inferred as a `Cell[Double]`.  This is why our formatting function is passed `value` as a `Double`.
+The mechanism is type-safe. In this example, `cost` is a `Double` cell, `quantity` is an `Int` cell, and `subtotal` is inferred as a `Cell[Double]`.  This is why our formatting function is passed `value` as a `Double`.(((type-safe options)))
 
 Note that the function passed to `toNode` must return a node sequence. This gives a great deal of flexibility as you can return any kind of markup in a `NodeSeq`. Our example complies with this signature by wrapping a text value in a `Text` object.
 
