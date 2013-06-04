@@ -182,7 +182,7 @@ Problem
 ^^^^^^^
 
 You want to have some code executed when your Lift application is
-shutting down.(((Lift applications, code execution at shutdown of)))((("shutdown, code execution at")))(((hooks)))(((unload hooks)))
+shutting down.(((Lift applications, code execution at shutdown of)))((("shutdown, code execution at")))(((hooks)))(((unload hooks)))(((request pipeline, code execution at shutdown)))
 
 Solution
 ^^^^^^^^
