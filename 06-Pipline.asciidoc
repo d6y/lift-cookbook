@@ -366,7 +366,7 @@ file with the message you want to show to users:
 
 You can also control what to send to clients when processing Ajax requests.  In the
 following example, we're matching just on Ajax POST requests, and returning
-custom JavaScript to the browser:
+custom JavaScript to the browser(((JavaScript, custom messages))):
 
 [source,scala]
 -----------------------------------------------------
