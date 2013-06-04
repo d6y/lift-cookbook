@@ -855,7 +855,7 @@ Force HTTPS Requests
 Problem
 ^^^^^^^
 
-You want to ensure clients are using HTTPS.
+You want to ensure clients are using HTTPS.(((request pipeline, forcing HTTPS use)))((("HTTPS use, forcing")))(((earlyResponse function)))
 
 Solution
 ^^^^^^^^
