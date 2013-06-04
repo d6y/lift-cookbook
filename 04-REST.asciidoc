@@ -571,7 +571,7 @@ Google Sitemap
 Problem
 ^^^^^^^
 
-You want to make a Google Sitemap using Lift's rendering capabilities.((("REST web services", "Google Sitemaps")))(((Google Sitmaps)))
+You want to make a Google Sitemap using Lift's rendering capabilities.((("REST web services", "Google Sitemaps")))(((Google Sitmaps)))((("templates", "using Google Sitemaps with")))
 
 Solution
 ^^^^^^^^
