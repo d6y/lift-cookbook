@@ -15,7 +15,7 @@ Problem
 ^^^^^^^
 
 You find yourself repeating parts of URL paths in your `RestHelper`, and
-you Don't want to Repeat Yourself.(((REST web services, avoiding URL repeats)))((("URLs, avoiding repeats")))
+you Don't want to Repeat Yourself.(((REST web services, avoiding URL repeats)))((("URLs, avoiding repeats")))(((DRY URLs)))
 
 Solution
 ^^^^^^^^
