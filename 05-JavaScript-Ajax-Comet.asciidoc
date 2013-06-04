@@ -625,7 +625,7 @@ Running a Template via JavaScript
 Problem
 ^^^^^^^
 
-You want to load an entire page--a template with snippets--inside of the current page (i.e., without a browser refresh).((("templates", "loading without browser refresh")))((("browsers", "loading pages without refresh")))
+You want to load an entire page--a template with snippets--inside of the current page (i.e., without a browser refresh).((("templates", "loading without browser refresh")))((("browsers", "loading pages without refresh")))(((JavaScript, running a template with)))
 
 Solution
 ^^^^^^^^
