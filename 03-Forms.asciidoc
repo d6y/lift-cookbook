@@ -1283,7 +1283,7 @@ Problem
 ^^^^^^^
 
 You want to show the user a number of options in a select box, and allow
-them to select multiple values.((("forms processing", "mulitple options", id="ix_FPmulval", range="startofrange")))(((multiple options)))(((checkboxes, multiple options)))(((select boxes)))
+them to select multiple values.((("forms processing", "mulitple selections", id="ix_FPmulval", range="startofrange")))(((multiple selections)))(((select boxes)))
 
 Solution
 ^^^^^^^^
@@ -1438,7 +1438,7 @@ Type-safe options
 If you don't want to work in terms of `String` values for an option, you
 can use `multiSelectObj`. In this variation the list of options still
 provides a text name, but the value is in terms of a class. Likewise,
-the list of default values will be a list of class instances.
+the list of default values will be a list of class instances.(((type-safe options)))
 
 The only changes to the code are to produce a `List[(Item,String)]` for the options, and use an `Item` as a default:
 
