@@ -844,7 +844,7 @@ jQuery(document).ready(function() {
 </script>
 -----
 
-Our `stash` function will save the current value of the input field in a cookie called `stashed`.  We arrange, on page load, to check for that cookie and insert the value into our message field.
+Our `stash` function will save the current value of the input field in a cookie called `stashed`.  We arrange, on page load, to check for that cookie and insert the value into our message field.(((cookies)))(((stash function)))
 
 The final part is to modify _Boot.scala_ to register our `stash` function:
 
