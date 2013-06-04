@@ -478,7 +478,7 @@ def render = "button [onclick]" #>
   (Alert("Here we go...") & RedirectTo("http://liftweb.net"))
 ----
 
-which pops up an alert dialog(((alert dialog box))) and then sends you to _http://liftweb.net_. The HTML would be rendered as:
+which pops up an alert dialog(((alert dialog box)))(((dialog boxes))) and then sends you to _http://liftweb.net_. The HTML would be rendered as:
 
 [source,html]
 ----
