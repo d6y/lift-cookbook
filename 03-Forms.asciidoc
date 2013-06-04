@@ -1527,7 +1527,7 @@ File Upload
 Problem
 ^^^^^^^
 
-You want a snippet to allow users to upload a file to your Lift application.((("files, uploading")))((("forms processing", "file upload")))
+You want a snippet to allow users to upload a file to your Lift application.((("files", "uploading")))((("forms processing", "file upload")))
 
 Solution
 ^^^^^^^^
