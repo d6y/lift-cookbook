@@ -421,7 +421,7 @@ Streaming Content
 Problem
 ^^^^^^^
 
-You want to stream content back to the web client.
+You want to stream content back to the web client.(((request pipeline, streaming content)))(((streaming content)))(((OutputSteamResponse)))
 
 Solution
 ^^^^^^^^
