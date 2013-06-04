@@ -222,7 +222,7 @@ Running Stateless
 Problem
 ^^^^^^^
 
-You want to force your application to be stateless at the HTTP level.
+You want to force your application to be stateless at the HTTP level.(((Lift applications, forced to be stateless)))
 
 Solution
 ^^^^^^^^
