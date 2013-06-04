@@ -279,7 +279,7 @@ When an HTML select option is selected, you want to trigger a function on the se
 Solution
 ^^^^^^^^
 
-Register a `String => JsCmd` function with `SHtml.ajaxSelect`.(((SHtml.ajaxSelect)))(((ajaxSelect)))((("Ajax", "server-side code triggering")))(((JavaScript, server-side code triggering with)))((("String JsCmd function")))
+Register a `String => JsCmd` function with `SHtml.ajaxSelect`.(((SHtml.ajaxSelect)))(((ajaxSelect)))((("Ajax", "server-side code triggering")))(((JavaScript, server-side function triggering with)))((("String JsCmd function")))
 
 In this example, we will look up the distance from Earth to the planet a user selects.  This lookup will
 happen on the server and update the browser with the result. The interface is:
@@ -375,7 +375,7 @@ The `handler` function has been stored by Lift under the identifier of `F4701839
 Collecting the value on form submission
 +++++++++++++++++++++++++++++++++++++++
 
-If you need to additionally capture the selected value on a regular form submission, you can make use of `SHtml.onEvents`.  This attaches event listeners to a `NodeSeq`, triggering a server-side function when the event occurs.  We can use this with a regular form with a regular select box, but wire in Ajax calls to the server when the select changes.
+If you need to additionally capture the selected value on a regular form submission, you can make use of `SHtml.onEvents`.  This attaches event listeners to a `NodeSeq`, triggering a server-side function when the event occurs.  We can use this with a regular form with a regular select box, but wire in Ajax calls to the server when the select changes.((("forms processing", "collecting values from")))
 
 To make use of this, our snippet changes very little:
 
