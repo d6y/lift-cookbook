@@ -890,7 +890,7 @@ Ajax File Upload
 Problem
 ^^^^^^^
 
-You want to offer your users an Ajax file upload tool, with progress bars and drag-and-drop support.((("Ajax", "file upload tool")))((("files", "uploading")))(((progress bars)))(((drag-and-drop support)))((("Tschan, Sebastian")))(((jQuery File Upload widget)))
+You want to offer your users an Ajax file upload tool, with progress bars and drag-and-drop support.((("Ajax", "file upload tool")))((("files", "uploading")))(((progress bars)))(((drag-and-drop support)))((("Tschan, Sebastian")))(((jQuery File Upload widget)))((("REST web services", "file uploads")))
 
 Solution
 ^^^^^^^^
@@ -1037,7 +1037,7 @@ Format A Wired Cell
 Problem
 ^^^^^^^
 
-You want a wired UI element to have a different format than plain conversion to a string. For example, you'd like to display a floating-point value as a currency.
+You want a wired UI element to have a different format than plain conversion to a string. For example, you'd like to display a floating-point value as a currency.((("wired cells, formatting")))
 
 Solution
 ^^^^^^^^
