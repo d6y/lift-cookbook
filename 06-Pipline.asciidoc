@@ -511,7 +511,7 @@ InMemoryResponse
 ++++++++++++++++
 
 `InMemoryResponse` is useful if you have already assembled the full
-content to send to the client. The signature is straightforward:
+content to send to the client. The signature is straightforward(((InMemoryResponse))):
 
 [source,scala]
 -----------------------------------
