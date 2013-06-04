@@ -426,7 +426,7 @@ Problem
 ^^^^^^^
 
 In your Lift code you want to set up an action that is run purely in
-client-side JavaScript.(((JavaScript, client-side function triggering with)))((("functions, server-side code and")))(((Scala, client-side actions and)))
+client-side JavaScript.(((JavaScript, client-side function triggering with)))((("functions, server-side code and")))(((Scala, client-side actions and)))((("submit buttons", seealso="radio buttons")))
 
 Solution
 ^^^^^^^^
