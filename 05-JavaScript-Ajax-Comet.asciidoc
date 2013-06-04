@@ -17,7 +17,7 @@ Problem
 ^^^^^^^
 
 You want to trigger some server-side code when the user presses a
-button.((("Ajax", "server-side code triggering", id="ix_AJssc", range="startofrange")))((("ajaxInvoke", "server-side code triggering with", id="ix_AIssc", range="startofrange")))(((radio buttons)))
+button.((("Ajax", "server-side code triggering", id="ix_AJssc", range="startofrange")))((("ajaxInvoke", "server-side code triggering with", id="ix_AIssc", range="startofrange")))(((radio buttons)))(((server-side code)))
 
 
 Solution
