@@ -890,7 +890,7 @@ Ajax File Upload
 Problem
 ^^^^^^^
 
-You want to offer your users an Ajax file upload tool, with progress bars and drag-and-drop support.
+You want to offer your users an Ajax file upload tool, with progress bars and drag-and-drop support.((("Ajax", "file upload tool")))
 
 Solution
 ^^^^^^^^
