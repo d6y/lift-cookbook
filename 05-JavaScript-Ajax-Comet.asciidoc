@@ -671,7 +671,7 @@ Discussion
 
 `Templates` produces a `Box[NodeSeq]`.  In the example above, we map this content into a `JsCmd` that will populate the `inject` `<div>`.
 
-If you write unit tests to access templates, be aware that you may need to modify your development or testing environment to include the _webapps_ folder.  To do this for SBT, add the following to _build.sbt_:
+If you write unit tests to access templates, be aware that you may need to modify your development or testing environment to include the _webapps_ folder.  To do this for SBT, add the following to _build.sbt_:((("build.sbt, contents")))
 
 [source,scala]
 ----
