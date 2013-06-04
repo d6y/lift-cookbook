@@ -1517,7 +1517,7 @@ The "Submit styling" discussion section in <<AjaxFormProcessing>> discusses the 
 
 http://exploring.liftweb.net/[Chapter 6 of _Exploring Lift_], "Forms in Lift," discusses multiselect and other types of form elements.
 
-The issue relating to no options being selected is on https://github.com/lift/framework/issues/1139[GitHub].
+The issue relating to no options being selected is on https://github.com/lift/framework/issues/1139[GitHub].(((range="endofrange", startref="ix_FPmulval")))
 
 
 [[FileUpload]]
