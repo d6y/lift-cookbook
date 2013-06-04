@@ -799,7 +799,7 @@ Run JavaScript on Comet Session Loss
 Problem
 ^^^^^^^
 
-You're using a Comet actor and you want to arrange for some JavaScript to be executed in the event of the session being lost.(((Comet, executing JavaScript with)))(((JavaScript, executing with Comet actor)))((("browsers", "handling session loss")))(((LiftRules.noCometSessionCmd)))(((session loss)))
+You're using a Comet actor and you want to arrange for some JavaScript to be executed in the event of the session being lost.(((Comet, executing JavaScript with)))(((JavaScript, executing with Comet actor)))((("browsers", "handling session loss")))(((LiftRules.noCometSessionCmd)))(((session loss)))(((chat sessions)))
 
 Solution
 ^^^^^^^^
@@ -864,7 +864,7 @@ Discussion
 
 Without changing `noCometSessionCmd`, the default behaviour of Lift is to arrange for the browser to load the home page, which is controlled by the `LiftRules.noCometSessionPage` setting. This is carried out via the JavaScript function `lift_sessionLost` in the file _cometAjax.js_.
 
-By providing our own `() => JsCmd` function to `LiftRules.noCometSessionCmd`, Lift arranges to call this function and deliver the `JsCmd`  to the browser, rather than `lift_sessionLost`.  If you watch the HTTP traffic between your browser and Lift, you'll see the `stash` function call being returned in response to a Comet request.
+By providing our own `() => JsCmd` function to `LiftRules.noCometSessionCmd`, Lift arranges to call this function and deliver the `JsCmd`  to the browser, rather than `lift_sessionLost`.  If you watch the HTTP traffic between your browser and Lift, you'll see the `stash` function call being returned in response to a Comet request.(((LiftRules.noCometSessionCmd)))(((dependency injection)))
 
 .Factory
 ****
