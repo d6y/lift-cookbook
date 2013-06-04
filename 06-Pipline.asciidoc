@@ -17,7 +17,7 @@ Debugging a Request
 Problem
 ^^^^^^^
 
-You want to debug a request and see what's arriving to your Lift application.
+You want to debug a request and see what's arriving to your Lift application.(((request pipeline, debugging requests)))
 
 Solution
 ^^^^^^^^
