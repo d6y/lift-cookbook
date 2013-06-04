@@ -879,7 +879,7 @@ The `NSURLConnection` approach is more versatile and gives you a starting point 
 See Also
 ^^^^^^^^
 
-You may find the http://simply.liftweb.net/index-5.4.html["Complete REST Example" in _Simply Lift_] to be a good test ground for your calls to Lift.
+You may find the http://simply.liftweb.net/index-5.4.html["Complete REST Example" in _Simply Lift_] to be a good test ground for your calls to Lift.(((range="endofrange", startref="ix_REST")))
 
 
 
