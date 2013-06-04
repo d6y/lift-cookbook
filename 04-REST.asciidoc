@@ -226,7 +226,7 @@ https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftw
 Missing .com from Email Addresses
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When submitting an email address to a REST service, a domain ending _.com_ is stripped before your REST service can handle the request.
+When submitting an email address to a REST service, a domain ending _.com_ is stripped before your REST service can handle the request.((("REST web services", "preserving .com URL endings")))
 
 Solution
 ^^^^^^^^
