@@ -799,7 +799,7 @@ Run JavaScript on Comet Session Loss
 Problem
 ^^^^^^^
 
-You're using a Comet actor and you want to arrange for some JavaScript to be executed in the event of the session being lost.(((Comet, executing JavaScript with)))(((JavaScript, executing with Comet actor)))((("browsers", "handling session loss")))(((LiftRules.noCometSessionCmd)))
+You're using a Comet actor and you want to arrange for some JavaScript to be executed in the event of the session being lost.(((Comet, executing JavaScript with)))(((JavaScript, executing with Comet actor)))((("browsers", "handling session loss")))(((LiftRules.noCometSessionCmd)))(((session loss)))
 
 Solution
 ^^^^^^^^
