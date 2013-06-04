@@ -693,7 +693,7 @@ Move JavaScript to End of Page
 Problem
 ^^^^^^^
 
-You want the JavaScript created in your snippet to be included at the end of the HTML page.
+You want the JavaScript created in your snippet to be included at the end of the HTML page.(((JavaScript, moving to page end)))
 
 Solution
 ^^^^^^^^
