@@ -675,7 +675,7 @@ Discussion
 
 By turning the request into a `Box[LiftResponse]`, we are able to serve
 up the file, send the user to a different page, and also allow Lift to
-handle the 404 (`Empty`) cases.
+handle the 404 (`Empty`) cases.((("404 (empty) pages")))
 
 If we added a test to see if the file existed on disk in `fileResponse`
 that would cause the method to evaluate to `Empty` for missing files,
