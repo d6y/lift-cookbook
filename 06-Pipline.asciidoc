@@ -717,7 +717,7 @@ Problem
 ^^^^^^^
 
 You need to control access to a page based on the value of an HTTP
-header.(((request pipeline, HTTP header access restriction)))(((HTTP header access restriction)))
+header.(((request pipeline, HTTP header access restriction)))(((HTTP header access restriction)))(((SiteMap)))
 
 Solution
 ^^^^^^^^
