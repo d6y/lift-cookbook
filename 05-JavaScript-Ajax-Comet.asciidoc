@@ -77,7 +77,7 @@ example, this would be the empty string as the button has no value.
 `SHtml.ajaxCall`:: This is more general than `onEvent`, as you give it the expression you want passed to your server-side code.(((SHtml.ajaxCall)))(((ajaxCall)))
 `SHtml.jsonCall`::  This is even more general still: you give it a function
 that will return a JSON object when executed on the client, and this
-object will be passed to your server-side function.
+object will be passed to your server-side function.(((SHtml.jsonCall)))(((jsonCall)))
 
 Let's look at each of these in turn.
 
