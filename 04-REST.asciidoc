@@ -467,7 +467,7 @@ Returning JSON
 Problem
 ^^^^^^^
 
-You want to return JSON from a REST call.((("REST web services", "returning JSON")))
+You want to return JSON from a REST call.((("REST web services", "returning JSON")))((("JSON format", "returning from REST calls")))
 
 Solution
 ^^^^^^^^
