@@ -1202,7 +1202,7 @@ Running this with SBT's `test` command would show a success:
 Discussion
 ^^^^^^^^^^
 
-The `DBTestKit` trait has to do quite a lot of work for us.  At the lowest level, it loads the H2 driver and configures Squeryl with an in-memory connection. The `mem` part of the JDBC connection string (`jdbc:h2:mem:dbname;DB_CLOSE_DELAY=-1`) means that H2 won't try to persist the data to disk.  The database just resides in memory, so there are no files in disk to maintain, and it runs quickly.
+The `DBTestKit` trait has to do quite a lot of work for us.  At the lowest level, it loads the H2 driver and configures Squeryl with an in-memory connection. The `mem` part of the JDBC connection string (`jdbc:h2:mem:dbname;DB_CLOSE_DELAY=-1`) means that H2 won't try to persist the data to disk.  The database just resides in memory, so there are no files in disk to maintain, and it runs quickly.(((DBTestKit trait)))
 
 By default, when a connection is closed, the in-memory database is destroyed. In this recipe, we've disabled that by adding the `DB_CLOSE_DELAY=-1`, which will allow us to write unit tests that span connections if we want to.
 
