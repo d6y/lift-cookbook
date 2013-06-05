@@ -1614,7 +1614,7 @@ The flip side of this is that responses from Lift are encoded as UTF-8.  You'll 
 
 Also, the `LiftResponse` classes set the encoding as UTF-8.
 
-Another aspect is how character data from Lift is sent to the database over the network.  This is controlled by the parameters to the JDBC driver.  The default for MySQL is to detect the encoding, but it seems from experience that this is not a great option, so we force the UTF-8 encoding.
+Another aspect is how character data from Lift is sent to the database over the network.  This is controlled by the parameters to the JDBC driver.  The default for MySQL is to detect the encoding, but it seems from experience that this is not a great option, so we force the UTF-8 encoding.(((range="endofrange", startref="ix_DBsrm")))
 
 Finally, the MySQL database itself needs to store the data as UTF-8.  The default character encoding is not UTF-8, so you'll need to specify the encoding when you create the database:
 
