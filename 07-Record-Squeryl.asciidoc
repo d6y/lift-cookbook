@@ -121,7 +121,7 @@ application.(((Record-Squeryl Lift applications, JNDI data sources for)))((("Jav
 Solution
 ^^^^^^^^
 
-In _Boot.scala_ call `initWithSquerylSession` with a `DataSource` looked up from the JNDI context:
+In _Boot.scala_ call `initWithSquerylSession` with a `DataSource` looked up from the JNDI context(((initWithSquerylSession))):
 
 [source,scala]
 ------------------------------------------------------------
