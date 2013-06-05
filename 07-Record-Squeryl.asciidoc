@@ -1068,7 +1068,7 @@ Use an in-memory database, and arrange for it to be set up before your test and 
 
 There are three parts to this: including a database in your project and connecting to it in an in-memory mode; creating a reusable trait to set up the database; and then using the trait in your test.
 
-The H2 database has an in-memory mode, meaning it won't save data to disk. It needs to be included in _build.sbt_ as a dependency. Whilst you are editing _build.sbt_ also disable SBT's parallel test execution to prevent database tests from influencing each other:
+The H2 database has an in-memory mode, meaning it won't save data to disk. It needs to be included in _build.sbt_ as a dependency. Whilst you are editing _build.sbt_ also disable SBT's parallel test execution to prevent database tests from influencing each other(((H2 Database Engine))):
 
 [source, scala]
 --------------------------------------------
