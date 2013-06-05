@@ -953,7 +953,7 @@ FieldError(this.name, <p>Please see <a href="/policy">our name policy</a></p>)
 -------------------------------------------------------------------------
 
 For internationalisation, you may prefer to pass in a key to the validation function, and
-resolve(((internationalisation))) it via `S.?`:
+resolve(((internationalisation)))(((text localization))) it via `S.?`:
 
 [source,scala]
 -------------------------------------------------------------------------
