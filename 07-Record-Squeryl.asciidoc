@@ -1432,7 +1432,7 @@ If you only need created time, or updated time, just mix in the `Created[T]` or 
 
 It should be noted that `onUpdate` is only called on full updates and
 not on partial updates with Squeryl. A full update is when the object is
-altered and then saved; a partial update is where you attempt to alter objects via a query.
+altered and then saved; a partial update is where you attempt to alter objects via a query.(((created time)))(((updated time)))
 
 If you're interested in other automations for Record, the Squeryl schema
 callbacks support these triggered behaviours:
