@@ -702,7 +702,7 @@ probeVisits.rightForeignKeyDeclaration.constrainReference(onDelete cascade)
 probeVisits.leftForeignKeyDeclaration.constrainReference(onDelete cascade)
 -----------------------------------------------------------
 
-This is part of the schema, in that it will change the table constraints, with `printDdl` producing this (depending on the database you use)(((range="endofrange", startref="ix_RSLAmtmr"))):
+This is part of the schema, in that it will change the table constraints, with `printDdl` producing this (depending on the database you use)(((range="endofrange", startref="ix_RSLAmtmr")))(((range="endofrange", startref="ix_mtmr"))):
 
 [source, sql]
 -----------------------------------------------------------
