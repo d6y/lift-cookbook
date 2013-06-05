@@ -993,7 +993,7 @@ You want to modify the value of a field before storing it (for example, to clean
 Solution
 ^^^^^^^^
 
-Override `setFilter` and provide a list of functions to apply to the field.
+Override `setFilter` and provide a list of functions to apply to the field.(((setFilter)))
 
 To remove leading and trailing whitespace entered by the user, the field would use the `trim` filter:
 
