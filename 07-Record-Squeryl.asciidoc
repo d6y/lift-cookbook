@@ -84,7 +84,7 @@ This arranges for requests to be handled in the `inTransaction` scope. As Lift u
 Discussion
 ^^^^^^^^^^
 
-You can use any JVM persistence mechanism with Lift. What Lift Record provides is a light interface around persistence with bindings to Lift's CSS transforms, screens, and wizards. Squeryl-Record is a concrete implementation to connect Record with Squeryl.  This means you can use standard Record objects, which are effectively your schema, with Squeryl and write queries which are validated at compile time.
+You can use any JVM persistence mechanism with Lift. What Lift Record provides is a light interface around persistence with bindings to Lift's CSS transforms, screens, and wizards. Squeryl-Record is a concrete implementation to connect Record with Squeryl.  This means you can use standard Record objects, which are effectively your schema, with Squeryl and write queries which are validated at compile time.(((JVM persistence mechanisms)))
 
 Plugging into Squeryl means initializing Squeryl's session management, which allows us to wrap queries in Squeryl's `transaction` and `inTransaction` functions.  The difference between these two calls is that `inTransaction` will start a new transaction if one doesn't exist, whereas `transaction` always creates a new transaction.
 
