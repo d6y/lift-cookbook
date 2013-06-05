@@ -1266,7 +1266,7 @@ Store a Random Value in a Column
 Problem
 ^^^^^^^
 
-You need a column to hold a random value.((("Record-Squeryl Lift applications", "random value column storage")))
+You need a column to hold a random value.((("Record-Squeryl Lift applications", "random value column storage")))(((values, storage in a column)))
 
 Solution
 ^^^^^^^^
