@@ -1049,7 +1049,7 @@ See Also
 
 The best place to understand the filters is the trait `StringValidators` in the https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/BaseField.scala[source for `BaseField`].
 
-If you really do need to apply title case to a value, http://commons.apache.org/lang/[the Apache Commons `WordUtils` class] provides ready-made functions for this.
+If you really do need to apply title case to a value, http://commons.apache.org/lang/[the Apache Commons `WordUtils` class] provides ready-made functions for this.(((range="endofrange", startref="ix_RSLAmvbs")))
 
 
 [[SquerylUnitTest]]
