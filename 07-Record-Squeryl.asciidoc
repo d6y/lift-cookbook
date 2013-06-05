@@ -1587,7 +1587,7 @@ MySQL Character Set Encoding
 Problem
 ^^^^^^^
 
-Some characters stored in your MySQL database are appearing as `???`.(((MySQL)))((("Record-Squeryl Lift applications", "MySQLs character set encoding")))
+Some characters stored in your MySQL database are appearing as `???`.(((MySQL)))((("Record-Squeryl Lift applications", "MySQLs character set encoding")))(((UTF-8 character set)))
 
 Solution
 ^^^^^^^^
