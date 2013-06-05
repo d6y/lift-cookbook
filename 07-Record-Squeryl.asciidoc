@@ -1455,7 +1455,7 @@ Logging SQL
 Problem
 ^^^^^^^
 
-You want to see the SQL being executed by Squeryl.((("Record-Squeryl Lift applications", "SQL logging")))
+You want to see the SQL being executed by Squeryl.((("Record-Squeryl Lift applications", "SQL logging")))(((SQL logging)))
 
 Solution
 ^^^^^^^^
