@@ -1527,12 +1527,12 @@ Problem
 ^^^^^^^
 
 You want to use MySQL's `MEDIUMTEXT` for a column, but `StringField`
-doesn't have this option.(("Record-Squeryl Lift applications", "MySQLs MEDIUMTEXT")))
+doesn't have this option.((("Record-Squeryl Lift applications", "MySQLs MEDIUMTEXT")))(((MySQL)))(((MEDIUMTEXT)))
 
 Solution
 ^^^^^^^^
 
-Use Squeryl's `dbType` in your schema:
+Use Squeryl's `dbType` in your schema(((dbType))):
 
 [source,scala]
 ------------------------------------------
