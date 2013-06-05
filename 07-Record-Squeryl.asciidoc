@@ -116,7 +116,7 @@ Problem
 ^^^^^^^
 
 You want to use a _Java Naming and Directory Interface_ (JNDI) data source for your Record-Squeryl Lift
-application.
+application.(((Record-Squeryl Lift applications, JNDI data sources for)))
 
 Solution
 ^^^^^^^^
