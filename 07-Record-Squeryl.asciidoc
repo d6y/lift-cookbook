@@ -683,7 +683,7 @@ where
   Visit.planetId = ?
 -----------------------------------------------------------
 
-What you cannot do is delete a `Planet` or `Probe` if that record still has associations in the `Visit` relationship.  What you'd get is a referential integrity exception thrown.  Instead, you'll need to `dissociateAll` first:
+What you cannot do is delete a `Planet` or `Probe` if that record still has associations in the `Visit` relationship.  What you'd get is a referential integrity exception thrown.  Instead, you'll need to `dissociateAll` first(((referential integrity exception)))(((error messages, referential integrity exception))):
 
 [source, scala]
 -----------------------------------------------------------
