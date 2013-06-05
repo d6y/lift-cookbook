@@ -731,7 +731,7 @@ Adding Validation to a Field
 Problem
 ^^^^^^^
 
-You want to add validation to a field in your model, so that users are informed of missing fields or fields that aren't acceptable to your application.
+You want to add validation to a field in your model, so that users are informed of missing fields or fields that aren't acceptable to your application.(((Record-Squeryl Lift applications, field validation in)))
 
 Solution
 ^^^^^^^^
