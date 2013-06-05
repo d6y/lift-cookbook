@@ -401,7 +401,7 @@ You want to model a many-to-many relationship, such as a planet being visited by
 Solution
 ^^^^^^^^
 
-Use Squeryl's `manyToManyRelation` in your schema, and implement a record to hold the join between the two sides of the relationship. <<SquerylPlanetManyToManyFigure>> shows the structure we will create in this recipe, where `Visit` is the record that will connect each many to the other many.
+Use Squeryl's `manyToManyRelation` in your schema, and implement a record to hold the join between the two sides of the relationship. <<SquerylPlanetManyToManyFigure>> shows the structure we will create in this recipe, where `Visit` is the record that will connect each many to the other many.((("Record-Squeryl Lift applications", "many-to-many relationships in", id="ix_RSLAmtmr", range="startofrange")))
 
 [[SquerylPlanetManyToManyFigure]]
 .Many-to-many: Jupiter was visited by Juno and Voyager 1; Saturn was only visited by Voyager 1.
