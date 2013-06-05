@@ -144,7 +144,7 @@ JNDI is a service provided by
 the web container (e.g., Jetty, Tomcat) that allows you to
 configure a database connection in the container and then refer to the
 connection by name in your application. One advantage of this is that
-you can avoid including database credentials to your Lift source base.
+you can avoid including database credentials to your Lift source base.(((web containers)))(((Jetty)))(((Tomcat)))
 
 The configuration of JNDI is different for each container, and may vary
 with versions of the container you use. The "See Also" section below includes
