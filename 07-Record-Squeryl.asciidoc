@@ -1256,7 +1256,7 @@ See Also
 
 See http://www.h2database.com/html/features.html#in_memory_databases[the H2 database website] for more about H2's in-memory database settings.
 
-<<MongoUnitTest>> discusses unit testing with MongoDB, but the comments on SBT's other testing commands and testing in an IDE would apply to this recipe, too.(((range="endofrange", startref="ix_RSLAtws")))
+<<MongoUnitTest>> discusses unit testing with MongoDB, but the comments on SBT's other testing commands and testing in an IDE would apply to this recipe, too.(((range="endofrange", startref="ix_RSLAtws")))(((range="endofrange", startref="ix_UTspec")))
 
 
 [[RandomValueColumn]]
