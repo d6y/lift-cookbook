@@ -885,7 +885,7 @@ Problem
 ^^^^^^^
 
 You want to provide your own validation logic and apply it to a field in
-a record.
+a record.(((Record-Squeryl Lift applications, custom validation logic for)))
 
 Solution
 ^^^^^^^^
