@@ -383,7 +383,7 @@ Which version should you use? That will depend on your application, but you can 
 See Also
 ^^^^^^^^
 
-Squeryl relations are documented at http://squeryl.org/relations.html[here].
+Squeryl relations are documented at http://squeryl.org/relations.html[here].(((range="endofrange", startref="ix_otmr")))(((range="endofrange", startref="ix_RSLAotmr")))
 
 
 
