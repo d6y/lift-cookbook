@@ -988,7 +988,7 @@ Modify a Field Value Before It Is Set
 Problem
 ^^^^^^^
 
-You want to modify the value of a field before storing it (for example, to clean a value by removing leading and trailing whitespace).((("Record-Squeryl Lift applications", "modifying values before storage", id="ix_RSLAmvbs", range="startofrange")))
+You want to modify the value of a field before storing it (for example, to clean a value by removing leading and trailing whitespace).((("Record-Squeryl Lift applications", "modifying values before storage", id="ix_RSLAmvbs", range="startofrange")))(((values, modifying before storage)))
 
 Solution
 ^^^^^^^^
