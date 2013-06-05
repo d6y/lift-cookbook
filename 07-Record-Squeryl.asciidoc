@@ -182,7 +182,7 @@ One-to-Many Relationship
 Problem
 ^^^^^^^
 
-You want to model a one-to-many relationship, such as a satellite belonging to a single planet, but a planet possibly having many satellites.
+You want to model a one-to-many relationship, such as a satellite belonging to a single planet, but a planet possibly having many satellites.(((Record-Squeryl Lift applications, one-to-many relationships in)))
 
 Solution
 ^^^^^^^^
