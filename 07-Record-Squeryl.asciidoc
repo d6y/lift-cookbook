@@ -1064,7 +1064,7 @@ You want to write Specs2 unit tests that access your database model with Squeryl
 Solution
 ^^^^^^^^
 
-Use an in-memory database, and arrange for it to be set up before your test and destroyed after it.(((in-memory mode)))
+Use an in-memory database, and arrange for it to be set up before your test and destroyed after it.(((in-memory mode)))(((databases, in-memory)))
 
 There are three parts to this: including a database in your project and connecting to it in an in-memory mode; creating a reusable trait to set up the database; and then using the trait in your test.
 
