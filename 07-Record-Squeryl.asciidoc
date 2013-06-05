@@ -13,7 +13,7 @@ Configuring Squeryl and Record
 Problem
 ^^^^^^^
 
-You want to configure your Lift application to use Squeryl and Record.((("Lift applications", "Squeryl-Record configuration")))
+You want to configure your Lift application to use Squeryl and Record.((("Lift applications", "Squeryl-Record configuration", seealso="Record-Squeryl Lift applications")))
 
 Solution
 ^^^^^^^^
