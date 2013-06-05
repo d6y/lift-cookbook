@@ -649,7 +649,7 @@ The lower half of <<SquerylManyToManyScreengrab>> demonstrates how this snippet 
 .Example output from using the many-to-many features in this recipe
 image::images/lfcb_0703.png[]
 
-To remove an association, use the `dissociate` or `dissociateAll` methods on the `left` or `right` queries. To remove a single association:
+To remove an association, use the `dissociate` or `dissociateAll` methods on the `left` or `right` queries. To remove a single association((("associations, removing"))):
 
 
 [source, scala]
