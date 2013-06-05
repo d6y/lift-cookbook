@@ -1332,7 +1332,7 @@ Problem
 ^^^^^^^
 
 You want created and updated timestamps on your records and would like them
-automatically updated when a row is added or updated.
+automatically updated when a row is added or updated.((("Record-Squeryl Lift applications", "timestamps")))
 
 Solution
 ^^^^^^^^
