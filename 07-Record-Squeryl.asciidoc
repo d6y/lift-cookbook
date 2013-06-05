@@ -1527,7 +1527,7 @@ Problem
 ^^^^^^^
 
 You want to use MySQL's `MEDIUMTEXT` for a column, but `StringField`
-doesn't have this option.
+doesn't have this option.(("Record-Squeryl Lift applications", "MySQLs MEDIUMTEXT")))
 
 Solution
 ^^^^^^^^
