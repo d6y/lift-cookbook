@@ -354,7 +354,7 @@ The third method, `deleteAll`, does what it sounds like it should do. It would e
 delete from Satellite
 -----------------------------------------------------------
 
-The right side of the one-to-many also has additional methods added by `ManyToOne[Planet]` of `assign` and `delete`.  Be aware that to delete the "one" side of a many-to-one, anything assigned to the record will need to have been deleted already to avoid a database constraint error that would arise from, for example, leaving satellites referencing nonexistent planets.(((database constraint errors)))
+The right side of the one-to-many also has additional methods added by `ManyToOne[Planet]` of `assign` and `delete`.  Be aware that to delete the "one" side of a many-to-one, anything assigned to the record will need to have been deleted already to avoid a database constraint error that would arise from, for example, leaving satellites referencing nonexistent planets.(((database constraint errors)))(((error messages, database constraint errors)))
 
 As `left` and `right` are queries, it means each time you use them you'll be sending a new query to the database.  Squeryl refers to these forms as _stateless relations_.
 
