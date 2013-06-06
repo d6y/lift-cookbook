@@ -383,7 +383,7 @@ Problem
 ^^^^^^^
 
 You have a MongoDB record, and you want to embed another set of values
-inside it as a single entity.(((MongoDB, document embedding)))((("documents, embedding in database records")))
+inside it as a single entity.(((MongoDB, document embedding)))((("documents, embedding in database records")))((("values", "embedding in database records")))
 
 Solution
 ^^^^^^^^
