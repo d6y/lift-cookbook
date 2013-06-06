@@ -335,7 +335,7 @@ Deploying to Amazon Elastic Beanstalk
 Problem
 ^^^^^^^
 
-You want to run your Lift application on Amazon Web Services (AWS) Elastic Beanstalk.((("production deployments", "to Amazon Web Services A(AWS) Elastic Beanstalk")))
+You want to run your Lift application on Amazon Web Services (AWS) Elastic Beanstalk.((("production deployments", "to Amazon Web Services (AWS) Elastic Beanstalk")))((("Amazon Web Services (AWS) Elastic Beanstalk")))
 
 
 Solution
