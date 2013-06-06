@@ -124,7 +124,7 @@ Storing a HashMap in a MongoDB Record
 Problem
 ^^^^^^^
 
-You want to store a hash map in MongoDB.(((MongoDB, hash map storage)))(((hash maps)))
+You want to store a hash map in MongoDB.(((MongoDB, hash map storage)))(((hash maps)))(((mapped fields)))
 
 Solution
 ^^^^^^^^
