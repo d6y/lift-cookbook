@@ -168,7 +168,7 @@ when deploying.
 Host IP and port number
 +++++++++++++++++++++++
 
-Generally, you don't need to know about your deployed instance's public host name and port number. Requests to your application URL are routed to the specific instance by CloudBees. However there are situations, especially when you have multiple instances, where you do need to find this out. For example, if you want to receive messages from Amazon's Simple Notification Service (SNS), then each instance will need to give a direct URL to SNS when the application boots.((("Amazon's Simple Notification Service (SNS)")))(((public host names)))(((port numbers)))
+Generally, you don't need to know about your deployed instance's public host name and port number. Requests to your application URL are routed to the specific instance by CloudBees. However there are situations, especially when you have multiple instances, where you do need to find this out. For example, if you want to receive messages from Amazon's Simple Notification Service (SNS), then each instance will need to give a direct URL to SNS when the application boots.((("Amazon's Simple Notification Service (SNS)")))(((public hostnames)))(((port numbers)))
 
 To get the public hostname, you need to make an https://developer.cloudbees.com/bin/view/Main/Finding+out+app+port+and+hostname[HTTP request to _http://instance-data/latest/meta-data/public-hostname_]. For example:
 
