@@ -790,7 +790,7 @@ Storing Geospatial Values
 Problem
 ^^^^^^^
 
-You want to store latitude and longitude information in MongoDB.((("MongoDB", "latitude/longitude information")))
+You want to store latitude and longitude information in MongoDB.((("MongoDB", "latitude/longitude information")))((("latitude/longitude information")))
 
 Solution
 ^^^^^^^^
