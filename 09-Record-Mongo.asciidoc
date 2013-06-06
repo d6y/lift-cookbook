@@ -58,7 +58,7 @@ the port make up the first part, and the database name is the part after
 the _/_.(((cloud services)))
 
 If you need to turn a URL like this into a connection, you can do so by
-using `java.net.URI` to parse the URL and make a connection((("URLs", "database connection"))):
+using `java.net.URI` to parse the URL and make a connection((("URLs", "database connection with"))):
 
 [source,scala]
 --------------------------------------------------------------
