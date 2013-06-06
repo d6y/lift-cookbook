@@ -5,7 +5,7 @@ Production Deployment
 Deploying a Lift application to production means little more than packaging it and ensuring you set the _run mode_ to `production`. The recipes in this chapter show how to do this for various hosted services.((("Lift applicatons", "production deployment of", id="ix_LApd", range="startofrange")))
 
 
-You can also install and run a _container_ such as Tomcat or Jetty on your own servers. Containers were introduced in <<RunningYourApplication>>. This brings with it the need to understand how to install, configure, start, stop, and manage each container, and how to integrate it with load balancers or other frontends. These are large topics, and you can find out more from such sources as(((Tomcat)))(((Jetty)))((("containers", "deployment to"))):
+You can also install and run a _container_ such as Tomcat or Jetty on your own servers. Containers were introduced in <<RunningYourApplication>>. This brings with it the need to understand how to install, configure, start, stop, and manage each container, and how to integrate it with load balancers or other frontends. These are large topics, and you can find out more from such sources as(((Tomcat)))(((Jetty)))((("containers", "deployment to")))(((load balancers))):
 
 * The deployment section of the https://www.assembla.com/spaces/liftweb/wiki/Deployment[Lift wiki].
 
@@ -26,7 +26,7 @@ Problem
 ^^^^^^^
 
 You have an account with the CloudBees PaaS hosting environment, and you
-want to deploy your Lift application there.((("production deployments", "to CloudBees", id="ix_PDcbee", range="startofrange")))((("CloudBees", id="ix_cbee", range="startofrange")))
+want to deploy your Lift application there.((("production deployments", "to CloudBees", id="ix_PDcbee", range="startofrange")))((("CloudBees", id="ix_cbee", range="startofrange")))((("hosting", "with CloudBees", id="ix_HOSTcbee", range="startofrange")))
 
 Solution
 ^^^^^^^^
