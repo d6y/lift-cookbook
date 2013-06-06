@@ -753,7 +753,7 @@ $ ./sbin/rabbitmq-server -detatched
 
 This command will produce various messages as it starts but will eventually say: "broker running."
 
-The Lift application we'll use to demonstrate the pubsub pattern is the real-time chat application, described in _Simply Lift_.
+The Lift application we'll use to demonstrate the pubsub pattern is the real-time chat application, described in _Simply Lift_.(((chat sessions)))
 The first modification is to include the Lift module to talk to RabbitMQ. This is a one-line addition to the `libraryDependencies` in _build.sbt_:
 
 [source, scala]
@@ -761,7 +761,7 @@ The first modification is to include the Lift module to talk to RabbitMQ. This i
 "net.liftmodules" %% "amqp_2.5" % "1.3"
 -----------------------------------------
 
-AMQP stands for Advanced Message Queuing Protocol, a protocol that RabbitMQ talks. The AMQP module provides abstract actors to send and receive messages, and we will implement these actors as `RemoteSend` and `RemoteReceiver`:
+AMQP stands for Advanced Message Queuing Protocol, a protocol that RabbitMQ talks.((("AMQP (Advanced Message Queuing Protocol)"))) The AMQP module provides abstract actors to send and receive messages, and we will implement these actors as `RemoteSend` and `RemoteReceiver`:
 
 [source, scala]
 -----------------------------------------
