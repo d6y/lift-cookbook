@@ -195,7 +195,7 @@ To find out where to make a change, you need to know that each chapter is a sepa
 Licensing
 +++++++++
 
-We ask contributors the following:
+We ask contributors the following((("Lift Cookbook", "code use permissions"))):
 
 * You agree to license your work (including the words you write, the code you use, and any images) to us under the Creative Commons Attribution, Non Commercial, No Derivatives license.
 
@@ -224,7 +224,7 @@ Sharing Code in Modules
 Problem
 ^^^^^^^
 
-You have code you'd like to share between Lift projects or with the community.
+You have code you'd like to share between Lift projects or with the community.((("code sharing, modules for")))((("modules, for code sharing")))
 
 Solution
 ^^^^^^^^
