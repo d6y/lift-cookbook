@@ -402,7 +402,7 @@ However, some mail services such as SendGrid do require `mail.smtp.auth=true` to
 See Also
 ^^^^^^^^
 
-As well as `mail.smtp.auth`, there are a http://javamail.kenai.com/nonav/javadocs/com/sun/mail/smtp/package-summary.html[range of settings to control the Java Mail API]. Examples include controlling port numbers and timeouts.
+As well as `mail.smtp.auth`, there are a http://javamail.kenai.com/nonav/javadocs/com/sun/mail/smtp/package-summary.html[range of settings to control the Java Mail API]. Examples include controlling port numbers and timeouts.(((port numbers)))(((timeouts)))
 
 
 [[EmailWithAttachments]]
