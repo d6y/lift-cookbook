@@ -368,7 +368,7 @@ Problem
 ^^^^^^^
 
 You want to accept an image upload, or other binary data, in your RESTful
-service.((("REST web services", "image uploads")))((("files", "uploading")))((("images, uploading")))((("binary data uploads")))
+service.((("REST web services", "image uploads")))((("files", "uploading")))((("images", "uploading")))((("binary data uploads")))
 
 Solution
 ^^^^^^^^
