@@ -271,7 +271,7 @@ Discussion
 An implicit converts the `NodeSeq` into an `XHTMLMailBodyType`. This
 ensures the mime type of the email is `text/html`. Despite the name of
 "XHTML," the message is converted for transmission using
-HTML5 semantics.
+HTML5 semantics.(((HTML5 email semantics)))
 
 The character encoding for HTML email, UTF-8, can be changed by setting
 `mail.charset` in your Lift properties file.
