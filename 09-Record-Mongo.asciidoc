@@ -698,7 +698,7 @@ Using Rogue
 Problem
 ^^^^^^^
 
-You want to use Foursquare's type-safe domain specific language (DSL), Rogue, for querying and updating MongoDB records.
+You want to use Foursquare's type-safe domain specific language (DSL), Rogue, for querying and updating MongoDB records.(((MongoDB, querying/updating records)))
 
 Solution
 ^^^^^^^^
