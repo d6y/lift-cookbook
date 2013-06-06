@@ -1092,7 +1092,7 @@ class MySpec extends Specification with MongoTestKit {
 }
 --------------------------------------------
 
-You can now run the test in SBT by typing `test`:
+You can now run the test in SBT by((("Simple Build Tool (SBT)", "unit tests in"))) typing `test`:
 
 ------------------------------------------------------------
 > test
