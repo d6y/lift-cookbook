@@ -455,7 +455,7 @@ Deploying to Heroku
 Problem
 ^^^^^^^
 
-You want to deploy your Lift application to your account on the Heroku cloud platform.((("production deployments", "to Heroku", id="ix_PDhero", range="startofrange")))((("Heroku", id="ix_hero", range="startofrange")))(((WAR files)))(((files, WAR files)))((("Hosting", "with Heroku", id="ix_HOSThero", range="startofrange")))
+You want to deploy your Lift application to your account on the Heroku cloud platform.((("production deployments", "to Heroku", id="ix_PDhero", range="startofrange")))((("Heroku", id="ix_hero", range="startofrange")))(((WAR files)))(((files, WAR files)))((("hosting", "with Heroku", id="ix_HOSThero", range="startofrange")))
 
 Solution
 ^^^^^^^^
@@ -710,7 +710,7 @@ The JVM shutdown hooks are described in the http://docs.oracle.com/javase/7/docs
 
 https://devcenter.heroku.com/articles/java-webapp-runner[Heroku's guide to containerless deployment] makes use of Maven to package your application.  There is also a https://github.com/ghostm/lift_blank_heroku[template SBT project from Matthew Henderson] that includes a `JettyLauncher` class.
 
-The way Heroku deals with Comet long-polling is described https://devcenter.heroku.com/articles/request-timeout[here].(((range="endofrange", startref="ix_PDhero")))(((range="endofrange", startref="ix_hero")))
+The way Heroku deals with Comet long-polling is described https://devcenter.heroku.com/articles/request-timeout[here].(((range="endofrange", startref="ix_PDhero")))(((range="endofrange", startref="ix_hero")))(((range="endofrange", startref="ix_HOSThero")))
 
 /////////////////////////////////////////
 
