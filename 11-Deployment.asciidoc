@@ -552,7 +552,7 @@ $ heroku logs -t --app glacial-waters-6292
 
 Anyone visiting your Lift application will cause Heroku to unidle your application.
 
-Note, though, that the application was stopped with a _SIGTERM_.  This is a Unix signal sent to a process, the JVM in this case, to request it to stop.  Unfortunately, the Tomcat application on Heroku does not use this signal to request Lift to shutdown. This may be of little consequence to you, but if you do have external resources you want to release to other actions to take at shutdown, you need to register a shutdown hook with the JVM.(((SIGTERM)))
+Note, though, that the application was stopped with a _SIGTERM_.  This is a Unix signal sent to a process, the JVM in this case, to request it to stop.  Unfortunately, the Tomcat application on Heroku does not use this signal to request Lift to shutdown. This may be of little consequence to you, but if you do have external resources you want to release to other actions to take at shutdown, you need to register a shutdown hook with the JVM.(((SIGTERM)))(((hooks)))(((shutdown hooks)))
 
 For example, you might add this to _Boot.scala_ if you're running on Heroku:
 
