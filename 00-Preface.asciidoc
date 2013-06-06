@@ -20,7 +20,7 @@ The aim is to give a single, short answer to a specific question. When there's m
 [[Contributors]]
 === Contributors
 
-I've mined the Lift mailing list for these recipes, but I'm not the only one.  Recipes have been contributed by((("Lift Cookbook", "contributers"))):
+I've mined the Lift mailing list for these recipes, but I'm not the only one.  Recipes have been contributed by((("Lift Cookbook", "contributers")))(((contributers, to Lift Cookbook))):
 
 
 * Jono Ferguson, who's a Scala consultant based in Sydney, Australia. He can be found lurking on the Lift mailing list and occasionally helps out with Lift modules.((("Ferguson, Jono"))) Find him at https://twitter.com/jonoabroad and http://underscoreconsulting.com.
