@@ -900,7 +900,7 @@ If you want to learn more about RabbitMQ, take a look at the http://www.rabbitmq
 
 Diego Medina has implemented a distributed Comet solution using CouchDB, and has described it in a https://fmpwizard.telegr.am/blog/distributed-comet-chat-lift[blog post].
 
-Amazon's Simple Notification Service (SNS) is a fanout facility so can also be used to implement this pattern. You can find a Lift module for SNS https://github.com/SpiralArm/liftmodules-aws-sns[on GitHub].(((range="endofrange", startref="ix_LApd")))
+Amazon's Simple Notification Service (SNS) is a fanout facility so can also be used to implement this pattern. You can find a Lift module for SNS https://github.com/SpiralArm/liftmodules-aws-sns[on GitHub].(((range="endofrange", startref="ix_Comms")))(((range="endofrange", startref="ix_LApd")))
 
 
 
