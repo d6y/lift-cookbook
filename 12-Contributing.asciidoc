@@ -187,7 +187,7 @@ Discussion
 
 Anything you've puzzled over, or things that have surprised you, impressed you, or are nonobvious are great topics for recipes. Improvements, discussions, and clarifications of existing recipes are welcome, too.
 
-The cookbook is structured using a markup language called AsciiDoc. If you're familiar with Markdown or Textile, you'll find similarities. For the cookbook, you only need to know about section headings, source code formatting, and links.  Examples of all of these are in the `template.asciidoc` file.
+The cookbook is structured using a markup language called AsciiDoc. If you're familiar with Markdown or Textile, you'll find similarities. For the cookbook, you only need to know about section headings, source code formatting, and links.  Examples of all of these are in the `template.asciidoc` file.(((AsciiDoc markup language)))(((Markdown)))(((Textile)))
 
 To find out where to make a change, you need to know that each chapter is a separate file, and each recipe is a section in that file.
 
