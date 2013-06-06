@@ -25,7 +25,7 @@ Problem
 ^^^^^^^
 
 You have an account with the CloudBees PaaS hosting environment, and you
-want to deploy your Lift application there.((("production deployments", "to CloudBees", id="ix_PDcbee", range="startofrange")))
+want to deploy your Lift application there.((("production deployments", "to CloudBees", id="ix_PDcbee", range="startofrange")))((("CloudBees", id="ix_cbee", range="startofrange")))
 
 Solution
 ^^^^^^^^
