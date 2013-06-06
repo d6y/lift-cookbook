@@ -224,7 +224,7 @@ Sharing Code in Modules
 Problem
 ^^^^^^^
 
-You have code you'd like to share between Lift projects or with the community.((("code sharing, modules for", id="ix_CSmf", range="startofrange")))((("modules, for code sharing")))
+You have code you'd like to share between Lift projects or with the community.((("code sharing, modules for", id="ix_CSmf", range="startofrange")))((("modules, for code sharing", id="ix_Mcs", range="startofrange")))
 
 Solution
 ^^^^^^^^
