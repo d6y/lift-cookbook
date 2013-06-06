@@ -503,7 +503,7 @@ Linking Between MongoDB Records
 Problem
 ^^^^^^^
 
-You have a MongoDB record and want to include a link to another record.
+You have a MongoDB record and want to include a link to another record.(((MongoDB, linked records)))
 
 Solution
 ^^^^^^^^
