@@ -395,9 +395,9 @@ authentication would happen in development mode, ensuring we can't
 accidentally send email outside of a production environment.
 
 You don't have to use a properties file for this: the Lift `Mailer`
-also supports JNDI, or you could look up a username and password some other way and set `Mailer.authenticator` when you have the values.
+also supports JNDI, or you could look up a username and password some other way and set `Mailer.authenticator` when you have the values.((("Java Naming and Directory Interface (JNDI)")))(((Mailer)))
 
-However, some mail services such as SendGrid do require `mail.smtp.auth=true` to be set, and that should go into your Lift properties file or set as a JVM argument: `-Dmail.smtp.auth=true`.
+However, some mail services such as SendGrid do require `mail.smtp.auth=true` to be set, and that should go into your Lift properties file or set as a JVM argument: `-Dmail.smtp.auth=true`.(((SendGrid)))
 
 See Also
 ^^^^^^^^
