@@ -613,7 +613,7 @@ record first.
 Querying by reference
 +++++++++++++++++++++
 
-Searching for records by a reference is straightforward:
+Searching for records by a reference is straightforward((("queries, by reference")))(((records, searching for))):
 
 [source,scala]
 ------------------------------------------------------------------------------
