@@ -99,7 +99,7 @@ $ bees app:update -a myaccount/myapp disableProxyBuffering=true
 As with the run mode setting, CloudBees will remember these settings, so you
 only need to set them once.
 
-Finally, you may want to increase the _permanent generation_ memory setting of the JVM. By default, an application has 64 MB assigned for the PermGen. To increase this to 128 MB, run the `bees app:update` commannd:
+Finally, you may want to increase the _permanent generation_ memory setting of the JVM. By default, an application has 64 MB assigned for the PermGen. To increase this to 128 MB, run the `bees app:update` commannd(((permanent generation memory)))((("Java Virtual Machine (JVM)", "troubleshooting"))):
 
 [source, bash]
 ----------------------------------------------------------------
@@ -114,7 +114,7 @@ RDBMS configuration
 
 If you are using a SQL database in your application, you'll want to
 configure _src/main/webapp/WEB-INF/cloudbees-web.xml_. For
-example:
+example((("RDBMS (Relational Database Management System)"))):
 
 [source, xml]
 --------------------------------------------------------------------------
