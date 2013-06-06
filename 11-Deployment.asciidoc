@@ -735,7 +735,7 @@ You use Lift's Comet support, and want to run across multiple servers for increa
 Solution
 ^^^^^^^^
 
-Use the _publish/subscribe_ (pubsub) model to connect each server to a _topic_ and route Comet messages out to the topic where it can be broadcast to all servers that are part of your application.
+Use the _publish/subscribe_ (pubsub) model to connect each server to a _topic_ and route Comet messages out to the topic where it can be broadcast to all servers that are part of your application.(((topics)))
 
 There are a variety of technologies you can use to accomplish this, such as databases, message systems, actor systems. For this recipe we will use the RabbitMQ message service, but there are examples using CouchDB and Amazon's Simple Notification Service in the "See Also" section.(((RabbitMQ message service)))(((CouchDB)))((("Amazon's Simple Notification Service (SNS)")))
 
