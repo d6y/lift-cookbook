@@ -175,7 +175,7 @@ Solution
 ^^^^^^^^
 
 If you're comfortable using Git, you can fork the repository and send a
-pull request.
+pull request.((("templates", "for Lift Cookbook submissions")))
 
 Alternatively, download a template file, write your recipe, and email it
 to the https://groups.google.com/group/liftweb[Lift mailing list].
