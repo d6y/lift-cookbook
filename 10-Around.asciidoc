@@ -237,7 +237,7 @@ Sending HTML Email
 Problem
 ^^^^^^^
 
-You want to send an HTML email from your Lift application.
+You want to send an HTML email from your Lift application.((("Lift applications", "HTML email")))
 
 Solution
 ^^^^^^^^
