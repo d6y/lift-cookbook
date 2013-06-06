@@ -390,7 +390,7 @@ Solution
 
 Use `BsonRecord` to define the document to embed, and embed it using
 `BsonRecordField`. Here's an example of storing information about an
-image within a record:
+image within a record(((BsonRecord)))(((images, storing within a record))):
 
 [source,scala]
 -----------------------------------------------------
