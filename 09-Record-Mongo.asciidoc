@@ -844,7 +844,7 @@ Discussion
 MongoDB supports _geospatial indexes_, and we're making use of this by doing two things.  First,
 we are storing the location information in one of MongoDB's permitted formats.  The format is
 an embedded document containing the coordinates. We could also have used an array of two values
-to represent the point.
+to represent the point.((("values", "embedding in database records")))
 
 Second, we're creating an index of type "2d," which allows us to use MongoDB's geospatial functions such as `$near` and `$within`. The `unique=true` in the `ensureIndex` highlights that you can control
 whether locations needs to be unique (`true`, no duplications) or not (`false`).
@@ -880,7 +880,7 @@ db.example.city.dropIndex( "loc_2d" )
 Querying
 ++++++++
 
-The reason this recipe uses Rogue's `LatLong` class is to enable us to query using the Rogue DSL.  Suppose we've inserted other cities into our collection:
+The reason this recipe uses Rogue's `LatLong` class is to enable us to query using the Rogue DSL.  Suppose we've inserted other cities into our collection((("queries", "of location information"))):
 
 [source,json]
 -----------------------------------------------------------
