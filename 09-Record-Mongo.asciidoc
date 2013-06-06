@@ -18,7 +18,7 @@ You want to connect to a MongoDB.(((MongoDB, connecting to)))
 Solution
 ^^^^^^^^
 
-Add the Lift MongoDB dependencies to your build and configure a connection using `net.liftweb.mongodb` and `com.mongodb`.
+Add the Lift MongoDB dependencies to your build and configure a connection using `net.liftweb.mongodb` and `com.mongodb`.((("Lift Web Framework", "Lift MongoDB dependencies")))
 
 In _build.sbt_, add the following to `libraryDependencies`:
 
