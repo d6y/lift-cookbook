@@ -647,7 +647,7 @@ Fetching URLs
 Problem
 ^^^^^^^
 
-You want your Lift application to fetch a URL, and process it as text, JSON, XML, or HTML.((("Lift applications", "fetching URLs")))((("URLs", "fetching")))(((Dispatch library)))
+You want your Lift application to fetch a URL, and process it as text, JSON, XML, or HTML.((("Lift applications", "fetching URLs")))((("URLs", "fetching")))(((Dispatch library)))(((HTTP interaction)))
 
 Solution
 ^^^^^^^^
