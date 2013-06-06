@@ -114,7 +114,7 @@ RDBMS configuration
 
 If you are using a SQL database in your application, you'll want to
 configure _src/main/webapp/WEB-INF/cloudbees-web.xml_. For
-example((("RDBMS (Relational Database Management System)"))):
+example((("RDBMS (Relational Database Management System)")))(((SQL databases)))(((databases, configuring connections to))):
 
 [source, xml]
 --------------------------------------------------------------------------
@@ -149,7 +149,7 @@ example((("RDBMS (Relational Database Management System)"))):
 
 The above is a JNDI database configuration, defining a connection to a
 CloudBees database called "mydb." This will be used by Lift if the JNDI
-name is referenced in _Boot.scala_:
+name((("Java Naming and Directory Interface (JNDI)"))) is referenced in _Boot.scala_:
 
 [source, scala]
 ------------------------------------------------------------
@@ -168,7 +168,7 @@ when deploying.
 Host IP and port number
 +++++++++++++++++++++++
 
-Generally, you don't need to know about your deployed instance's public host name and port number. Requests to your application URL are routed to the specific instance by CloudBees. However there are situations, especially when you have multiple instances, where you do need to find this out. For example, if you want to receive messages from Amazon's Simple Notification Service (SNS), then each instance will need to give a direct URL to SNS when the application boots.
+Generally, you don't need to know about your deployed instance's public host name and port number. Requests to your application URL are routed to the specific instance by CloudBees. However there are situations, especially when you have multiple instances, where you do need to find this out. For example, if you want to receive messages from Amazon's Simple Notification Service (SNS), then each instance will need to give a direct URL to SNS when the application boots.((("Amazon's Simple Notification Service (SNS)")))
 
 To get the public hostname, you need to make an https://developer.cloudbees.com/bin/view/Main/Finding+out+app+port+and+hostname[HTTP request to _http://instance-data/latest/meta-data/public-hostname_]. For example:
 
