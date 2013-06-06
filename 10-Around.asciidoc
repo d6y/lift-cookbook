@@ -108,7 +108,7 @@ Problem
 ^^^^^^^
 
 You don't want email sent when developing your Lift application locally,
-but you do want to see what would have been sent.((("Lift applications", "email logging")))((("email", "logging vs. sending")))
+but you do want to see what would have been sent.((("Lift applications", "email logging")))((("email", "logging vs. sending")))(((logging)))(((Mailer.devModeSend)))
 
 Solution
 ^^^^^^^^
