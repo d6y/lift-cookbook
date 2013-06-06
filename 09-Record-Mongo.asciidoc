@@ -1113,7 +1113,7 @@ You can now run the test in SBT by((("Simple Build Tool (SBT)", "unit tests in")
 Discussion
 ^^^^^^^^^^
 
-Lift normally provides all the scaffolding you need to connect and run against MongoDB. Without a running Lift application, we need to ensure MongoDB is configured when our tests run outside of Lift, and that's what the `MongoTestKit` trait is providing for us.
+Lift normally provides all the scaffolding you need to connect and run against MongoDB. Without a running Lift application, we need to ensure MongoDB is configured when our tests run outside of Lift, and that's what the `MongoTestKit` trait is providing for us.(((DBTestKit trait)))
 
 The one unusual part of the test setup is including a `TestLiftSession`. This provides an empty session around your test, which is useful if you are accessing or testing state-related code (e.g., access to `S`).  It's not strictly necessary for running tests against Record, but it has been included here because you may want to do that at some point, for example if you are testing user login via MongoDB records.
 
@@ -1136,7 +1136,7 @@ There's also `test-quick` (in SBT 0.12), which will only run tests that have not
 Database cleanup
 ++++++++++++++++
 
-Around each test we've simply deleted the database so the next time we try to use it, it'll be empty.  In some situations you may not be able to do this.  For example, if you're running tests against a database hosted with companies such as MongoLabs or MongoHQ, then deleting the database will mean you won't be able to connect to it next time you run.
+Around each test we've simply deleted the database so the next time we try to use it, it'll be empty.  In some situations you may not be able to do this.  For example, if you're running tests against a database hosted with companies such as MongoLabs or MongoHQ, then deleting the database will mean you won't be able to connect to it next time you run.(((databases, cleanup after testing)))
 
 One way to resolve that is to clean up each individual collection, by defining the collections you need to clean up, and replacing `destroyDb` with a method that will remove all entries in those collections:
 
