@@ -817,7 +817,7 @@ Looking at the way the widget module builds autocomplete functionality may give 
 
 As an example of server-generated suggestions, we can look at the _Typeahead_ component that is included in Twitter Bootstrap.(((Typeahead component)))(((Twitter Bootstrap)))(((Bootstrap)))
 
-To incorporate Typeahead, the template needs to change to include the library and mark the input field in the way Typeahead expects:
+To incorporate Typeahead, the template needs to change to include the library and mark the input field in the way Typeahead expects(((autocomplete suggestions, Typeahead))):
 
 [source,scala]
 -------------------------------------------
