@@ -710,7 +710,7 @@ The JVM shutdown hooks are described in the http://docs.oracle.com/javase/7/docs
 
 https://devcenter.heroku.com/articles/java-webapp-runner[Heroku's guide to containerless deployment] makes use of Maven to package your application.  There is also a https://github.com/ghostm/lift_blank_heroku[template SBT project from Matthew Henderson] that includes a `JettyLauncher` class.
 
-The way Heroku deals with Comet long-polling is described https://devcenter.heroku.com/articles/request-timeout[here].
+The way Heroku deals with Comet long-polling is described https://devcenter.heroku.com/articles/request-timeout[here].(((range="endofrange", startref="ix_PDhero")))
 
 /////////////////////////////////////////
 
