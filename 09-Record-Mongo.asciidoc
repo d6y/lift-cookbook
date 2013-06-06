@@ -939,7 +939,7 @@ Running Queries from the Scala Console
 Problem
 ^^^^^^^
 
-You want to try out a few queries interactively from the Scala console.((("queries", "with Scala console")))(((Scala, interactive queries)))
+You want to try out a few queries interactively from the Scala console.((("queries", "with Scala console")))(((Scala, interactive queries)))((("MongoDB", "queries with Scala console")))
 
 Solution
 ^^^^^^^^
