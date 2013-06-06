@@ -1012,7 +1012,7 @@ Unit Testing Record with MongoDB
 Problem
 ^^^^^^^
 
-You want to write unit tests to run against your Lift Record code with MongoDB.
+You want to write unit tests to run against your Lift Record code with MongoDB.((("MongoDB", "unit tests")))
 
 Solution
 ^^^^^^^^
