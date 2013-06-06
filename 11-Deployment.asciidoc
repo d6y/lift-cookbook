@@ -78,7 +78,7 @@ Discussion
 If you are deploying an application to multiple CloudBees
 instances, be aware that by default CloudBees will round robin requests
 to each instance. If you use any of Lift's state features you'll want to
-enable session affinity (sticky sessions):
+enable session affinity (sticky sessions)(((session affinity)))(((sticky sessions))):
 
 [source, bash]
 ----------------------------------------------------------------
