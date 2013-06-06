@@ -169,7 +169,7 @@ How to Add a New Recipe to this Cookbook
 Problem
 ^^^^^^^
 
-You'd like to add a section or chapter to this cookbook.((("Lift Cookbook", "contributions to")))
+You'd like to add a section or chapter to this cookbook.((("Lift Cookbook", "submitting recipies to")))
 
 Solution
 ^^^^^^^^
