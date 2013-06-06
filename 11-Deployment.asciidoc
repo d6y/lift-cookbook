@@ -730,7 +730,7 @@ Distributing Comet Across Multiple Servers
 Problem
 ^^^^^^^
 
-You use Lift's Comet support, and want to run across multiple servers for increased redundancy or to handle increased load.(((Comet, and muliple servers)))(((redundancy)))((("publish/subscribe (pubsub) model")))
+You use Lift's Comet support, and want to run across multiple servers for increased redundancy or to handle increased load.((("Comet", "and muliple servers", id="ix_Comms", range="startofrange")))(((redundancy)))((("publish/subscribe (pubsub) model")))
 
 Solution
 ^^^^^^^^
