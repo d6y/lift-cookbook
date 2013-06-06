@@ -1136,7 +1136,7 @@ There's also `test-quick` (in SBT 0.12), which will only run tests that have not
 Database cleanup
 ++++++++++++++++
 
-Around each test we've simply deleted the database so the next time we try to use it, it'll be empty.  In some situations you may not be able to do this.  For example, if you're running tests against a database hosted with companies such as MongoLabs or MongoHQ, then deleting the database will mean you won't be able to connect to it next time you run.(((databases, cleanup after testing)))
+Around each test we've simply deleted the database so the next time we try to use it, it'll be empty.  In some situations you may not be able to do this.  For example, if you're running tests against a database hosted with companies such as MongoLabs or MongoHQ, then deleting the database will mean you won't be able to connect to it next time you run.(((databases, cleanup after testing)))(((MongoLabs)))(((MongoHQ)))
 
 One way to resolve that is to clean up each individual collection, by defining the collections you need to clean up, and replacing `destroyDb` with a method that will remove all entries in those collections:
 
