@@ -455,7 +455,7 @@ Deploying to Heroku
 Problem
 ^^^^^^^
 
-You want to deploy your Lift application to your account on the Heroku cloud platform.((("production deployments", "to Heroku", id="ix_PDhero", range="startofrange")))
+You want to deploy your Lift application to your account on the Heroku cloud platform.((("production deployments", "to Heroku", id="ix_PDhero", range="startofrange")))((("Heroku", id="ix_hero", range="startofrange")))
 
 Solution
 ^^^^^^^^
