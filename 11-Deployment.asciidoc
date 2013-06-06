@@ -297,7 +297,7 @@ serverPool      : stax-global (Stax Global Pool)
 ClickStarts
 +++++++++++
 
-ClickStart Applications are templates to quickly get an application, and automated build, up and running at CloudBees. The Lift ClickStart creates a private Git source repository at CloudBees that contains a Lift 2.4 application, provisions a MySQL database, creates a Maven-based Jenkins build, and deploys the application.  All you need to do is provide a name for the application (without whitespace).(((ClickStart Applications)))(((templates, for CloudBees)))
+ClickStart Applications are templates to quickly get an application, and automated build, up and running at CloudBees. The Lift ClickStart creates a private Git source repository at CloudBees that contains a Lift 2.4 application, provisions a MySQL database, creates a Maven-based Jenkins build, and deploys the application.  All you need to do is provide a name for the application (without whitespace).(((ClickStart Applications)))(((templates, for CloudBees)))((("Maven-based Jenkins build")))
 
 To access the Git source repository created for you, you'll need to upload an SSH public key. You can do this in the "My Keys" section of your account settings on the CloudBees website.
 
