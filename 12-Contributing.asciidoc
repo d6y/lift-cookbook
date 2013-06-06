@@ -39,7 +39,7 @@ How to Report Bugs
 Problem
 ^^^^^^^
 
-You've found a bug and want to report it.((("bugs, reporting of")))(((reporting bugs)))
+You've found a bug and want to report it.((("bugs, reporting of")))(((reporting bugs)))((("questions about Lift, how to format")))
 
 Solution
 ^^^^^^^^
