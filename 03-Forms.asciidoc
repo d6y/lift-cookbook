@@ -1283,7 +1283,7 @@ Problem
 ^^^^^^^
 
 You want to show the user a number of options in a select box, and allow
-them to select multiple values.((("forms processing", "mulitple selections", id="ix_FPmulval", range="startofrange")))(((multiple selections)))(((select boxes)))
+them to select multiple values.((("forms processing", "mulitple selections", id="ix_FPmulval", range="startofrange")))(((multiple selections)))(((select boxes)))(((checkboxes, multiple options)))
 
 Solution
 ^^^^^^^^
