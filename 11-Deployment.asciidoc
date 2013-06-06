@@ -33,7 +33,7 @@ Solution
 
 Use the SBT `package` command to produce a WAR file that can be deployed
 to CloudBees, and then use the CloudBees SDK to configure and deploy your
-application.
+application.((("Simple Build Tool (SBT)", "using CloudBees with")))
 
 From within the CloudBees "Grand Central" console, create a new application under your account. In what follows we'll assume your account is called _myaccount_ and your application is called _myapp_.
 
