@@ -87,7 +87,7 @@ Contributing Small Code Changes and ScalaDoc
 Problem
 ^^^^^^^
 
-You have a small change or ScalaDoc improvement you'd like incorporated into Lift.
+You have a small change or ScalaDoc improvement you'd like incorporated into Lift.((("Lift Web Framework", "submitting changes to")))
 
 Solution
 ^^^^^^^^
