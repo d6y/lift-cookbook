@@ -1012,7 +1012,7 @@ Unit Testing Record with MongoDB
 Problem
 ^^^^^^^
 
-You want to write unit tests to run against your Lift Record code with MongoDB.((("MongoDB", "unit tests")))
+You want to write unit tests to run against your Lift Record code with MongoDB.((("MongoDB", "unit tests")))(((Specs2 unit tests)))((("unit tests", "with Specs2")))
 
 Solution
 ^^^^^^^^
