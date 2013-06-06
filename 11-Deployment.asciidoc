@@ -223,7 +223,7 @@ Java version
 ++++++++++++
 
 Currently the default JVM provided by CloudBees is JDK 7, but you can select 6, 7, and 8.
-To change the default Java Virtual Machine, use the `bees config:set` command:
+To change the default Java Virtual Machine, use the `bees config:set` command((("Java Virtual Machine (JVM)", "and CloudBees")))
 
 [source, bash]
 ------------------------------------------------------------
