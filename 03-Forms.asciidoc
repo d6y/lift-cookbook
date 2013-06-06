@@ -838,7 +838,7 @@ To incorporate Typeahead, the template needs to change to include the library an
 
 We've included a placeholder with an ID of "js" for the JavaScript that will call back to the server. We'll get to that in a moment.
 
-The way Typeahead works is that we attach it to our input field, and tell it to call a JavaScript function when it need to make suggestions.  That JavaScript function is going to be called `askServer`, and it is given two arguments: the input the user has typed so far (`query`), and a JavaScript function to call when the suggestions are available (`callback`).  The Lift snippet needs to use the `query` value and then call the JavaScript `callback` function with whatever suggestions are made.
+The way Typeahead works is that we attach it to our input field, and tell it to call a JavaScript function when it need to make suggestions.  That JavaScript function is going to be called `askServer`, and it is given two arguments: the input the user has typed so far (`query`), and a JavaScript function to call when the suggestions are available (`callback`).  The Lift snippet needs to use the `query` value and then call the JavaScript `callback` function with whatever suggestions are made.((("autocomplete suggestions", "query/callback functions")))
 
 A snippet to implement this would be as follows:
 
