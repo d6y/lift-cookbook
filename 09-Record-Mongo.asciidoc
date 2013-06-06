@@ -672,7 +672,7 @@ the object being referenced, a later call to `obj` will return an
 Types of link
 +++++++++++++
 
-The example uses a `StringRefField`, as the MongoDB records themselves use `String` as the `_id`. Other reference types are:
+The example uses a `StringRefField`, as the MongoDB records themselves use `String` as the `_id`. Other reference types are(((references, types of))):
 
 `ObjectIdRefField`:: This is possibly the most frequently used kind of reference, when you want to reference via the usual default `ObjectId` in MongoDB.
 `UUIDRefField`:: This is used for records with an ID based on `java.util.UUID`.
