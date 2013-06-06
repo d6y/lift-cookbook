@@ -39,7 +39,7 @@ Discussion
 `Mailer` sends the message asynchronously, meaning `sendMail` will
 return immediately, so you don't have to worry about the time costs of
 negotiating with an SMTP server. There's also a `blockingSendMail`
-method if you need to wait.
+method if you need to wait.(((SMTP servers)))
 
 By default, the SMTP server used will be _localhost_. You can change
 this by setting the `mail.smtp.host` property.
