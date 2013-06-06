@@ -10,7 +10,7 @@ You'd Like Some Help
 Problem
 ^^^^^^^
 
-You're stuck on something in Lift and you'd like some help.((("Lift Web Framework", "accessing help")))((("help, accessing")))(((Lift mailing list)))(((Lift community)))
+You're stuck on something in Lift and you'd like some help.((("Lift Web Framework", "accessing help")))((("help, accessing")))(((Lift mailing list)))(((Lift community)))((("mailing list, for help with Lift)))
 
 Solution
 ^^^^^^^^
