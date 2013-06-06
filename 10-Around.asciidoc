@@ -274,7 +274,7 @@ ensures the mime type of the email is `text/html`. Despite the name of
 HTML5 semantics.(((HTML5 email semantics)))(((XHTMLMailBodyType)))
 
 The character encoding for HTML email, UTF-8, can be changed by setting
-`mail.charset` in your Lift properties file.
+`mail.charset` in your Lift properties file.(((UTF-8 character set)))
 
 If you want to set both the text and HTML version of a message, supply each body wrapped in the appropriate `BodyType` class:
 
@@ -345,7 +345,7 @@ Sending Authenticated Email
 Problem
 ^^^^^^^
 
-You need to authenticate with an SMTP server to send email.
+You need to authenticate with an SMTP server to send email.((("Lift applications", "authenticated email")))
 
 Solution
 ^^^^^^^^
