@@ -503,13 +503,13 @@ Linking Between MongoDB Records
 Problem
 ^^^^^^^
 
-You have a MongoDB record and want to include a link to another record.(((MongoDB, linked records)))
+You have a MongoDB record and want to include a link to another record.(((MongoDB, linked records)))((("records, linking")))
 
 Solution
 ^^^^^^^^
 
 Create a reference using a `MongoRefField` such as `ObjectIdRefField` or
-`StringRefField`, and dereference the record using the `obj` call.
+`StringRefField`, and dereference the record using the `obj` call.(((MongoRefField)))(((ObjectIdRefField)))
 
 As an example, we can create records representing countries, where a
 country references the planet where you can find it:
