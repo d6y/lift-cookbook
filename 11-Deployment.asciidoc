@@ -254,7 +254,7 @@ Runtime Parameters:
 Container version
 +++++++++++++++++
 
-CloudBees offer several containers: Tomcat 6.0.32 (the default), Tomcat 7, JBoss 7.02, JBoss 7.1, and GlassFish 3.((("containers", "and CloudBees")))
+CloudBees offer several containers: Tomcat 6.0.32 (the default), Tomcat 7, JBoss 7.02, JBoss 7.1, and GlassFish 3.((("containers", "and CloudBees")))(((Tomcat)))(((JBoss)))(((GlassFish)))
 
 To change containers the application will need to be redeployed, as CloudBees uses different file configurations for the various containers.  Hence we use the `bees app:deploy` command. The following example updates to Tomcat 7:
 
