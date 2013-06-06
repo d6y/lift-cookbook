@@ -1171,7 +1171,7 @@ You'll notice that the example specification includes the line: `sequential`.  T
 Running tests in IDEs
 +++++++++++++++++++++
 
-IntelliJ IDEA detects and allows you to run Specs2 tests automatically.  With Eclipse, you'll need to include the JUnit runner annotation at the start of your specification:
+IntelliJ IDEA detects and allows you to run Specs2 tests automatically.  With Eclipse, you'll need to include the JUnit runner annotation at the start of your specification((("IntelliJ IDEA development environment")))(((Lift applications, IntelliJ IDEA development))):
 
 [source, scala]
 --------------------------------------------
