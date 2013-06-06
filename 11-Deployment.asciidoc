@@ -335,7 +335,7 @@ Deploying to Amazon Elastic Beanstalk
 Problem
 ^^^^^^^
 
-You want to run your Lift application on Amazon Web Services (AWS) Elastic Beanstalk.((("production deployments", "to Amazon Web Services (AWS) Elastic Beanstalk")))((("Amazon Web Services (AWS) Elastic Beanstalk")))(((Elastic Beanstalk)))(((Tomcat)))((("Simple Build Tool (SBT)", "using Elastic Beanstalk with")))
+You want to run your Lift application on Amazon Web Services (AWS) Elastic Beanstalk.((("production deployments", "to Amazon Web Services (AWS) Elastic Beanstalk")))((("Amazon Web Services (AWS) Elastic Beanstalk")))(((Elastic Beanstalk)))(((Tomcat)))((("Simple Build Tool (SBT)", "using Elastic Beanstalk with")))(((WAR files)))(((files, WAR files)))
 
 
 Solution
@@ -367,7 +367,7 @@ Discussion
 
 Elastic Beanstalk provides a prebuilt stack of software and infrastructure, in this case: Linux, Tomcat 7, a 64 bit "t1.micro" EC2 instance, load balancing, and an S3 bucket. That's the _environment_ and it has reasonable default settings.  Beanstalk also provides an easy way to deploy your Lift application.  As we've seen in this recipe, you upload an application (WAR file) to Beanstalk and deploy it to the environment.
 
-As with many cloud providers keep in mind that you want to avoid local file storage. The reason for this is to allow instances to be terminated or restarted without data loss. With your Beanstalk application you do have a file system and you can write to it, but it is lost if the image is restarted. You can get persistent local file storage, for example using Amazon Elastic Block Storage, but you're fighting against the nature of the pass:[<phrase role='keep-together'>platform.</phrase>]
+As with many cloud providers(((cloud services)))((("files", "local vs. cloud storage of"))) keep in mind that you want to avoid local file storage. The reason for this is to allow instances to be terminated or restarted without data loss. With your Beanstalk application you do have a file system and you can write to it, but it is lost if the image is restarted. You can get persistent local file storage, for example using Amazon Elastic Block Storage, but you're fighting against the nature of the pass:[<phrase role='keep-together'>platform.</phrase>]
 
 Logfiles are written to the local file system. To access them, from the AWS console, navigate to your environment, into the "Logs" tab and hit the "Snapshot" button. This will take a copy of the logs and store them in an S3 bucket, and give you a link to the file contents.  This is a single file showing the content of a variety of logfiles, and _catalina.out_ will be the one showing any output from your Lift application.  If you want to try to keep these logfiles around, you can configure the environment to rotate the logs to S3 every hour from the "Container" tab under "Edit Configuration."
 
