@@ -14,7 +14,7 @@ Sending Plain-Text Email
 Problem
 ^^^^^^^
 
-You want to send a plain-text email from your Lift application.((("Lift applications", "plain-text email in")))((("email, plain-text")))(((Mailer)))
+You want to send a plain-text email from your Lift application.((("Lift applications", "plain-text email in")))((("email", "plain-text")))(((Mailer)))
 
 Solution
 ^^^^^^^^
