@@ -425,7 +425,7 @@ We are assuming that the snowstorm source can be found at _../snowstorm_ relativ
 See Also
 ^^^^^^^^
 
-Originally, Lift included a set of modules, but these have been separated out to https://github.com/liftmodules/[individual projects].  The Lift contributor policy outlined in <<LiftCodeContributions>> doesn't apply to Lift modules: you're free to contribute to these modules as you would any other open source project.
+Originally, Lift included a set of modules, but these have been separated out to https://github.com/liftmodules/[individual projects].  The Lift contributor policy outlined in <<LiftCodeContributions>> doesn't apply to Lift modules: you're free to contribute to these modules as you would any other open source project.(((range="endofrange", startref="ix_CSmf")))
 
 The Lift wiki pages for modules can be reached via http://liftmodules.net[http://liftmodules.net].
 
