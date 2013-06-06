@@ -1379,7 +1379,7 @@ not called. This is described in https://github.com/lift/framework/issues/1139[i
 
 One way to work around this is to add a hidden function to reset the list. For example, we
 could modify the above code to be a stateful snippet and remember the
-values we selected(((hidden functions)))((("functions, hidden"))):
+values we selected(((hidden functions)))((("functions", "hidden"))):
 
 [source,scala]
 ---------------------------------------------------------
