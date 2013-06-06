@@ -412,7 +412,7 @@ Sending Email with Attachments
 Problem
 ^^^^^^^
 
-You want to send an email with one or more attachments.
+You want to send an email with one or more attachments.((("Lift applications", "email attachements")))
 
 Solution
 ^^^^^^^^
