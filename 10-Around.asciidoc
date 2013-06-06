@@ -745,7 +745,7 @@ This example is parsing the XML response to the request, which returns a `Promis
 </gml:description>
 ------------------------------------------
 
-That example assumes the request is going to be well formed. In addition to the core Databinder library, there are extensions for JSoup and TagSoup to assist in parsing HTML that isn't necessarily well formed.(((JSoup)))(((TagSoup)))
+That example assumes the request is going to be well formed. In addition to the core Databinder library, there are extensions for JSoup and TagSoup to assist in parsing HTML that isn't necessarily well formed.(((JSoup)))(((TagSoup)))(((Databinder library)))
 
 For example, to use JSoup, include the dependency:
 
