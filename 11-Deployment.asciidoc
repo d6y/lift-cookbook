@@ -89,7 +89,7 @@ If you are using Comet, it'll work fine, but the CloudBees default is to enable
 _request buffering_. This allows CloudBees to do smart things, such as rerouting
 requests in a cluster if one machine does not respond. A
 consequence of request buffering is that long-polling Comet requests will timeout more
-often. To turn this feature off, run the following:
+often. To turn this feature off, run the following(((request buffering))):
 
 [source, bash]
 ----------------------------------------------------------------
