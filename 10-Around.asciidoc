@@ -205,7 +205,7 @@ Subject: Hello
 Hello from Lift
 ---------------------------------------------------------
 
-This example `display` function is long but mostly straightforward. The `body` value handles multipart messages by extracting each body part.  This is triggered when sending more structured emails, such as the HTML emails(((HTML email))) described in <<HTMLEmail>>.
+This example `display` function is long but mostly straightforward. The `body` value handles multipart messages by extracting each body part.  This is triggered when sending more structured emails, such as the HTML emails(((HTML email)))((("email", "HTML"))) described in <<HTMLEmail>>.
 
 If you want to debug the mail system while it's actually sending the email, enable the Java Mail debug mode.  In _default.props_ add:
 
