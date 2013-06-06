@@ -276,7 +276,7 @@ val sf : Option[Int] = uk.population.is.get("San Francisco")
 What a MongoMapField can contain
 ++++++++++++++++++++++++++++++++
 
-You should be aware that `MongoMapField` supports only primitive types.
+You should be aware that `MongoMapField` supports only primitive types.(((MongoMapFields)))
 
 The mapped field used in this recipe is typed `String => Int`, but of course
 MongoDB will let you mix types such as putting a `String` or a `Boolean` as a population value.
