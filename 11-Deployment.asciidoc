@@ -737,7 +737,7 @@ Solution
 
 Use the _publish/subscribe_ (pubsub) model to connect each server to a _topic_ and route Comet messages out to the topic where it can be broadcast to all servers that are part of your application.
 
-There are a variety of technologies you can use to accomplish this, such as databases, message systems, actor systems. For this recipe we will use the RabbitMQ message service, but there are examples using CouchDB and Amazon's Simple Notification Service in the "See Also" section.
+There are a variety of technologies you can use to accomplish this, such as databases, message systems, actor systems. For this recipe we will use the RabbitMQ message service, but there are examples using CouchDB and Amazon's Simple Notification Service in the "See Also" section.(((RabbitMQ message service)))(((CouchDB)))(((Amazon's Simple Notification Service)))
 
 Regardless of the technology, the principle is illustrated in <<DistributedCometDiagram>>. A Comet event originating on one Lift application is sent to a service for redistribution. It is the responsibility of this service (labeled as "topic" in the figure) to ensure all the participating Lift applications receive the event.
 
