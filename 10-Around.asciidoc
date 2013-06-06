@@ -345,7 +345,7 @@ Sending Authenticated Email
 Problem
 ^^^^^^^
 
-You need to authenticate with an SMTP server to send email.((("Lift applications", "authenticated email")))((("email", "authenticated")))
+You need to authenticate with an SMTP server to send email.((("Lift applications", "authenticated email")))((("email", "authenticated")))(((SMTP servers)))((("authentication, for email")))
 
 Solution
 ^^^^^^^^
