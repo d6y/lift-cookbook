@@ -352,7 +352,7 @@ Solution
 
 Set the `Mailer.authenticator` in `Boot` with the credentials for your
 SMTP server, and enable the `mail.smtp.auth` flag in your Lift properties
-file.
+file.(((Mailer.authenticator)))
 
 Modify _Boot.scala_ to include:
 
