@@ -737,7 +737,7 @@ scala> Country.where(_.id eqs "uk").
 Discussion
 ^^^^^^^^^^
 
-Rogue is able to use information in your Lift record to offer an elegant way to query and update records. It's type-safe, meaning, for example, if you try to use an `Int` where a `String` is expected in a query, MongoDB would allow that and fail to find results at runtime, but Rogue enables Scala to reject the query at compile time:
+Rogue is able to use information in your Lift record to offer an elegant way to query and update records. It's type-safe, meaning, for example, if you try to use an `Int` where a `String` is expected in a query, MongoDB would allow that and fail to find results at runtime, but Rogue enables Scala to reject the query at compile time(((Scala, type-safe options))):
 
 [source, scala]
 ---------------------------------------------
