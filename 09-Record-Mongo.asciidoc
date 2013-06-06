@@ -1198,7 +1198,7 @@ https://github.com/flapdoodle-oss/embedmongo.flapdoodle.de[Flapdoodle] provides 
 
 http://www.scala-sbt.org/release/docs/Detailed-Topics/Testing[The test interface provided by SBT], such as the `test` command, also supports the ability to fork tests, set specific configurations for test cases, and ways to select which tests are run.
 
-https://www.assembla.com/wiki/show/liftweb/Unit_Testing_Snippets_With_A_Logged_In_User[The Lift wiki] describes more about unit testing and Lift sessions.(((range="endofrange", startref="ix_DBmdbr")))(((range="endofrange", startref="ix_MDBunit")))
+https://www.assembla.com/wiki/show/liftweb/Unit_Testing_Snippets_With_A_Logged_In_User[The Lift wiki] describes more about unit testing and Lift sessions.(((range="endofrange", startref="ix_DBmdbr")))(((range="endofrange", startref="ix_MDBunit")))(((range="endofrange", startref="ix_UTestspec")))
 
 
 
