@@ -565,7 +565,7 @@ Run Tasks Periodically
 Problem
 ^^^^^^^
 
-You want a scheduled task to run periodically (repeatedly).
+You want a scheduled task to run periodically (repeatedly).((("Lift applications", "repeat tasks")))
 
 Solution
 ^^^^^^^^
