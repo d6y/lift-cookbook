@@ -730,7 +730,7 @@ Distributing Comet Across Multiple Servers
 Problem
 ^^^^^^^
 
-You use Lift's Comet support, and want to run across multiple servers for increased redundancy or to handle increased load.(((Comet, and muliple servers)))
+You use Lift's Comet support, and want to run across multiple servers for increased redundancy or to handle increased load.(((Comet, and muliple servers)))(((redundancy)))
 
 Solution
 ^^^^^^^^
