@@ -3,7 +3,7 @@ MongoDB Persistence with Record
 -------------------------------
 
 This chapter gives recipes for making use of MongoDB in your Lift
-application. Many of the code examples in this chapter can be found at https://github.com/LiftCookbook/cookbook_mongo[https://github.com/LiftCookbook/cookbook_mongo].
+application. Many of the code examples in this chapter can be found at https://github.com/LiftCookbook/cookbook_mongo[https://github.com/LiftCookbook/cookbook_mongo].((("database persistence", "with MongoDB and Record", id="ix_DBmdbr", range="startofrange")))
 
 
 [[ConnectingToMongo]]
