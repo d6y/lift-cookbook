@@ -376,7 +376,7 @@ The Lift application WAR files are stored in the same S3 bucket that the logs ar
 Multiple instances
 ++++++++++++++++++
 
-Beanstalks enables _auto scaling_ by default. That is, it launches a single instance of your Lift application, but if the load increases above a threshold, up to four instances may be running.(((auto scaling)))((("Lift applications", "autoscaling of")))(((Lift Web Framework, stateful features of)))(((session affinity)))((("browsers", "session affinity")))(((sticky sessions)))
+Beanstalks enables _auto scaling_ by default. That is, it launches a single instance of your Lift application, but if the load increases above a threshold, up to four instances may be running.(((auto scaling)))((("Lift applications", "autoscaling of")))(((Lift Web Framework, stateful features of)))(((session affinity)))((("browsers", "session affinity")))(((sticky sessions)))(((load balancers)))
 
 If you're making use of Lift's state features, you'll need to enable sticky sessions from the "Load Balancer" tab of the environment configuration. It's a check box named pass:[<phrase role='keep-together'>"Enable</phrase>] Session Stickiness"—it's easy to miss, but that tab does scroll to show more options if you don't see it the first time.
 
@@ -384,7 +384,7 @@ If you're making use of Lift's state features, you'll need to enable sticky sess
 Working with a database
 ++++++++++++++++++++++++
 
-There's nothing unusual you have to do to use Lift and a database from Beanstalk. However, Beanstalk does try to make it easy for you to work with Amazon's Relational Database Service (RDS).  Either when creating your Beanstalk environment, or from the configuration options later, you can add an RDS instance, which can be an Oracle, SQL-Server or MySQL database.
+There's nothing unusual you have to do to use Lift and a database from Beanstalk. However, Beanstalk does try to make it easy for you to work with Amazon's Relational Database Service (RDS).  Either when creating your Beanstalk environment, or from the configuration options later, you can add an RDS instance, which can be an Oracle, SQL-Server or MySQL database.((("RDBMS (Relational Database Management System)")))(((databases, RDS instances of)))
 
 The MySQL option will create a MySQL 5.5 InnoDB database. The database will be accessible from Beanstalk, but not from elsewhere on the Internet. To change that, modify the security groups for the RDS instance from the AWS web console.  For example, you might permit access from your IP address.
 
