@@ -460,7 +460,7 @@ You want to deploy your Lift application to your account on the Heroku cloud pla
 Solution
 ^^^^^^^^
 
-Package your Lift application as a WAR file and use the Heroku deploy plugin to send and run your application. This will give you an application running under Tomcat 7. Anyone can use this method to deploy an application but Heroku only provides support for it for Enterprise Java customers.(((Tomcat)))
+Package your Lift application as a WAR file and use the Heroku deploy plugin to send and run your application. This will give you an application running under Tomcat 7. Anyone can use this method to deploy an application but Heroku only provides support for it for Enterprise Java customers.(((Tomcat)))(((Enterprise Java)))
 
 This recipe walks through the process in three stages: one-time setup; deployment of the WAR; and configuration of your Lift application for production performance.
 
