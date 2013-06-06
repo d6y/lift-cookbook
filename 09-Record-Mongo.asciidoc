@@ -44,7 +44,7 @@ This will give you a connection to a local MongoDB database called
 Discussion
 ^^^^^^^^^^
 
-If your database needs authentication, use `MongoDB.defineDbAuth`:
+If your database needs authentication,((("authentication, for databases"))) use `MongoDB.defineDbAuth`:
 
 [source,scala]
 --------------------------------------------------------------
