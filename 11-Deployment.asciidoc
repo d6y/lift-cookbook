@@ -612,7 +612,7 @@ Database access in Heroku
 Heroku makes no restrictions on which databases you can connect to from your Lift application, but they try to make it easy to use their PostgreSQL service by attaching a free database to applications you create.(((databases, configuring connections to)))(((PostgreSQL service)))
 
 
-You can find out if you have a database by running the `pg` command:
+You can find out if you have a database by running the `pg` command((("URLs", "fetching"))):
 
 [source, bash]
 ---------------------------
