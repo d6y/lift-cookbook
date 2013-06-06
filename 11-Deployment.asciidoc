@@ -310,7 +310,7 @@ See Also
 
 https://wiki.cloudbees.com/bin/view/RUN/BeesSDK[The CloudBees SDK] provides command-line tools for configuring and controlling applications.
 
-https://developer.cloudbees.com[The CloudBees developer portal] contains a "Resources" section that provides details of the CloudBees services.(((range="endofrange", startref="ix_PDcbee")))
+https://developer.cloudbees.com[The CloudBees developer portal] contains a "Resources" section that provides details of the CloudBees services.(((range="endofrange", startref="ix_PDcbee")))(((range="endofrange", startref="ix_cbee")))
 
 The JVM PermGen settings for CloudBees are described https://wiki.cloudbees.com/bin/view/RUN/JVM+PermGen+Space[here], and settings for which JVM is used can be found https://developer.cloudbees.com/bin/view/RUN/JVMVersion[here]. For information about the containers, see: https://developer.cloudbees.com/bin/view/RUN/ClickStack[this site].
 
