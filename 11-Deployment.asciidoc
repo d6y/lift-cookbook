@@ -599,7 +599,7 @@ $ heroku ps --app glacial-waters-6292
 web.1: up 2013/01/01 22:37:35 (~ 31s ago)
 ---------------------------
 
-Here we see a Java process executing a JAR file called _webapp-runner-7.0.29.3.jar_ that is passed our WAR file as an argument. This is not identical to the Tomcat _catalina.sh_ script you may be more familiar with, but instead is https://github.com/jsimone/webapp-runner[this launcher process]. As it does not register a handler to deal with _SIGTERM_, we will have to if we need to release any resources during shutdown.
+Here we see a Java process executing a JAR file called _webapp-runner-7.0.29.3.jar_ that is passed our WAR file as an argument. This is not identical to the Tomcat _catalina.sh_ script you may be more familiar with, but instead is https://github.com/jsimone/webapp-runner[this launcher process]. As it does not register a handler to deal with _SIGTERM_, we will have to if we need to release any resources during shutdown.(((JAR files)))(((files, JAR files)))
 
 All of this means that if you want to launch a Lift application in a different way, you can. You'd need to wrap an appropriate container (Jetty or Tomcat, for example), and provide a `main` method for Heroku to call. This is sometimes called _containerless deployment_.
 
