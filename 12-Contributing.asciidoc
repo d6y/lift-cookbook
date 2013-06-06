@@ -87,7 +87,7 @@ Contributing Small Code Changes and ScalaDoc
 Problem
 ^^^^^^^
 
-You have a small change or ScalaDoc improvement you'd like incorporated into Lift.((("Lift Web Framework", "submitting improvements to")))(((contributers, to Lift Web Framework)))
+You have a small change or ScalaDoc improvement you'd like incorporated into Lift.((("Lift Web Framework", "submitting improvements to")))(((contributers, to Lift Web Framework)))((("code changes, contributing")))
 
 Solution
 ^^^^^^^^
@@ -136,7 +136,7 @@ Contributing Documentation
 Problem
 ^^^^^^^
 
-You'd like to contribute documentation to Lift.
+You'd like to contribute documentation to Lift.(((contributers, to Lift Web Framework)))((("documentation, contribution of")))
 
 
 Solution
@@ -144,7 +144,7 @@ Solution
 
 Update or add to the https://www.assembla.com/wiki/show/liftweb[Lift wiki].
 
-You'll need to sign in, or create a free account, with Assembla, the company that hosts the wiki. You then need to become a _watcher_ of the Lift wiki, which is offered as a link on the top right of the Lift wiki page.  As a watcher, you can edit pages and create new pages.
+You'll need to sign in, or create a free account, with Assembla, the company that hosts the wiki. You then need to become a _watcher_ of the Lift wiki, which is offered as a link on the top right of the Lift wiki page.  As a watcher, you can edit pages and create new pages.(((Assembla)))(((Lift wiki page)))
 
 
 Discussion
