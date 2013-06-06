@@ -55,7 +55,7 @@ MongoDB.defineDbAuth(DefaultMongoIdentifier, new Mongo(server),
 Some cloud services will give you a URL to connect to, such as
 _mongodb://alex.mongohq.com:10050/fglvBskrsdsdsDaGNs1_. In this case, the host and
 the port make up the first part, and the database name is the part after
-the _/_.
+the _/_.(((cloud services)))
 
 If you need to turn a URL like this into a connection, you can do so by
 using `java.net.URI` to parse the URL and make a connection:
