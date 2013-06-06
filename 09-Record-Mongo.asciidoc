@@ -281,7 +281,7 @@ You should be aware that `MongoMapField` supports only primitive types.(((MongoM
 The mapped field used in this recipe is typed `String => Int`, but of course
 MongoDB will let you mix types such as putting a `String` or a `Boolean` as a population value.
 If you do modify the MongoDB record in the database outside of Lift and mix types, you'll get a `java.lang.ClassCastException` at
-runtime.((("java.lang.ClassCastException")))((("error messages", "java.lang.ClassCastException")))
+runtime.((("java.lang.ClassCastException message")))((("error messages", "java.lang.ClassCastException")))
 
 See Also
 ^^^^^^^^
