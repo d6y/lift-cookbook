@@ -613,7 +613,7 @@ record first.
 Querying by reference
 +++++++++++++++++++++
 
-Searching for records by a reference is straightforward((("queries, by reference")))(((records, searching for))):
+Searching for records by a reference is straightforward((("queries, by reference")))(((references, querying by)))(((records, searching for))):
 
 [source,scala]
 ------------------------------------------------------------------------------
@@ -632,7 +632,7 @@ val onEarth : List[Country]= Country.findAll(Country.planet.name, "earth")
 Updating and deleting
 +++++++++++++++++++++
 
-Updating a reference is as you'd expect:
+Updating a reference is as you'd expect((("references", "updating/deleting"))):
 
 [source,scala]
 ----------------------------------------------------------
