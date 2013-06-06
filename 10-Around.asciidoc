@@ -565,7 +565,7 @@ Run Tasks Periodically
 Problem
 ^^^^^^^
 
-You want a scheduled task to run periodically (repeatedly).((("Lift applications", "repeat tasks")))((("tasks", "repeat execution of")))
+You want a scheduled task to run periodically (repeatedly).((("Lift applications", "repeat tasks")))((("tasks", "repeat execution of")))(((net.liftweb.util.Schedule)))
 
 Solution
 ^^^^^^^^
