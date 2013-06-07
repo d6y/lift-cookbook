@@ -432,7 +432,7 @@ See Also
 
 The `IEOnly` example is derived from a http://bit.ly/lift-ieonly[posting on the mailing list from Antonio Salazar Cardozo].
 
-http://code.google.com/p/html5shim/[The html5shim project]
+The _html5shim_ project can be downloaded from its http://code.google.com/p/html5shim/[Google Code site].
 
 
 
@@ -469,7 +469,7 @@ Starting with the original markup:
 </div>
 ----
 
-we could leave it alone or change it with this snippet:
+We could leave it alone or change it with this snippet:
 
 [source,scala]
 ----
@@ -523,13 +523,13 @@ The pattern of converting one `NodeSeq` to another is simple, but also powerful 
 
 
 [[SnippetNotFound]]
-Snippet Not Found When Using HTML 5
+Snippet Not Found When Using HTML5
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
 ^^^^^^^
 
-You're using Lift with the HTML 5 parser and one of your snippets is rendering with a "Class Not
+You're using Lift with the HTML5 parser and one of your snippets is rendering with a "Class Not
 Found" error.((("error messages", "Class Not Found")))(((Class Not Found error message)))(((HTML5 parser)))(((snippets))) It even happens for `<lift:HelloWorld.howdy />`.
 
 Solution
@@ -545,7 +545,7 @@ Switch to the designer-friendly snippet invocation mechanism. For example((("Lif
 Discussion
 ^^^^^^^^^^
 
-In this Cookbook we use the HTML 5 parser, which is set in _Boot.scala_:
+In this Cookbook we use the HTML5 parser, which is set in _Boot.scala_:
 
 [source,scala]
 -----
@@ -562,9 +562,9 @@ Switching to the designer-friendly mechanism is the solution here, and you gain 
 
 There are three popular ways of referencing a snippet:
 
-* As an HTML 5 data attribute: `data-lift="MySnippet"`. This is the style we use in this book, and is valid HTML 5 markup.
+* As an HTML5 data attribute: `data-lift="MySnippet"`. This is the style we use in this book, and is valid HTML5 markup.
 
-* Using the `lift` attribute, as in: `lift="MySnippet"`. This won't strictly validate against HTML 5, but you may see it.
+* Using the `lift` attribute, as in: `lift="MySnippet"`. This won't strictly validate against HTML5, but you may see it used.
 
 * The XHTML namespace version: `<lift:MySnippet />`. You'll see the usage of this tag in templates declining because of the way it interacts with the HTML5 parser. However, it works just fine outside of a template, for example when embedding a snippet invocation in your server-side code (<<SetPageTitle>> includes an example of this for `Menu.title`).(((XHTML parser)))
 
@@ -701,7 +701,7 @@ https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/lift
 
 https://developers.google.com/speed/docs/best-practices/caching[Google's _Optimize caching_ notes] are a good source of information about browser behaviour.
 
-You can learn more about URL rewriting at the https://www.assembla.com/spaces/liftweb/wiki/URL_Rewriting[Lift wiki].
+You can learn more about URL rewriting at the https://www.assembla.com/spaces/liftweb/wiki/URL_Rewriting[Lift wiki]. Rewriting is used rarely, and only for special cases. Most problems that look like rewriting problems are better solved with a https://www.assembla.com/spaces/liftweb/wiki/Location_Parameters[Menu Param].
 
 
 
@@ -885,7 +885,7 @@ Menu.i("404") / "404" >> Hidden
 See Also
 ^^^^^^^^
 
-<<CatchException>> for how to catch any exception thrown from your code.
+<<CatchException>> shows how to catch any exception thrown from your code.
 
 
 
@@ -957,7 +957,7 @@ LiftRules.responseTransformers.append {
 ----
 
 [NOTE]
-In Lift 3 `responseTransformers` will be modified to be a partial function, meaning you'll be able to leave off the final `case r => r` part of this example.
+In Lift 3, `responseTransformers` will be modified to be a partial function, meaning you'll be able to leave off the final `case resp => resp` part of this example.
 
 That redirect will work just fine, with the only downside that the HTTP status code sent back to the web browser won't be a 403 code.
 
@@ -1019,7 +1019,7 @@ See Also
 
 <<Custom404>> explains the built-in support for custom 404 messages.
 
-<<CatchException>> for how to catch any exception thrown from your code.
+<<CatchException>> shows how to catch any exception thrown from your code.
 
 
 
@@ -1203,11 +1203,11 @@ The first step is to add Lift's Test Kit as dependency to your project in _build
 
 [source, scala]
 -------
-libraryDependencies += "net.liftweb" %% "lift-testkit" % "2.5-RC5" % "test"
+libraryDependencies += "net.liftweb" %% "lift-testkit" % "2.5" % "test"
 -------
 
 To demonstrate how to use `testReq` we will test a function that detects a Google crawler. Google identifies
-crawlers via various `User-Agent` header on a request, so the function we want to test would look like this:
+crawlers via various `User-Agent` header values, so the function we want to test would look like this:
 
 [source, scala]
 -------
@@ -1441,7 +1441,7 @@ Discussion
 
 There's nothing special code has to do to become a Lift module, although there are common conventions: they typically are packaged as _net.liftmodules_, but don't have to be; they usually depend on a version of Lift; they sometimes use the hooks provided by `LiftRules` to provide a particular behaviour.  Anyone can create and publish a Lift module, and anyone can contribute to existing modules. In the end, they are declared as dependencies in SBT, and pulled into your code just like any other dependency.(((Lift modules)))
 
-The dependency name is made up of two elements: the name and the "edition" of Lift that the module is compatible with, as shown in <<ModuleVersioning>>. By "edition" we just mean the first part of the Lift version number. This implies the module is compatible with any Lift release that starts "2.5."((("dependencies, naming conventions of")))
+The dependency name is made up of two elements: the name and the "edition" of Lift that the module is compatible with, as shown in <<ModuleVersioning>>. By "edition" we just mean the first part of the Lift version number. A "2.5" edition implies the module is compatible with any Lift release that starts "2.5."((("dependencies, naming conventions of")))
 
 [[ModuleVersioning]]
 .The structure of a module version
@@ -1455,8 +1455,6 @@ See Also
 ^^^^^^^^
 
 There's no real specification of what Textile is, but there are http://redcloth.org/hobix.com/textile/[references available] that cover the typical kinds of markup to enter and what HTML you can expect to see.
-
-https://github.com/liftmodules/textile[The home of the Textile module]
 
 https://github.com/liftmodules/textile/blob/master/src/test/scala/net/liftmodules/textile/TextileSpec.scala[The unit tests for the Textile module] give you a good set of examples of what is supported.(((range="endofrange", startref="ix_LAhtml")))
 
