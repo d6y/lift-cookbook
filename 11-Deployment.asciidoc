@@ -698,15 +698,13 @@ jdbc:postgresql://ec2-54-243-230-119.compute-1.amazonaws.com:5432/d44nsahps11hda
 See Also
 ^^^^^^^^
 
-Both the https://devcenter.heroku.com/categories/scala[Scala] and https://devcenter.heroku.com/categories/java[Java] articles at Heroku are useful to learn more of the details described in this recipe.
-
-_Dynos and the Dyno Manifold_ are described https://devcenter.heroku.com/articles/dynos[here].
+The https://devcenter.heroku.com/categories/scala[Scala] and https://devcenter.heroku.com/categories/java[Java] articles at Heroku, and https://devcenter.heroku.com/articles/dynos[Dynos and the Dyno Manager], are useful to learn more of the details described in this recipe.
 
 The JVM shutdown hooks are described in the http://docs.oracle.com/javase/7/docs/api/java/lang/Runtime.html[JDK documentation].
 
 https://devcenter.heroku.com/articles/java-webapp-runner[Heroku's guide to containerless deployment] makes use of Maven to package your application.  There is also a https://github.com/ghostm/lift_blank_heroku[template SBT project from Matthew Henderson] that includes a `JettyLauncher` class.
 
-The way Heroku deals with Comet long-polling is described https://devcenter.heroku.com/articles/request-timeout[here].(((range="endofrange", startref="ix_PDhero")))(((range="endofrange", startref="ix_hero")))(((range="endofrange", startref="ix_HOSThero")))
+https://devcenter.heroku.com/articles/request-timeout[Request Timeout] describes how Heroku deals with Comet long polling.(((range="endofrange", startref="ix_PDhero")))(((range="endofrange", startref="ix_hero")))(((range="endofrange", startref="ix_HOSThero")))
 
 /////////////////////////////////////////
 
@@ -888,9 +886,9 @@ Note that `Props.productionMode` is `true` for the run modes of `Production`, `S
 See Also
 ^^^^^^^^
 
-The Lift Chat example is described in http://simply.liftweb.net/[_Simply Lift_]. The source code used in this recipe can be found https://github.com/LiftCookbook/rabbitmq_chat[here].
+The Lift Chat example is described in http://simply.liftweb.net/[_Simply Lift_]. The source code used in this recipe is on https://github.com/LiftCookbook/rabbitmq_chat[GitHub].
 
-https://github.com/liftmodules/amqp[The Lift AMQP module]
+Source for https://github.com/liftmodules/amqp[the Lift AMQP module] can be found on GitHub.
 
 If you want to learn more about RabbitMQ, take a look at the http://www.rabbitmq.com/tutorials/tutorial-five-java.html[tutorials] or Alvaro Videla and Jason J.W. Williams's _RabbitMQ in Action: Distributed Messaging for Everyone_, Manning Publications.
 
