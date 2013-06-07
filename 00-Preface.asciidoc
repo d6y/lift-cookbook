@@ -136,6 +136,10 @@ I am indebted to the contributors who have taken the trouble to write new recipe
 
 You'll see I've repeatedly referenced the work of Antonio Salazar Cardozo, Diego Medina, Tim Nelson, David Pollak, and Dave Whittaker. These are fantastic communicators: thank you guys.
 
+++++
+<?hard-pagebreak?>
+++++
+
 It's been a pleasure working with the O'Reilly team, and they have immensely improved the text. Thank you, especially Meghan Blanchette, Kara Ebrahim, and Kiel Van Horn.
 
 Many thank to Jono for all the encouragement and help.
