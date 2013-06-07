@@ -632,7 +632,7 @@ Use the web interface included as part of H2. Here are the steps:
 . Start the server from a Terminal window using the JAR file: `java -cp /path/to/h2-version.jar org.h2.tools.Server`
 . This should launch your web browser, asking you to log in.
 . Select "Generic H2 Server" in "Saved Settings."
-. Enter +*jdbc:h2:/path/to/youapp/lift_proto.db;AUTO_SERVER=TRUE*+ for "JDBC URL," adjusting the path for the location of your database, and adjusting the name of the database (_lift_proto.db_) if different in your _Boot.scala_.
+. Enter **++jdbc:h2:/path/to/youapp/lift_proto.db;AUTO_SERVER=TRUE++** for "JDBC URL," adjusting the path for the location of your database, and adjusting the name of the database (_lift_proto.db_) if different in your _Boot.scala_.
 . Press "Connect" to view and edit your database.
 
 Discussion
