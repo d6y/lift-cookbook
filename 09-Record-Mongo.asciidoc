@@ -39,7 +39,7 @@ MongoDB.defineDb(DefaultMongoIdentifier, new Mongo(server), "mydb")
 -----------------------------------------------------------------
 
 This will give you a connection to a local MongoDB database called
-"mydb."
+`mydb`.
 
 Discussion
 ^^^^^^^^^^
@@ -85,7 +85,7 @@ MongoUrl.defineDb(DefaultMongoIdentifier,
   "mongodb://user:pass@127.0.0.1:27017/myDb")
 --------------------------------------------------------------
 
-The full URL scheme for MongoDB is more complicated, allowing for multiple hosts and connection parameters, but the above code handles optional username and password fields and may be enough to get you up and running with your MongoDB pass:[<phrase role='keep-together'>configuration.</phrase>]
+The full URL scheme for MongoDB is more complicated, allowing for multiple hosts and connection parameters, but the previous code handles optional username and password fields and may be enough to get you up and running with your MongoDB pass:[<phrase role='keep-together'>configuration.</phrase>]
 
 The `DefaultMongoIdentifier` is a value used to identify a particular connection.  Lift keeps a map of identifiers to connections, meaning you can connect to more than one database.  The common case is a single database, and that is usually assigned to `DefaultMongoIdentifier`.
 
@@ -118,7 +118,7 @@ The full MongoDB connection format is described in http://docs.mongodb.org/manua
 
 
 [[MongoHashMap]]
-Storing a HashMap in a MongoDB Record
+Storing a Hash Map in a MongoDB Record
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -171,7 +171,7 @@ class Places {
 }
 -------------------------------------------------------------------------------
 
-When this snippet is called, it looks up a record by `_id` of "uk" or
+When this snippet is called, it looks up a record by `_id` of `uk` or
 creates it using some canned information. The template to go with the
 snippet could include:
 
@@ -362,7 +362,7 @@ Fri.toString // java.lang.String = Fri
 Fri.id //  Int = 4
 -----------------------------------
 
-If you wanted to store the ID, use `EnumField` instead.
+If you want to store the ID, use `EnumField` instead.
 
 Be aware that other tools, notably Rogue, expect the string value, not the integer ID, of an enumeration, so you may prefer to use `EnumNameField` for that reason.
 
@@ -468,7 +468,7 @@ object image extends BsonRecordField(this, Image) {
 
 With `optional_?` set in this way, the image part of the MongoDB document
 won't be saved if the value is not set. Within Scala you will then want
-to access the value with `valueBox` call:
+to access the value with a `valueBox` call:
 
 [source,scala]
 ---------------------------------------
@@ -557,7 +557,7 @@ class HelloWorld {
   }
 -----------------------------------------------------------------------------
 
-For the value `uk` we look up an existing record, or create one if none
+For the value `uk`, we look up an existing record, or create one if none
 is found. We create `earth` as a separate MongoDB record, and
 then reference it in the `planet` field with the ID of the planet.
 
@@ -578,7 +578,7 @@ System.setProperty("DEBUG.MONGO", "true")
 System.setProperty("DB.TRACE", "true")
 -----------------------------------------
 
-Having done this, the first time you run the previous snippet your console
+Having done this, the first time you run the previous snippet, your console
 will include:
 
 ----------------------------------------------------------------------------
@@ -590,13 +590,13 @@ INFO: update: cookbook.example.country { "_id" : "uk"} { "_id" : "uk" ,
 INFO: find: cookbook.example.planet { "_id" : "earth"}
 ----------------------------------------------------------------------------
 
-What you're seeing here is the initial lookup for "uk," followed by the
-creation of the "earth" record and an update that is saving the "uk"
-record. Finally, there is a lookup of "earth" when `uk.obj` is called in
+What you're seeing here is the initial lookup for `uk`, followed by the
+creation of the `earth` record and an update that is saving the `uk`
+record. Finally, there is a lookup of `earth` when `uk.obj` is called in
 the `facts` method.
 
 The `obj` call will cache the `planet` reference. That means you could
-say...
+say:
 
 [source,scala]
 ------------------------------------------
@@ -605,8 +605,8 @@ say...
 ".review *" #> uk.planet.obj.map(_.review)
 ------------------------------------------
 
-...and you'd still only see one query for the "earth" record despite
-calling `obj` multiple times. The flip side of that is if the "earth"
+and you'd still only see one query for the `earth` record despite
+calling `obj` multiple times. The flip side of that is if the `earth`
 record was updated elsewhere in MongoDB after you called `obj` you would
 not see the change from a call to `uk.obj` unless you reloaded the `uk`
 record first.
@@ -713,7 +713,7 @@ For the first step, edit _build.sbt_ and add:
 "com.foursquare" %% "rogue" % "1.1.8" intransitive()
 ---------------------------------------------
 
-In your code `import com.foursquare.rogue._` and then start using Rogue.  For example, using the Scala console (see <<MongoScalaConsole>>):
+In your code, run `import com.foursquare.rogue._` and then start using Rogue.  For example, using the Scala console (see <<MongoScalaConsole>>):
 
 [source, scala]
 ---------------------------------------------
@@ -755,7 +755,7 @@ The DSL constructs a query that we then `fetch` to send the query to MongoDB. Th
 
 `countDistinct`:: Shows the number of distinct values in the results
 
-`exists`:: This is true if there's any record that matches the query
+`exists`:: True if there's any record that matches the query
 
 `get`:: Returns an `Option[T]` from the query
 
@@ -847,7 +847,7 @@ we are storing the location information in one of MongoDB's permitted formats.  
 an embedded document containing the coordinates. We could also have used an array of two values
 to represent the point.((("values", "embedding in database records")))
 
-Second, we're creating an index of type "2d," which allows us to use MongoDB's geospatial functions such as `$near` and `$within`. The `unique=true` in the `ensureIndex` highlights that you can control
+Second, we're creating an index of type `2d`, which allows us to use MongoDB's geospatial functions such as `$near` and `$within`. The `unique=true` in the `ensureIndex` highlights that you can control
 whether locations needs to be unique (`true`, no duplications) or not (`false`).
 
 With regard to the unique index, you'll note that we're calling `save(true)` on the `City` in
@@ -1068,7 +1068,7 @@ trait MongoTestKit {
 }
 --------------------------------------------
 
-This trait provides the plumbing for connection to a MongoDB server running locally, and creates a database based on the name of the class it is mixed into.  The important part is the `MongoContext`, which ensures that `around` your specification the database is initialized, and that after your specification is run, it is cleaned up.
+This trait provides the plumbing for connection to a MongoDB server running locally, and creates a database based on the name of the class it is mixed into.  The important part is the `MongoContext`, which ensures that `around` your specification the database is initialised, and that after your specification is run, it is cleaned up.
 
 To use this in a specification, mix in the trait and then add the context:
 
@@ -1136,9 +1136,9 @@ There's also `test-quick` (in SBT 0.12), which will only run tests that have not
 Database cleanup
 ++++++++++++++++
 
-Around each test we've simply deleted the database so the next time we try to use it, it'll be empty.  In some situations you may not be able to do this.  For example, if you're running tests against a database hosted with companies such as MongoLabs or MongoHQ, then deleting the database will mean you won't be able to connect to it next time you run.(((databases, cleanup after testing)))(((MongoLabs)))(((MongoHQ)))
+Around each test, we've simply deleted the database so the next time we try to use it, it'll be empty.  In some situations, you may not be able to do this.  For example, if you're running tests against a database hosted with companies such as MongoLabs or MongoHQ, then deleting the database will mean you won't be able to connect to it next time you run.(((databases, cleanup after testing)))(((MongoLabs)))(((MongoHQ)))
 
-One way to resolve that is to clean up each individual collection, by defining the collections you need to clean up, and replacing `destroyDb` with a method that will remove all entries in those collections:
+One way to resolve that is to clean up each individual collection, by defining the collections you need to clean up and replacing `destroyDb` with a method that will remove all entries in those collections:
 
 [source, scala]
 --------------------------------------------
@@ -1150,7 +1150,7 @@ def destroyDb() : Unit = {
 }
 --------------------------------------------
 
-Note that the collection list is `lazy` to avoid start up of the Record system before we've initialized our database connections.
+Note that the collection list is `lazy` to avoid start up of the Record system before we've initialised our database connections.
 
 
 
