@@ -168,9 +168,9 @@ when deploying.
 Host IP and port number
 +++++++++++++++++++++++
 
-Generally, you don't need to know about your deployed instance's public host name and port number. Requests to your application URL are routed to the specific instance by CloudBees. However there are situations, especially when you have multiple instances, where you do need to find this out. For example, if you want to receive messages from Amazon's Simple Notification Service (SNS), then each instance will need to give a direct URL to SNS when the application boots.((("Amazon's Simple Notification Service (SNS)")))(((public hostnames)))(((port numbers)))
+Generally, you don't need to know about your deployed instance's public host name and port number. Requests to your application URL are routed to a specific instance by CloudBees. However there are situations, especially when you have multiple instances, where you do need to find this out. For example, if you want to receive messages from Amazon's Simple Notification Service (SNS), then each instance will need to give a direct URL to SNS when the application boots.((("Amazon's Simple Notification Service (SNS)")))(((public hostnames)))(((port numbers)))
 
-To get the public hostname, you need to make an https://developer.cloudbees.com/bin/view/Main/Finding+out+app+port+and+hostname[HTTP request to _http://instance-data/latest/meta-data/public-hostname_]. For example:
+CloudBees has provided https://developer.cloudbees.com/bin/view/Main/Finding+out+app+port+and+hostname[documentation on how to do this]. To get the public hostname, you need to make an HTTP request to _http://instance-data/latest/meta-data/public-hostname_. For example:
 
 [source, scala]
 ------------------------------------------------------------
@@ -202,7 +202,7 @@ val beesPort : Option[Int] = {
 }
 ------------------------------------------------------------
 
-The `java.io.File#list` method returns a list of filenames in a directory, but will return `null` if the directory doesn't exist or if there are any IO errors.  For this reason, we wrap it in `Option` to convert `null` values to `None`.
+The `java.io.File list` method returns a list of filenames in a directory, but will return `null` if the directory doesn't exist or if there are any IO errors.  For this reason, we wrap it in `Option` to convert `null` values to `None`.
 
 Running locally this will return a `None`, but on CloudBees you'll see a `Full[Int]` port number.
 
@@ -230,7 +230,7 @@ To change the default Java Virtual Machine, use the `bees config:set` command(((
 $ bees config:set -a myaccount/myapp -Rjava_version=1.8
 ------------------------------------------------------------
 
-Excluding the application identifier `-a myaccount/myapp` from the command will set the JVM as the default for all applications in the account. The  `bees config:set` command will update the configuration, but not take effect until the application(s) have been updated or restarted.
+Excluding the application identifier `-a myaccount/myapp` from the command will set the JVM as the default for all applications in the account. The  `bees config:set` command will update the configuration, but not take effect until the application has been updated or restarted.
 
 The JVM can also be changed when an application is deployed or updated via the following commands:
 
@@ -254,7 +254,7 @@ Runtime Parameters:
 Container version
 +++++++++++++++++
 
-CloudBees offer several containers: Tomcat 6.0.32 (the default), Tomcat 7, JBoss 7.02, JBoss 7.1, and GlassFish 3.((("containers", "and CloudBees")))(((Tomcat)))(((JBoss)))(((GlassFish)))
+CloudBees offers several containers: Tomcat 6.0.32 (the default), Tomcat 7, JBoss 7.02, JBoss 7.1, and GlassFish 3.((("containers", "and CloudBees")))(((Tomcat)))(((JBoss)))(((GlassFish)))
 
 To change containers the application will need to be redeployed, as CloudBees uses different file configurations for the various containers.((("files", "container-specific configuration")))  Hence we use the `bees app:deploy` command. The following example updates to Tomcat 7:
 
@@ -311,9 +311,7 @@ See Also
 
 https://wiki.cloudbees.com/bin/view/RUN/BeesSDK[The CloudBees SDK] provides command-line tools for configuring and controlling applications.
 
-https://developer.cloudbees.com[The CloudBees developer portal] contains a "Resources" section that provides details of the CloudBees services.(((range="endofrange", startref="ix_PDcbee")))(((range="endofrange", startref="ix_cbee")))(((range="endofrange", startref="ix_HOSTcbee")))
-
-The JVM PermGen settings for CloudBees are described https://wiki.cloudbees.com/bin/view/RUN/JVM+PermGen+Space[here], and settings for which JVM is used can be found https://developer.cloudbees.com/bin/view/RUN/JVMVersion[here]. For information about the containers, see: https://developer.cloudbees.com/bin/view/RUN/ClickStack[this site].
+https://developer.cloudbees.com[The CloudBees developer portal] contains a "Resources" section that provides details of the CloudBees services. In it, you'll find details on https://wiki.cloudbees.com/bin/view/RUN/JVM+PermGen+Space[PermGen settings], https://developer.cloudbees.com/bin/view/RUN/JVMVersion[JVM selection], and https://developer.cloudbees.com/bin/view/RUN/ClickStack[servlet containers].(((range="endofrange", startref="ix_PDcbee")))(((range="endofrange", startref="ix_cbee")))(((range="endofrange", startref="ix_HOSTcbee")))
 
 
 //////////////////////////////////////////
@@ -386,7 +384,7 @@ Working with a database
 
 There's nothing unusual you have to do to use Lift and a database from Beanstalk. However, Beanstalk does try to make it easy for you to work with Amazon's Relational Database Service (RDS).  Either when creating your Beanstalk environment, or from the configuration options later, you can add an RDS instance, which can be an Oracle, SQL-Server or MySQL database.((("RDBMS (Relational Database Management System)")))(((databases, RDS instances of)))(((MySQL)))(((Oracle)))(((SQL-Server)))
 
-The MySQL option will create a MySQL 5.5 InnoDB database. The database will be accessible from Beanstalk, but not from elsewhere on the Internet. To change that, modify the security groups for the RDS instance from the AWS web console.  For example, you might permit access from your IP address.
+The MySQL option will create a MySQL InnoDB database. The database will be accessible from Beanstalk, but not from elsewhere on the Internet. To change that, modify the security groups for the RDS instance from the AWS web console.  For example, you might permit access from your IP address.
 
 When your application launches with an associated RDS instance, the JVM system properties include settings for the database name, host, port, user, and password.  You could pull them together like this in _Boot.scala_:
 
@@ -460,7 +458,7 @@ You want to deploy your Lift application to your account on the Heroku cloud pla
 Solution
 ^^^^^^^^
 
-Package your Lift application as a WAR file and use the Heroku deploy plugin to send and run your application. This will give you an application running under Tomcat 7. Anyone can use this method to deploy an application but Heroku only provides support for it for Enterprise Java customers.(((Tomcat)))(((Enterprise Java)))
+Package your Lift application as a WAR file and use the Heroku deploy plugin to send and run your application. This will give you an application running under Tomcat 7. Anyone can use this method to deploy an application but Heroku only provides support for Enterprise Java customers.(((Tomcat)))(((Enterprise Java)))
 
 This recipe walks through the process in three stages: one-time setup; deployment of the WAR; and configuration of your Lift application for production performance.
 
@@ -693,9 +691,7 @@ $
 To access via a JDBC tool outside of the Heroku environment, you'll need to include parameters to force SSL. For example:
 
 ---------------------------
-jdbc:postgresql://ec2-54-243-230-119.compute-1.amazonaws.com:5432/d44nsahps11hda?
-  username=gghetjutddgr&password=RNC_lINakkk899HHYEFUppwG&ssl=true&sslfactory=
-  org.postgresql.ssl.NonValidatingFactory
+jdbc:postgresql://ec2-54-243-230-119.compute-1.amazonaws.com:5432/d44nsahps11hda?username=gghetjutddgr&password=RNC_lINakkk899HHYEFUppwG&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
 ---------------------------
 
 
