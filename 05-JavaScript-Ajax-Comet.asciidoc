@@ -614,7 +614,7 @@ See Also
 
 For an example of accessing these query parameters in your own snippets, see <<ConditionalIncludes>>.
 
-_Simply Lift_, Chapter 4, introduces Ajax forms at http://simply.liftweb.net/[http://simply.liftweb.net/].
+http://simply.liftweb.net/[_Simply Lift_, Chapter 4], introduces Ajax forms.
 
 
 
