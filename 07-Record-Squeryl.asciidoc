@@ -2,7 +2,7 @@
 Relational Database Persistence with Record and Squeryl
 -------------------------------------------------------
 
-Squeryl is an object-relational mapping library.  It converts Scala classes into tables, rows, and columns in a relational database, and provides a way to write SQL-like queries that are type-checked by the Scala compiler. The Lift Squeryl Record module integrates Squeryl with Record, meaning your Lift application can use Squeryl to store and fetch data while making use of the features of record, such as data validation.(((Squeryl Record module)))(((object-relational mapping)))(((Scala, relational database conversion)))((("Lift Web Framework", "Squeryl Record module")))(((SQL-like queries)))((("Record, configuration of")))((("Squeryl, configuring")))((("database persistence", "with Squeryl Record module", id="ix_DBsrm", range="startofrange")))
+Squeryl is an object-relational mapping library.  It converts Scala classes into tables, rows, and columns in a relational database, and provides a way to write SQL-like queries that are type-checked by the Scala compiler. The Lift Squeryl Record module integrates Squeryl with Record, meaning your Lift application can use Squeryl to store and fetch data while making use of the features of Record, such as data validation.(((Squeryl Record module)))(((object-relational mapping)))(((Scala, relational database conversion)))((("Lift Web Framework", "Squeryl Record module")))(((SQL-like queries)))((("Record, configuration of")))((("Squeryl, configuring")))((("database persistence", "with Squeryl Record module", id="ix_DBsrm", range="startofrange")))
 
 The code in this chapter can be found at https://github.com/LiftCookbook/cookbook_squeryl[https://github.com/LiftCookbook/cookbook_squeryl].
 
@@ -18,7 +18,7 @@ You want to configure your Lift application to use Squeryl and Record.((("Lift a
 Solution
 ^^^^^^^^
 
-Include the Squeryl-Record dependency in your build, and in _Boot.scala_ provide a database connection function to `SquerylRecord.initWithSquerylSession`.
+Include the Squeryl-Record dependency in your build, and in _Boot.scala_, provide a database connection function to `SquerylRecord.initWithSquerylSession`.
 
 For example, to configure Squeryl with PostgreSQL, modify _build.sbt_ to add two dependencies, one for Squeryl-Record and one for the database driver:
 
@@ -35,7 +35,7 @@ libraryDependencies ++= {
 }
 ---------------------------------------------------------------
 
-In _Boot.scala_ we define a connection and register it with Squeryl:
+In _Boot.scala_, we define a connection and register it with Squeryl:
 
 [source, scala]
 ---------------------------------------------------------------
@@ -82,11 +82,11 @@ This arranges for requests to be handled in the `inTransaction` scope. As Lift u
 Discussion
 ^^^^^^^^^^
 
-You can use any JVM persistence mechanism with Lift. What Lift Record provides is a light interface around persistence with bindings to Lift's CSS transforms, screens, and wizards. Squeryl-Record is a concrete implementation to connect Record with Squeryl.  This means you can use standard Record objects, which are effectively your schema, with Squeryl and write queries which are validated at compile time.(((JVM persistence mechanisms)))
+You can use any JVM persistence mechanism with Lift. What Lift Record provides is a light interface around persistence with bindings to Lift's CSS transforms, screens, and wizards. Squeryl-Record is a concrete implementation to connect Record with Squeryl.  This means you can use standard Record objects, which are effectively your schema, with Squeryl and write queries that are validated at compile time.(((JVM persistence mechanisms)))
 
 Plugging into Squeryl means initialising Squeryl's session management, which allows us to wrap queries in Squeryl's `transaction` and `inTransaction` functions.  The difference between these two calls is that `inTransaction` will start a new transaction if one doesn't exist, whereas `transaction` always creates a new transaction.
 
-By ensuring a transaction is available for all HTTP requests via `addAround`, we can write queries in Lift and for the most part do not have to establish transactions ourselves unless we want to. For example:
+By ensuring a transaction is available for all HTTP requests via `addAround`, we can write queries in Lift, and for the most part, do not have to establish transactions ourselves unless we want to. For example:
 
 [source,scala]
 ------------------------------------------------------------
@@ -94,7 +94,7 @@ import net.liftweb.squerylrecord.RecordTypeMode._
 val r = myTable.insert(MyRecord.createRecord.myField(aValue))
 ------------------------------------------------------------
 
-In this recipe, the `PostgreSqlAdapter` is being used. Squeryl also supports: `OracleAdapter`, `MySQLInnoDBAdapter` and `MySQLAdapter`, `MSSQLServer`, `H2Adapter`, `DB2Adapter`, and `DerbyAdapter`.
+In this recipe, the `PostgreSqlAdapter` is used. Squeryl also supports: `OracleAdapter`, `MySQLInnoDBAdapter` and `MySQLAdapter`, `MSSQLServer`, `H2Adapter`, `DB2Adapter`, and `DerbyAdapter`.
 
 
 See Also
@@ -107,7 +107,7 @@ See <<SquerylJNDI>> for configuring connections via Java Naming and Directory In
 
 
 [[SquerylJNDI]]
-Using a JNDI Datasource
+Using a JNDI DataSource
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -119,7 +119,7 @@ application.(((Record-Squeryl Lift applications, JNDI data sources for)))((("Jav
 Solution
 ^^^^^^^^
 
-In _Boot.scala_ call `initWithSquerylSession` with a `DataSource` looked up from the JNDI context(((initWithSquerylSession))):
+In _Boot.scala_, call `initWithSquerylSession` with a `DataSource` looked up from the JNDI context(((initWithSquerylSession))):
 
 [source,scala]
 ------------------------------------------------------------
@@ -185,7 +185,7 @@ You want to model a one-to-many relationship, such as a satellite belonging to a
 Solution
 ^^^^^^^^
 
-Use Squeryl's `oneToManyRelation` in your schema, and on your Lift model include a reference from the satellite to the planet.
+Use Squeryl's `oneToManyRelation` in your schema, and on your Lift model, include a reference from the satellite to the planet.
 
 The objective is to model the relationship as shown in <<SquerylPlanetOneToManyFigure>>.
 
@@ -306,14 +306,14 @@ Deimos orbits: Mars
 Moons of Mars are: List(Phobos, Deimos)
 -----------------------------------------------------------
 
-In this example code we're calling `deimos.planet.single`, which returns one result or will throw an exception if the associated planet was not found. `headOption` is the safer way if there's a chance the record will not be found, as it will evaluate to `None` or `Some[Planet]`.
+In this example code, we're calling `deimos.planet.single`, which returns one result or will throw an exception if the associated planet was not found. `headOption` is the safer way if there's a chance the record will not be found, as it will evaluate to `None` or `Some[Planet]`.
 
 
 
 Discussion
 ^^^^^^^^^^
 
-The `planetToSatellites.left` method is not a simple collection of `Satellite` objects.  It's a Squeryl `Query[Satellite]`, meaning you can treat it like any other kind of `Queryable[Satellite]`.  For example we could ask for those satellites of a planet that are alphabetically after "E," which for Mars would match "Phobos":
+The `planetToSatellites.left` method is not a simple collection of `Satellite` objects.  It's a Squeryl `Query[Satellite]`, meaning you can treat it like any other kind of `Queryable[Satellite]`.  For example, we could ask for those satellites of a planet that are alphabetically after "E," which for Mars would match "Phobos":
 
 [source, scala]
 -----------------------------------------------------------
@@ -402,7 +402,7 @@ Solution
 Use Squeryl's `manyToManyRelation` in your schema, and implement a record to hold the join between the two sides of the relationship. <<SquerylPlanetManyToManyFigure>> shows the structure we will create in this recipe, where `Visit` is the record that will connect each many to the other many.((("Record-Squeryl Lift applications", "many-to-many relationships in", id="ix_RSLAmtmr", range="startofrange")))((("many-to-many relationships", id="ix_mtmr", range="startofrange")))
 
 [[SquerylPlanetManyToManyFigure]]
-.Many-to-many: Jupiter was visited by Juno and Voyager 1; Saturn was only visited by Voyager 1.
+.Many-to-many: Jupiter was visited by Juno and Voyager 1; Saturn was only visited by Voyager 1
 image::images/lfcb_0702.png[]
 
 The schema is defined in terms of two tables, one for planets and one for space probes, plus a relationship between the two based on a third class, called `Visit`:
@@ -609,9 +609,9 @@ To access this extra information on the `Visit` object, you can make use of a co
 
 `associations`:: A query returning the `Visit` objects related to the `Planet.probes` or `Probe.planets`
 
-`associationMap`:: A query returning pairs of `(Planet,Visit)` or `(Probe,Visit)` depending on which side of the join you call it on (`probes` or `planets`)
+`associationMap`:: A query returning pairs of `(Planet,Visit)` or `(Probe,Visit)`, depending on which side of the join you call it on (`probes` or `planets`)
 
-For example, in a snippet we could list all the space probes, and for each probe show the planet it visited and what year it was there.  The snippet would look like this:
+For example, in a snippet, we could list all the space probes and, for each probe, show the planet it visited and what year it was there.  The snippet would look like this:
 
 [source, scala]
 -----------------------------------------------------------
@@ -854,7 +854,7 @@ val url = new StringField(this, 1024) {
 }
 ------------------------------------------------------------
 
-The list of errors from `validate` are of type `List[FieldError]`.  The `S.error` method accepts this list and registered each validation error message so it can be shown on the page.  It does this by associating the message with an ID for the field, allowing you to pick out just the errors for an individual field, as we do in this recipe.  The ID is stored on the field, and in the case of `Planet.name` it is available as `Planet.name.uniqueFieldId`.  It's a `Box[String]` with a value of `Full("name_id")`.  It is this `name_id` value that we used in the `lift:Msg?id=name_id&errorClass=error` markup to pick out just the error for this field.(((S. error)))(((error messages, from validation process)))
+The list of errors from `validate` are of type `List[FieldError]`.  The `S.error` method accepts this list and registers each validation error message so it can be shown on the page.  It does this by associating the message with an ID for the field, allowing you to pick out just the errors for an individual field, as we do in this recipe.  The ID is stored on the field, and in the case of `Planet.name`, it is available as `Planet.name.uniqueFieldId`.  It's a `Box[String]` with a value of `Full("name_id")`.  It is this `name_id` value that we used in the `lift:Msg?id=name_id&errorClass=error` markup to pick out just the error for this field.(((S. error)))(((error messages, from validation process)))
 
 You don't have to use `S.error` to display validation messages.  You can roll your own display code, making use of the `FieldError` directly.  As you can see from the source for `FieldError`, the error is available as a `msg` property:
 
@@ -931,14 +931,14 @@ The validation is triggered just like any other validation, as described in <<Fi
 Discussion
 ^^^^^^^^^^
 
-By convention validation functions have two argument lists: the first
-for the error message; the second to receive the value to validate. This
+By convention, validation functions have two argument lists: the first
+for the error message, and the second to receive the value to validate. This
 allows you to easily reuse your validation function on other fields.  For example,
 if you wanted to validate that satellites have a unique name, you could use
 exactly the same function but provide a different error message.
 
 The `FieldError` you return needs to know the field it applies to as
-well as the message to display. In the example the field is `name`, but
+well as the message to display. In the example, the field is `name`, but
 we've used `this.name` to avoid confusion with the `name` parameter passed
 into the `valUnique` function.
 
@@ -1066,7 +1066,7 @@ Use an in-memory database, and arrange for it to be set up before your test and 
 
 There are three parts to this: including a database in your project and connecting to it in an in-memory mode; creating a reusable trait to set up the database; and then using the trait in your test.
 
-The H2 database has an in-memory mode, meaning it won't save data to disk. It needs to be included in _build.sbt_ as a dependency. Whilst you are editing _build.sbt_ also disable SBT's parallel test execution to prevent database tests from influencing each other(((H2 Database Engine))):
+The H2 database has an in-memory mode, meaning it won't save data to disk. It needs to be included in _build.sbt_ as a dependency. Whilst you are editing _build.sbt_, also disable SBT's parallel test execution to prevent database tests from influencing each other(((H2 Database Engine))):
 
 [source, scala]
 --------------------------------------------
@@ -1294,7 +1294,7 @@ The database column backing the `UniqueIdField` in this recipe will be a `varcha
 GOJFGQRLS5GVYGPH3L3HRNXTATG3RM5M
 ----------------------
 
-As the value is made up of just letters and numbers, it makes it easy to use in URLs as there are no characters to escape. For example, it could be used in a link to allow a user to validate their account when sent the link over email, which is one of the uses in `ProtoUser`.
+As the value is made up of just letters and numbers, it makes it easy to use in URLs as there are no characters to escape. For example, it could be used in a link to allow a user to validate her account when sent the link over email, which is one of the uses in `ProtoUser`.
 
 If you need to change the value, the `reset` method on the field will generate a new random string for the field.
 
@@ -1404,7 +1404,7 @@ goal is to update the `updated` field when any part of the record
 changes, we can't use the `LiftcycleCallbacks` here.
 
 Instead, the `CreatedUpdated` trait simplifies adding `updated` and
-`created` fields to a Record, but we do need to remember to add a hook
+`created` fields to a record, but we do need to remember to add a hook
 into the schema to ensure the `updated` value is changed when a record
 is modified. This is why we set the `callbacks` on the Schema.
 
@@ -1416,7 +1416,7 @@ updated timestamp not null,
 created timestamp not null
 -----------------------------------------------
 
-The `timestamp` is used for the H2 database.  For other databases the type may be different.
+The `timestamp` is used for the H2 database. For other databases, the type may be different.
 
 The values can be accessed like any other record field.  Using the example data from <<SquerylOneToMany>>, we could run the following:
 
