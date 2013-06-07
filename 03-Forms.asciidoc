@@ -234,7 +234,7 @@ The `*+` replacement rule means append a value to the child node of the button. 
 ---------------------------------------------------------
 
 
-and when the form is submitted, the hidden field is submitted, and like any field, Lift will call the function associated with it: `process` in this case.
+When the form is submitted, the hidden field is submitted, and like any field, Lift will call the function associated with it: `process` in this case.
 
 The effect is something like `ajaxSubmit`, but not exactly the same. In this instance we're appending a hidden field after the `<button>`, but you could place it anywhere on the form you find convenient. However, there's one complication: when is `process` called? Is it before the `name` has been assigned or after? That depends on the order the fields are rendered.  That's to say, in your HTML template, placing the button before the text field (and therefore moving the hidden field's position in this example), the `process` function is called before the name has been set.(((functions, order of execution)))
 
@@ -262,7 +262,7 @@ See Also
 
 Function order is discussed in the http://www.assembla.com/spaces/liftweb/wiki/cool_tips[Lift Cool Tips wiki page].
 
-http://api.jquery.com/serialize/[Form serialisation]
+For more details about the form serialisation process, take a look at http://api.jquery.com/serialize/[the jQuery documentation].
 
 <<AjaxFileUpload>> describes Ajax file uploads.
 
@@ -369,7 +369,7 @@ object JsonForm {
 }
 ---------------------------------------------------------
 
-Like many snippets, this Scala code contains a `render` method that binds to elements on the page. Specifically, `jsonForm` is being replaced with `SHtml.jsonForm`, which will take a `NodeSeq` (which are the input fields) turns it into a form that will submit the values as JSON. The submission will be to our `MottoServer` code.(((SHtml.jsonForm method)))
+Like many snippets, this Scala code contains a `render` method that binds to elements on the page. Specifically, `jsonForm` is being replaced with `SHtml.jsonForm`, which will take a `NodeSeq` (which are the input fields) and turns it into a form that will submit the values as JSON. The submission will be to our `MottoServer` code.(((SHtml.jsonForm method)))
 
 The `jsonScript` element is bound to JavaScript that will perform the transmission and encoding of the values to the server.
 
@@ -408,7 +408,7 @@ Before going on, convince yourself that we're generating JavaScript on the serve
 Additional commands
 +++++++++++++++++++
 
-In the above example, we match on a `JsonCmd` with a command name of `"processForm"`.  You may be wondering what other command can be supplied, or what the meaning of the "target" value is.
+In the above example, we match on a `JsonCmd` with a command name of `"processForm"`.  You may be wondering what other command can be supplied, or what the meaning of the `target` value is.
 
 To demonstrate how you can implement other commands, we can add two additional buttons. These buttons will just convert the motto to upper- or lowercase.  The server-side `render` method changes as follows:
 
@@ -426,7 +426,7 @@ def render =
 ---------------------------------------------------------
 
 The `JsonForm` is unchanged. We still include `MottoServer.jsCmd`, and we still want to wrap the fields and submit them as before. What we've added
-is an extra JavaScript function called `"changeCase"`, which takes one argument called `"direction"` and as a body calls the `MottoServer` with various parameters.  When it is rendered on the page it would appear as something like this:
+is an extra JavaScript function called `changeCase`, which takes one argument called `direction` and as a body calls the `MottoServer` with various parameters.  When it is rendered on the page it would appear as something like this:
 
 [source,javascript]
 ---------------------------------------------------------
@@ -449,7 +449,7 @@ When is the `changeCase` function called?  That's up to us, and one very simple 
 <button onclick="javascript:changeCase('lower')">Lower case the Motto</button>
 ---------------------------------------------------------
 
-When either of these buttons are pressed, the result will be a JSON value sent to the server with the command of `"processCase"` and the `"direction"` and `"params"` set accordingly.  All that is left is to modify our `MottoServer` to pick up this `JsonCmd` on the server:
+When either of these buttons are pressed, the result will be a JSON value sent to the server with the command of `"processCase"` and the `direction` and `params` set accordingly.  All that is left is to modify our `MottoServer` to pick up this `JsonCmd` on the server:
 
 [source,scala]
 ---------------------------------------------------------
@@ -480,9 +480,9 @@ The first `JsonCmd` is unchanged. The second matches on the parameters sent and 
 See Also
 ^^^^^^^^
 
-There are http://demo.liftweb.net/json_more[further examples of `JsonHandler`].
+The Lift demo site contains http://demo.liftweb.net/json_more[further examples of `JsonHandler`].
 
-If you want to process JSON via REST, take a look at http://demo.liftweb.net/stateless_json[these examples].
+If you want to process JSON via REST, take a look at http://demo.liftweb.net/stateless_json[the stateless JSON examples].
 
 _Lift in Action_, section 9.1.4 discusses "Using JSON forms with AJAX," as does section 10.4 of http://exploring.liftweb.net[_Exploring Lift_].
 
@@ -647,7 +647,7 @@ See Also
 
 http://diveintohtml5.info[_Dive into HTML5_] describes how to detect browser pass:[<phrase role='keep-together'>features.</phrase>]
 
-http://api.jqueryui.com/datepicker/[jQuery UI's date picker] has many configuration options.
+http://api.jqueryui.com/datepicker/[The jQuery UI API documentation] lists the various configuration options for the date picker.
 
 The HTML5 date input types submit dates in http://tools.ietf.org/html/rfc3339[RFC 3339 format].
 
@@ -675,7 +675,7 @@ Start by adding the Lift widgets module to your _build.sbt_:
 libraryDependencies += "net.liftmodules" %% "widgets_2.5" % "1.3"
 -------------------------------------------
 
-To enable the autocomplete widget, initialize it in _Boot.scala_:
+To enable the autocomplete widget, initialise it in _Boot.scala_:
 
 [source,scala]
 -------------------------------------------
@@ -693,7 +693,7 @@ We can create a regular form snippet:
 </form>
 -------------------------------------------
 
-and connect the `AutoComplete` class to the element with the ID of "autocomplete":
+Connect the `AutoComplete` class to the element with the ID of "autocomplete":
 
 [source,scala]
 -------------------------------------------
@@ -822,7 +822,8 @@ To incorporate Typeahead, the template needs to change to include the library an
 [source,scala]
 -------------------------------------------
 <link data-lift="head" rel="stylesheet"
-  href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css">
+  href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/
+        bootstrap-combined.min.css">
 
 <script data-lift="tail"
   src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js">
@@ -940,9 +941,9 @@ See Also
 
 The behaviour of the widget module with respect to new values is described in a ticket on the https://github.com/liftmodules/widgets/issues/4[module's GitHub page]. Enhancing modules is one route to get involved with Lift, and <<ContributingAndHelp>> describes other ways to contribute.
 
-The jQuery UI Autocomplete widget is documented http://jqueryui.com/autocomplete/[here]. The version included with the Lift widgets module is version 1.0.2.(((range="endofrange", startref="ix_FPauto")))(((range="endofrange", startref="ix_autocomp")))
+http://jqueryui.com/autocomplete/[The jQuery UI Autocomplete documentation] describes how to configure the widget. The version included with the Lift widgets module is version 1.0.2.(((range="endofrange", startref="ix_FPauto")))(((range="endofrange", startref="ix_autocomp")))
 
-You can find documentation for Twitter Bootstrap Typeahead http://twitter.github.io/bootstrap/javascript.html#typeahead[here].(((Typeahead component)))
+The Typeahead widget is http://twitter.github.io/bootstrap/javascript.html#typeahead[documented] as part of Twitter Bootstrap.(((Typeahead component)))
 
 [[Radio]]
 Offering Choices with Radio Buttons
@@ -1016,19 +1017,17 @@ Rather than generate the radio buttons in one expression on the `render` method,
 </div>
 -----------------------------------------------
 
-The `class="options"` span will be replaced with the radio buttons from the code, and when the form is submitted, the function supplied to `SHtml.radioElem` will be called, resulting in the selected value being logged. For example:
+The `class="options"` span will be replaced with the radio buttons from the code, and when the form is submitted, the function supplied to `SHtml.radioElem` will be called, resulting in the selected value being logged. For example, if no radio button is selected:
 
 -----------------------------------------------
 INFO  code.snippet.Radio - Choice: Empty
 -----------------------------------------------
 
-if no radio button is selected, and:
+or if the third button was selected:
 
 -----------------------------------------------
 INFO  code.snippet.Radio - Choice: Full(Rather Not Say)
 -----------------------------------------------
-
-if the third button was selected.
 
 Discussion
 ^^^^^^^^^^
@@ -1079,7 +1078,7 @@ This might be a surprise if you were just expecting something like this:
 -----------------------------------------------
 <input type="radio" name="gender" value="Male">Male<br>
 <input type="radio" name="gender" value="Female">Female<br>
-<input type="radio" name="gender" value="RatherNotSay">Rather Not Say<br>
+<input type="radio" name="gender" value="NotSpecified">Rather Not Say<br>
 -----------------------------------------------
 
 By using random values, Lift has helped us by protecting against a range of form-based attacks, such as submitting values we're not expected, or setting values on fields we don't want set.(((form-based attacks)))(((security, form-based attacks)))
@@ -1511,13 +1510,11 @@ The enumeration version works in the same way as the type-safe version.
 See Also
 ^^^^^^^^
 
-The "Submit styling" discussion section in <<AjaxFormProcessing>> discusses the use of hidden fields as function calls.
+The "Submit styling" discussion in <<AjaxFormProcessing>> discusses the use of hidden fields as function calls.
 
 <<SelectOptionChange>> describes how to trigger a server-side action when a selection changes in the browser.
 
-http://exploring.liftweb.net/[Chapter 6 of _Exploring Lift_], "Forms in Lift," discusses multiselect and other types of form elements.
-
-The issue relating to no options being selected is on https://github.com/lift/framework/issues/1139[GitHub].(((range="endofrange", startref="ix_FPmulval")))
+http://exploring.liftweb.net/[Chapter 6 of _Exploring Lift_], "Forms in Lift," discusses multiselect and other types of form elements.(((range="endofrange", startref="ix_FPmulval")))
 
 
 [[FileUpload]]
@@ -1534,7 +1531,7 @@ Solution
 
 Use a `FileParamHolder` in your snippet, and extract file information from it when the form is submitted.
 
-Start with a form that is marked as `"multipart=true"`:
+Start with a form that is marked as `multipart=true`:
 
 [source,html]
 ---------------------------------------------------------
@@ -1594,7 +1591,7 @@ The `fileUpload` binding ensures that the file is assigned to the `upload` varia
 Discussion
 ^^^^^^^^^^
 
-HTTP includes an encoding type of `"multipart/form-data"` that was introduced to support binary data uploads.  The `?form=post;multipart=true` parameters in the template mark the form with this encoding, and the HTML generated will look
+HTTP includes an encoding type of `multipart/form-data` that was introduced to support binary data uploads.  The `?form=post;multipart=true` parameters in the template mark the form with this encoding, and the HTML generated will look
 like this(((binary data uploads))):
 
 [source,html]
@@ -1602,7 +1599,7 @@ like this(((binary data uploads))):
 <form enctype="multipart/form-data" method="post" action="/fileupload">
 ---------------------------------------------------------
 
-When the browser submits the form, Lift detects the `"multipart/form-data"` encoding and extracts any files from the request.  These are available as `uploadedFiles` on a `Req` object, for example:
+When the browser submits the form, Lift detects the `multipart/form-data` encoding and extracts any files from the request.  These are available as `uploadedFiles` on a `Req` object, for example:
 
 [source, scala]
 ---------------------------------------------------------
@@ -1631,7 +1628,7 @@ LiftRules.exceptionHandler.prepend {
 }
 ---------------------------------------------------------
 
-Be aware that the container (Jetty, Tomcat) or any web server (Apache, NGINX) may also have limits on file upload sizes.
+Be aware that the container (Jetty, Tomcat) or any web server (Apache, Nginx) may also have limits on file upload sizes.
 
 [[UploadToDisk]]
 Uploading a file into memory may be fine for some situations, but you may want to upload larger items to disk and then process them in Lift as a stream.  Lift supports this via the following setting:
