@@ -59,13 +59,13 @@ We can test the service with cURL:
 
 [source,xml]
 ------------------
-$ *curl -H 'Content-Type: application/xml'
-    http://localhost:8080/issues/by-state/open*
+$ curl -H 'Content-Type: application/xml'
+    http://localhost:8080/issues/by-state/open
 <?xml version="1.0" encoding="UTF-8"?>
 <p>None open</p>
 
-$ *curl -X DELETE -H 'Content-Type: application/xml'
-    http://localhost:8080/issues/by-state/closed*
+$ curl -X DELETE -H 'Content-Type: application/xml'
+    http://localhost:8080/issues/by-state/closed
 <?xml version="1.0" encoding="UTF-8"?>
 <p>All deleted</p>
 ------------------
@@ -148,7 +148,7 @@ You requested 123.png
 Discussion
 ^^^^^^^^^^
 
-When Lift parses a request it splits the request into constituent parts
+When Lift parses a request, it splits the request into constituent parts
 (e.g., turning the path into a `List[String]`). This includes a
 separation of _some_ suffixes. This is good for pattern matching when you
 want to change behaviour based on the suffix, but a hindrance in this
@@ -348,7 +348,7 @@ case Req("reports" :: name :: Nil, "", GetRequest) =>
   Text("Here's your CSV report for "+name)
 ----
 
-Here we're matching on no suffix (`""`). In this case, `name` would be set to `"foo.csv"`.  This is because Lift separates file suffixes from the end of URLs only for file suffixes that are registered with `explicitlyParsedSuffixes`.  Because "csv" is not one of the default registered suffixes, `"foo.csv"` is not split. That's why "csv" in the suffix position of `Req` pattern match won't match the request, but an empty string in that position will.
+Here we're matching on no suffix (`""`). In this case, `name` would be set to `"foo.csv"`.  This is because Lift separates file suffixes from the end of URLs only for file suffixes that are registered with `explicitlyParsedSuffixes`.  Because `"csv"` is not one of the default registered suffixes, `"foo.csv"` is not split. That's why `"csv"` in the suffix position of `Req` pattern match won't match the request, but an empty string in that position will.
 
 
 See Also
@@ -446,7 +446,7 @@ object JPeg {
 }
 ----------------------
 
-We have defined an extractor called `JPeg` that returns `Some[Req]` if the content type of the upload is _image/jpg_; otherwise the result will be `None`.  This is used in the REST pattern match as `JPeg(req)`.  Note that the `unapply` needs to return `Option[Req]` as this is what's expected by the `Post` extractor.
+We have defined an extractor called `JPeg` that returns `Some[Req]` if the content type of the upload is _image/jpg_; otherwise, the result will be `None`.  This is used in the REST pattern match as `JPeg(req)`.  Note that the `unapply` needs to return `Option[Req]` as this is what's expected by the `Post` extractor.
 
 
 See Also
@@ -526,10 +526,10 @@ tells the compiler that the expression is expected to be of type
 required if, for example, you were calling a function that was defined
 to return a `JValue`.(((type ascription)))
 
-The JSON DSL allows you to created nested structures, lists, and
+The JSON DSL allows you to create nested structures, lists, and
 everything else you expect of JSON.
 
-In addition to the DSL, you can also create JSON from a case class by using the `Extraction.decompose` method:
+In addition to the DSL, you can create JSON from a case class by using the `Extraction.decompose` method:
 
 [source,scala]
 ----
@@ -576,7 +576,7 @@ You want to make a Google Sitemap using Lift's rendering capabilities.((("REST w
 Solution
 ^^^^^^^^
 
-Create the sitemap structure, and bind to it as you would for any template in Lift.
+Create the site map structure, and bind to it as you would for any template in Lift.
 
 Start with a _sitemap.html_ in your _webapp_ folder containing valid XML-Sitemap markup:
 
@@ -619,7 +619,7 @@ class SitemapContent {
 
   def base: CssSel =
     "loc *" #> "http://%s/".format(S.hostName) &
-      "lastmod *" #> siteLastUdated.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZZ")
+      "lastmod *" #> siteLastUpdated.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZZ")
 
   def list: CssSel =
     "url *" #> entries.map(post =>
@@ -684,9 +684,9 @@ $ curl http://127.0.0.1:8080/sitemap
 Discussion
 ^^^^^^^^^^
 
-You may be wondering why we've used REST here, when we could have used a regular HTML template and snippet. The reason is that we want XML rather than HTML output.  We use the same mechanism, but invoke it and wrap it in an `XmlResponse`.
+You may be wondering why we've used REST here when we could have used a regular HTML template and snippet. The reason is that we want XML rather than HTML output.  We use the same mechanism, but invoke it and wrap it in an `XmlResponse`.
 
-The `S.render` method takes a `NodeSeq` and an `HTTPRequst`. The first we supply by running the _sitemap.html_ snippet; the second is simply the current request.  `XmlResponse` requires a `Node` rather than a `NodeSeq`, which is why we call ++head++—as there's only one node in the response, this does what we need.
+The `S.render` method takes a `NodeSeq` and an `HTTPRequest`. The first we supply by running the _sitemap.html_ snippet; the second is simply the current request.  `XmlResponse` requires a `Node` rather than a `NodeSeq`, which is why we call ++head++—as there's only one node in the response, this does what we need.
 
 Note that Google Sitemaps needs dates to be in ISO 8601 format. The built-in `java.text.SimpleDateFormat` does not support this format prior to Java 7. If you are using Java 6, you need to use `org.joda.time.DateTime` as we are in this example.
 
@@ -817,7 +817,7 @@ be a starting point for use in your application.
 Discussion
 ^^^^^^^^^^
 
-There are many ways to do HTTP POST from iOS and it can be confusing to identify the correct way that works, especially without the aid of an external library. The example above uses the iOS native API.
+There are many ways to do HTTP POST from iOS, and it can be confusing to identify the correct way that works, especially without the aid of an external library. The previous example uses the iOS native API.
 
 Another way is to use _AFNetworking_. This is a popular external library for iOS development, can cope with many scenarios, and is simple to use(((AFNetworking))):
 
