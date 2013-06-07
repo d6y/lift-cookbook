@@ -319,7 +319,7 @@ The `planetToSatellites.left` method is not a simple collection of `Satellite` o
 mars.satellites.where(s => s.name gt "E").map(_.name)
 -----------------------------------------------------------
 
-The `left` method result is also a `OneToMany[Satellite]` that adds the following methods:
+The `left` method result is also a `OneToMany[Satellite]` that adds the following pass:[<phrase role='keep-together'>methods:</phrase>]
 
 `assign`:: Adds a new relationship, but does not update the database
 `associate`:: Similar to `assign`, but updates the database
@@ -747,7 +747,6 @@ As an example, imagine we have a database of planets and we want to ensure any n
       override def validations =
         valMinLen(5, "Name too short") _ :: super.validations
     }
-
   }
 ------------------------------------------------------------------------
 
