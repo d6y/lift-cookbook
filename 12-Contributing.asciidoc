@@ -1,6 +1,6 @@
 [[ContributingAndHelp]]
 Contributing, Bug Reports, and pass:[<phrase role='keep-together'>Getting Help</phrase>]
--------------------------------------------
+----------------------------------------------------------------------------------------
 
 
 [[GettingHelp]]
