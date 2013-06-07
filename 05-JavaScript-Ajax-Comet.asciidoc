@@ -282,7 +282,7 @@ Solution
 Register a `String => JsCmd` function with `SHtml.ajaxSelect`.(((SHtml.ajaxSelect)))(((ajaxSelect)))(((JavaScript, server-side function triggering with)))((("String JsCmd function")))
 
 In this example, we will look up the distance from Earth to the planet a user selects.  This lookup will
-happen on the server and update the browser with the result. The interface is:
+happen on the server and update the browser with the result. The pass:[<phrase role='keep-together'>interface is:</phrase>]
 
 [source, html]
 -----
@@ -409,7 +409,7 @@ The corresponding HTML also changes little.  We need to add a button and make su
 </div>
 ----
 
-Now when you change a selected value you see the dynamically updated distance calculation, but pressing the "Book Ticket" button also delivers the value to the server.
+Now when you change a selected value, you see the dynamically updated distance calculation, but pressing the "Book Ticket" button also delivers the value to the server.
 
 See Also
 ^^^^^^^^
@@ -555,7 +555,7 @@ The CSS transform in `render` will match against a `name="username"` element in 
 replace it with a text input field that will be focused on automatically
 when the page loads.((("Lift Web Framework", "CSS selector transforms")))
 
-Although we're focusing on in-line HTML, this could be any `NodeSeq`, such as the one produced by `SHtml.text`.
+Although we're focusing on inline HTML, this could be any `NodeSeq`, such as the one produced by `SHtml.text`.
 
 Discussion
 ^^^^^^^^^^
@@ -563,9 +563,9 @@ Discussion
 `FocusOnLoad` is an example of a `NodeSeq => NodeSeq` transformation. It appends to the `NodeSeq` with the
 JavaScript required to set focus on that field.
 
-The JavaScript that performs the focus simply looks up the node in the DOM by ID and calls `focus` on it. Although the example code above doesn't specify an ID, the `FocusOn` command is smart enough to add one automatically for us.
+The JavaScript that performs the focus simply looks up the node in the DOM by ID and calls `focus` on it. Although the previous example code doesn't specify an ID, the `FocusOn` command is smart enough to add one automatically for us.
 
-There are two related `JsCmd`:
+There are two related `JsCmd` choices:
 
 `Focus`:: Takes an element ID and sets focus on the element
 `SetValueAndFocus`:: Similar to `Focus`, but takes an additional
@@ -607,14 +607,14 @@ Discussion
 If you need to set multiple CSS classes, encode a space between the
 class names, e.g., `class=boxed+primary`.
 
-The `form.ajax` construction is a regular snippet call: the `Form` snippet is one of the handful of built-in snippets, and in this case we're calling the `ajax` method on that object.  However, normally snippet calls do not copy attributes into the resulting markup, but this snippet is implemented to do exactly that.
+The `form.ajax` construction is a regular snippet call: the `Form` snippet is one of the handful of built-in snippets, and in this case, we're calling the `ajax` method on that object.  However, normally snippet calls do not copy attributes into the resulting markup, but this snippet is implemented to do exactly that.
 
 See Also
 ^^^^^^^^
 
 For an example of accessing these query parameters in your own snippets, see <<ConditionalIncludes>>.
 
-_Simply Lift_, chapter 4, introduces Ajax forms at http://simply.liftweb.net/[http://simply.liftweb.net/].
+_Simply Lift_, Chapter 4, introduces Ajax forms at http://simply.liftweb.net/[http://simply.liftweb.net/].
 
 
 
@@ -630,7 +630,7 @@ You want to load an entire page--a template with snippets--inside of the current
 Solution
 ^^^^^^^^
 
-Use `Template` to load the template, and `SetHtml` to place the content
+Use `Template` to load the template and `SetHtml` to place the content
 on the page.(((SetHtml)))
 
 Let's populate a `<div>` with the site home page when a button is pressed:
@@ -669,7 +669,7 @@ loaded into the `inject` element.
 Discussion
 ^^^^^^^^^^
 
-`Templates` produces a `Box[NodeSeq]`.  In the example above, we map this content into a `JsCmd` that will populate the `inject` `<div>`.
+`Templates` produces a `Box[NodeSeq]`.  In the previous example, we map this content into a `JsCmd` that will populate the `inject` `<div>`.
 
 If you write unit tests to access templates, be aware that you may need to modify your development or testing environment to include the _webapps_ folder.  To do this for SBT, add the following to _build.sbt_:((("build.sbt, contents")))
 
@@ -702,7 +702,7 @@ Solution
 
 Use `S.appendJs`, which places your JavaScript just before the closing `</body>` tag, along with other JavaScript produced by Lift.
 
-In this HTML, we have placed a `<script>` tag in the middle of the page, and marked it with a snippet called `JavaScriptTail`:
+In this HTML, we have placed a `<script>` tag in the middle of the page and marked it with a snippet called `JavaScriptTail`:
 
 [source,html]
 -----
@@ -898,7 +898,7 @@ Solution
 
 Add Sebastian Tschan's https://github.com/blueimp/jQuery-File-Upload[_jQuery File Upload_ widget] to your project, and implement a REST end point to receive files.
 
-The first step is to download the widget, and drag the _js_ folder into your application as _src/main/webapp/js_.  We can then use the JavaScript in a template:
+The first step is to download the widget and drag the _js_ folder into your application as _src/main/webapp/js_.  We can then use the JavaScript in a template:
 
 [source,html]
 ---------------------------------------------------------
@@ -1110,7 +1110,7 @@ We have defined a `currency` method to format the `subtotal` not as a `Double` b
 Discussion
 ^^^^^^^^^^
 
-The primary `WiringUI` class makes it easy to bind a cell as text. The `asText` method works by converting a value to a `String` and wrapping it in a `Text` node. This is done via `toNode`, however we can use the `toNode` method directly
+The primary `WiringUI` class makes it easy to bind a cell as text. The `asText` method works by converting a value to a `String` and wrapping it in a `Text` node. This is done via `toNode`, however, we can use the `toNode` method directly
 to generate a transform function that is both hooked into the wiring UI and
 uses our code for the translation of the item.
 
@@ -1118,7 +1118,7 @@ The mechanism is type-safe. In this example, `cost` is a `Double` cell, `quantit
 
 Note that the function passed to `toNode` must return a `NodeSeq`. This gives a great deal of flexibility as you can return any kind of markup in a `NodeSeq`. Our example complies with this signature by wrapping a text value in a `Text` object.
 
-The `WiringUI.toNode` requires a `(T, NodeSeq) => NodeSeq`.  In the example above, we ignore the `NodeSeq`, but the value would be the contents of the element we've bound to.  Given the input:
+The `WiringUI.toNode` requires a `(T, NodeSeq) => NodeSeq`.  In the previous example, we ignore the `NodeSeq`, but the value would be the contents of the element we've bound to.  Given the input:
 
 [source,html]
 ---------------------------------------------------------
