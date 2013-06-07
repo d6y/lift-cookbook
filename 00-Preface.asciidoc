@@ -6,7 +6,7 @@
 This is a collection of solutions to questions you might have while developing
 web applications with the Lift Web Framework.((("Lift Web Framework", "prerequisites")))
 
-The aim is to give a single, short answer to a specific question. When there's more than approach, or style, we'll give you one solution, but will point you at alternatives in the discussion.
+The aim is to give a single, short answer to a specific question. When there's multiple approaches, or styles, we'll give you one solution, but will point you at alternatives in the discussion.
 
 <<InstallAndRunning>> will get you up and running with Lift, but in other respects this cookbook is aimed at practitioners and the questions they have asked. If this is the first time you've heard of Lift, you'll want to look at:
 
@@ -132,8 +132,14 @@ Watch us on YouTube: link:$$http://www.youtube.com/oreillymedia$$[]
 
 These recipes exist because of the many contributions on the Lift mailing list, where _Liftafarians_, as they are known, generously give their time to ask questions, put together example projects, give answers, share alternatives, and chip in with comments. Thank you.
 
-I also want to thank those who have provided corrections to the recipes, on the mailing list, GitHub, and Twitter.  No matter what else it means, writing on the Web and publishing on the Web has meant I've received some prompt, high-quality feedback.
+I am indebted to the contributors who have taken the trouble to write new recipes, and to those who have provided corrections and suggestions. 
 
-I am indebted to the contributors who have taken the trouble to write new recipes for this book.
+You'll see I've repeatedly referenced the work of Antonio Salazar Cardozo, Diego Medina, Tim Nelson, David Pollak, and Dave Whittaker. These are fantastic communicators: thank you guys.
+
+It's been a pleasure working with the O'Reilly team, and they have immensely improved the text. Thank you, especially Meghan Blanchette, Kara Ebrahim, and Kiel Van Horn.
+
+Many thank to Jono for all the encouragement and help.
+
+To Jane, Mum, Dad: thank you. It's amazing what you can do with a supportive family.
 
 
