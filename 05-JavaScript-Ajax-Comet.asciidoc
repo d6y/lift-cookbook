@@ -347,7 +347,7 @@ class HtmlSelectSnippet {
 -----
 
 The last line of the code is doing the work for us.  It is generating the options and binding
-the selection to a function called `handler`.  The handler function is called with the value
+the selection to a function called `handler`.  The `handler` function is called with the value
 of the selected item.
 
 We're using the same `String` (the planet name) for the option label and value, but they could be
@@ -467,7 +467,7 @@ Discussion
 ^^^^^^^^^^
 
 Lift includes a JavaScript abstraction that you can use to build up
-more elaborate expressions for the client-side. For example you can
+more elaborate expressions for the client-side. For example, you can
 combine basic commands:
 
 [source,scala]
@@ -478,7 +478,7 @@ def render = "button [onclick]" #>
   (Alert("Here we go...") & RedirectTo("http://liftweb.net"))
 ----
 
-which pops up an alert dialog(((alert dialog boxes)))(((dialog boxes))) and then sends you to _http://liftweb.net_. The HTML would be rendered as:
+This pops up an alert dialog(((alert dialog boxes)))(((dialog boxes))) and then sends you to _http://liftweb.net_. The HTML would be rendered as:
 
 [source,html]
 ----
@@ -551,7 +551,7 @@ class Focus {
 }
 ----
 
-The CSS transform in `render` will match against `name="username"` element in the HTML and
+The CSS transform in `render` will match against a `name="username"` element in the HTML and
 replace it with a text input field that will be focused on automatically
 when the page loads.((("Lift Web Framework", "CSS selector transforms")))
 
@@ -581,7 +581,7 @@ https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/lift
 
 
 [[CSSClassOnAjaxForm]]
-Add CSS Class to an Ajax Form
+Add a CSS Class to an Ajax Form
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -675,7 +675,9 @@ If you write unit tests to access templates, be aware that you may need to modif
 
 [source,scala]
 ----
-unmanagedResourceDirectories in Test <+= (baseDirectory) { _ / "src/main/webapp" }
+unmanagedResourceDirectories in Test <+= (baseDirectory) { 
+  _ / "src/main/webapp" 
+}
 ----
 
 For this to work in your IDE, you'll need to add _webapp_ as a source folder to locate templates.
@@ -760,8 +762,7 @@ jQuery(document).ready(function() {
 </script>
 -----
 
-Although the snippet was in the middle of the page, the JavaScript appears at the
-end of the page.
+Observe that the snippet was in the middle of the template, but the JavaScript appears at the end of the rendered page.
 
 
 Discussion
@@ -998,7 +999,7 @@ In the REST service, the uploaded files are available via the `uploadedFiles` me
 
 By default, uploaded files are held in memory, but that can be changed (see <<UploadToDisk>> in <<FileUpload>>).
 
-In the recipe, we return a 200 (`OkResponse`).  If we wanted to signal to the widget that a file was rejected, we can return another code. For example, perhaps we want to reject all files except PNG images.  On the server-side we can do that by replacing the `OkResponse` with a test:
+In this recipe, we return a 200 (`OkResponse`).  If we wanted to signal to the widget that a file was rejected, we can return another code. For example, perhaps we want to reject all files except PNG images.  On the server-side we can do that by replacing the `OkResponse` with a test:
 
 [source,scala]
 ---------------------------------------------------------
@@ -1028,7 +1029,7 @@ Diego Medina has posted a http://bit.ly/lift-restupload[Gist of Lift REST code] 
 
 <<FileUpload>> describes the basic file upload behaviour of Lift and how to control where files are stored.
 
-Antonio Salazar Cardozo has posted example code for performing Ajax file upload using Lift's Ajax mechanisms. This avoids external JavaScript libraries. You can find a description and link to the code on the http://bit.ly/lift-ajaxupload[mailing list].
+Antonio Salazar Cardozo has posted http://bit.ly/lift-ajaxupload[example code] for performing Ajax file upload using Lift's Ajax mechanisms. This avoids external JavaScript libraries.
 
 [[FormatWiring]]
 Format A Wired Cell
@@ -1115,7 +1116,7 @@ uses our code for the translation of the item.
 
 The mechanism is type-safe. In this example, `cost` is a `Double` cell, `quantity` is an `Int` cell, and `subtotal` is inferred as a `Cell[Double]`.  This is why our formatting function is passed `value` as a `Double`.(((type-safe options)))
 
-Note that the function passed to `toNode` must return a node sequence. This gives a great deal of flexibility as you can return any kind of markup in a `NodeSeq`. Our example complies with this signature by wrapping a text value in a `Text` object.
+Note that the function passed to `toNode` must return a `NodeSeq`. This gives a great deal of flexibility as you can return any kind of markup in a `NodeSeq`. Our example complies with this signature by wrapping a text value in a `Text` object.
 
 The `WiringUI.toNode` requires a `(T, NodeSeq) => NodeSeq`.  In the example above, we ignore the `NodeSeq`, but the value would be the contents of the element we've bound to.  Given the input:
 
@@ -1133,7 +1134,7 @@ this would mean the `NodeSeq` passed to us would just be the text node represent
 </td>
 ---------------------------------------------------------
 
-and apply a CSS selector to change the "amount" element:
+Now we can apply a CSS selector to change just the `amount` element:
 
 [source,scala]
 ---------------------------------------------------------
