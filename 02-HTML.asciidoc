@@ -21,7 +21,7 @@ Solution
 
 You can use the Scala REPL to run your CSS selectors.(((Scala, REPL CSS selector testing)))
 
-Here's an example were we test out a CSS selector that adds an _href_ attribute to a link.
+Here's an example where we test out a CSS selector that adds an `href` attribute to a link.
 Start from within SBT and use the `console` command to get into the REPL:
 
 ----
@@ -58,10 +58,10 @@ Discussion
 CSS selector transforms are one of the distinguishing features of Lift. They succinctly describe a node in your template (lefthand side) and give a replacement (operation, the righthand side). They do take a little while to get used to, so being able to test them at the Scala REPL is useful.((("Lift Web Framework", "CSS selector transforms")))
 
 It may help to know that prior to CSS selectors, Lift snippets were typically defined in terms
-of a function that took a `NodeSeq` and returned a `NodeSeq`, often via a method called `bind`. Lift would take your template, which would be the input `NodeSeq`, apply the function, and return a new `NodeSeq`.  You won't see that usage so often any more, but the principle is the same.((("Lift Web Framework", "snippets in")))(((snippets)))
+of a function that took a `NodeSeq` and returned a `NodeSeq`, often via a method called `bind`. Lift would take your template, which would be the input `NodeSeq`, apply the function, and return a new `NodeSeq`.  You won't see that usage so often anymore, but the principle is the same.((("Lift Web Framework", "snippets in")))(((snippets)))
 
 The CSS selector functionality in Lift gives you a `CssSel` function,
-which is `NodeSeq => NodeSeq`. We exploit this in the above example by constructing an input
+which is `NodeSeq => NodeSeq`. We exploit this in the previous example by constructing an input
 `NodeSeq` (called `in`), then creating a CSS function (called `f`).  Because we know that `CssSel`
 is defined as a `NodeSeq => NodeSeq`, the natural way to execute the selector is to supply
 the `in` as a parameter, and this gives us the answer, `res0`.
@@ -125,7 +125,7 @@ This is because `&` is aggregating the selectors together before applying them. 
 a method of all Scala functions that composes two functions together, with the first being
 called before the second.
 
-Compare the example above if we change the `andThen` to
+Compare the previous example if we change the `andThen` to
 `&`:
 
 [source,scala]
@@ -179,7 +179,7 @@ attribute:
 Discussion
 ^^^^^^^^^^
 
-The `@` selector selects all elements with the given name. It's useful in this case to change the `<meta name="keyword">` tag, but you may also see it used elsewhere. For example, in an HTML form you can select input fields such as `<input name="address">` with `"@address"`.(((forms processing, HTML input fields)))
+The `@` selector selects all elements with the given name. It's useful in this case to change the `<meta name="keyword">` tag, but you may also see it used elsewhere. For example, in an HTML form, you can select input fields such as `<input name="address">` with `"@address"`.(((forms processing, HTML input fields)))
 
 The `[content]` part is an example of a _replacement rule_ that can follow a selector. That's to say, it's not specific to the `@` selector and can be used with other selectors.  In this example, it replaces the value of the attribute called "content."  If the meta tag had no "content" attribute, it would be added.(((replacement rules)))(((attributes)))
 
@@ -222,7 +222,7 @@ res1: scala.xml.NodeSeq = NodeSeq(<meta content="words, here, please, thank you"
 Appending to a class attribute
 ++++++++++++++++++++++++++++++
 
-Although not directly relevant to `meta` tags, you should be aware that there is one convenient special case for appending to an attribute. If the attribute is `class`, a space is added together with your class value.(((class attributes))) As a demonstration of that, here's an example of appending a class called "btn-primary" to a `div`:
+Although not directly relevant to `meta` tags, you should be aware that there is one convenient special case for appending to an attribute. If the attribute is `class`, a space is added together with your class value.(((class attributes))) As a demonstration of that, here's an example of appending a class called `btn-primary` to a `div`:
 
 [source,scala]
 ---------------------------------------------------------------------
@@ -273,7 +273,7 @@ result in:
 Discussion
 ^^^^^^^^^^
 
-This example uses an element selector, which picks out tags in the HTML template, and replaces the content.  Notice that we are using `"title *"` to select the _content_ of the title tag. If we had left off the `*`, the entire title tag would have been replaced with text.
+This example uses an element selector, which picks out tags in the HTML template and replaces the content.  Notice that we are using `"title *"` to select the _content_ of the `title` tag. If we had left off the `*`, the entire `title` tag would have been replaced with text.
 
 As an alternative, it is also possible to set the page title from the contents of `SiteMap`,
 meaning the title used will be the title you've assigned to the page in
@@ -366,8 +366,8 @@ through to the rendered page. If you just tried to paste the _html5shim_ markup 
 your template you'd find it missing from the rendered page.(((HTML5 parser)))
 
 We deal with this by generating unparsed markup from a snippet. If you're looking at
-`Unparsed` and worried, your instincts are correct.  Normally, Lift would cause the
-markup to be escaped, but in this case we really do want
+`Unparsed` and are worried, your instincts are correct.  Normally, Lift would cause the
+markup to be escaped, but in this case, we really do want
 unparsed XML content (the comment tag) included in the output.(((unparsed XML content)))
 
 If you find you're using IE conditional comments frequently, you may want to create a more general version of the snippet.
@@ -408,7 +408,7 @@ and produces output like this:
 </div><![endif]-->
 ----
 
-Notice that the `condition` test defaults to "IE," but first tries to look for an attribute called "cond."  This allows you to write:
+Notice that the `condition` test defaults to `IE`, but first tries to look for an attribute called `cond`. This allows you to write:
 
 [source,html]
 ----
@@ -514,7 +514,7 @@ object ClearNodes extends Function1[NodeSeq, NodeSeq] {
 }
 -----
 
-The pattern of converting one `NodeSeq` to another is simple, but also powerful enough to get you out of most situations as you can always arbitrarily rewrite the `NodeSeq`.
+The pattern of converting one `NodeSeq` to another is simple, but also powerful enough to get you out of most situations, as you can always arbitrarily rewrite the `NodeSeq`.
 
 
 
@@ -545,7 +545,7 @@ Switch to the designer-friendly snippet invocation mechanism. For example((("Lif
 Discussion
 ^^^^^^^^^^
 
-In this Cookbook we use the HTML5 parser, which is set in _Boot.scala_:
+In this Cookbook, we use the HTML5 parser, which is set in _Boot.scala_:
 
 [source,scala]
 -----
@@ -556,7 +556,7 @@ LiftRules.htmlProperties.default.set( (r: Req) =>
 
 
 The HTML5 parser and the traditional Lift XHTML parser have different
-behaviours. In particular, the HTML5 parser converts elements and attribute names to lowercase when looking up snippets. This means Lift would take `<lift:HelloWorld.howdy />` and look for a class called "helloworld" rather than "HelloWorld," which would be the cause of the "Class Not Found" error.
+behaviours. In particular, the HTML5 parser converts elements and attribute names to lowercase when looking up snippets. This means Lift would take `<lift:HelloWorld.howdy />` and look for a class called `helloworld` rather than `HelloWorld`, which would be the cause of the "Class Not Found" error.
 
 Switching to the designer-friendly mechanism is the solution here, and you gain validating HTML as a bonus.
 
@@ -572,7 +572,7 @@ There are three popular ways of referencing a snippet:
 See Also
 ^^^^^^^^
 
-The key differences between the XHTML and HTML5 parser are outlined on http://bit.ly/lift-parsers[the mailing list].
+The key differences between the XHTML and HTML5 parsers are outlined on http://bit.ly/lift-parsers[the mailing list].
 
 
 
@@ -623,7 +623,7 @@ resource name with an ID appended.
 
 You can also wrap a number of tags inside a
 `<lift:with-resource-id>...<lift:with-resource-id>` block. However,
-avoid doing this in the `<head>` of your page as the HTML5 parser will
+avoid doing this in the `<head>` of your page, as the HTML5 parser will
 move the tags to be outside of the head section.
 
 Note that some proxies may choose not to cache resources with query
@@ -678,7 +678,7 @@ With the code in place, we can, for example, modify _templates-hidden/default.ht
   src="/classpath/jquery.js" type="text/javascript"></script>
 -----------
 
-At runtime this would be rendered in HTML as:
+At runtime, this would be rendered in HTML as:
 
 [source, html]
 -----------
@@ -688,10 +688,10 @@ At runtime this would be rendered in HTML as:
 
 Most of the work for this is happening in the `statelessRewrite`, which is working at a low-level inside Lift. The two parts to it are:
 
-* A `RewriteRequest` that is the pattern we're matching on, and
-* A `RewriteResponse` that is the result we want if the request matches.
+* A `RewriteRequest` that is the pattern we're matching on
+* A `RewriteResponse` that is the result we want if the request matches
 
-Looking at the `RewriteRequest` first, this expects three arguments: the path, which we care about, and then the method (e.g., `GetRequest`, `PutRequest`) and the `HTTPRequest` itself, neither of which concern us in this instance.  In the path part, we're matching on patterns that start with "cache" followed by something (we don't care what), and then the rest of the path, represented by the name `file`.  In that situation, we rewrite to the original path, which is just the `file` with the `suffix`, effectively removing the _/cache/F352555437877UHCNRW_ part.  This is the content that Lift will serve.
+Looking at the `RewriteRequest` first, this expects three arguments: the path, which we care about, and then the method (e.g., `GetRequest`, `PutRequest`) and the `HTTPRequest` itself, neither of which concern us in this instance.  In the path part, we're matching on patterns that start with `cache` followed by something (we don't care what), and then the rest of the path, represented by the name `file`.  In that situation, we rewrite to the original path, which is just the `file` with the `suffix`, effectively removing the _/cache/F352555437877UHCNRW_ part.  This is the content that Lift will serve.
 
 
 See Also
@@ -808,7 +808,7 @@ The `head` snippet is a built-in snippet, but otherwise no different from any sn
 
 You might suspect you can therefore put a plain old `<head>` section anywhere on your template. You can, but that would not necessarily be valid HTML5 markup.
 
-There's also `tail`, which works in a similar way, except anything marked with this snippet is moved to be just before the close of the body tag.
+There's also `tail`, which works in a similar way, except anything marked with this snippet is moved to be just before the close of the `body` tag.
 
 See Also
 ^^^^^^^^
@@ -832,7 +832,7 @@ You want to show a customised "404" (not found) page.((("error messages", "404 (
 Solution
 ^^^^^^^^
 
-In _Boot.scala_ add the following:
+In _Boot.scala_, add the following:
 
 [source,scala]
 ----
@@ -867,12 +867,12 @@ In the example, we're matching any not found situation, regardless of the reques
 this as a resource identified by `ParsePath`.  The path we've used is _/404.html_.
 
 In case you're wondering, the last two `true` and `false` arguments to `ParsePath`
-indicates the path we've given is absolute, and doesn't end in a
+indicate the path we've given is absolute and doesn't end in a
 slash.  `ParsePath` is a representation for a URI path, and exposing
 if the path is absolute or ends in a slash are useful flags for matching on, but
 in this case, they're not relevant.
 
-Be aware that 404 pages, when rendered this way, won't have a location in the site map. That's because we've not included the _404.html_ file in the site map, and we don't have to because we're rendering via `NotFoundAsTemplate` rather than sending a redirect to pass:[<phrase role='keep-together'><emphasis>/404.html</emphasis>.</phrase>] However, this means that if you display an error page using a template that contains `Menu.builder` or similar (as _templates-hidden/default.html_ does), you'll see "No Navigation Defined."  In that case, you'll probably want to use a different template on your 404 page.
+Be aware that 404 pages, when rendered this way, won't have a location in the site map. That's because we've not included the _404.html_ file in the site map, and we don't have to, because we're rendering via `NotFoundAsTemplate` rather than sending a redirect to pass:[<phrase role='keep-together'><emphasis>/404.html</emphasis>.</phrase>] However, this means that if you display an error page using a template that contains `Menu.builder` or similar (as _templates-hidden/default.html_ does), you'll see "No Navigation Defined."  In that case, you'll probably want to use a different template on your 404 page.
 
 As an alternative, you could include the 404 page in your site map but make it hidden when the site map is displayed via the `Menu.builder`:
 
@@ -994,7 +994,7 @@ The convention in `Customised` is that we have an HTML file in _src/main/webapp_
 the status code we want to show, but of course you can change that by using a different
 pattern in the argument to `Templates`.
 
-One way to test the above examples is to add the following to _Boot.scala_ to
+One way to test the previous examples is to add the following to _Boot.scala_ to
 make all requests to _/secret_ return a 403:
 
 [source,scala]
@@ -1044,7 +1044,7 @@ S.error("checkPrivacyPolicy",
   <span>See our <a href="/policy">privacy policy</a></span>)
 ----
 
-You might pair this with the following in your template...
+You might pair this with the following in your template:
 
 [source,html]
 ---------------------------------------------------------
@@ -1081,7 +1081,7 @@ You want a button or a link that, when clicked, will trigger a download in the b
 Solution
 ^^^^^^^^
 
-Create a link using `SHtml.link`, provide a function to return a `LiftResponse` and wrap the response in a `ResponseShortcutException`.
+Create a link using `SHtml.link`, provide a function to return a `LiftResponse`, and wrap the response in a `ResponseShortcutException`.
 
 As an example, we will create a snippet that shows the user a poem and provides a link to download the poem as a text file.  The template for this snippet will present each line of the poem separated by a `<br>`:
 
@@ -1150,7 +1150,7 @@ Discussion
 downloadlink?F845451240716XSXE3G=_#notused
 ---------------------------------------------
 
-When that link is followed, Lift looks up the function and executes it, before processing the linked-to resource. However, in this case, we are shortcutting the Lift pipeline by throwing this particular exception.  This is caught by Lift and the response wrapped by the exception is taken as the final response from the request.(((request pipeline, shortcutting)))
+When that link is followed, Lift looks up the function and executes it, before processing the linked-to resource. However, in this case, we are shortcutting the Lift pipeline by throwing this particular exception.  This is caught by Lift, and the response wrapped by the exception is taken as the final response from the request.(((request pipeline, shortcutting)))
 
 This shortcutting is used by `S.redirectTo` via `ResponseShortcutException.redirect`. This companion object also defines `shortcutResponse`, which you can use like this:
 
@@ -1199,14 +1199,14 @@ Solution
 
 Supply a mock request to Lift's `MockWeb.testReq`, and run your test in the context of the `Req` supplied by `testReq`.
 
-The first step is to add Lift's Test Kit as dependency to your project in _build.sbt_:
+The first step is to add Lift's Test Kit as a dependency to your project in _build.sbt_:
 
 [source, scala]
 -------
 libraryDependencies += "net.liftweb" %% "lift-testkit" % "2.5" % "test"
 -------
 
-To demonstrate how to use `testReq` we will test a function that detects a Google crawler. Google identifies
+To demonstrate how to use `testReq`, we will test a function that detects a Google crawler. Google identifies
 crawlers via various `User-Agent` header values, so the function we want to test would look like this:
 
 [source, scala]
@@ -1232,7 +1232,7 @@ object RobotDetector {
 
 We have the list of magic `botNames` that Google sends as a user agent, and we define a check, `known_?`, that takes the user agent string and looks to see if any robot satisfies the condition of being contained in that user agent string.
 
-The `googlebot_?` method is given a Lift `Req` object and from this we look up the header.  This evaluates to a `Box[String]`, as it's possible there is no header. We find the answer by seeing if there exists in the `Box` a value that satisfies the `known_?` condition.
+The `googlebot_?` method is given a Lift `Req` object, and from this, we look up the header.  This evaluates to a `Box[String]`, as it's possible there is no header. We find the answer by seeing if there exists in the `Box` a value that satisfies the `known_?` condition.
 
 To test this, we create a user agent string, prepare a `MockHttpServletRequest` with the header, and use Lift's `MockWeb` to turn the low-level request into a Lift `Req` for us to test with:
 
@@ -1295,7 +1295,7 @@ Aside from HTTP headers, you can set cookies, content type, query parameters, th
 Data table
 ++++++++++
 
-In the example test above it would be tedious to have to set up the same code repeatedly for different user agents.  Specs2's _Data Table_ provides a compact way to run different example values through the same test(((Specs2)))((("Data Table (Spec2)"))):
+In the example test shown earlier, it would be tedious to have to set up the same code repeatedly for different user agents.  Specs2's _Data Table_ provides a compact way to run different example values through the same test(((Specs2)))((("Data Table (Spec2)"))):
 
 [source, scala]
 -------
