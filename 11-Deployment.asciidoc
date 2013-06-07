@@ -528,7 +528,7 @@ Discussion
 
 There are a few important comments regarding Lift applications on Heroku. First, note that there's no support for session affinity. This means if you deploy to multiple _dynos_ (Heroku terminology for instances), there is no co-ordination over which requests go to which servers. As a consequence, you won't be able to make use of Lift's stateful features and will want to turn them off (<<RunningStateless>> describes for how to do that).
 
-Second, if you are using Lift Comet features, there's an adjustment to make in _Boot.scala_ to work a little better in the Heroku environment(((Comet, and Heoku))):
+Second, if you are using Lift Comet features, there's an adjustment to make in _Boot.scala_ to work a little better in the Heroku environment(((Comet, and Heroku))):
 
 [source, scala]
 ---------------------------
