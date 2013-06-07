@@ -57,7 +57,7 @@ object Plain {
 }
 ------------------
 
-The first time through this snippet there will be no parameter so we just pass back the form unchanged to the browser, which is what `PassThru` is doing. You can then enter a value into the `name` field and submit the form. This will result in Lift processing the template again, but this time with a value for the `name` input.  The result will be your browser redirected to a page with a message set for display.
+The first time through this snippet, there will be no parameter, so we just pass back the form unchanged to the browser, which is what `PassThru` is doing. You can then enter a value into the `name` field and submit the form. This will result in Lift processing the template again, but this time, with a value for the `name` input.  The result will be your browser redirected to a page with a message set for display.
 
 
 Discussion
@@ -66,7 +66,7 @@ Discussion
 Manually plucking parameters from a request isn't making the best use of Lift, but sometimes you need to do it, and `S.param` is the way you can process request parameters.((("parameters, manual selection of")))
 
 
-The result of `S.param` is a `Box[String]`, and in the above example we pattern match on this value.  With more than one parameter, you've probably seen `S.param` used in this way:
+The result of `S.param` is a `Box[String]`, and in the previous example, we pattern match on this value.  With more than one parameter, you've probably seen `S.param` used in this way:
 
 [source,scala]
 ------------------
@@ -105,7 +105,7 @@ val names = for {
 } yield value
 ------------------
 
-Note that by opening up `S.request` we can access all the parameter names via `paramNames` function on `Req`.
+Note that by opening up `S.request` we can access all the parameter names via the `paramNames` function on `Req`.
 
 Screen or Wizard provide alternatives for form processing, but sometimes
 you just want to pull values from a request, as demonstrated in this
@@ -135,7 +135,7 @@ Solution
 Mark your form as an Ajax form with `data-lift="form.ajax"` and supply a
 function to run on the server when the form is submitted.
 
-Here's an example of a form that will collect our name, and submit it via Ajax to the server:
+Here's an example of a form that will collect our name and submit it via Ajax to the server:
 
 [source,html]
 ---------------------------------------------------------
@@ -175,7 +175,7 @@ object EchoForm extends {
 }
 ---------------------------------------------------------
 
-The `render` method is binding the name input field to a function that will assign whatever the user enters to the variable `name`. Note you'll more typically see `s => name = s` written in the shorter form of `name = _`.
+The `render` method is binding the `name` input field to a function that will assign whatever the user enters to the variable `name`. Note you'll more typically see `s => name = s` written in the shorter form of `name = _`.
 
 When the button is pressed, the `process` function is called, which will return the
 value of the `name` back to the element in the HTML with an ID of `result`.
@@ -216,7 +216,7 @@ The `SHtml.ajaxSubmit` function generates a `<input type="submit">` element for 
 
 Pressing a `<button>` inside a form triggers the submit. However, if you bound that button with `SHtml.ajaxSubmit`, the content, and therefore the styling, would be lost.
 
-To fix this you can assign a function to a hidden field. This function will be called when the form is submitted just like any other field.  The only part of our snippet that changes is the CSS selector binding(((hidden fields))):
+To fix this, you can assign a function to a hidden field. This function will be called when the form is submitted just like any other field.  The only part of our snippet that changes is the CSS selector binding(((hidden fields))):
 
 [source,scala]
 ---------------------------------------------------------
@@ -234,9 +234,9 @@ The `*+` replacement rule means append a value to the child node of the button. 
 ---------------------------------------------------------
 
 
-When the form is submitted, the hidden field is submitted, and like any field, Lift will call the function associated with it: `process` in this case.
+When the form is submitted, the hidden field is submitted, and like any field, Lift will call the function associated with it: `process`, in this case.
 
-The effect is something like `ajaxSubmit`, but not exactly the same. In this instance we're appending a hidden field after the `<button>`, but you could place it anywhere on the form you find convenient. However, there's one complication: when is `process` called? Is it before the `name` has been assigned or after? That depends on the order the fields are rendered.  That's to say, in your HTML template, placing the button before the text field (and therefore moving the hidden field's position in this example), the `process` function is called before the name has been set.(((functions, order of execution)))
+The effect is something like `ajaxSubmit`, but not exactly the same. In this instance, we're appending a hidden field after the `<button>`, but you could place it anywhere on the form you find convenient. However, there's one complication: when is `process` called? Is it before the `name` has been assigned or after? That depends on the order in which the fields are rendered.  That's to say, in your HTML template, placing the button before the text field (and therefore moving the hidden field's position in this example), the `process` function is called before the name has been set.(((functions, order of execution)))
 
 There are a couple of ways around that.  Either, ensure your hidden fields used in this way appear late in your form, or make sure the function is called late(((formGroup function))) with a `formGroup`:
 
@@ -369,7 +369,7 @@ object JsonForm {
 }
 ---------------------------------------------------------
 
-Like many snippets, this Scala code contains a `render` method that binds to elements on the page. Specifically, `jsonForm` is being replaced with `SHtml.jsonForm`, which will take a `NodeSeq` (which are the input fields) and turns it into a form that will submit the values as JSON. The submission will be to our `MottoServer` code.(((SHtml.jsonForm method)))
+Like many snippets, this Scala code contains a `render` method that binds to elements on the page. Specifically, `jsonForm` is being replaced with `SHtml.jsonForm`, which will take a `NodeSeq` (which are the input fields), and turns it into a form that will submit the values as JSON. The submission will be to our `MottoServer` code.(((SHtml.jsonForm method)))
 
 The `jsonScript` element is bound to JavaScript that will perform the transmission and encoding of the values to the server.
 
@@ -386,7 +386,7 @@ the following sent to the server:
 
 This is the value of the `all` parameter in the `JsonCmd` being pattern matched against in `MottoServer.apply`. Lift has taken care of the plumbing to make this happen.
 
-The result of the pattern match in the example is to pick out the two field values, and send back JavaScript to update the `results` `<div>` with:
+The result of the pattern match in the example is to pick out the two field values and send back JavaScript to update the `results` `<div>` with:
 "The motto of the Royal Society is Nullius in verba."
 
 
@@ -408,7 +408,7 @@ Before going on, convince yourself that we're generating JavaScript on the serve
 Additional commands
 +++++++++++++++++++
 
-In the above example, we match on a `JsonCmd` with a command name of `"processForm"`.  You may be wondering what other command can be supplied, or what the meaning of the `target` value is.
+In the previous example, we match on a `JsonCmd` with a command name of `"processForm"`.  You may be wondering what other command can be supplied, or what the meaning of the `target` value is.
 
 To demonstrate how you can implement other commands, we can add two additional buttons. These buttons will just convert the motto to upper- or lowercase.  The server-side `render` method changes as follows:
 
@@ -426,7 +426,7 @@ def render =
 ---------------------------------------------------------
 
 The `JsonForm` is unchanged. We still include `MottoServer.jsCmd`, and we still want to wrap the fields and submit them as before. What we've added
-is an extra JavaScript function called `changeCase`, which takes one argument called `direction` and as a body calls the `MottoServer` with various parameters.  When it is rendered on the page it would appear as something like this:
+is an extra JavaScript function called `changeCase`, which takes one argument called `direction` and as a body calls the `MottoServer` with various parameters.  When it is rendered on the page, it would appear as something like this:
 
 [source,javascript]
 ---------------------------------------------------------
@@ -437,9 +437,9 @@ function changeCase(direction) {
 ---------------------------------------------------------
 
 The `F299202CYGIL` function (or similar name) is generated by Lift as part of `MottoServer.jsCmd`, and it is responsible for delivering data
-to the server.  The data it is delivering, in this case, is a JSON structure consisting of a different command ("processCase"), a target of whatever
+to the server.  The data it is delivering, in this case, is a JSON structure consisting of a different command (`processCase`), a target of whatever
 the JavaScript value `direction` evaluates to, and a parameter that is the result of the jQuery expression for the value
-of the `"#motto"` form field.
+of the `#motto` form field.
 
 When is the `changeCase` function called?  That's up to us, and one very simple way to call the function would be by this addition to the HTML:
 
@@ -449,7 +449,7 @@ When is the `changeCase` function called?  That's up to us, and one very simple 
 <button onclick="javascript:changeCase('lower')">Lower case the Motto</button>
 ---------------------------------------------------------
 
-When either of these buttons are pressed, the result will be a JSON value sent to the server with the command of `"processCase"` and the `direction` and `params` set accordingly.  All that is left is to modify our `MottoServer` to pick up this `JsonCmd` on the server:
+When either of these buttons are pressed, the result will be a JSON value sent to the server with the command of `processCase` and the `direction` and `params` set accordingly.  All that is left is to modify our `MottoServer` to pick up this `JsonCmd` on the server:
 
 [source,scala]
 ---------------------------------------------------------
@@ -536,7 +536,7 @@ Our form will include an input field called `birthday` to be used as a date pick
 </html>
 ---------------------------------------------------------
 
-This would normally produce a regular text input field, but we can change that by adding JavaScript to attach the date picker to the input field.  You could do this in the template, but in this example we're enhancing the text field as part of the snippet code:
+This would normally produce a regular text input field, but we can change that by adding JavaScript to attach the date picker to the input field.  You could do this in the template, but in this example, we're enhancing the text field as part of the snippet code:
 
 
 [source,scala]
@@ -572,11 +572,11 @@ class JqDatePicker extends Loggable {
 }
 ---------------------------------------------------------
 
-Notice in `render` we are binding a regular `SHtml.text` field to the element with the ID of "birthday," but also appending JavaScript to the page.  That JavaScript selects the birthday input field and attaches a configured date picker to it.
+Notice in `render` we are binding a regular `SHtml.text` field to the element with the ID of `birthday`, but also appending JavaScript to the page.  That JavaScript selects the `birthday` input field and attaches a configured date picker to it.
 
 When the field is submitted, the `logDate` method is called with the value of the text field. We parse the text into a `java.util.Date` object.  The `tryo` Lift helper will catch any `ParseException` and return a `Box[Date]`, which we open, or default to the current date if a bad date is supplied.
 
-Running this code and submitting the form will produce a log message something like this:
+Running this code and submitting the form will produce a log message such as:
 
 ---------------------------------------------------------
 INFO  code.snippet.DatePicker - Birthday: Sun Apr 21 00:00:00 BST 2013
@@ -587,10 +587,10 @@ Discussion
 
 The approach outlined in this recipe can be used with other date picker libraries. The key point is to configure the date picker to submit a date in a format you can parse when the value is submitted to the server. This is the "wire format" of the date, and does not have to necessarily be the same format the user sees in the browser, depending on the browser or the JavaScript library being used.((("wire formats, for dates")))
 
-HTML5 Date Pickers
+HTML5 date pickers
 +++++++++++++++++++
 
-The HTML5 specification includes support for a variety of date input types: `datetime`, `datetime-local`, `date`, `month`, `time`, `week`. For example(((HTML5 date pickers))):
+The HTML5 specification includes support for a variety of date input types: `datetime`, `datetime-local`, `date`, `month`, `time`, and `week`. For example(((HTML5 date pickers))):
 
 [source,html]
 ---------------------------------------------------------
@@ -599,13 +599,13 @@ The HTML5 specification includes support for a variety of date input types: `dat
 
 This type of input field will submit a date in _yyyy-mm-dd_ format, which our snippet would be able to process.
 
-As more browsers implement these types it will become possible to depend on them.  However, you can default to the HTML5 browser-native date pickers today and fall back to a JavaScript library as required.((("Safari, date picker format")))((("Chrome, date picker format"))) The difference is shown in <<DatePickerScreenGrabs>>.
+As more browsers implement these types, it will become possible to depend on them.  However, you can default to the HTML5 browser-native date pickers today and fall back to a JavaScript library as required.((("Safari, date picker format")))((("Chrome, date picker format"))) The difference is shown in <<DatePickerScreenGrabs>>.
 
 [[DatePickerScreenGrabs]]
 .An input field with the jQuery UI date picker attached, compared to the browser-native date picker in Chrome
 image::images/lfcb_0301.png[]
 
-To detect if the browser supports `type="date"` inputs, we can use the _Modernizr_ library.  This is an additional script in our template((("browsers", "detecting features in"))):
+To detect whether the browser supports `type="date"` inputs, we can use the _Modernizr_ library.  This is an additional script in our template((("browsers", "detecting features in"))):
 
 [source,html]
 ---------------------------------------------------------
@@ -616,7 +616,7 @@ To detect if the browser supports `type="date"` inputs, we can use the _Moderniz
 
 We will use this in our snippet. In fact, there are  two changes we need to make to the snippet:
 
-1. Add the `type="date"` attribute to the input field; and
+1. Add the `type="date"` attribute to the input field.
 
 2. Modify the JavaScript to only attach the jQuery UI date picker in browsers that don't support the `type="date"` input.
 
@@ -637,7 +637,7 @@ val enhance = Run(
   """.stripMargin)
 ---------------------------------------------------------
 
-The `"type" -> "date"` parameter on `SHtml.text` is setting the attribute "type" to the value "date" on the resulting `<input>` field.
+The `"type" -> "date"` parameter on `SHtml.text` is setting the attribute `type` to the value `date` on the resulting `<input>` field.
 
 When this snippet runs, and the page is rendered, the jQuery UI date picker will be attached to input fields of `type="date"` only if the browser doesn't support that type already.
 
@@ -649,7 +649,7 @@ http://diveintohtml5.info[_Dive into HTML5_] describes how to detect browser pas
 
 http://api.jqueryui.com/datepicker/[The jQuery UI API documentation] lists the various configuration options for the date picker.
 
-The HTML5 date input types submit dates in http://tools.ietf.org/html/rfc3339[RFC 3339 format].
+The HTML5 `date` input types submit dates in http://tools.ietf.org/html/rfc3339[RFC 3339 format].
 
 
 
@@ -666,7 +666,7 @@ You want to provide an autocomplete widget, to give users suggestions as they ty
 Solution
 ^^^^^^^^
 
-Use a JavaScript autocomplete widget, for example the jQuery UI autocomplete via the `AutoComplete` class from the Lift Widgets module.(((jQuery UI autocomplete)))(((Lift Web Framework, Widgets module)))(((Lift modules)))(((autocomplete suggestions, jQuery UI for)))
+Use a JavaScript autocomplete widget, for example, the jQuery UI autocomplete via the `AutoComplete` class from the Lift Widgets module.(((jQuery UI autocomplete)))(((Lift Web Framework, Widgets module)))(((Lift modules)))(((autocomplete suggestions, jQuery UI for)))
 
 Start by adding the Lift widgets module to your _build.sbt_:
 
@@ -693,7 +693,7 @@ We can create a regular form snippet:
 </form>
 -------------------------------------------
 
-Connect the `AutoComplete` class to the element with the ID of "autocomplete":
+Connect the `AutoComplete` class to the element with the ID of `autocomplete`:
 
 [source,scala]
 -------------------------------------------
