@@ -451,7 +451,7 @@ We have defined an extractor called `JPeg` that returns `Some[Req]` if the conte
 See Also
 ^^^^^^^^
 
-http://www.artima.com/pins1ed/extractors.html[Odersky, _et al._, (2008), _Programming in Scala_, chapter 24], discusses extractors in detail.
+http://www.artima.com/pins1ed/extractors.html[Odersky, _et al._, (2008), _Programming in Scala_, Chapter 24], discusses extractors in detail.
 
 
 <<FileUpload>> describes form-based (multipart) file uploads
