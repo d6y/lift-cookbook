@@ -87,7 +87,7 @@ Contributing Small Code Changes and ScalaDoc
 Problem
 ^^^^^^^
 
-You have a small change or ScalaDoc improvement you'd like incorporated into Lift.((("Lift Web Framework", "submitting improvements to")))(((contributers, to Lift Web Framework)))((("code changes, contributing")))
+You have a small change or ScalaDoc improvement you'd like incorporated into Lift.((("Lift Web Framework", "submitting improvements to")))(((contributors, to Lift Web Framework)))((("code changes, contributing")))
 
 Solution
 ^^^^^^^^
@@ -136,7 +136,7 @@ Contributing Documentation
 Problem
 ^^^^^^^
 
-You'd like to contribute documentation to Lift.(((contributers, to Lift Web Framework)))((("documentation, contribution of")))
+You'd like to contribute documentation to Lift.(((contributors, to Lift Web Framework)))((("documentation, contribution of")))
 
 
 Solution
