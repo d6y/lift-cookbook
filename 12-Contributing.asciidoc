@@ -73,11 +73,11 @@ A great way to get help with the issue you have, or getting a bug fixed, is to p
 See Also
 ^^^^^^^^
 
-You'll find a list of tickets http://ticket.liftweb.net/[here].
+You'll find a list of tickets at http://ticket.liftweb.net/[http://ticket.liftweb.net/].
 
-If you're asked to, or want to, post example code there's a guide http://www.assembla.com/wiki/show/liftweb/Posting_example_code[here].
+If you're asked to, or want to, post example code, please follow http://www.assembla.com/wiki/show/liftweb/Posting_example_code[the guide].
 
-If you've found a bug, and you're asked to create a ticket, the main thing to do is include a link to the mailing list discussion of the issue, as described http://www.assembla.com/wiki/show/liftweb/Creating_tickets[here].
+If you've found a bug, and you're asked to create a ticket, the main thing to do is include a link to the mailing list discussion of the issue, as described in http://www.assembla.com/wiki/show/liftweb/Creating_tickets[Creating Tickets].
 
 
 [[LiftCodeContributions]]
@@ -118,7 +118,7 @@ What's a small change? That's a good question, and if you're unsure, talk about 
 See Also
 ^^^^^^^^
 
-This contribution policy was introduced in November 2012, and can be read about http://www.lift.la/blog/new_contribution_policy[here].
+This contribution policy was http://www.lift.la/blog/new_contribution_policy[introduced in November 2012].
 
 The _contributors.md_ file is found https://github.com/lift/framework/blob/master/contributors.md[on GitHub].
 
@@ -187,7 +187,7 @@ Discussion
 
 Anything you've puzzled over, or things that have surprised you, impressed you, or are nonobvious are great topics for recipes. Improvements, discussions, and clarifications of existing recipes are welcome, too.
 
-The cookbook is structured using a markup language called AsciiDoc. If you're familiar with Markdown or Textile, you'll find similarities. For the cookbook, you only need to know about section headings, source code formatting, and links.  Examples of all of these are in the `template.asciidoc` file.(((AsciiDoc markup language)))(((Markdown)))(((Textile markup)))
+The cookbook is structured using a markup language called AsciiDoc. If you're familiar with Markdown or Textile, you'll find similarities. For the cookbook, you only need to know about section headings, source code formatting, and links.  Examples of all of these are in the _template.asciidoc_ file.(((AsciiDoc markup language)))(((Markdown)))(((Textile markup)))
 
 To find out where to make a change, you need to know that each chapter is a separate file, and each recipe is a section in that file.
 
@@ -233,7 +233,7 @@ Create a Lift module, and then reference the module from your Lift projects.
 
 As an example, let's create a module to embed the _snowstorm snowfall effect_ on every page in your Lift web application (please don't do this).
 
-There's nothing special about modules: they are code, packaged and used like any other dependency. What makes them possible is the exposure of extension points via `LiftRules`. The main convention is to have an `init` method that Lift applications can use to initialize your module.
+There's nothing special about modules: they are code, packaged and used like any other dependency. What makes them possible is the exposure of extension points via `LiftRules`. The main convention is to have an `init` method that Lift applications can use to initialise your module.
 
 For our snowstorm, we're going to package some JavaScript and inject the script onto every page.
 
@@ -290,7 +290,7 @@ resolvers ++= Seq(
 scalacOptions ++= Seq("-deprecation", "-unchecked")
 
 libraryDependencies ++= {
-  val liftVersion = "2.5-RC5"
+  val liftVersion = "2.5"
   Seq(
     "net.liftweb" %% "lift-webkit"  % liftVersion  % "compile"
   )
@@ -308,7 +308,7 @@ With our module built and published, we can now include it in our Lift applicati
 [source,scala]
 --------------------------------------------------------------
 libraryDependencies ++= {
-  val liftVersion = "2.5-RC5"
+  val liftVersion = "2.5"
   Seq(
   ...
   "net.liftmodules" %% "snowstorm" % "1.0.0",
@@ -400,7 +400,7 @@ libraryDependencies <++= liftVersion { v =>
 
 Note the `"provided"` configuration for Lift in the build file. This means that when your module is used, the version of Lift's WebKit will be the version provided by the application being built by the person using your module.
 
-What the above gives you is a way for your module to depend on Lift ("2.5"), without locking your module into a specific release if it happens to be built with "2.5-SNAPSHOT." By using a setting of `liftVersion`, we can control the version via a script for all modules.  This is what we do to publish a range of Lift modules after each Lift release, as described https://www.assembla.com/spaces/liftweb/wiki/Releasing_the_modules[here].
+What the previous code gives you is a way for your module to depend on Lift ("2.5"), without locking your module into a specific release if it happens to be built with "2.5-SNAPSHOT." By using a setting of `liftVersion`, we can control the version via a script for all modules.  This is what we do to publish a range of Lift modules after each Lift release, as described https://www.assembla.com/spaces/liftweb/wiki/Releasing_the_modules[on the Lift wiki].
 
 When your module is built, don't forget to announce it on the Lift mailing list.
 
@@ -429,7 +429,7 @@ Originally, Lift included a set of modules, but these have been separated out to
 
 The Lift wiki pages for modules can be reached via http://liftmodules.net[http://liftmodules.net].
 
-The Snowstorm project ("setting CPUs on fire worldwide every winter since 2003") is https://github.com/scottschiller/snowstorm/[here] and the module developed for this recipe is https://github.com/LiftCookbook/snowstorm-example-module[here].
+https://github.com/scottschiller/snowstorm/[The Snowstorm project] has been "setting CPUs on fire worldwide every winter since 2003"), and the module developed for this recipe is https://github.com/LiftCookbook/snowstorm-example-module[on GitHub].
 
 To publish to Sonatype, take a look at https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide[their guide]. CloudBees offers an http://www.cloudbees.com/foss/foss-dev.cb[open source repository].
 
