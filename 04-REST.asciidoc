@@ -14,8 +14,8 @@ DRY URLs
 Problem
 ^^^^^^^
 
-You find yourself repeating parts of URL paths in your `RestHelper`, and
-you Don't want to Repeat Yourself.(((REST web services, avoiding URL repeats)))((("URLs", "avoiding repeats")))(((DRY URLs)))
+You find yourself repeating parts of URL paths in your `RestHelper` and
+you Don't want to Repeat Yourself (DRY).(((REST web services, avoiding URL repeats)))((("URLs", "avoiding repeats")))(((DRY URLs)))
 
 Solution
 ^^^^^^^^
@@ -59,13 +59,13 @@ We can test the service with cURL:
 
 [source,xml]
 ------------------
-$ curl -H 'Content-Type: application/xml'
-    http://localhost:8080/issues/by-state/open
+$ *curl -H 'Content-Type: application/xml'
+    http://localhost:8080/issues/by-state/open*
 <?xml version="1.0" encoding="UTF-8"?>
 <p>None open</p>
 
-$ curl -X DELETE -H 'Content-Type: application/xml'
-    http://localhost:8080/issues/by-state/closed
+$ *curl -X DELETE -H 'Content-Type: application/xml'
+    http://localhost:8080/issues/by-state/closed*
 <?xml version="1.0" encoding="UTF-8"?>
 <p>All deleted</p>
 ------------------
