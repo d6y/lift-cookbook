@@ -76,7 +76,7 @@ Discussion
 You can have many `serve` blocks in your `RestHelper`, which helps give
 your REST service structure.
 
-In this example, we've arbitrarily decided to return XML and to match on an XML request using `XmlGet` and `XmlDelete`.  The test for an XML request requires a content type of _text/xml_ or _application/xml_, and a request for a path that ends with _.xml_.   This is why the cURL request includes a header with with the `-H` flag.  If we hadn't included that, the request would not match any of our patterns, and the result would be a 404 response.
+In this example, we've arbitrarily decided to return XML and to match on an XML request using `XmlGet` and `XmlDelete`.  The test for an XML request requires a content type of _text/xml_ or _application/xml_, or a request for a path that ends with _.xml_.   This is why the cURL request includes a header with with the `-H` flag.  If we hadn't included that, the request would not match any of our patterns, and the result would be a 404 response.
 
 
 
@@ -116,7 +116,7 @@ import net.liftweb.http.rest.RestHelper
 import net.liftweb.http.LiftRules
 import xml.Text
 
-object Reunite extends RestHelper  {
+object Reunite extends RestHelper {
 
   private def reunite(name: String, suffix: String) =
     if (suffix.isEmpty) name else name+"."+suffix
@@ -238,7 +238,7 @@ In _Boot.scala_:
 [source,scala]
 ----
 import net.liftweb.util.Helpers
-LiftRules.explicitlyParsedSuffixes = Helpers.knownSuffixes &~ (Set("com"))
+LiftRules.explicitlyParsedSuffixes = Helpers.knownSuffixes - "com"
 ----
 
 Discussion
@@ -419,7 +419,7 @@ $ curl -X POST --data-binary "@dog.jpg" -H 'Content-Type: image/jpg'
 Discussion
 ^^^^^^^^^^
 
-In the previous example, the binary data is accessed via the `req.body`, which returns
+In this example, the binary data is accessed via the `req.body`, which returns
  a `Box[Array[Byte]]`.  We turn this into a `Box[Elem]` to send back to the client.
  Implicits in `RestHelper` turn this into an `XmlResponse` for Lift to handle.
 
@@ -693,7 +693,7 @@ Note that Google Sitemaps needs dates to be in ISO 8601 format. The built-in `ja
 See Also
 ^^^^^^^^
 
-Sitemaps are described http://support.google.com/webmasters/bin/answer.py?hl=en&answer=156184[here].
+You'll find an explanation of the Sitemap Protocol on Google's http://support.google.com/webmasters/bin/answer.py?hl=en&answer=156184[Webmaster Tools site].
 
 
 
@@ -744,14 +744,14 @@ The service expects a JSON post with a parameter of `name`, and it returns a gre
 LiftRules.statelessDispatch.append(Shouty)
 ---------------------------------------------------------
 
-and then call it from the command line:
+Call it from the command line:
 
 [source,json]
 -----
-$ curl -d '{ "name" : "Richard" }' -X POST -H 'Content-type: application/json'
+$ curl -d '{ "name" : "World" }' -X POST -H 'Content-type: application/json'
    http://127.0.0.1:8080/shout
 {
-  "greeting":"HELLO RICHARD"
+  "greeting":"HELLO WORLD"
 }
 -----
 
@@ -764,7 +764,7 @@ static NSString *url = @"http://localhost:8080/shout";
 
 -(void) postAction {
   // JSON data:
-  NSDictionary* dic = @{@"name": @"Richard"};
+  NSDictionary* dic = @{@"name": @"World"};
   NSData* jsonData =
     [NSJSONSerialization dataWithJSONObject:dic options:0 error:nil];
   NSMutableURLRequest *request = [
@@ -831,7 +831,7 @@ static NSString *url = @"http://localhost:8080/shout";
 
 -(void) postAction {
   // JSON data:
-  NSDictionary* dic = @{@"name": @"Richard"};
+  NSDictionary* dic = @{@"name": @"World"};
   NSData* jsonData =
    [NSJSONSerialization dataWithJSONObject:dic options:0 error:nil];
 
