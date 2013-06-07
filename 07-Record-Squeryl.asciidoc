@@ -235,7 +235,6 @@ object MySchema extends Schema {
   }
 
   object Satellite extends Satellite with MetaRecord[Satellite]
-
 }
 -----------------------------------------------------------
 
