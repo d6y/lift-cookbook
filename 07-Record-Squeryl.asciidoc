@@ -2,7 +2,7 @@
 Relational Database Persistence with Record and Squeryl
 -------------------------------------------------------
 
-Squeryl is an object-relational mapping library.  It converts Scala classes into tables, rows, and columns in a relational database, and provides a way to write SQL-like queries that are type-checked by the Scala compiler. The Lift Squeryl Record module integrates Squeryl with Record, meaning your Lift application can use Squeryl to store and fetch data while making use of the features of record, such as data validation.(((Squeryl Record module)))(((object-relational mapping)))(((Scala, relational database conversion)))((("Lift Web Framework", "Squeryl Record module")))(((SQL-like queries)))((("Record, configuration of")))(((Squeryl, configuring)))((("database persistence", "with Squeryl Record module", id="ix_DBsrm", range="startofrange")))
+Squeryl is an object-relational mapping library.  It converts Scala classes into tables, rows, and columns in a relational database, and provides a way to write SQL-like queries that are type-checked by the Scala compiler. The Lift Squeryl Record module integrates Squeryl with Record, meaning your Lift application can use Squeryl to store and fetch data while making use of the features of record, such as data validation.(((Squeryl Record module)))(((object-relational mapping)))(((Scala, relational database conversion)))((("Lift Web Framework", "Squeryl Record module")))(((SQL-like queries)))((("Record, configuration of")))((("Squeryl, configuring")))((("database persistence", "with Squeryl Record module", id="ix_DBsrm", range="startofrange")))
 
 The code in this chapter can be found at https://github.com/LiftCookbook/cookbook_squeryl[https://github.com/LiftCookbook/cookbook_squeryl].
 
