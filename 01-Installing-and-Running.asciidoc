@@ -300,7 +300,7 @@ editor, hitting reload in your browser to see changes.(((Lift applications, text
 Solution
 ^^^^^^^^
 
-Run SBT while you are editing, and ask it to detect and compile changes to Scala files.  To do that, start `sbt` and enter the following to the SBT prompt((("Simple Build Tool (SBT)", "text editor develoment with"))):
+Run SBT while you are editing, and ask it to detect and compile changes to Scala files.  To do that, start `sbt` and enter the following to the SBT prompt((("Simple Build Tool (SBT)", "text editor development with"))):
 
 --------------------------------------
 ~; container:start; container:reload /
