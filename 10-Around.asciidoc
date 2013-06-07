@@ -629,7 +629,7 @@ library, which allows you to `cancel` the activity.
 See Also
 ^^^^^^^^
 
-Chapter 1 of _Lift in Action_ by Perrett, (Manning Publications, Co.) includes a Comet Actor clock example that uses `Schedule`.
+Chapter 1 of _Lift in Action_ (by Perrett, Manning Publications, Co.) includes a Comet Actor clock example that uses `Schedule`.
 
 
 
@@ -640,7 +640,7 @@ Fetching URLs
 Problem
 ^^^^^^^
 
-You want your Lift application to fetch a URL, and process it as text, JSON, XML, or HTML.((("Lift applications", "fetching URLs")))((("URLs", "fetching")))(((Dispatch library)))(((HTTP interaction)))
+You want your Lift application to fetch a URL and process it as text, JSON, XML, or HTML.((("Lift applications", "fetching URLs")))((("URLs", "fetching")))(((Dispatch library)))(((HTTP interaction)))
 
 Solution
 ^^^^^^^^
@@ -665,7 +665,7 @@ val country : Promise[String] = Http(svc OK as.String)
 println(country())
 ------------------------------------------
 
-Note that the result `country` is not a `String` but a `Promise[String]`, and we `apply` to wait for the resulting value.
+Note that the result `country` is not a `String` but a `Promise[String]`, and we use `apply` to wait for the resulting value.
 
 The result printed will be a country code such as `GB`, or `XX` if the country cannot be determined from your IP address.
 
@@ -683,7 +683,7 @@ We can ask for an `Option`:
 val result : Option[String] = country.option()
 ------------------------------------------
 
-As you'd expect, this will give a `None` or `Some[String]`. However, if you have debug level logging enabled in your application you'll see the request and response and error messages from the underlying Netty library.  You can tune these messages by adding a logger setting to _default.logback.xml_ file(((Netty library))):
+As you'd expect, this will give a `None` or `Some[String]`. However, if you have debug level logging enabled in your application, you'll see the request and response and error messages from the underlying Netty library.  You can tune these messages by adding a logger setting to _default.logback.xml_ file(((Netty library))):
 
 [source, xml]
 ------------------------------------------
@@ -702,21 +702,21 @@ country.either() match {
 
 This will print a result as we are forcing the evaluation with an apply via `either()`.
 
-`Promise[T]` implements `map`, `flatMap`, `filter`, `fold` and all the usual methods you'd expect to allow you to compose.  This means you can use the promise with a `for` pass:[<phrase role='keep-together'>comprehension:</phrase>]
+`Promise[T]` implements `map`, `flatMap`, `filter`, `fold`, and all the usual methods you'd expect it to allow you to compose.  This means you can use the promise with a `for` pass:[<phrase role='keep-together'>comprehension:</phrase>]
 
 [source,scala]
 ------------------------------------------
 val codeLength = for (cc <- country) yield cc.length
 ------------------------------------------
 
-Note that `codeLength` is a `Promise[Int]`.  To get the value you can evaluate `codeLength()` and you'll get a result of `2`.
+Note that `codeLength` is a `Promise[Int]`. To get the value, you can evaluate `codeLength()` and you'll get a result of `2`.
 
 As well as extracting string values with `as.String`, there are other options, including:
 
-`as.Bytes`:: To work with `Promise[Array[Byte]]`.
-`as.File`:: To write to a file, as in `Http(svc > as.File(new File("/tmp/cc")))`.
-`as.Response`:: To allow you to provide a `client.Response => T` function to use on the response.
-`as.xml.Elem`:: To parse an XML response.
+`as.Bytes`:: To work with `Promise[Array[Byte]]`
+`as.File`:: To write to a file, as in `Http(svc > as.File(new File("/tmp/cc")))`
+`as.Response`:: To allow you to provide a `client.Response => T` function to use on the response
+`as.xml.Elem`:: To parse an XML response
 
 As an example of `as.xml.Elem`:
 
@@ -758,7 +758,7 @@ val title = Http(svc > as.jsoup.Document).map(_.select("h1").text).option
 println( title() getOrElse "unknown title" )
 -------------------------------------------------
 
-Here we are applying JSoup's `select` function to pick out the `<h1>` element on the page, taking the text of the element which we turn into a `Promise[Option[String]]`.  The result, unless _example.org_ has changed, will be "Example Domain."
+Here we are applying JSoup's `select` function to pick out the `<h1>` element on the page, taking the text of the element, which we turn into a `Promise[Option[String]]`.  The result, unless _example.org_ has changed, will be "Example Domain."
 
 As a final example of using Dispatch, we can pipe a request into Lift's JSON library:
 
@@ -783,7 +783,7 @@ val hostInfo = json.map(_.extract[HostInfo])()
 
 The URL we're calling returns a JSON representation for location information of the IP address we've passed.
 
-By providing a `Response => JValue` to Dispatch we're able to pass the response body through to the JSON parser. We can then map on the `Promise[JValue]` to apply whatever Lift JSON functions we want to. In this case, we're extracting a simple case class.
+By providing a `Response => JValue` to Dispatch, we're able to pass the response body through to the JSON parser. We can then map on the `Promise[JValue]` to apply whatever Lift JSON functions we want to. In this case, we're extracting a simple case class.
 
 The result from the above would show `hostInfo` as:
 
