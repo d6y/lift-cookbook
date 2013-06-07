@@ -125,7 +125,7 @@ When `onchange` is triggered (by pressing Return or the Tab key, for example), t
 
 
 ajaxCall: receiving an arbitrary client-side string
-+++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Where `onEvent` sends `this.value` to your server-side code, `ajaxCall` allows you to specify the client-side expression used to produce a value.(((ajaxCall)))(((SHtml.ajaxCall)))
 
@@ -172,7 +172,7 @@ You may have guessed that `onEvent` is implemented as an `ajaxCall` for `JsRaw("
 
 
 jsonCall: receiving a JSON value
-++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++
 
 Both `ajaxCall` and `onEvent` end up evaluating a `String => JsCmd` function. By contrast, `jsonCall` has the signature `JValue => JsCmd`, meaning you can pass more complex data structures from JavaScript to your Lift application.(((SHtml.jsonCall)))(((jsonCall)))
 
