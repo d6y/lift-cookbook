@@ -2,7 +2,7 @@
 REST
 ----
 
-This chapter looks at recipes around REST web services, via Lift's `RestHelper` trait. For an introduction, take a look at the https://www.assembla.com/spaces/liftweb/wiki/REST_Web_Services[Lift wiki page] and http://simply.liftweb.net[chapter 5 of _Simply Lift_].((("REST web services", id="ix_REST", range="startofrange")))(((RestHelper)))
+This chapter looks at recipes around REST web services, via Lift's `RestHelper` trait. For an introduction, take a look at the https://www.assembla.com/spaces/liftweb/wiki/REST_Web_Services[Lift wiki page] and http://simply.liftweb.net[Chapter 5 of _Simply Lift_].((("REST web services", id="ix_REST", range="startofrange")))(((RestHelper)))
 
 The sample code from this chapter is at https://github.com/LiftCookbook/cookbook_rest[https://github.com/LiftCookbook/cookbook_rest].
 
