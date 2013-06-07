@@ -1,6 +1,6 @@
 [[Ajax]]
 JavaScript, Ajax, and Comet
------------------------
+---------------------------
 
 Lift is known for its great Ajax and Comet support, and in this chapter, we'll explore these.
 
