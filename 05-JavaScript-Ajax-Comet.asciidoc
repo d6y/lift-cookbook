@@ -1,8 +1,8 @@
 [[Ajax]]
-JavaScript, Ajax, Comet
+JavaScript, Ajax, and Comet
 -----------------------
 
-Lift is known for its great Ajax and Comet support, and in this chapter we'll explore these.
+Lift is known for its great Ajax and Comet support, and in this chapter, we'll explore these.
 
 For an introduction to Lift's Ajax and Comet features, see http://simply.liftweb.net[_Simply Lift_], Chapter 9 of _Lift in Action_ (Perrett, 2012, Manning Publications, Co.), or watch https://fmpwizard.telegr.am/blog/comet-actors-presentation[Diego Medina's video presentation].
 
@@ -63,17 +63,17 @@ Discussion
 The signature of the function you pass to `ajaxInvoke` is
 `Unit => JsCmd`, meaning you can trigger a range of behaviours, from
 returning `Noop` if you want nothing to happen, through changing DOM
-element, all the way up to executing arbitrary JavaScript.
+elements, all the way up to executing arbitrary JavaScript.
 
-The example above is using a button, but will work on any element that
-has an event you can bind to.  We're binding to _onclick_ but it could be any event
+The previous example uses a button but will work on any element that
+has an event you can bind to.  We're binding to `onclick` but it could be any event
 the DOM exposes.
 
 Related to `ajaxInvoke` are the following functions:
 
 `SHtml.onEvent`:: Calls a function with the signature `String => JsCmd` because it
 is passed the `value` of the node it is attached to. In the previous
-example, this would be the empty string as the button has no value.
+example, this would be the empty string, as the button has no value.
 `SHtml.ajaxCall`:: This is more general than `onEvent`, as you give it the expression you want passed to your server-side code.(((SHtml.ajaxCall)))(((ajaxCall)))
 `SHtml.jsonCall`::  This is even more general still: you give it a function
 that will return a JSON object when executed on the client, and this
@@ -84,7 +84,7 @@ Let's look at each of these in turn.
 onEvent: receiving the value of a DOM element
 +++++++++++++++++++++++++++++++++++++++++++++
 
-You can use `onEvent` with any element that has a `value` attribute and responds to the event you choose to bind to. The function you supply to `onEvent` is called with the element's value. As an example, we can write a snippet that presents a challenge to the user, and validates the response(((SHtml.onEvent)))(((onEvent))):
+You can use `onEvent` with any element that has a `value` attribute and responds to the event you choose to bind to. The function you supply to `onEvent` is called with the element's value. As an example, we can write a snippet that presents a challenge to the user and validates the response(((SHtml.onEvent)))(((onEvent))):
 
 [source,scala]
 ----
@@ -242,7 +242,7 @@ object JsonCall extends Loggable {
 
 Working from the bottom of this snippet up, we see a binding of the `<button>` to the `jsonCall`. The value we'll be working on is the value provided by the JavaScript function called `currentQuestion`.  This was defined on the template page.  When the button is clicked, the JavaScript function is called and the resulting value will be presented to `validate`, which is our `JValue => JsCmd` function.
 
-All `validate` does is log the JSON data and alert back if the question looks correct or not.  To do this we use the Lift JSON ability to extract JSON to a case class and call the `valid_?` test to see if the numbers add up.  This will evaluate to `Some(true)` if the addition works, `Some(false)` if the addition isn't correct, or `None` if the input is missing or not a valid integer.
+All `validate` does is log the JSON data and alert back if the question looks correct or not.  To do this, we use the Lift JSON ability to extract JSON to a case class and call the `valid_?` test to see if the numbers add up.  This will evaluate to `Some(true)` if the addition works, `Some(false)` if the addition isn't correct, or `None` if the input is missing or not a valid integer.
 
 Running the code and entering 1, 2, and 3 into the text fields will produce the following in the server log:
 
@@ -259,9 +259,9 @@ See Also
 
 <<SelectOptionChange>> includes an example of `SHtml.onEvents`, which will bind a function to a number of events on a `NodeSeq`.
 
-For another example of `AjaxInvoke` take a look at the http://blog.fmpwizard.com/scala-lift-custom-wizard[_Call Scala code from JavaScript_ section] of Diego Medina's blog.
+For another example of `AjaxInvoke`, take a look at the http://blog.fmpwizard.com/scala-lift-custom-wizard[_Call Scala code from JavaScript_ section] of Diego Medina's blog.
 
-http://exploring.liftweb.net/master/index-10.html[_Exploring Lift_, chapter 10], lists various `JsExp` classes you can use for `ajaxCall`.
+http://exploring.liftweb.net/master/index-10.html[_Exploring Lift_, Chapter 10], lists various `JsExp` classes you can use for `ajaxCall`.
 
 <<JsonForms>> using `JsonHandler` to send JSON data from a form to the server.(((range="endofrange", startref="ix_AJssc")))(((range="endofrange", startref="ix_AIssc")))
 
