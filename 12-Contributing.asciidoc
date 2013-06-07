@@ -1,5 +1,5 @@
 [[ContributingAndHelp]]
-Contributing, Bug Reports, and Getting Help
+Contributing, Bug Reports, and pass:[<phrase role='keep-together'>Getting Help</phrase>]
 -------------------------------------------
 
 
