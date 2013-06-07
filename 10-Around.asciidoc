@@ -448,7 +448,7 @@ Discussion
 `XHTMLPlusImages` can also accept more than one `PlusImageHolder` if you
 have more than one file to attach.  Although the name `PlusImageHolder` may suggest it is for attachment images, you can attach any kind of data as an `Array[Byte]` with an appropriate mime type.
 
-By default the attachment is sent with an "inline" disposition. This controls the `Content-Disposition` header in the message, and "inline" means the content is intended for display automatically when the message is shown.  The alternative is "attachment," and this can be indicated with an optional final parameter to `PlusImageHolder`:
+By default, the attachment is sent with an `inline` disposition. This controls the `Content-Disposition` header in the message, and `inline` means the content is intended for display automatically when the message is shown.  The alternative is `attachment`, and this can be indicated with an optional final parameter to `PlusImageHolder`:
 
 [source,scala]
 --------------------------------------------------------------
@@ -483,15 +483,15 @@ msg match {
 }
 --------------------------------------------------------------
 
-As the contents of _src/main/resources_ is included on the classpath, we pass the filename to `loadResource` with a leading `/` character so the file can be found at the right place on the classpath.
+As the content of _src/main/resources_ is included on the classpath, we pass the filename to `loadResource` with a leading `/` character so the file can be found at the right place on the classpath.
 
-The `loadResource` returns a `Box[Array[Byte]]` as we have no guarantee the file will exist. We map this to a `Box[XHTMLPlusImages]` and match on that result to either send the email, or log that the file wasn't found.
+The `loadResource` returns a `Box[Array[Byte]]` as we have no guarantee the file will exist. We map this to a `Box[XHTMLPlusImages]` and match on that result to either send the email or log that the file wasn't found.
 
 
 See Also
 ^^^^^^^^
 
-Messages are sent using the `multipart/related` mime heading, with an "inline" disposition. https://github.com/lift/framework/issues/1197[Lift ticket #1197] links to a discussion regarding `multipart/mixed` that may be preferable for working around issues with Microsoft Exchange.
+Messages are sent using the `multipart/related` mime heading, with an `inline` disposition. https://github.com/lift/framework/issues/1197[Lift ticket #1197] links to a discussion regarding `multipart/mixed` that may be preferable for working around issues with Microsoft Exchange.
 
 http://www.ietf.org/rfc/rfc2183.txt[RFC 2183] describes the `Content-Disposition` header.
 
@@ -525,14 +525,14 @@ seconds from now.
 Discussion
 ^^^^^^^^^^
 
-The signature for `Schedule` used above expects a function of type `() => Unit`, which is the thing we want to happen in the future, and a `TimeSpan` from Lift's `TimeHelpers` which is when we want it to happen.  The `30 seconds` value gives us a `TimeSpan` via the `Helpers._` import, but there's a variation called `perform` that accepts a `Long` millisecond value if you prefer that:
+The signature for `Schedule` used previously expects a function of type `() => Unit`, which is the thing we want to happen in the future, and a `TimeSpan` from Lift's `TimeHelpers`, which is when we want it to happen.  The `30 seconds` value gives us a `TimeSpan` via the `Helpers._` import, but there's a variation called `perform` that accepts a `Long` millisecond value if you prefer that:
 
 [source,scala]
 ------------------------------------------------
 Schedule.perform(() => println("doing it"), 30*1000L)
 ------------------------------------------------
 
-Behind the scenes, Lift is making use of the `ScheduledExecutorService` from `java.util.concurrent`, and as such returns a `ScheduledFuture[Unit]`.  You can use this future to `cancel` the operation before it runs.
+Behind the scenes, Lift is making use of the `ScheduledExecutorService` from `java.util.concurrent` and, as such, returns a `ScheduledFuture[Unit]`.  You can use this future to `cancel` the operation before it runs.
 
 It may be a surprise to find that you can call `Schedule` with just a function as an argument, and not a delay value.  This version runs the function immediately, but on a worker thread.  This is a convenient way to asynchronously run other tasks without going to the trouble of creating an actor for the purpose.
 
@@ -618,7 +618,7 @@ future reschedules:
 LiftRules.unloadHooks.append( () => MyScheduledTask ! MyScheduledTask.Stop )
 ----------------------------------------------------------------------------
 
-Without the `Stop` message the actor would continue to be rescheduled
+Without the `Stop` message, the actor would continue to be rescheduled
 until the JVM exits. This may be acceptable, but note that during
 development with SBT, without the `Stop` message, you will continue to
 schedule tasks after issuing the `container:stop` command.
