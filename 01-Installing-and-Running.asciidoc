@@ -35,7 +35,7 @@ start a basic Lift application.(((Lift applications, basic instructions)))
 For Mac and Linux
 +++++++++++++++++
 
-* Visit http://liftweb.net/download[http://liftweb.net/download] and download the Lift 2.5-RC5 ZIP file.
+* Visit http://liftweb.net/download[http://liftweb.net/download] and download the most recent Lift 2.5 ZIP file.
 * Unzip the file.
 * Start Terminal or your favourite shell tool.
 * Navigate into the unzipped folder and into the _scala_29_ subfolder and then into the _lift_basic_ folder.
@@ -48,7 +48,7 @@ For Mac and Linux
 For Windows
 +++++++++++
 
-* Visit http://liftweb.net/download[http://liftweb.net/download] and locate the link to the ZIP version of Lift 2.5-RC5 and save this to disk.
+* Visit http://liftweb.net/download[http://liftweb.net/download] and locate the link to the most recent ZIP version of Lift 2.5 and save this to disk.
 * Extract the contents of the ZIP file.
 * Navigate in Explorer to the extracted folder, and inside navigate into _scala_29_ and then _lift_basic_.
 * Double-click _sbt.bat_ to run the build tool; a terminal window should open.
@@ -114,7 +114,7 @@ See Also
 
 The Simple Build Tool documentation is at http://www.scala-sbt.org[http://www.scala-sbt.org].
 
-Tutorials for Lift can be found in http://simply.liftweb.net/[_Simply Lift_] and in _Lift in Action_, Tim Perrett (Manning Publications Co).
+Tutorials for Lift can be found in http://simply.liftweb.net/[_Simply Lift_], Instant Lift Web Applications How-to (PACKT Publishing), and in _Lift in Action_ (Manning Publications Co).
 
 [[LiftFromScratch]]
 Creating a Lift Project from Scratch Using SBT
