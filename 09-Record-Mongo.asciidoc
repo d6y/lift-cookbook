@@ -113,7 +113,7 @@ See Also
 
 Connection configuration that includes replica sets and MongoDB options, such as timeout settings, are described on the https://www.assembla.com/wiki/show/liftweb/Mongo_Configuration[Lift wiki].
 
-The full specification for MongoDB connection URLs is http://docs.mongodb.org/manual/reference/connection-string/[here].
+The full MongoDB connection format is described in http://docs.mongodb.org/manual/reference/connection-string/[Connection String URI Format].
 
 
 
@@ -147,7 +147,7 @@ object Country extends Country with MongoMetaRecord[Country] {
 -------------------------------------------------------------------------------
 
 In this example, we are creating a record for information about a country,
-and the `population` is a map from a `String` key to an `Integer` value.
+and the `population` is a map from a `String` key, representing a city in that country, to an `Integer` value, representing the population of that city.
 
 We can use it in a snippet like this:
 
@@ -266,7 +266,7 @@ uk.population.get("San Francisco")
 // will throw java.util.NoSuchElementException
 ----------------------------------------------
 
-…or you can access via the standard Scala map interface:
+or you can access via the standard Scala map interface:
 
 [source,scala]
 ------------------------------------------------------------
@@ -286,7 +286,7 @@ runtime.((("java.lang.ClassCastException")))((("error messages", "java.lang.Clas
 See Also
 ^^^^^^^^
 
-A discussion on the mailing list regarding the limited type support in `MongoMapField` and a possible way around it by overriding `asDBObject` can be found http://bit.ly/lift-mongomap[here].
+There's a http://bit.ly/lift-mongomap[discussion on the mailing list] regarding the limited type support in `MongoMapField` and a possible way around it by overriding `asDBObject`.
 
 
 
@@ -552,7 +552,8 @@ class HelloWorld {
     ".country *" #> uk.id &
     ".planet" #> uk.planet.obj.map { p =>
       ".name *" #> p.id &
-      ".review *" #> p.review }
+      ".review *" #> p.review
+    }
   }
 -----------------------------------------------------------------------------
 
@@ -618,14 +619,14 @@ Searching for records by a reference is straightforward((("queries", "by referen
 [source,scala]
 ------------------------------------------------------------------------------
 val earth : Planet = ...
-val onEarth : List[Country]= Country.findAll(Country.planet.name, earth.id.is)
+val onEarth : List[Country] = Country.findAll(Country.planet.name, earth.id.is)
 ------------------------------------------------------------------------------
 
 Or in this case, because we have `String` references, we could just say:
 
 [source,scala]
 --------------------------------------------------------------------------
-val onEarth : List[Country]= Country.findAll(Country.planet.name, "earth")
+val onEarth : List[Country] = Country.findAll(Country.planet.name, "earth")
 --------------------------------------------------------------------------
 
 
@@ -682,7 +683,7 @@ The example uses a `StringRefField`, as the MongoDB records themselves use `Stri
 See Also
 ^^^^^^^^
 
-http://docs.mongodb.org/manual/core/data-modeling/[10Gen, Inc.'s _Data Modeling Decisions_] describes embedding of documents compared to referencing objects.
+10Gen, Inc.'s http://docs.mongodb.org/manual/core/data-modeling/[_Data Modeling Decisions_] describes embedding of documents compared to referencing objects.
 
 
 
@@ -754,7 +755,7 @@ The DSL constructs a query that we then `fetch` to send the query to MongoDB. Th
 
 `countDistinct`:: Shows the number of distinct values in the results
 
-`exists`:: This is true if there's any record that matches the query.
+`exists`:: This is true if there's any record that matches the query
 
 `get`:: Returns an `Option[T]` from the query
 
@@ -922,10 +923,9 @@ us an angle in radians. We convert this to `Degrees` as required by Rogue.
 See Also
 ^^^^^^^^
 
-http://docs.mongodb.org/manual/core/geospatial-indexes/[The MongoDB manual] discusses geospatial indexes.
+http://docs.mongodb.org/manual/core/geospatial-indexes/[The MongoDB Manual] discusses geospatial indexes.
 
-You can learn more about http://docs.mongodb.org/manual/core/write-operations/[write concerns], and
-the various values to pass to `save` are described in the http://api.mongodb.org/java/current/[Java MongoDB driver].
+Learn more about http://docs.mongodb.org/manual/core/write-operations/[write concerns] from the MongoDB Manual.
 
 
 
@@ -979,7 +979,7 @@ scala> :q
 Discussion
 ^^^^^^^^^^
 
-Running everything in `Boot` may be a little heavy handed, especially if you are starting up various services and background tasks.  All we need to do is define a database connection. For example, using the example code presented in <<ConnectingToMongo>>, we could initialise a conection with:
+Running everything in `Boot` may be a little heavy handed, especially if you are starting up various services and background tasks.  All we need to do is define a database pass:[<phrase role='keep-together'>connection.</phrase>] For example, using the sample code presented in <<ConnectingToMongo>>, we could initialise a conection with:
 
 ---------------------------------------------
 scala> import bootstrap.liftweb._
@@ -1001,7 +1001,7 @@ res2: List[code.model.Country] = List(class code.model.Country={_id=uk,
 See Also
 ^^^^^^^^
 
-<<ConnectingToMongo>> for connecting to MongoDB and <<QueryingWithRogue>> for querying with Rogue.
+<<ConnectingToMongo>> explains connecting to MongoDB and <<QueryingWithRogue>> describes querying with Rogue.
 
 
 
@@ -1188,13 +1188,13 @@ You can then "Run As..." the class in Eclipse.
 See Also
 ^^^^^^^^
 
-Specs2 is documented at http://specs2.org/[here].
+http://specs2.org/[The Specs2 site] contains examples and a user guide.
 
-If you prefer to use the http://www.scalatest.org[Scala Test framework], take a look at https://github.com/eltimn/lift-mongoauth[Tim Nelson's _Mongo Auth_ Lift module]. It includes tests using that framework that run against MongoDB.  Much of what Tim has written there has been adapted to produce this recipe for Specs2.
+If you prefer to use the http://www.scalatest.org[Scala Test framework], take a look at https://github.com/eltimn/lift-mongoauth[Tim Nelson's _Mongo Auth_ Lift module]. It includes tests using that framework.  Much of what Tim has written there has been adapted to produce this recipe for Specs2.
 
 https://github.com/lift/framework/tree/master/persistence/mongodb-record/src/test/scala/net/liftweb/mongodb/record[The Lift MongoDB Record library] includes a variation on testing with Specs2, using just `Before` and `After` rather than the `around` example used in this recipe.
 
-https://github.com/flapdoodle-oss/embedmongo.flapdoodle.de[Flapdoodle] provides a way to automate the download, install, setup, and cleanup of a MongoDB database. This automation is something you can wrap around your unit tests, and a Specs2 integration is included using the same `Before` and `After` approach to testing used by https://github.com/athieriot/specs2-embedmongo[Lift MongoDB Record].
+https://github.com/flapdoodle-oss/embedmongo.flapdoodle.de[Flapdoodle] provides a way to automate the download, install, setup, and cleanup of a MongoDB database. This automation is something you can wrap around your unit tests, and a https://github.com/athieriot/specs2-embedmongo[Specs2 integration is included] using the same `Before` and `After` approach to testing used by Lift MongoDB Record.
 
 http://www.scala-sbt.org/release/docs/Detailed-Topics/Testing[The test interface provided by SBT], such as the `test` command, also supports the ability to fork tests, set specific configurations for test cases, and ways to select which tests are run.
 
