@@ -237,7 +237,7 @@ There's nothing special about modules: they are coded, packaged, and used like a
 
 For our snowstorm, we're going to package some JavaScript and inject the script onto every page.
 
-Starting with the _lift_blank_ template downloaded from _liftweb.net_, we can remove all the source and HTML files as this won't be a runnable Lift application in itself. However, it will leave us with the regular Lift structure and build configuration.
+Starting with the _lift_blank_ template downloaded from _liftweb.net_, we can remove all the source and HTML files, as this won't be a runnable Lift application in itself. However, it will leave us with the regular Lift structure and build configuration.
 
 Our module will need the https://github.com/scottschiller/snowstorm/[snowstorm JavaScript file] copied as _resources/toserve/snowstorm.js_.  This will place the JavaScript file on the classpath of our Lift application.
 
@@ -328,7 +328,7 @@ When we run our Lift application, white snow will be falling on every page, supp
 Discussion
 ^^^^^^^^^^
 
-The module is self contained: there's no need for users to copy JavaScript files around or modify their templates.  To achieve that we've made use of `ResourceServer`.  When we reference the JavaScript file via _/classpath/snowstorm.js_, Lift will attempt to locate _snowstorm.js_ from the classpath.  This is what we want for our Lift application because _snowstorm.js_ will be inside the module JAR file.
+The module is self contained: there's no need for users to copy JavaScript files around or modify their templates.  To achieve that, we've made use of `ResourceServer`.  When we reference the JavaScript file via _/classpath/snowstorm.js_, Lift will attempt to locate _snowstorm.js_ from the classpath.  This is what we want for our Lift application, because _snowstorm.js_ will be inside the module JAR file.
 
 However, we do not want to expose all files on the classpath to anyone visiting our application. To avoid that, Lift looks for resources inside a _toserve_ folder, which for our purposes means files and folders inside _src/main/resources/toserve_.  You can think of pass:[<phrase role='keep-together'><emphasis>/classpath</emphasis></phrase>] meaning _toserve_ (although, you can change those values via `LiftRules.resourceServerPath` and `ResourceServer.baseResourceLocation`).
 
@@ -343,7 +343,7 @@ ResourceServer.allow {
 
 We're just always returning `true` for anyone who asks for this resource, but we could dynamically control access here if we wanted.
 
-`S.putInHead` adds the JavaScript to the head of a page, and is triggered on every page by `LiftSession.onBeginServicing` (also discussed in <<OnSession>>). We could make use of `Req` here to restrict the snowstorm to particular pages, but we're adding it to every page.
+`S.putInHead` adds the JavaScript to the head of a page and is triggered on every page by `LiftSession.onBeginServicing` (also discussed in <<OnSession>>). We could make use of `Req` here to restrict the snowstorm to particular pages, but we're adding it to every page.
 
 Hopefully you can see that anything you can do in a Lift application you can probably turn into a Lift module.  A typical approach might be to have functionality in a Lift application, and then factor out settings in `Boot` into a module `init` method.  For example, if you wanted to provide REST services as a module, that would be possible and is an approach taken by the Lift PayPal module.
 
@@ -352,9 +352,9 @@ Making your module available
 
 If you do want your module to be used by a wider audience, you need to publish it to a public repository, such as Sonatype or CloudBees. You'll also want to keep your module up-to-date with Lift releases. There are a few conventions around this.
 
-One convention is to include the Lift "edition" as part of the module name.  For example, version 1.0.0 of your "foo" module for Lift 2.5 would have the name "foo_2.5." This makes it clear your module is compatible with Lift for all of 2.5, including milestones, release candidates, snapshots, and final releases.  It also means you only need publish your module once, at least until Lift 2.6 or 3.0 is available.
+One convention is to include the Lift "edition" as part of the module name. For example, version 1.0.0 of your _foo_ module for Lift 2.5 would have the name _foo_2.5_. This makes it clear your module is compatible with Lift for all of 2.5, including milestones, release candidates, snapshots, and final releases.  It also means you only need publish your module once, at least until Lift 2.6 or 3.0 is available.
 
-One way to ease the above is to make a modification to your module build to allow the Lift version number to change. This makes it possible to automate the build when new versions of Lift are released. To do that, create _project/LiftModule.scala_ in your module:
+One way to manage updates is to make a modification to your module build to allow the Lift version number to change. This makes it possible to automate the build when new versions of Lift are released. To do that, create _project/LiftModule.scala_ in your module:
 
 
 [source,scala]
