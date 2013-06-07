@@ -163,7 +163,7 @@ The markup format for the wiki pages is http://redcloth.org/hobix.com/textile/[T
 
 
 [[AddRecipe]]
-How to Add a New Recipe to this Cookbook
+How to Add a New Recipe to This Cookbook
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -233,7 +233,7 @@ Create a Lift module, and then reference the module from your Lift projects.
 
 As an example, let's create a module to embed the _snowstorm snowfall effect_ on every page in your Lift web application (please don't do this).
 
-There's nothing special about modules: they are code, packaged and used like any other dependency. What makes them possible is the exposure of extension points via `LiftRules`. The main convention is to have an `init` method that Lift applications can use to initialise your module.
+There's nothing special about modules: they are coded, packaged, and used like any other dependency. What makes them possible is the exposure of extension points via pass:[<phrase role='keep-together'><literal>LiftRules</literal></phrase>]. The main convention is to have an `init` method that Lift applications can use to initialise your module.
 
 For our snowstorm, we're going to package some JavaScript and inject the script onto every page.
 
