@@ -53,7 +53,7 @@ raise a ticket unless asked to do so by a Lift committer on the mailing list.
 Discussion
 ^^^^^^^^^^
 
-[quote, David Pollack, http://bit.ly/lift-expects[http://bit.ly/lift-expects]]
+[quote, David Pollack, _http://bit.ly/lift-expects_]
 ____
 If Lift is not behaving as you expect, please ask questions about what
 you're seeing. The ideal form of these questions is "When I do X, my
