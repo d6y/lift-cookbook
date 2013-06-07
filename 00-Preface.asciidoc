@@ -8,7 +8,7 @@ web applications with the Lift Web Framework.((("Lift Web Framework", "prerequis
 
 The aim is to give a single, short answer to a specific question. When there's multiple approaches, or styles, we'll give you one solution, but will point you at alternatives in the discussion.
 
-<<InstallAndRunning>> will get you up and running with Lift, but in other respects this cookbook is aimed at practitioners and the questions they have asked. If this is the first time you've heard of Lift, you'll want to look at:
+<<InstallAndRunning>> will get you up and running with Lift, but in other respects, this cookbook is aimed at practitioners and the questions they have asked. If this is the first time you've heard of Lift, you'll want to look at:
 
 * http://simply.liftweb.net[_Simply Lift_]
 
