@@ -61,7 +61,7 @@ number of `MailTypes`:
 `XHTMLMailBodyType`:: For HTML email (<<HTMLEmail>>)
 `XHTMLPlusImages`:: For attachments (<<EmailWithAttachments>>)
 
-In the example above we added two types: `PlainMailBodyType`
+In the previous example, we added two types: `PlainMailBodyType`
 and `To`.  Adding more is as you'd expect:
 
 [source,scala]
@@ -88,7 +88,7 @@ This would appear in your mailbox as:
 From: Example Corporation <you@example.org>
 ----------------------------------------
 
-The default character set is UTF-8. If you need to change this replace
+The default character set is UTF-8. If you need to change this, replace
 the use of `PlainMailBodyType` with
 `PlainPlusBodyType("Hello from Lift", "ISO8859_1")`.
 
@@ -126,7 +126,7 @@ Mailer.devModeSend.default.set( (m: MimeMessage) =>
 ---------------------------------------------------------
 
 When you send an email with `Mailer`, no SMTP server will be contacted, and
-instead you'll see output to your log:
+instead, you'll see output to your log:
 
 ---------------------------------------------------------
 Would have sent: Hello from Lift
@@ -152,7 +152,7 @@ application is in developer mode (which it is by default). We're logging
 just the body part of the message.
 
 Java Mail doesn't include a utility to display all the
-parts of an email, so if you want more information you'll need to
+parts of an email, so if you want more information, you'll need to
 roll your own function.  For example(((Java Mail))):
 
 [source,scala]
