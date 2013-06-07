@@ -4,7 +4,7 @@ Around Lift
 
 This chapter looks at interacting with other systems from within Lift, such as sending email, calling URLs, or scheduling tasks.
 
-Many of the recipes in this chapter have code examples in a project at https://github.com/LiftCookbook/cookbook_around[GitHub].
+Many of the recipes in this chapter have code examples in a project at https://github.com/LiftCookbook/cookbook_around[https://github.com/LiftCookbook/cookbook_around].
 
 
 [[SendTextEmail]]
@@ -38,8 +38,8 @@ Discussion
 
 `Mailer` sends the message asynchronously, meaning `sendMail` will
 return immediately, so you don't have to worry about the time costs of
-negotiating with an SMTP server. There's also a `blockingSendMail`
-method if you need to wait.(((SMTP servers)))
+negotiating with an SMTP server. However, there's also a `blockingSendMail`
+method if you do need to wait.(((SMTP servers)))
 
 By default, the SMTP server used will be _localhost_. You can change
 this by setting the `mail.smtp.host` property.
@@ -138,14 +138,7 @@ Discussion
 The key part of this recipe is setting a
 `MimeMessage => Unit` function on `Mailer.devModeSend`.  We happen to be logging, but you can use this function to handle the email any way you want.
 
-The Lift `Mailer` allows you to control how email is sent at each run mode:
-
-`devModeSend`:: Sends email by default
-`testModeSend`:: Logs only that a message would have been sent
-`stagingModeSend`:: Sends email by default
-`productionModeSend`:: Sends email by default
-`pilotModeSend`:: Sends email by default
-`profileModeSend`:: Sends email by default
+The Lift `Mailer` allows you to control how email is sent at each run mode: by default, email is sent for `devModeSend`, `profileModeSend`, `pilotModeSend`, `stagingModeSend`, and `productionModeSend`; whereas, by default, `testModeSend` only logs that a message would have been sent.
 
 The `testModeSend` logs a reference to the `MimeMessage`, meaning your log
 would show a message like:
@@ -227,11 +220,11 @@ DEBUG SMTP: trying to connect to host "localhost", port 25, isSSL false
 See Also
 ^^^^^^^^
 
-Run modes are described https://www.assembla.com/spaces/liftweb/wiki/Run_Modes[here].
+Run modes are described on https://www.assembla.com/spaces/liftweb/wiki/Run_Modes[the Lift wiki].
 
 
 [[HTMLEmail]]
-Sending HTML Email
+SMTP Authentication
 ~~~~~~~~~~~~~~~~~~
 
 Problem
@@ -397,12 +390,12 @@ accidentally send email outside of a production environment.
 You don't have to use a properties file for this: the Lift `Mailer`
 also supports JNDI, or you could look up a username and password some other way and set `Mailer.authenticator` when you have the values.((("Java Naming and Directory Interface (JNDI)")))(((Mailer)))
 
-However, some mail services such as SendGrid do require `mail.smtp.auth=true` to be set, and that should go into your Lift properties file or set as a JVM argument: `-Dmail.smtp.auth=true`.(((SendGrid)))
+However, some mail services such as SendGrid do require `mail.smtp.auth=true` to be set, and that should go into your Lift properties file or set as a JVM argument: pass:[<phrase role='keep-together'><literal>-Dmail.smtp.auth=true</literal></phrase>].(((SendGrid)))
 
 See Also
 ^^^^^^^^
 
-As well as `mail.smtp.auth`, there are a http://javamail.kenai.com/nonav/javadocs/com/sun/mail/smtp/package-summary.html[range of settings to control the Java Mail API]. Examples include controlling port numbers and timeouts.(((port numbers)))(((timeouts)))
+As well as `mail.smtp.auth`, there are a http://docs.oracle.com/javaee/5/api/javax/mail/package-summary.html[range of settings to control the Java Mail API]. Examples include controlling port numbers and timeouts.(((port numbers)))(((timeouts)))
 
 
 [[EmailWithAttachments]]
@@ -498,9 +491,9 @@ The `loadResource` returns a `Box[Array[Byte]]` as we have no guarantee the file
 See Also
 ^^^^^^^^
 
-Messages are sent using the `multipart/related` mime heading, with an "inline" disposition. https://github.com/lift/framework/issues/1197[Lift ticket #1197] links to a discussion regarding "multipart/mixed" that may be preferable for working around issues with Microsoft Exchange.
+Messages are sent using the `multipart/related` mime heading, with an "inline" disposition. https://github.com/lift/framework/issues/1197[Lift ticket #1197] links to a discussion regarding `multipart/mixed` that may be preferable for working around issues with Microsoft Exchange.
 
-http://www.ietf.org/rfc/rfc2183.txt[RFC 2183] describes the "Content-Disposition" header.
+http://www.ietf.org/rfc/rfc2183.txt[RFC 2183] describes the `Content-Disposition` header.
 
 
 
@@ -543,7 +536,7 @@ Behind the scenes, Lift is making use of the `ScheduledExecutorService` from `ja
 
 It may be a surprise to find that you can call `Schedule` with just a function as an argument, and not a delay value.  This version runs the function immediately, but on a worker thread.  This is a convenient way to asynchronously run other tasks without going to the trouble of creating an actor for the purpose.
 
-There is also a `Schedule.schedule` method that will send a specified
+There is also a `Schedule.schedule` method that will send an
 actor a specified message after a given delay.  This takes a `TimeSpan` delay, but again there's also a `Schedule.perform` version that accepts a `Long` as a delay.
 
 
@@ -721,9 +714,9 @@ Note that `codeLength` is a `Promise[Int]`.  To get the value you can evaluate `
 As well as extracting string values with `as.String`, there are other options, including:
 
 `as.Bytes`:: To work with `Promise[Array[Byte]]`.
-`as.File`:: To write to a file, as in `Http(svc > as.File(new File("/tmp/cc")) )`.
-`as.Response`:: To allow you to provide a `client.Response => T` function to use on the response
-`as.xml.Elem`:: To parse an XML response
+`as.File`:: To write to a file, as in `Http(svc > as.File(new File("/tmp/cc")))`.
+`as.Response`:: To allow you to provide a `client.Response => T` function to use on the response.
+`as.xml.Elem`:: To parse an XML response.
 
 As an example of `as.xml.Elem`:
 
@@ -804,8 +797,6 @@ See Also
 ^^^^^^^^
 
 http://dispatch.databinder.net/Dispatch.html[The Dispatch documentation] is well written and guides you through the way Dispatch approaches HTTP. Do spend some time with it.
-
-To see what's available on Dispatch's `Promise`, browse the source https://github.com/dispatch/reboot/blob/master/core/src/main/scala/promise.scala[here].
 
 For questions about Dispatch, the best place is the https://groups.google.com/forum/#!forum/dispatch-scala[Dispatch Google Group].
 
