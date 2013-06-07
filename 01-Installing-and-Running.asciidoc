@@ -161,7 +161,7 @@ scalaVersion := "2.10.0"
 seq(com.github.siasia.WebPlugin.webSettings :_*)
 
 libraryDependencies ++= {
-  val liftVersion = "2.5-RC5"
+  val liftVersion = "2.5"
   Seq(
     "net.liftweb" %% "lift-webkit" % liftVersion % "compile",
     "org.eclipse.jetty" % "jetty-webapp" % "8.1.7.v20120910"  % 
@@ -358,16 +358,16 @@ One error you may run into is:
 java.lang.OutOfMemoryError: PermGen space
 ------------------------------------------
 
-The _permanent generation_ is a Java virtual machine concept. It's the area of memory used for storing classes (amongst other things).  It's a fixed size and once it is full this PermGen error appears.  As you might imagine, continually restarting a container causes many classes to be loaded and unloaded, but the process is not perfect, effectively leaking memory. The best you can do is stop and then restart SBT.  If you're seeing this error often, check the setting for `-XX:MaxPermSize` inside the _sbt_ (or _sbt.bat_) script, and if you can, double it.((("Java Virtual Machine (JVM)", "troubleshooting")))(((permanent generation)))
+The _permanent generation_ is a Java Virtual Machine concept. It's the area of memory used for storing classes (amongst other things).  It's a fixed size and once it is full this PermGen error appears.  As you might imagine, continually restarting a container causes many classes to be loaded and unloaded, but the process is not perfect, effectively leaking memory. The best you can do is stop and then restart SBT.  If you're seeing this error often, check the setting for `-XX:MaxPermSize` inside the _sbt_ (or _sbt.bat_) script, and if you can, double it.((("Java Virtual Machine (JVM)", "troubleshooting")))(((permanent generation)))
 
 See Also
 ^^^^^^^^
 
-http://www.scala-sbt.org/release/docs/Detailed-Topics/Triggered-Execution[More about triggered execution]
+Triggered execution has a number of settings you can adjust, as described in http://www.scala-sbt.org/release/docs/Detailed-Topics/Triggered-Execution[the SBT documentation].
 
-http://www.scala-sbt.org/release/docs/Detailed-Topics/Command-Line-Reference[Reference for the core SBT command line]
+See http://www.scala-sbt.org/release/docs/Detailed-Topics/Command-Line-Reference[the SBT Command Line Reference] for an overview of available commands.
 
-https://github.com/JamesEarlDouglas/xsbt-web-plugin/wiki[Command reference for the web plugin for SBT]
+Commands and configuration options for the SBT web plugin are described on https://github.com/JamesEarlDouglas/xsbt-web-plugin/wiki[the GitHub wiki].
 
 
 [[jrebel]]
@@ -441,7 +441,7 @@ That change is live, without having to restart the container.
 Discussion
 ^^^^^^^^^^
 
-JRebel is very likely to speed up your development. It updates code in a running Java virtual machine, without having to stop and restart it.  The effect is that, on the whole, you can compile a class, then hit reload in your browser to see the change in your Lift application.((("Java Virtual Machine (JVM)", "troubleshooting")))((("JRebel, reducing restarts with")))((("browsers", "reloading")))(((Lift applications, speeding development of)))
+JRebel is very likely to speed up your development. It updates code in a running Java Virtual Machine, without having to stop and restart it.  The effect is that, on the whole, you can compile a class, then hit reload in your browser to see the change in your Lift application.((("Java Virtual Machine (JVM)", "troubleshooting")))((("JRebel, reducing restarts with")))((("browsers", "reloading")))(((Lift applications, speeding development of)))
 
 Even with JRebel you will need to restart your applications from time to time, but JRebel usually reduces the number of restarts. For example, _Boot.scala_ is run when your application starts, so if you modify something in your _Boot.scala_, you'll need to stop and start your application. JRebel can't help with that.
 
@@ -463,7 +463,7 @@ This recipe uses a free Scala license for a service called myJRebel. This commun
 See Also
 ^^^^^^^^
 
-http://zeroturnaround.com/software/jrebel/resources/faq/[Details about how JRebel works in the FAQ]
+Details about how JRebel works can be found in http://zeroturnaround.com/software/jrebel/resources/faq/[the ZeroTurnaround FAQ].
 
 The Lift support was announced in a http://zeroturnaround.com/jrebel/lift-support-in-jrebel/[blog post in 2012], where you'll find more about the capabilities of the plugin.
 
@@ -484,7 +484,7 @@ Use the "Scala IDE for Eclipse" plugin to Eclipse, and the _sbteclipse_ plugin f
 
 The instructions for the Eclipse plugin are given at http://scala-ide.org[http://scala-ide.org]. There are a number of options to be aware of when picking an update site to use: there are different sites for Scala 2.9 and 2.10, and for different versions of Eclipse. Start with the _stable_ version of the plugin rather than a nightly or milestone version. This will give you an Eclipse perspective that knows about Scala.
 
-Once the Eclipse plugin is installed and restarted, you need to create the project files to allow Eclipse to load your Lift project. Install "sbteclipse" by adding the following to _projects/plugins.sbt_ in your Lift project:
+Once the Eclipse plugin is installed and restarted, you need to create the project files to allow Eclipse to load your Lift project. Install _sbteclipse_ by adding the following to _projects/plugins.sbt_ in your Lift project:
 
 [source,scala]
 -----------------------------------------------------------------------
@@ -566,7 +566,7 @@ The IntelliJ plugin you'll only need to install once, and these instructions are
 
 From the "Welcome to IntelliJ IDEA" screen, select "Configure" and then "Plugins." Select "Browse repositories..." In the search box, top right, type "Scala."  You'll find on the left a number of matches: select "Scala."  On the right, you'll see confirmation that this is the "Plugin for Scala language support" and the vendor is JetBrains, Inc. Select the "Download and Install" icon from the top of the window, or right-click to download and install. "Close" the dialog, and OK out of the plugins window. You'll be prompted to restart IntelliJ IDEA.
 
-With the IDE configured, you now need to add the SBT plugin inside your Lift project by adding the following to the file _projects/plugins.sbt_:
+With the IDE configured, you now need to include the SBT plugin inside your Lift project by adding the following to the file _projects/plugins.sbt_:
 
 [source,scala]
 ------------------------------------------------------------------------
@@ -647,7 +647,7 @@ If you don't like the web interface, the connection settings described in this r
 See Also
 ^^^^^^^^
 
-http://www.h2database.com[The properties of H2]
+http://www.h2database.com[The H2 site] lists the features and configuration options for database engine.
 
 If you're using the console frequently, consider making it accessible from your Lift application in development node. This is described by Diego Medina in a https://fmpwizard.telegr.am/blog/lift-and-h2[blog post].
 
@@ -687,8 +687,8 @@ of the latest build.
 Discussion
 ^^^^^^^^^^
 
-Production releases of Lift (e.g., "2.4," "2.5"), as well as milestone releases
-(e.g., "2.5-M3") and release candidates (e.g., "2.5-RC1") are published
+Production releases of Lift (e.g., 2.4, 2.5), as well as milestone releases
+(e.g., 2.5-M3) and release candidates (e.g., 2.5-RC1) are published
 into a releases repository. When SBT downloads them, they are downloaded
 once.(((production releases)))(((milestone releases)))(((release candidates)))(((releases repository)))
 
@@ -721,7 +721,7 @@ Providing that the Scala version is _binary compatible_ with the latest
 version used by Lift, you can change your build file to force the Scala
 version.(((binary compatibility)))(((Scala, binary compatibility in)))
 
-For example, assuming your _build.sbt_ file is set up to use Lift 2.5
+For example, let's assume your _build.sbt_ file is set up to use Lift 2.5
 with Scala 2.9.1:
 
 [source,scala]
@@ -736,7 +736,7 @@ libraryDependencies ++= {
 }
 ---------------------------------------------------------------------
 
-Let's assume that you now want to use Scala 2.9.3 but Lift 2.5 was only
+Suppose you now want to use Scala 2.9.3 but Lift 2.5 was only
 built against Scala 2.9.1. Replace `%%` with `%` for the `net.liftweb`
 resources and explicitly include the Scala version that Lift was built
 against for each Lift component:
@@ -760,7 +760,7 @@ This works because the two different Scala versions are binary compatible.
 Discussion
 ^^^^^^^^^^
 
-Dependencies have a particular naming convention.  For example, the `lift-webkit` library for Lift 2.5-RC5 is called _lift-webkit_2.9.1-2.5-RC5.jar_.  Normally, in _build.sbt_ we simply refer to `"net.liftweb" %% "lift-webkit"` and SBT turns that into the name of a file that can be downloaded.((("dependencies, naming conventions of")))((("names/naming", "of dependencies")))
+Dependencies have a particular naming convention.  For example, the `lift-webkit` library for Lift 2.5 is called _lift-webkit_2.9.1-2.5.jar_.  Normally, in _build.sbt_ we simply refer to `"net.liftweb" %% "lift-webkit"` and SBT turns that into the name of a file that can be downloaded.((("dependencies, naming conventions of")))((("names/naming", "of dependencies")))
 
 However, in this recipe we have forced SBT to explicitly fetch the 2.9.1 version
 of the Lift resources rather than allow it to compute the URL to the
@@ -777,7 +777,7 @@ See Also
 
 Binary compatibility in Scala is discussed on the http://article.gmane.org/gmane.comp.lang.scala.user/39290[Scala user mailing list].(((binary compatibility)))(((Scala, binary compatibility in)))
 
-http://www.scala-sbt.org/release/docs/Getting-Started/Library-Dependencies[The SBT behaviour]
+http://www.scala-sbt.org/release/docs/Getting-Started/Library-Dependencies[The SBT Library Dependencies page] describes how SBT manages version numbers.
 
 <<snapshot>> describes how to use a snapshot version of Lift.
 
