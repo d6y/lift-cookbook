@@ -53,7 +53,7 @@ raise a ticket unless asked to do so by a Lift committer on the mailing list.
 Discussion
 ^^^^^^^^^^
 
-[quote, David Pollack, http://bit.ly/lift-expects]
+[quote, David Pollack, http://bit.ly/lift-expects[http://bit.ly/lift-expects]]
 ____
 If Lift is not behaving as you expect, please ask questions about what
 you're seeing. The ideal form of these questions is "When I do X, my
@@ -67,7 +67,7 @@ because Lift is behaving differently than you expect it to, it's not
 necessarily a bug in Lift.
 ____
 
-A great way to get help with the issue you have, or getting a bug fixed, is to produce a small example to illustrate the problem and post it on GitHub. The key is to provide instructions so someone can run the example and see exactly what you see without having to jump through hoops.
+A great way to get help with the issue you have, or get a bug fixed, is to produce a small example to illustrate the problem and post it on GitHub. The key is to provide instructions so someone can run the example and see exactly what you see without having to jump through hoops.
 
 
 See Also
