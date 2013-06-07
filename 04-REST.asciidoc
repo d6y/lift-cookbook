@@ -40,7 +40,6 @@ object IssuesService extends RestHelper {
     case "closed" :: Nil XmlGet _ => <p>None closed</p>
     case "closed" :: Nil XmlDelete _ => <p>All deleted</p>
   })
-
 }
 ----
 
