@@ -262,7 +262,7 @@ See Also
 
 Function order is discussed in the http://www.assembla.com/spaces/liftweb/wiki/cool_tips[Lift Cool Tips wiki page].
 
-For more details about the form serialisation process, take a look at http://api.jquery.com/serialize/[the jQuery documentation].
+For more details about the form serialisation process, take a look at http://api.jquery.com/serialize/[the jQuery pass:[<phrase role='keep-together'>documentation</phrase>]].
 
 <<AjaxFileUpload>> describes Ajax file uploads.
 
