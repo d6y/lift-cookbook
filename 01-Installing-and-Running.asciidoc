@@ -50,7 +50,7 @@ For Windows
 
 * Visit http://liftweb.net/download[http://liftweb.net/download] and locate the link to the most recent ZIP version of Lift 2.5 and save this to disk.
 * Extract the contents of the ZIP file.
-* Navigate in Explorer to the extracted folder, and inside navigate into _scala_29_ and then _lift_basic_.
+* Navigate in Explorer to the extracted folder, and once inside, navigate into _scala_29_ and then _lift_basic_.
 * Double-click _sbt.bat_ to run the build tool; a terminal window should open.
 * Required libraries will be downloaded automatically.
 * At the SBT prompt (>), type: `container:start`.
@@ -61,8 +61,8 @@ For Windows
 Expected result
 +++++++++++++++
 
-The result of the above commands should be a basic Lift application running on
-your computer as shown in <<LiftBasicScreenshot>>.
+The result of these commands should be a basic Lift application running on
+your computer, as shown in <<LiftBasicScreenshot>>.
 
 [[LiftBasicScreenshot]]
 .The basic Lift application home page
@@ -85,10 +85,10 @@ files are stored on disk in _.ivy2_ under your home folder.
 
 Your application build is configured by _build.sbt_.  Looking inside, you'll see((("build.sbt, contents"))):
 
-* Basic information about your application, including a name and version;
-* Resolvers, which inform SBT where to fetch dependencies from;
-* Settings for plugins and the Scala compiler; and
-* A list of dependencies required to run your application, which will include the Lift framework.
+* Basic information about your application, including a name and version
+* Resolvers, which inform SBT where to fetch dependencies from
+* Settings for plugins and the Scala compiler
+* A list of dependencies required to run your application, which will include the Lift framework
 
 [[RunningYourApplication]]
 Running your application
@@ -106,7 +106,7 @@ Source code
 
 The source code of the application resides in _src/main/webapp_ and _src/main/scala_. If you take a look at _index.html_ in the _webapp_ folder, you'll see mention of `lift:helloWorld`. That's a reference to the class defined in _scala/code/snippet/HelloWorld.scala_. This is a _snippet invocation_ and an example of Lift's _view first_ approach to web applications. That is, there's no routing set up for the index page to collect the data and forward it to the view. Instead, the view defines areas of the content that are replaced with functions, such as those functions defined in _HelloWorld.scala_.(((snippet invocation)))((("view first approach", "definition of")))((("Lift Web Framework", "view first approach of")))(((Lift applications, source code for)))(((source code)))
 
-Lift knows to look in the `code` package for snippets because that package is declared as a location for snippets in _scala/bootstrap/liftweb/Boot.scala_. The Boot class is run when starting your application, and it's where you can configure the behaviour of Lift.
+Lift knows to look in the `code` package for snippets, because that package is declared as a location for snippets in _scala/bootstrap/liftweb/Boot.scala_. The Boot class is run when starting your application, and it's where you can configure the behaviour of Lift.
 
 
 See Also
@@ -130,7 +130,7 @@ Solution
 
 You will need to configure SBT and the Lift project yourself. Luckily, only five small files are needed.((("Simple Build Tool (SBT)", "configuration of")))(((Lift applications, creating from scratch)))
 
-First, create an SBT plug-in file at _project/plugins.sbt_ (all file names are given relative to the project root directory):
+First, create an SBT plugin file at _project/plugins.sbt_ (all filenames are given relative to the project root directory):
 
 [source,scala]
 ---------------------------------------------------------
@@ -358,7 +358,7 @@ One error you may run into is:
 java.lang.OutOfMemoryError: PermGen space
 ------------------------------------------
 
-The _permanent generation_ is a Java Virtual Machine concept. It's the area of memory used for storing classes (amongst other things).  It's a fixed size and once it is full this PermGen error appears.  As you might imagine, continually restarting a container causes many classes to be loaded and unloaded, but the process is not perfect, effectively leaking memory. The best you can do is stop and then restart SBT.  If you're seeing this error often, check the setting for `-XX:MaxPermSize` inside the _sbt_ (or _sbt.bat_) script, and if you can, double it.((("Java Virtual Machine (JVM)", "troubleshooting")))(((permanent generation)))
+The _permanent generation_ is a Java Virtual Machine concept. It's the area of memory used for storing classes (amongst other things). It's a fixed size, and once it is full, this PermGen error appears.  As you might imagine, continually restarting a container causes many classes to be loaded and unloaded, but the process is not perfect, effectively leaking memory. The best you can do is stop and then restart SBT.  If you're seeing this error often, check the setting for `-XX:MaxPermSize` inside the _sbt_ (or _sbt.bat_) script, and if you can, double it.((("Java Virtual Machine (JVM)", "troubleshooting")))(((permanent generation)))
 
 See Also
 ^^^^^^^^
@@ -382,7 +382,7 @@ You want to avoid application restarts when you change a Scala source file by us
 Solutions
 ^^^^^^^^^
 
-There are three steps required: install JRebel once; each year request the free Scala license; and configure SBT to use JRebel.((("Simple Build Tool (SBT)", "using JRebel with")))(((Scala, license for)))((("license, for Scala")))
+There are three steps required: install JRebel once; each year, request the free Scala license; and configure SBT to use JRebel.((("Simple Build Tool (SBT)", "using JRebel with")))(((Scala, license for)))((("license, for Scala")))
 
 First, visit https://my.jrebel.com/plans[https://my.jrebel.com/plans] and request the free Scala license.
 
@@ -396,7 +396,7 @@ $ /opt/zt/jrebel/bin/jrebel-config.sh
 
 For Windows, navigate to and launch _bin\jrebel-config.cmd_.
 
-In the "Activation" setting, select "I want to use myJRebel" and then in the "License" section paste in your activation token. Click the "Activate" button, and once you see the license status change to "You have a valid myJRebel token" click "Finish."
+In the "Activation" setting, select "I want to use myJRebel" and then in the "License" section, paste in your activation token. Click the "Activate" button, and once you see the license status change to "You have a valid myJRebel token" click "Finish."
 
 Finally, configure SBT by modifying the _sbt_ script to enable JRebel.  This means setting the `-javaagent` and `-noverify` flags for Java, and enabling the JRebel Lift plugin.
 
@@ -453,7 +453,7 @@ The `-Drebel.lift_plugin=true` setting adds Lift-specific functionality to JRebe
 Purchased licenses
 ++++++++++++++++++
 
-This recipe uses a free Scala license for a service called myJRebel. This communicates with JRebel servers via the activation code.  If you have purchased a license from ZeroTurnaround, the situation is slightly different.  In this case, you will have a license key that you store in a file called _jrebel.lic_. You can place the file in a _.jrebel_ folder in your home directory, or alongside _jrebel.jar_ (e.g., in the _/opt/zt/jrebel/_ folder if that's where you installed JRebel), or you can specify some other location.  For the latter option, modify the _sbt_ script and specify the location of the file by adding another Java setting((("license, for Scala")))(((Scala, license for)))(((ZeroTurnaround))):
+This recipe uses a free Scala license for a service called myJRebel. This communicates with JRebel servers via the activation code.  If you have purchased a license from ZeroTurnaround, the situation is slightly different.  In this case, you will have a license key that you store in a file called _jrebel.lic_. You can place the file in a _.jrebel_ folder in your home directory, or alongside _jrebel.jar_ (e.g., in the _/opt/zt/jrebel/_ folder, if that's where you installed JRebel), or you can specify some other location.  For the latter option, modify the _sbt_ script and specify the location of the file by adding another Java setting((("license, for Scala")))(((Scala, license for)))(((ZeroTurnaround))):
 
 -----------------------------------
 -Drebel.license=/path/to/jrebel.lic
@@ -497,7 +497,7 @@ You can then create Eclipse project files (_.project_ and _.classpath_) by enter
 eclipse
 -------
 
-Open the project in Eclipse by navigating to "File > Import..." and selecting "General > Existing Projects into Workspace." Browse to and choose your Lift project. You are now set up to develop your application in Eclipse.
+Open the project in Eclipse by navigating to "File -> Import..." and selecting "General -> Existing Projects into Workspace." Browse to and choose your Lift project. You are now set up to develop your application in Eclipse.
 
 To see live changes as you edit and save your work, run SBT in a separate terminal window.  That is, start _sbt_ from a terminal window outside of Eclipse and enter the following:
 
@@ -505,9 +505,9 @@ To see live changes as you edit and save your work, run SBT in a separate termin
 ~; container:start; container:reload /
 --------------------------------------
 
-The behaviour of this command is described in <<texteditor>>, but if you're using JRebel (see <<jrebel>>) then you just need to run `container:start` by itself.
+The behaviour of this command is described in <<texteditor>>, but if you're using JRebel (see <<jrebel>>), then you just need to run `container:start` by itself.
 
-You can then edit in Eclipse, save to compile, and in your web browser hit reload to see
+You can then edit in Eclipse, save to compile, and in your web browser, hit reload to see
 the changes.
 
 Discussion
@@ -573,7 +573,7 @@ With the IDE configured, you now need to include the SBT plugin inside your Lift
 addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.4.0")
 ------------------------------------------------------------------------
 
-Start SBT, and at the SBT prompt create the IDEA project files by typing:
+Start SBT, and at the SBT prompt, create the IDEA project files by typing:
 
 ---------
 gen-idea
@@ -587,7 +587,7 @@ To see live changes as you edit and save your work, run SBT in a separate termin
 ~; container:start; container:reload /
 --------------------------------------
 
-This behaviour of this command is described in <<texteditor>>, but if you're using JRebel (see <<jrebel>>) then you just need to run `container:start` by itself.
+This behaviour of this command is described in <<texteditor>>, but if you're using JRebel (see <<jrebel>>), then you just need to run `container:start` by itself.
 
 Each time you compile or make the project, the container will pick up the changes, and you can see them by reloading your browser window.
 
@@ -628,12 +628,12 @@ Solution
 
 Use the web interface included as part of H2. Here are the steps:
 
-* Locate the H2 JAR file. For me, this was: _~/.ivy2/cache/com.h2database/h2/jars/h2-1.2.147.jar_.
-* Start the server from a Terminal window using the JAR file you just found: `java -cp /path/to/h2-version.jar org.h2.tools.Server`
-* This should launch your web browser, asking you to login.
-* Select "Generic H2 Server" in "Saved Settings."
-* Enter _jdbc:h2:/path/to/youapp/lift_proto.db;AUTO_SERVER=TRUE_ for "JDBC URL," adjusting the path for the location of your database, and adjusting the name of the database (_lift_proto.db_) if different in your _Boot.scala_.
-* Press "Connect" to view and edit your database.
+. Locate the H2 JAR file. For me, this was: _~/.ivy2/cache/com.h2database/h2/jars/h2-1.2.147.jar_.
+. Start the server from a Terminal window using the JAR file you just found: `java pass:[<phrase role='keep-together'><literal>-cp</literal></phrase>] /path/to/h2-version.jar org.h2.tools.Server`
+. This should launch your web browser, asking you to log in.
+. Select "Generic H2 Server" in "Saved Settings."
+. Enter _jdbc:h2:/path/to/youapp/lift_proto.db;AUTO_SERVER=TRUE_ for "JDBC URL," adjusting the path for the location of your database, and adjusting the name of the database (_lift_proto.db_) if different in your _Boot.scala_.
+. Press "Connect" to view and edit your database.
 
 Discussion
 ^^^^^^^^^^
