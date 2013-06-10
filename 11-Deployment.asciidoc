@@ -99,7 +99,7 @@ $ bees app:update -a myaccount/myapp disableProxyBuffering=true
 As with the run mode setting, CloudBees will remember these settings, so you
 only need to set them once.
 
-Finally, you may want to increase the _permanent generation_ memory setting of the JVM. By default, an application has 64 MB assigned for the PermGen. To increase this to 128 MB, run the `bees app:update` command(((permanent generation memory)))((("Java Virtual Machine (JVM)", "troubleshooting"))):
+Finally, you may want to increase the _permanent generation_ memory setting of the JVM. By default, an application has 64 MB assigned for the PermGen. To increase this to 128 MB, run the `bees app:update` command(((permanent generation)))((("Java Virtual Machine (JVM)", "troubleshooting"))):
 
 [source, bash]
 ----------------------------------------------------------------
@@ -382,7 +382,7 @@ If you're making use of Lift's state features, you'll need to enable sticky sess
 Working with a database
 +++++++++++++++++++++++
 
-There's nothing unusual you have to do to use Lift and a database from Beanstalk. However, Beanstalk does try to make it easy for you to work with Amazon's Relational Database Service (RDS).  Either when creating your Beanstalk environment, or from the configuration options later, you can add an RDS instance, which can be an Oracle, SQL-Server, or MySQL database.((("RDBMS (Relational Database Management System)")))(((databases, RDS instances of)))(((MySQL)))(((Oracle)))(((SQL-Server)))
+There's nothing unusual you have to do to use Lift and a database from Beanstalk. However, Beanstalk does try to make it easy for you to work with Amazon's Relational Database Service (RDS).  Either when creating your Beanstalk environment, or from the configuration options later, you can add an RDS instance, which can be an Oracle, SQL-Server, or MySQL database.((("RDBMS (Relational Database Management System)")))(((databases, RDS instances of)))(((MySQL)))(((SQL-Server)))
 
 The MySQL option will create a MySQL InnoDB database. The database will be accessible from Beanstalk, but not from elsewhere on the Internet. To change that, modify the security groups for the RDS instance from the AWS web console.  For example, you might permit access from your IP address.
 
