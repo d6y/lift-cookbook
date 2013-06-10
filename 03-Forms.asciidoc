@@ -1605,7 +1605,7 @@ When the browser submits the form, Lift detects the `multipart/form-data` encodi
 val files : List[FileParamHolder] = S.request.map(_.uploadedFiles) openOr Nil
 ---------------------------------------------------------
 
-However, as we're dealing with a form with a single upload field, it's easier to use `SHtml.fileUpload` to bind the input to our `upload` variable.  Lift arranges for the function `f => upload = Full(f)` to be called when a file is selected and uploaded via this field. If the file is zero length, the function is not called.
+However, as we're dealing with a form with a single upload field, it's easier to use `SHtml.fileUpload` to bind the input to our `upload` variable.  Lift arranges for the function `f => upload = Full(f)` to be called when a file is selected and uploaded via this field. If the file is zero length, the function is not called.((("S.", "request.map")))
 
 The default behaviour for Lift is to read the file into memory and present it as a `FileParamHolder`.  In this recipe, we're pattern matching on the fields of the `FileParamHolder` and simply printing out what we know about the file.  We're ignoring the first parameter, which will be Lift's generated name for the field, but capturing the mime type, original filename, and the raw data that was in the file.
 
