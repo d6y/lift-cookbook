@@ -57,7 +57,7 @@ object Plain {
 }
 ------------------
 
-The first time through this snippet, there will be no parameter, so we just pass back the form unchanged to the browser, which is what `PassThru` is doing. You can then enter a value into the `name` field and submit the form. This will result in Lift processing the template again, but this time, with a value for the `name` input.  The result will be your browser redirected to a page with a message set for display.((("S.", ".notice")))((("S.", ".redirectTo")))
+The first time through this snippet, there will be no parameter, so we just pass back the form unchanged to the browser, which is what `PassThru` is doing. You can then enter a value into the `name` field and submit the form. This will result in Lift processing the template again, but this time, with a value for the `name` input.  The result will be your browser redirected to a page with a message set for display.((("S.", "notice")))((("S.", "redirectTo")))
 
 
 Discussion
