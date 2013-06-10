@@ -62,7 +62,7 @@ LiftRules.liftRequest.append {
 
 With this in place, a request for _robots.txt_ will be logged by `LiftRules.early` but won't make it to any of the other methods described in this recipe.
 
-If you need access to state (e.g., `S`), use `earlyInStateful`, which is based on a `Box[Req]` not a `Req`:
+If you need access to state (e.g., `S`), use `earlyInStateful`, which is based on a `Box[Req]` not a `Req`:((("LiftRules", ".earlyInStateful")))
 
 [source,scala]
 -----------------------------------------------------
