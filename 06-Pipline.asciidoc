@@ -467,7 +467,7 @@ LiftRules.dispatch.append(Numbers)
 Visiting _http://127.0.0.1:8080/numbers_ will generate a 200 status code
 and start producing the integers from 1. The numbers are produced quite quickly, so you
 probably don't want to try that in your web browser, but instead from something that
-is easier to stop, such as cURL.(((200 status code)))((("200 status code", sortas="twohundred")))
+is easier to stop, such as cURL.(((200 status code)))
 
 Discussion
 ^^^^^^^^^^
