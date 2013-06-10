@@ -89,7 +89,7 @@ binding expressions.((("CSS selectors", "applying to earlier expressions")))
 Solution
 ^^^^^^^^
 
-Use `andThen` rather than `&` to compose your selector expressions.(((andThen selector expressions)))((("& selector expressions")))
+Use `andThen` rather than `&` to compose your selector expressions.(((andThen selector expressions)))((("& (combining) selectors")))
 
 For example, suppose we want to replace `<div id="foo"/>` with
 `<div id="bar">bar content</div>` but for some reason we needed to
