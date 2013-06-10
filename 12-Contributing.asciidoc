@@ -39,7 +39,7 @@ How to Report Bugs
 Problem
 ^^^^^^^
 
-You've found a bug and want to report it.((("bugs, reporting of")))(((reporting bugs)))((("questions about Lift, how to format")))((("Lift Web Framework", "bug reports")))
+You've found a bug and want to report it.((("bugs, reporting of")))(((reporting bugs)))((("questions about Lift, how to ask")))((("Lift Web Framework", "bug reports")))
 
 Solution
 ^^^^^^^^
