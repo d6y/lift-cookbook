@@ -783,7 +783,7 @@ class ValidateSnippet {
 }
 ---------------------------------------------------------
 
-When the snippet runs, we render the `Planet.name` field and wire up a submit button to call the `validateAndSave` method.
+When the snippet runs, we render the `Planet.name` field and wire up a submit button to call the `validateAndSave` method.((("S.", "notice")))
 
 If the `newPlanet.validate` call indicates there are no errors (`Nil`), we can save the record and inform the user via a notice.  If there are errors, we render all of them with `S.error`.
 
