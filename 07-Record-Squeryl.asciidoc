@@ -1073,7 +1073,7 @@ libraryDependencies += "com.h2database" % "h2" % "1.3.170"
 parallelExecution in Test := false
 --------------------------------------------
 
-Create a trait to initialise the database and create the schema:
+Create a trait to initialise the database and create the schema((("S.", "init"))):
 
 [source, scala]
 --------------------------------------------
