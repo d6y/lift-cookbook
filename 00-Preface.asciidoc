@@ -27,13 +27,13 @@ I've mined the Lift mailing list for these recipes, but I'm not the only one.  R
 
 * Franz Bettag, who's been an enthusiastic Scala hacker for several years now. He joined the Lift team in January 2012 and actively tweets and blogs about his newest Scala adventures. Find him at https://twitter.com/fbettag[https://twitter.com/fbettag].
 
-* Marek Żebrowski.((("Żebrowski, Marek")))
+* Marek Żebrowski.
 
 * Peter Robinett, who's a web and mobile developer and a Lift committer. He can be found http://www.bubblefoundry.com[on the Web] and http://twitter.com/pr1001[on Twitter].((("Robinett, Peter")))
 
-* Kevin Lau, who's a founder of few web apps with a focus in AWS cloud, iOS, and Lift.((("Lau, Kevin")))
+* Kevin Lau, who's a founder of few web apps with a focus in AWS cloud, iOS, and Lift.
 
-* Tony Kay.((("Kay, Tony")))
+* Tony Kay.
 
 [[jointhem]]
 You should join them: <<AddRecipe>> tells you how.
