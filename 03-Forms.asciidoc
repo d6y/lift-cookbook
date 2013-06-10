@@ -572,7 +572,7 @@ class JqDatePicker extends Loggable {
 }
 ---------------------------------------------------------
 
-Notice in `render` we are binding a regular `SHtml.text` field to the element with the ID of `birthday`, but also appending JavaScript to the page.  That JavaScript selects the `birthday` input field and attaches a configured date picker to it.
+Notice in `render` we are binding a regular `SHtml.text` field to the element with the ID of `birthday`, but also appending JavaScript to the page.  That JavaScript selects the `birthday` input field and attaches a configured date picker to it.((("S.", "appendJs")))
 
 When the field is submitted, the `logDate` method is called with the value of the text field. We parse the text into a `java.util.Date` object.  The `tryo` Lift helper will catch any `ParseException` and return a `Box[Date]`, which we open, or default to the current date if a bad date is supplied.
 
