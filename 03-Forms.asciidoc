@@ -791,7 +791,7 @@ When the page loads, the jQuery UI `autocomplete` function is bound to the input
 Submitting new values
 +++++++++++++++++++++
 
-One peculiarity of the `AutoComplete` widget is that if you type in a new value--one not suggested--and press submit, it is not sent to the server.  That is, you need to click on one of the suggestions to select it.  If that's not the behaviour you want, you can pass:[<phrase role='keep-together'>adjust it.</phrase>](((autocomplete suggestions, new values and)))
+One peculiarity of the `AutoComplete` widget is that if you type in a new value--one not suggested--and press submit, it is not sent to the server.  That is, you need to click on one of the suggestions to select it.  If that's not the behaviour you want, you can pass:[<phrase role='keep-together'>adjust it.</phrase>](((autocomplete suggestions, new values and)))((("S.", "appendJs")))
 
 Inside the `render` method, we can modify the behaviour by adding JavaScript to the page:
 
@@ -900,7 +900,7 @@ class ProgrammingLanguagesTypeAhead extends Loggable {
 }
 -------------------------------------------
 
-Working from the bottom of the snippet, we bind a regular Lift `SHtml.text` input to the autocomplete field.  This will receive the selected value when the form is submitted.  We also bind the JavaScript placeholder to a JavaScript function definition called `askServer`.  This is the function that Typeahead will call when it wants suggestions.
+Working from the bottom of the snippet, we bind a regular Lift `SHtml.text` input to the autocomplete field.  This will receive the selected value when the form is submitted.  We also bind the JavaScript placeholder to a JavaScript function definition called `askServer`.  This is the function that Typeahead will call when it wants suggestions.((("S.", "appendJs")))
 
 The JavaScript function we're defining takes two arguments: the `query` and `callback`. The body of `askServer` causes it to run something called `runSuggestion`, which is a `jsonCall` to the server, with the value of the `query`.
 
