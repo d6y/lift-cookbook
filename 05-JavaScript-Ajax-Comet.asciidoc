@@ -127,7 +127,7 @@ When `onchange` is triggered (by pressing Return or the Tab key, for example), t
 ajaxCall: receiving an arbitrary client-side string
 +++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Where `onEvent` sends `this.value` to your server-side code, `ajaxCall` allows you to specify the client-side expression used to produce a value.(((ajaxCall)))(((SHtml.ajaxCall)))
+Where `onEvent` sends `this.value` to your server-side code, `ajaxCall` allows you to specify the client-side expression used to produce a value.(((ajaxCall)))((("SHtml.", "ajaxCall")))
 
 To demonstrate this, we can create a template that includes two elements: a button and a text field.  We'll bind our function to the button, but read a value from the input field:
 
