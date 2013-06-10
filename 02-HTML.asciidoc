@@ -1150,7 +1150,7 @@ Discussion
 downloadlink?F845451240716XSXE3G=_#notused
 ---------------------------------------------
 
-When that link is followed, Lift looks up the function and executes it, before processing the linked-to resource. However, in this case, we are shortcutting the Lift pipeline by throwing this particular exception.  This is caught by Lift, and the response wrapped by the exception is taken as the final response from the request.(((request pipeline, shortcutting)))((("S.", ".redirectTo")))
+When that link is followed, Lift looks up the function and executes it, before processing the linked-to resource. However, in this case, we are shortcutting the Lift pipeline by throwing this particular exception.  This is caught by Lift, and the response wrapped by the exception is taken as the final response from the request.(((request pipeline, shortcutting)))((("S.", "redirectTo")))
 
 This shortcutting is used by `S.redirectTo` via `ResponseShortcutException.redirect`. This companion object also defines `shortcutResponse`, which you can use like this:
 
