@@ -268,7 +268,7 @@ object Snowstorm {
 --------------------------------------------------------------
 
 Here we are plugging into Lift's processing pipeline and adding the required
-JavaScript to the head of every page.
+JavaScript to the head of every page.((("S.", "putInHead")))
 
 We modify _build.sbt_ to give the module a name, organisation, and version number.  We also can remove many of the dependencies and the web plugin as we only depend on the web API elements of Lift:
 
