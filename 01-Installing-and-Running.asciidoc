@@ -106,7 +106,7 @@ Source code
 
 The source code of the application resides in _src/main/webapp_ and _src/main/scala_. If you take a look at _index.html_ in the _webapp_ folder, you'll see mention of `lift:helloWorld`. That's a reference to the class defined in _scala/code/snippet/HelloWorld.scala_. This is a _snippet invocation_ and an example of Lift's _view first_ approach to web applications. That is, there's no routing set up for the index page to collect the data and forward it to the view. Instead, the view defines areas of the content that are replaced with functions, such as those functions defined in _HelloWorld.scala_.(((snippet invocation)))((("view first approach", "definition of")))((("Lift Web Framework", "view first approach of")))(((Lift applications, source code for)))(((source code)))
 
-Lift knows to look in the `code` package for snippets, because that package is declared as a location for snippets in _scala/bootstrap/liftweb/Boot.scala_. The Boot class is run when starting your application, and it's where you can configure the behaviour of Lift.
+Lift knows to look in the `code` package for snippets, because that package is declared as a location for snippets in _scala/bootstrap/liftweb/Boot.scala_. The Boot class is run when starting your application, and it's where you can configure the behaviour of Lift.(((Boot.scala)))
 
 
 See Also
