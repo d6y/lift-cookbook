@@ -347,7 +347,7 @@ LiftRules.exceptionHandler.prepend {
 
 Here we are sending back a response with a 500 status code, but the content is the
 `Node` that results from running _src/main/webapp/template-hidden/500.html_.  Create that
-file with the message you want to show to users:
+file with the message you want to show to users((("S.", "render"))):
 
 [source,html]
 --------------------------------------------------
