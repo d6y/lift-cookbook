@@ -695,7 +695,7 @@ Move JavaScript to End of Page
 Problem
 ^^^^^^^
 
-You want the JavaScript created in your snippet to be included at the end of the HTML page.(((JavaScript, moving to page end)))(((S.appendJs)))((("HTML pages, moving JavaScript to end of")))
+You want the JavaScript created in your snippet to be included at the end of the HTML page.(((JavaScript, moving to page end)))(((S.appendJs)))(((HTML, moving JavaScript to end of pages)))
 
 Solution
 ^^^^^^^^
