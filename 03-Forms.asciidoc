@@ -590,7 +590,7 @@ The approach outlined in this recipe can be used with other date picker librarie
 HTML5 date pickers
 +++++++++++++++++++
 
-The HTML5 specification includes support for a variety of date input types: `datetime`, `datetime-local`, `date`, `month`, `time`, and `week`. For example(((HTML5 date pickers))):
+The HTML5 specification includes support for a variety of date input types: `datetime`, `datetime-local`, `date`, `month`, `time`, and `week`. For example(((HTML5, date pickers))):
 
 [source,html]
 ---------------------------------------------------------
