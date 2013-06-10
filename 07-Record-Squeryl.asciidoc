@@ -1055,7 +1055,7 @@ Testing with Specs
 Problem
 ^^^^^^^
 
-You want to write Specs2 unit tests that access your database model with Squeryl and Record.((("Record-Squeryl Lift applications", "testing with Specs", id="ix_RSLAtws", range="startofrange")))(((Specs2 unit tests)))((("unit tests", "with Specs2", id="ix_UTspec", range="startofrange")))
+You want to write Specs2 unit tests that access your database model with Squeryl and Record.((("Record-Squeryl Lift applications", "testing with Specs", id="ix_RSLAtws", range="startofrange")))(((Specs2)))((("unit tests", "with Specs2", id="ix_UTspec", range="startofrange")))
 
 Solution
 ^^^^^^^^
