@@ -628,7 +628,7 @@ class SitemapContent {
 }
 ----
 
-This example is using canned data for two pages.((("S.", "hostName")))((("S.", "render")))
+This example is using canned data for two pages.((("S.", "hostName")))((("S.", "render")))((("S.", "request.get.request")))
 
 Apply the template and snippet in a REST service at _/sitemap_:
 
