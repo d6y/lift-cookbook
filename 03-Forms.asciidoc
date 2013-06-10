@@ -285,7 +285,7 @@ Solution
 Make use of Lift's _jlift.js_ JavaScript library and `JsonHandler` class.(((JsonHandler class)))(((jlift.js JavaScript library)))
 
 As an example, we can create a "motto server" that will accept an institution name and the institution's motto
-and perform some action on these values. We're just going to echo the name and motto back to the client.(((motto servers)))
+and perform some action on these values. We're just going to echo the name and motto back to the client.(((Motto example)))
 
 Consider this HTML, which is not in a form, but includes _jlift.js_:
 
