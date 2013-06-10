@@ -1068,7 +1068,7 @@ trait MongoTestKit {
 }
 --------------------------------------------
 
-This trait provides the plumbing for connection to a MongoDB server running locally, and creates a database based on the name of the class it is mixed into.  The important part is the `MongoContext`, which ensures that `around` your specification the database is initialised, and that after your specification is run, it is cleaned up.
+This trait provides the plumbing for connection to a MongoDB server running locally, and creates a database based on the name of the class it is mixed into.  The important part is the `MongoContext`, which ensures that `around` your specification the database is initialised, and that after your specification is run, it is cleaned up.((("S.", "init")))
 
 To use this in a specification, mix in the trait and then add the context:
 
