@@ -363,7 +363,7 @@ Discussion
 
 The HTML5 parser used by Lift does not carry comments from the source
 through to the rendered page. If you just tried to paste the _html5shim_ markup into
-your template you'd find it missing from the rendered page.(((HTML5 parser)))
+your template you'd find it missing from the rendered page.(((HTML5, parser)))
 
 We deal with this by generating unparsed markup from a snippet. If you're looking at
 `Unparsed` and are worried, your instincts are correct.  Normally, Lift would cause the
