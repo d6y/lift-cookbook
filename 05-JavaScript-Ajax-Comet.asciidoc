@@ -865,7 +865,7 @@ Discussion
 
 Without changing `noCometSessionCmd`, the default behaviour of Lift is to arrange for the browser to load the home page, which is controlled by the `LiftRules.noCometSessionPage` setting. This is carried out via the JavaScript function `lift_sessionLost` in the file _cometAjax.js_.
 
-By providing our own `() => JsCmd` function to `LiftRules.noCometSessionCmd`, Lift arranges to call this function and deliver the `JsCmd`  to the browser, rather than `lift_sessionLost`.  If you watch the HTTP traffic between your browser and Lift, you'll see the `stash` function call being returned in response to a Comet request.(((LiftRules.noCometSessionCmd)))(((dependency injection)))
+By providing our own `() => JsCmd` function to `LiftRules.noCometSessionCmd`, Lift arranges to call this function and deliver the `JsCmd`  to the browser, rather than `lift_sessionLost`.  If you watch the HTTP traffic between your browser and Lift, you'll see the `stash` function call being returned in response to a Comet request.((("LiftRules" ".noCometSessionCmd")))(((dependency injection)))
 
 .Factory
 ****
