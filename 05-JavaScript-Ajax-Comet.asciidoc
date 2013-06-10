@@ -1104,7 +1104,7 @@ class Wiring {
 }
 ---------------------------------------------------------
 
-We have defined a `currency` method to format the `subtotal` not as a `Double` but as a currency amount using the Java number-formatting capabilities.  This will result in values like "$19.90" being shown rather than "19.9."
+We have defined a `currency` method to format the `subtotal` not as a `Double` but as a currency amount using the Java number-formatting capabilities.  This will result in values like "$19.90" being shown rather than "19.9."((("S.", "notice")))
 
 
 Discussion
