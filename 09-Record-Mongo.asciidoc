@@ -297,7 +297,7 @@ Storing an Enumeration in MongoDB
 Problem
 ^^^^^^^
 
-You want to store an enumeration in a MongoDB document.(((MongoDB, enumeration storage)))(((enumeration storage)))(((EnumNabeField)))
+You want to store an enumeration in a MongoDB document.(((MongoDB, enumeration storage)))(((enumerations)))(((EnumNabeField)))
 
 Solution
 ^^^^^^^^
