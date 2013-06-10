@@ -672,7 +672,7 @@ The result printed will be a country code such as `GB`, or `XX` if the country c
 Discussion
 ^^^^^^^^^^
 
-This short example expects a 200 (OK) status result and turns the result into a `String`, but that's a tiny part of what Dispatch is capable of.  We'll explore further in this section.(((HTTP status codes)))(((200 status code)))((("200 status code", sortas="twohundred")))
+This short example expects a 200 (OK) status result and turns the result into a `String`, but that's a tiny part of what Dispatch is capable of.  We'll explore further in this section.(((HTTP, status codes)))(((200 status code)))((("200 status code", sortas="twohundred")))
 
 What if the request doesn't return a 200? In that case, with the code we have, we'd get an exception such as: "Unexpected response status: 404." There are a few ways to change that.((("404 status")))((("unexpected response (404) status")))
 
