@@ -51,7 +51,7 @@ LiftRules.onBeginServicing.append {
 
 This pattern will match any request starting _/paypal_, and we're ignoring the suffix on the request, if any, and the type of request (e.g., GET, POST, or so on).
 
-There's also `LiftRules.early`, which is called before `onBeginServicing`.  It expects an `HTTPRequest => Unit` function, so is a little lower-level than the `Req` used in `onBeginServicing`.  However, it will be called by all requests that pass through Lift. To see the difference, you could mark a request as something that the container should handle by itself:
+There's also `LiftRules.early`, which is called before `onBeginServicing`.  It expects an `HTTPRequest => Unit` function, so is a little lower-level than the `Req` used in `onBeginServicing`.  However, it will be called by all requests that pass through Lift. To see the difference, you could mark a request as something that the container should handle by itself((("LiftRules", ".early"))):
 
 [source,scala]
 -----------------------------------------------------
