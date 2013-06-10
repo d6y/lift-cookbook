@@ -852,7 +852,7 @@ val url = new StringField(this, 1024) {
 }
 ------------------------------------------------------------
 
-The list of errors from `validate` are of type `List[FieldError]`.  The `S.error` method accepts this list and registers each validation error message so it can be shown on the page.  It does this by associating the message with an ID for the field, allowing you to pick out just the errors for an individual field, as we do in this recipe.  The ID is stored on the field, and in the case of `Planet.name`, it is available as `Planet.name.uniqueFieldId`.  It's a `Box[String]` with a value of `Full("name_id")`.  It is this `name_id` value that we used in the `lift:Msg?id=name_id&errorClass=error` markup to pick out just the error for this field.(((S. error)))(((error messages, from validation process)))
+The list of errors from `validate` are of type `List[FieldError]`.  The `S.error` method accepts this list and registers each validation error message so it can be shown on the page.  It does this by associating the message with an ID for the field, allowing you to pick out just the errors for an individual field, as we do in this recipe.  The ID is stored on the field, and in the case of `Planet.name`, it is available as `Planet.name.uniqueFieldId`.  It's a `Box[String]` with a value of `Full("name_id")`.  It is this `name_id` value that we used in the `lift:Msg?id=name_id&errorClass=error` markup to pick out just the error for this field.(((error messages, from validation process)))((("S.", "error")))
 
 You don't have to use `S.error` to display validation messages.  You can roll your own display code, making use of the `FieldError` directly.  As you can see from the source for `FieldError`, the error is available as a `msg` property:
 
