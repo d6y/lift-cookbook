@@ -700,7 +700,7 @@ You want the JavaScript created in your snippet to be included at the end of the
 Solution
 ^^^^^^^^
 
-Use `S.appendJs`, which places your JavaScript just before the closing `</body>` tag, along with other JavaScript produced by Lift.
+Use `S.appendJs`, which places your JavaScript just before the closing `</body>` tag, along with other JavaScript produced by Lift.((("S.", "appendJs")))
 
 In this HTML, we have placed a `<script>` tag in the middle of the page and marked it with a snippet called `JavaScriptTail`:
 
