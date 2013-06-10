@@ -86,7 +86,7 @@ def render = {
 If both `name` and `petName` are provided, the body of the `for` will be evaluated.
 
 
-Related functions on `S` include((("S.", "params(name)")))((("S.", "post_?"))):
+Related functions on `S` include((("S.", "params(name)")))((("S.", "post_?")))((("S.", "get_?"))):
 
 `S.params(name)`:: Produces a `List[String]` for all the request parameters with the given name
 `S.post_?` and `S.get_?`:: Tells you if the request was a GET or POST
