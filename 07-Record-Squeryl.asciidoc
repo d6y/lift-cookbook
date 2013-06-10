@@ -1208,7 +1208,7 @@ These steps are brought together at the `InMemoryDB` class, which implements a S
 
 In our specification itself, we mix in the `DBTestKit` and reference the `InMemoryDB` context on the tests that access the database.  You'll note that we've used `>>` rather than Specs2's `should` and `in` that you may have seen elsewhere. This is to avoid name conflicts between Specs2 and Squeryl that you might come across.
 
-As we disabled parallel execution with SBT, we also disable parallel execution in Specs2 with `sequential`.  We are doing this to prevent a situation where one test might be expecting data that another test is modifying at the same time.
+As we disabled parallel execution with SBT, we also disable parallel execution in Specs2 with `sequential`.  We are doing this to prevent a situation where one test might be expecting data that another test is modifying at the same time.((("S.", "addAround")))
 
 If all the tests in a specification are going to use the database, you can use the Specs2 `AroundContextExample[T]` to avoid having to mention `InMemoryDB` on every test.  To do that, mix in `AroundContextExample[InMemoryDB]` and define `aroundContext`:
 
