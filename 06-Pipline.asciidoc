@@ -457,7 +457,7 @@ object Numbers extends RestHelper {
 Scala's `Stream` class is a way to generate a sequence with lazy evaluation. The values being
 produced by `infinite` are used as example data to stream back to the client.(((Scala, Stream class)))
 
-Wire this into Lift in _Boot.scala_:(((Boot.scala)))
+Wire this into Lift in _Boot.scala_:
 
 [source,scala]
 ----------------------------------
