@@ -530,7 +530,7 @@ Problem
 ^^^^^^^
 
 You're using Lift with the HTML5 parser and one of your snippets is rendering with a "Class Not
-Found" error.((("error messages", "Class Not Found")))(((Class Not Found error message)))(((HTML5 parser)))(((snippets))) It even happens for `<lift:HelloWorld.howdy />`.
+Found" error.((("error messages", "Class Not Found")))(((Class Not Found error message)))(((HTML5, parser)))(((snippets))) It even happens for `<lift:HelloWorld.howdy />`.
 
 Solution
 ^^^^^^^^
