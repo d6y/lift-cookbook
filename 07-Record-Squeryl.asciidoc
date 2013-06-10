@@ -77,7 +77,7 @@ S.addAround(new LoanWrapper {
 })
 ---------------------------------------------------------------
 
-This arranges for requests to be handled in the `inTransaction` scope. As Lift uses an exception for redirects, we catch this exception and throw it after the transaction completes, avoiding rollbacks after an `S.redirectTo` or similar.((("S.", "addAround")))
+This arranges for requests to be handled in the `inTransaction` scope. As Lift uses an exception for redirects, we catch this exception and throw it after the transaction completes, avoiding rollbacks after an `S.redirectTo` or similar.((("S.", "addAround")))((("S.", "redirectTo")))
 
 Discussion
 ^^^^^^^^^^
