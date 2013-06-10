@@ -279,7 +279,7 @@ When an HTML select option is selected, you want to trigger a function on the se
 Solution
 ^^^^^^^^
 
-Register a `String => JsCmd` function with `SHtml.ajaxSelect`.((("SHtml.", "ajaxSelect")))(((ajaxSelect)))(((JavaScript, server-side function triggering with)))((("String JsCmd function")))
+Register a `String => JsCmd` function with `SHtml.ajaxSelect`.((("SHtml.", "ajaxSelect")))(((ajaxSelect)))(((JavaScript, server-side function triggering with)))
 
 In this example, we will look up the distance from Earth to the planet a user selects.  This lookup will
 happen on the server and update the browser with the result. The pass:[<phrase role='keep-together'>interface is:</phrase>]
