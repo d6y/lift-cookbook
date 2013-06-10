@@ -1080,7 +1080,7 @@ This might be a surprise if you were just expecting something like this:
 <input type="radio" name="gender" value="NotSpecified">Rather Not Say<br>
 -----------------------------------------------
 
-By using random values, Lift has helped us by protecting against a range of form-based attacks, such as submitting values we're not expected, or setting values on fields we don't want set.(((form-based attacks)))(((security, form-based attacks)))
+By using random values, Lift has helped us by protecting against a range of form-based attacks, such as submitting values we're not expected, or setting values on fields we don't want set.(((security, form-based attacks)))
 
 Each of the random radio button values is associated, on the server, with a `BirthGender` value from our `options` sequence. When the form is submitted, Lift picks out the selected value (if any), looks up the corresponding `BirthGender` value, and calls our function.
 
