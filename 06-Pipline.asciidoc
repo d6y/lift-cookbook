@@ -317,7 +317,7 @@ LiftRules.exceptionHandler.prepend {
 
 In this example, all exceptions for all requests at all run modes
 are being matched, causing an error to be logged and a 500 (internal
-server error) to be returned to the browser.((("error messages", "500 (internal server)")))((("500 (internal server) error", sortas="fivehundred")))((("500 (internal server) error")))((("internal server (500) error messages")))
+server error) to be returned to the browser.((("error messages", "500 (internal server)")))((("500 (internal server) error")))((("internal server (500) error messages")))
 
 Discussion
 ^^^^^^^^^^
