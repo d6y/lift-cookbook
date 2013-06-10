@@ -84,7 +84,7 @@ Let's look at each of these in turn.
 onEvent: receiving the value of a DOM element
 +++++++++++++++++++++++++++++++++++++++++++++
 
-You can use `onEvent` with any element that has a `value` attribute and responds to the event you choose to bind to. The function you supply to `onEvent` is called with the element's value. As an example, we can write a snippet that presents a challenge to the user and validates the response(((SHtml.onEvent)))(((onEvent))):
+You can use `onEvent` with any element that has a `value` attribute and responds to the event you choose to bind to. The function you supply to `onEvent` is called with the element's value. As an example, we can write a snippet that presents a challenge to the user and validates the response((("SHtml.", "onEvent")))(((onEvent))):
 
 [source,scala]
 ----
