@@ -22,7 +22,7 @@ You want to debug a request and see what's arriving to your Lift application.(((
 Solution
 ^^^^^^^^
 
-Add an `onBeginServicing` function in _Boot.scala_ to log the request.(((onBeginServicing function)))
+Add an `onBeginServicing` function in _Boot.scala_ to log the request.(((onBeginServicing function)))((("LiftRules", ".onBeginServicing")))
 For example:
 
 [source,scala]
