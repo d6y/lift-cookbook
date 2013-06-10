@@ -1031,7 +1031,7 @@ Problem
 ^^^^^^^
 
 You want to include a clickable link in your `S.error`, `S.notice`, or
-`S.warning` messages.((("links", "clickable")))(((clickable links)))(((error messages, clickable links in)))((("S.error messages")))((("S.notice messages")))((("S.warning messages")))
+`S.warning` messages.((("links", "clickable")))(((clickable links)))(((error messages, clickable links in)))((("S.", ".error")))((("S.", "notice")))((("S.", "warning messages")))
 
 Solution
 ^^^^^^^^
