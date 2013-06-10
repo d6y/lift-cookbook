@@ -82,7 +82,7 @@ LiftRules.earlyInStateful.append {
 }
 -----------------------------------------------------
 
-Finally, there's also `earlyInStateless`, which like `earlyInStateful`, works on a `Box[Req]` but in other respects is the same as `onBeginServicing`. It is triggered after `early` and before `earlyInStateful`.
+Finally, there's also `earlyInStateless`, which like `earlyInStateful`, works on a `Box[Req]` but in other respects is the same as `onBeginServicing`. It is triggered after `early` and before `earlyInStateful`.((("LiftRules", ".earlyInStateless")))
 
 As a summary, the functions described in this recipe are called in this order:
 
