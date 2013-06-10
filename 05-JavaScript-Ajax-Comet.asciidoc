@@ -174,7 +174,7 @@ You may have guessed that `onEvent` is implemented as an `ajaxCall` for `JsRaw("
 jsonCall: receiving a JSON value
 ++++++++++++++++++++++++++++++++
 
-Both `ajaxCall` and `onEvent` end up evaluating a `String => JsCmd` function. By contrast, `jsonCall` has the signature `JValue => JsCmd`, meaning you can pass more complex data structures from JavaScript to your Lift application.(((SHtml.jsonCall)))(((jsonCall)))
+Both `ajaxCall` and `onEvent` end up evaluating a `String => JsCmd` function. By contrast, `jsonCall` has the signature `JValue => JsCmd`, meaning you can pass more complex data structures from JavaScript to your Lift application.((("SHtml.", "jsonCall")))(((jsonCall)))
 
 To demonstrate this, we'll create a template that asks for input, has a function to convert the input into JSON, and a button to send the JSON to the server:
 
