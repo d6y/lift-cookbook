@@ -273,7 +273,7 @@ Call Server When Select Option Changes
 Problem
 ^^^^^^^
 
-When an HTML select option is selected, you want to trigger a function on the server.((("functions", "triggering with HTML select option")))((("server-side code", "triggering with HTML select option")))(((HTML select options)))
+When an HTML select option is selected, you want to trigger a function on the server.((("functions", "triggering with HTML select option")))((("server-side code", "triggering with HTML select option")))(((HTML, select options)))
 
 
 Solution
