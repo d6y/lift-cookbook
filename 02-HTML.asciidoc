@@ -371,7 +371,7 @@ markup to be escaped, but in this case, we really do want
 unparsed XML content (the comment tag) included in the output.(((unparsed XML content)))
 
 If you find you're using IE conditional comments frequently, you may want to create a more general version of the snippet.
-For example((("S.", ".attr"))):
+For example((("S.", "attr"))):
 
 [source,scala]
 ----
