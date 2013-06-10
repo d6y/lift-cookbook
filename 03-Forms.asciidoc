@@ -369,7 +369,7 @@ object JsonForm {
 }
 ---------------------------------------------------------
 
-Like many snippets, this Scala code contains a `render` method that binds to elements on the page. Specifically, `jsonForm` is being replaced with `SHtml.jsonForm`, which will take a `NodeSeq` (which are the input fields), and turns it into a form that will submit the values as JSON. The submission will be to our `MottoServer` code.(((SHtml.jsonForm method)))
+Like many snippets, this Scala code contains a `render` method that binds to elements on the page. Specifically, `jsonForm` is being replaced with `SHtml.jsonForm`, which will take a `NodeSeq` (which are the input fields), and turns it into a form that will submit the values as JSON. The submission will be to our `MottoServer` code.((("SHtml.", "jsonForm method")))
 
 The `jsonScript` element is bound to JavaScript that will perform the transmission and encoding of the values to the server.
 
