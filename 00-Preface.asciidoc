@@ -43,7 +43,7 @@ You should join them: <<AddRecipe>> tells you how.
 
 The text of this cookbook is at https://github.com/d6y/lift-cookbook[https://github.com/d6y/lift-cookbook].
 
-You'll find projects for each chapter at https://github.com/LiftCookbook/[GitHub].((("Lift Cookbook", "projects for")))
+You'll find projects for each chapter https://github.com/LiftCookbook/[on GitHub].((("Lift Cookbook", "projects for")))
 
 
 === Updates
