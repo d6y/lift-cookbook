@@ -104,7 +104,7 @@ Solution
 Access `req.path.suffix` to recover the suffix.
 
 For example, when
-processing _/download/123.png_, you want to be able reconstruct
+processing _/download/123.png_, you want to be able to reconstruct
 _123.png_:
 
 [source,scala]
@@ -159,7 +159,7 @@ split from the filename. This includes many of the common file suffixes
 with, such as _.com_.
 
 Note that if the suffix is not in `explicitlyParsedSuffixes`, the suffix
-will be an empty string and the `name` (in the above example) will be
+will be an empty string and the `name` (in the previous example) will be
 the filename with the suffix still attached.
 
 Depending on your needs, you could alternatively add a guard condition to check for the file suffix:
@@ -710,7 +710,7 @@ You want to make an HTTP POST from a native iOS device to a Lift REST service.((
 Solution
 ^^^^^^^^
 
-Use `NSURLConnection` ensuring you set the `content-type` to `application/json`.
+Use `NSURLConnection`, ensuring you set the `content-type` to `application/json`.
 
 For example, suppose we want to call this service:
 
