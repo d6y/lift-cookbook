@@ -785,7 +785,7 @@ The URL we're calling returns a JSON representation for location information of 
 
 By providing a `Response => JValue` to Dispatch, we're able to pass the response body through to the JSON parser. We can then map on the `Promise[JValue]` to apply whatever Lift JSON functions we want to. In this case, we're extracting a simple case class.
 
-The result from the above would show `hostInfo` as:
+The result would show `hostInfo` as:
 
 [source,scala]
 -------------------------------------------------
