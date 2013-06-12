@@ -92,7 +92,7 @@ Solution
 Use `andThen` rather than `&` to compose your selector expressions.(((andThen selector expressions)))((("& (combining) selectors")))
 
 For example, suppose we want to replace `<div id="foo"/>` with
-`<div id="bar">bar content</div>` but for some reason we needed to
+`<div id="bar">bar content</div>` but for some reason we need to
 generate the `bar` div as a separate step in the selector expression:
 
 ----
@@ -262,7 +262,7 @@ text you want:
 "title *" #> "I am different"
 ----
 
-Assuming you have a `<title>` tag in your template, the above will
+Assuming you have a `<title>` tag in your template, this will
 result in:
 
 [source,html]
@@ -286,7 +286,7 @@ the site map.  To do that, make use of `Menu.title` in your template directly:
 
 The `Menu.title` code appends to any existing text in the title.
 This means the following will have the phrase `"Site Title - "` in the
-title followed by the page title:
+title, followed by the page title:
 
 [source,html]
 ----
@@ -417,7 +417,7 @@ Notice that the `condition` test defaults to `IE`, but first tries to look for a
 </div>
 ----
 
-The `+` symbol is the the URL encoding for a space, resulting in:
+The `+` symbol is the URL encoding for a space, resulting in:
 
 [source,html]
 ----
@@ -562,11 +562,11 @@ Switching to the designer-friendly mechanism is the solution here, and you gain 
 
 There are three popular ways of referencing a snippet:
 
-* As an HTML5 data attribute: `data-lift="MySnippet"`. This is the style we use in this book, and is valid HTML5 markup.
+As an HTML5 data attribute: `data-lift="MySnippet"`:: This is the style we use in this book, and is valid HTML5 markup.
 
-* Using the `lift` attribute, as in: `lift="MySnippet"`. This won't strictly validate against HTML5, but you may see it used.
+Using the `lift` attribute, as in: `lift="MySnippet"`:: This won't strictly validate against HTML5, but you may see it used.
 
-* The XHTML namespace version: `<lift:MySnippet />`. You'll see the usage of this tag in templates declining because of the way it interacts with the HTML5 parser. However, it works just fine outside of a template, for example when embedding a snippet invocation in your server-side code (<<SetPageTitle>> includes an example of this for `Menu.title`).(((XHTML parser)))
+The XHTML namespace version: `<lift:MySnippet />`:: You'll see the usage of this tag in templates declining because of the way it interacts with the HTML5 parser. However, it works just fine outside of a template, for example when embedding a snippet invocation in your server-side code (<<SetPageTitle>> includes an example of this for `Menu.title`).(((XHTML parser)))
 
 
 See Also
@@ -617,7 +617,7 @@ The random value that is appended to the resource is computed when your Lift app
 
 If you need some other behaviour from `with-resource-id`, you can assign
 a new function of type `String => String` to
-`LiftRules.attachResourceId`. The default implementation, shown above,
+`LiftRules.attachResourceId`. The default implementation, shown previously,
 takes the resource name, _/myscript.js_ in the example, and returns the
 resource name with an ID appended.
 
@@ -686,7 +686,7 @@ At runtime, this would be rendered in HTML as:
   src="/cache/F352555437877UHCNRW/classpath/jquery.js"></script>
 -----------
 
-Most of the work for this is happening in the `statelessRewrite`, which is working at a low-level inside Lift. The two parts to it are:
+Most of the work for this is happening in the `statelessRewrite`, which is working at a low level inside Lift. The two parts to it are:
 
 * A `RewriteRequest` that is the pattern we're matching on
 * A `RewriteResponse` that is the result we want if the request matches
@@ -699,7 +699,7 @@ See Also
 
 https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/LiftRules.scala[The source for `LiftRules`] shows the default implementation of `attachResourceId`.
 
-https://developers.google.com/speed/docs/best-practices/caching[Google's _Optimize caching_ notes] are a good source of information about browser behaviour.
+https://developers.google.com/speed/docs/best-practices/caching[Google's "Optimize caching" notes] are a good source of information about browser pass:[<phrase role='keep-together'>behaviour.</phrase>]
 
 You can learn more about URL rewriting at the https://www.assembla.com/spaces/liftweb/wiki/URL_Rewriting[Lift wiki]. Rewriting is used rarely, and only for special cases. Most problems that look like rewriting problems are better solved with a https://www.assembla.com/spaces/liftweb/wiki/Location_Parameters[Menu Param].
 
@@ -799,7 +799,7 @@ If you find your tags not appearing in the `<head>` section, check that
 the HTML in your template and page is valid HTML5.(((HTML5, markup issues)))
 
 You can also use `<lift:head>...</lift:head>` to wrap a number of
-expressions, and will see `<head_merge>...</head_merge>` used in code
+expressions, and will see `<head_merge>...</head_merge>` used in the code
 example as an alternative to `<lift:head>`.
 
 Another variant you may see is `class="lift:head"`, as an alternative to `data-lift="head"`.
@@ -931,7 +931,7 @@ LiftRules.responseTransformers.append {
 ----
 
 The file _src/main/webapp/403.html_ will now be served for requests that
-generate 403 status codes. Other non-403 responses are left untouched.
+generate 403 status codes. Other non–403 responses are left untouched.
 
 Discussion
 ^^^^^^^^^^
@@ -944,7 +944,7 @@ exposed by `LiftResponse`.
 
 
 In the recipe, we respond with a template, but you may find
-situations where other kinds of response make sense, such as an `InMemoryResponse`.
+situations where other kinds of responses make sense, such as an `InMemoryResponse`.
 
 You could even simplify the example to just this:
 
@@ -962,7 +962,7 @@ In Lift 3, `responseTransformers` will be modified to be a partial function, mea
 That redirect will work just fine, with the only downside that the HTTP status code sent back to the web browser won't be a 403 code.
 
 A more general approach, if you're customising a number of pages, would be to define the status codes you want to
-customise, create a page for each, and then only match on those pages:
+customise, create a page for each, and then match only on those pages:
 
 [source,scala]
 ----
@@ -1287,7 +1287,7 @@ Although `MockWeb.testReq` is handling the creation of a `Req` for us, the envir
 
 Aside from HTTP headers, you can set cookies, content type, query parameters, the HTTP method, authentication type, and the body.  There are variations on the `body` assignment, which conveniently set the content type depending on the value you assign((("content types, setting"))):
 
-* `JValue` will use content type of `application/json`.
+* `JValue` will use a content type of `application/json`.
 * `NodeSeq` will use `text/xml` (or you can supply an alternative).
 * `String` uses `text/plain` (unless you supply an alternative).
 * `Array[Byte]` does not set the content type.
