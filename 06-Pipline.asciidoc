@@ -144,13 +144,13 @@ servicing the request, after servicing, when the session is about to
 shut down, at shutdown, etc. The pipeline diagrams mentioned at the start of this chapter
 are a useful guide to these stages.
 
-The list of session hooks is:
+The list of session hooks follows:
 
 `onSetupSession`:: This will be the first hook called when a session is created.
 `afterSessionCreate`:: This will be called after all `onSetupSession` functions have been called.
 `onBeginServicing`:: This will be called at the start of request processing.
 `onEndServicing`:: This will be called at the end of request processing.
-`onAboutToShutdownSession`:: This will be called just before a session is shut down, (for example, when a session expires or the Lift application is being shut down).
+`onAboutToShutdownSession`:: This will be called just before a session is shut down (for example, when a session expires or the Lift application is being shut down).
 `onShutdownSession`:: This will be called after all `onAboutToShutdownSession` functions have been run.
 
 If you are testing these hooks, you might want to make the session expire faster than the 30 minutes of inactivity used by default in Lift.  To do this, supply a millisecond value to `LiftRules.sessionInactivityTimeout`:
@@ -265,7 +265,7 @@ LiftRules.statelessReqTest.append {
 This example would only make the index page and any GIFs, JavaScript, and
 CSS files stateless. The `httpReq` part is an `HTTPRequest` instance,
 allowing you to base the decision on the content of the request
-(cookies, user agent, etc).
+(cookies, user agent, etc.).
 
 Another option is `LiftRules.statelessDispatch`, which allows you to
 register a function that returns a `LiftResponse`. This will be
@@ -317,7 +317,7 @@ LiftRules.exceptionHandler.prepend {
 
 In this example, all exceptions for all requests at all run modes
 are being matched, causing an error to be logged and a 500 (internal
-server error) to be returned to the browser.((("error messages", "500 (internal server)")))((("500 (internal server) error")))((("internal server (500) error messages")))
+server) error to be returned to the browser.((("error messages", "500 (internal server)")))((("500 (internal server) error")))((("internal server (500) error messages")))
 
 Discussion
 ^^^^^^^^^^
@@ -567,7 +567,7 @@ case class StreamingResponse(
 
 Notice the use of a structural type for the `data` parameter. Anything
 with a matching `read` method can be given here, including
-`java.io.InputStream`-like objects, meaning `StreamingResponse` can act
+`java.io.InputStream`–like objects, meaning `StreamingResponse` can act
 as a pipe from input to output. Lift pulls 8 K chunks from your
 `StreamingResponse` to send to the client.
 
@@ -704,7 +704,7 @@ to best fit the way you want the code to look and work.
 See Also
 ^^^^^^^^
 
-http://www.artima.com/pins1ed/extractors.html[_Chapter 24: Extractors_] from _Programming in Scala_.
+http://www.artima.com/pins1ed/extractors.html[Chapter 24: _Extractors_] from _Programming in Scala_.
 
 
 
