@@ -145,7 +145,7 @@ connection by name in your application. One advantage of this is that
 you can avoid including database credentials to your Lift source base.(((web containers)))(((Jetty)))(((Tomcat)))(((databases, configuring connections to)))
 
 The configuration of JNDI is different for each container, and may vary
-with versions of the container you use. The "See Also" section below includes
+with versions of the container you use. The "See Also" section next includes
 links to the documentation pages for popular containers.
 
 Some environments may also require that you to reference the JNDI resource
@@ -594,7 +594,7 @@ class Visit extends Record[Visit] with KeyedRecord[Long] {
 
 `Visit` is still a container for the `planetId` and `probeId` references, but we also have a plain integer holder for the year of the visit.
 
-To record a visit year, we need the `assign` method provided by `ManyToMany[T]`.  This will establish the relationship but not change the database. Instead, it returns the `Visit` instance, which we can change and then store in the database:
+To record a visit year, we need the `assign` method provided by `ManyToMany[T]`.  This will establish the relationship but not change the database. Instead, it returns the instance `Visit`, which we can change and then store in the database:
 
 [source, scala]
 -----------------------------------------------------------
@@ -893,7 +893,7 @@ Here's an example: we have a database of planets, and when a user
 enters a new planet, we want the name to be unique.  The name of the planet
 is a `String`, so we need to provide a function from `String => List[FieldError]`.
 
-With the validation function defined (`valUnique`, below), we include it in the list of `validations` on the
+With the validation function defined (`valUnique`, next), we include it in the list of `validations` on the
 `name` field:
 
 [source,scala]
@@ -1414,7 +1414,7 @@ updated timestamp not null,
 created timestamp not null
 -----------------------------------------------
 
-The `timestamp` is used for the H2 database. For other databases, the type may be different.
+The `timestamp` is used for the H2 database. For other databases, the type may be pass:[<phrase role='keep-together'>different.</phrase>]
 
 The values can be accessed like any other record field.  Using the example data from <<SquerylOneToMany>>, we could run the following:
 
@@ -1426,7 +1426,7 @@ val created : Calendar = mars.created.is
 
 If you only need created time, or updated time, just mix in the `Created[T]` or `Updated[T]` trait instead of `CreatedUpdated[T]`.
 
-It should be noted that `onUpdate` is only called on _full updates_ and
+It should be noted that `onUpdate` is called only on _full updates_ and
 not on _partial updates_ with Squeryl. A full update is when the object is
 altered and then saved; a partial update is where you attempt to alter objects via a query.(((created time)))(((updated time)))
 
