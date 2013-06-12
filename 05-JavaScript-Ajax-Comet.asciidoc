@@ -61,7 +61,7 @@ Discussion
 ^^^^^^^^^^
 
 The signature of the function you pass to `ajaxInvoke` is
-`Unit => JsCmd`, meaning you can trigger a range of behaviours, from
+`Unit => JsCmd`, meaning you can trigger a range of behaviours: from
 returning `Noop` if you want nothing to happen, through changing DOM
 elements, all the way up to executing arbitrary JavaScript.
 
@@ -563,7 +563,7 @@ Discussion
 `FocusOnLoad` is an example of a `NodeSeq => NodeSeq` transformation. It appends to the `NodeSeq` with the
 JavaScript required to set focus on that field.
 
-The JavaScript that performs the focus simply looks up the node in the DOM by ID and calls `focus` on it. Although the previous example code doesn't specify an ID, the `FocusOn` command is smart enough to add one automatically for us.
+The JavaScript that performs the focus simply looks up the node in the DOM by ID and calls `focus` on it. Although the previous example code doesn't specify an ID, the command `FocusOn` is smart enough to add one automatically for us.
 
 There are two related `JsCmd` choices:
 
@@ -605,7 +605,7 @@ Discussion
 ^^^^^^^^^^
 
 If you need to set multiple CSS classes, encode a space between the
-class names, e.g., `class=boxed+primary`.
+class names (e.g., `class=boxed+primary`).
 
 The `form.ajax` construction is a regular snippet call: the `Form` snippet is one of the handful of built-in snippets, and in this case, we're calling the `ajax` method on that object.  However, normally snippet calls do not copy attributes into the resulting markup, but this snippet is implemented to do exactly that.
 
@@ -1032,7 +1032,7 @@ Diego Medina has posted a http://bit.ly/lift-restupload[Gist of Lift REST code] 
 Antonio Salazar Cardozo has posted http://bit.ly/lift-ajaxupload[example code] for performing Ajax file upload using Lift's Ajax mechanisms. This avoids external JavaScript libraries.
 
 [[FormatWiring]]
-Format A Wired Cell
+Format a Wired Cell
 ~~~~~~~~~~~~~~~~~~~
 
 Problem
