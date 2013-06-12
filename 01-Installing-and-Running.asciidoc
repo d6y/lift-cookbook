@@ -39,7 +39,7 @@ For Mac and Linux
 * Unzip the file.
 * Start Terminal or your favourite shell tool.
 * Navigate into the unzipped folder and into the _scala_29_ subfolder and then into the _lift_basic_ folder.
-* Run`./sbt`.
+* Run `./sbt`.
 * Required libraries will be downloaded automatically.
 * At the SBT prompt (>), type **++container:start++**.
 * Open your browser and go to _http://127.0.0.1:8080/_.
@@ -114,7 +114,7 @@ See Also
 
 The Simple Build Tool documentation is at http://www.scala-sbt.org[http://www.scala-sbt.org].
 
-Tutorials for Lift can be found in http://simply.liftweb.net/[_Simply Lift_], _Instant Lift Web Applications How-to_ (PACKT Publishing), and in _Lift in Action_ (Manning Publications Co).
+Tutorials for Lift can be found in http://simply.liftweb.net/[_Simply Lift_], _Instant Lift Web Applications How-to_ (PACKT Publishing), and in _Lift in Action_ (Manning Publications Co.).
 
 [[LiftFromScratch]]
 Creating a Lift Project from Scratch Using SBT
