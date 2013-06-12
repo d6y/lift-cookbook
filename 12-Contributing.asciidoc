@@ -429,7 +429,7 @@ Originally, Lift included a set of modules, but these have been separated out to
 
 The Lift wiki pages for modules can be reached via http://liftmodules.net[http://liftmodules.net].
 
-https://github.com/scottschiller/snowstorm/[The Snowstorm project] has been "setting CPUs on fire worldwide every winter since 2003", and the module developed for this recipe is https://github.com/LiftCookbook/snowstorm-example-module[on GitHub].
+https://github.com/scottschiller/snowstorm/[The Snowstorm project] has been "setting CPUs on fire worldwide every winter since 2003," and the module developed for this recipe is https://github.com/LiftCookbook/snowstorm-example-module[on GitHub].
 
 To publish to Sonatype, take a look at https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide[their guide]. CloudBees offers an http://www.cloudbees.com/foss/foss-dev.cb[open source repository].
 
