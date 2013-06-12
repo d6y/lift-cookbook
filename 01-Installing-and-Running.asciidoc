@@ -39,11 +39,11 @@ For Mac and Linux
 * Unzip the file.
 * Start Terminal or your favourite shell tool.
 * Navigate into the unzipped folder and into the _scala_29_ subfolder and then into the _lift_basic_ folder.
-* Run:`./sbt`.
+* Run`./sbt`.
 * Required libraries will be downloaded automatically.
-* At the SBT prompt (>), type: `container:start`.
+* At the SBT prompt (>), type **++container:start++**.
 * Open your browser and go to _http://127.0.0.1:8080/_.
-* When you're done, type `exit` at the SBT prompt to stop your application from running.
+* When you're done, type **++exit++** at the SBT prompt to stop your application from running.
 
 For Windows
 +++++++++++
@@ -51,12 +51,12 @@ For Windows
 * Visit http://liftweb.net/download[http://liftweb.net/download] and locate the link to the most recent ZIP version of Lift 2.5 and save this to disk.
 * Extract the contents of the ZIP file.
 * Navigate in Explorer to the extracted folder, and once inside, navigate into _scala_29_ and then _lift_basic_.
-* Double-click _sbt.bat_ to run the build tool; a terminal window should open.
+* Double-click _sbt.bat_ to run the build tool; a Terminal window should open.
 * Required libraries will be downloaded automatically.
-* At the SBT prompt (>), type: `container:start`.
+* At the SBT prompt (>), type **++container:start++**.
 * You may find Windows Firewall blocking Java from running. If so, opt to "allow access."
 * Start your browser and go to _http://127.0.0.1:8080/_.
-* When you're done, type `exit` at the SBT prompt to stop your application from running.
+* When you're done, type **++exit++** at the SBT prompt to stop your application from running.
 
 Expected result
 +++++++++++++++
@@ -114,7 +114,7 @@ See Also
 
 The Simple Build Tool documentation is at http://www.scala-sbt.org[http://www.scala-sbt.org].
 
-Tutorials for Lift can be found in http://simply.liftweb.net/[_Simply Lift_], Instant Lift Web Applications How-to (PACKT Publishing), and in _Lift in Action_ (Manning Publications Co).
+Tutorials for Lift can be found in http://simply.liftweb.net/[_Simply Lift_], _Instant Lift Web Applications How-to_ (PACKT Publishing), and in _Lift in Action_ (Manning Publications Co).
 
 [[LiftFromScratch]]
 Creating a Lift Project from Scratch Using SBT
@@ -249,7 +249,7 @@ You can verify that you have a working Lift project by launching the Jetty web c
 Discussion
 ^^^^^^^^^^
 
-As shown above, creating a Lift project from scratch is a relatively simple process. However, it can be a tricky one for newcomers, especially if you are not used to the Java Virtual Machine (JVM) ecosystem and its conventions for web containers. If you run into problems, make sure the files are in the correct locations and that their contents were not mistakenly modified. If all else fails, refer to the sample project below or ask for help on the http://groups.google.com/group/liftweb[Lift mailing list].((("containers", "troubleshooting")))((("Java Virtual Machine (JVM)", "troubleshooting")))((("web containers", seealso="containers")))
+As shown previously, creating a Lift project from scratch is a relatively simple process. However, it can be a tricky one for newcomers, especially if you are not used to the Java Virtual Machine (JVM) ecosystem and its conventions for web containers. If you run into problems, make sure the files are in the correct locations and that their contents were not mistakenly modified. If all else fails, refer to the sample project next or ask for help on the http://groups.google.com/group/liftweb[Lift mailing list].((("containers", "troubleshooting")))((("Java Virtual Machine (JVM)", "troubleshooting")))((("web containers", seealso="containers")))
 
 Lift projects using SBT or similar build tools follow a standard project layout, where Scala source code is in _src/main/scala_ and web resources are in _src/main/webapp_. Your Scala files must be placed either directly at _src/main/scala_ or in nested directories matching the organization and name you defined in _build.sbt_, in our case giving us _src/main/scala/org/yourorganization/liftfromscratch/_. Test files match the directory structure but are placed in _src/test/_ instead of _src/main/_. Likewise, the _web.xml_ file must be placed in _src/main/webapp/WEB-INF/_ for it to be properly detected.((("Simple Build Tool (SBT)", "standard layout with")))(((Lift applications, standard layout of)))(((source code)))(((directory structure)))
 
@@ -396,7 +396,7 @@ $ /opt/zt/jrebel/bin/jrebel-config.sh
 
 For Windows, navigate to and launch _bin\jrebel-config.cmd_.
 
-In the "Activation" setting, select "I want to use myJRebel" and then in the "License" section, paste in your activation token. Click the "Activate" button, and once you see the license status change to "You have a valid myJRebel token" click "Finish."
+In the "Activation" setting, select "I want to use myJRebel" and then in the "License" section, paste in your activation token. Click the "Activate" button, and once you see the license status change to "You have a valid myJRebel token," click "Finish."
 
 Finally, configure SBT by modifying the _sbt_ script to enable JRebel.  This means setting the `-javaagent` and `-noverify` flags for Java, and enabling the JRebel Lift plugin.
 
@@ -562,7 +562,7 @@ Solution
 
 You need the Scala plugin for IntelliJ, and an SBT plugin to generate the IDEA project files.
 
-The IntelliJ plugin you'll only need to install once, and these instructions are for IntelliJ IDEA 12.  The details may vary between releases of the IDE, but the basic idea is to find the JetBrains Scala plugin, and download and install it.
+The IntelliJ plugin you'll need to install only once, and these instructions are for IntelliJ IDEA 12.  The details may vary between releases of the IDE, but the basic idea is to find the JetBrains Scala plugin, and download and install it.
 
 From the "Welcome to IntelliJ IDEA" screen, select "Configure" and then "Plugins." Select "Browse repositories..." In the search box, top right, type "Scala."  You'll find on the left a number of matches: select "Scala."  On the right, you'll see confirmation that this is the "Plugin for Scala language support" and the vendor is JetBrains, Inc. Select the "Download and Install" icon from the top of the window, or right-click to download and install. "Close" the dialog, and OK out of the plugins window. You'll be prompted to restart IntelliJ IDEA.
 
@@ -581,7 +581,7 @@ gen-idea
 
 This will generate the _.idea_ and _.iml_ files that IntelliJ uses. Inside IntelliJ you can open the project from the "File" menu, picking "Open..." and then navigating to your project and selecting the directory.
 
-To see live changes as you edit and save your work, run SBT in a separate terminal window.  That is, start _sbt_ from a terminal window outside of IntelliJ and enter the following:
+To see live changes as you edit and save your work, run SBT in a separate Terminal window.  That is, start _sbt_ from a Terminal window outside of IntelliJ and enter the following:
 
 --------------------------------------
 ~; container:start; container:reload /
@@ -629,7 +629,7 @@ Solution
 Use the web interface included as part of H2. Here are the steps:
 
 . Locate the H2 JAR file. For me, this was: _~/.ivy2/cache/com.h2database/h2/jars/h2-1.2.147.jar_.
-. Start the server from a Terminal window using the JAR file: `java -cp /path/to/h2-version.jar org.h2.tools.Server`
+. Start the server from a Terminal window using the JAR file: `java -cp /path/to/h2-version.jar org.h2.tools.Server`.
 . This should launch your web browser, asking you to log in.
 . Select "Generic H2 Server" in "Saved Settings."
 . Enter **++jdbc:h2:/path/to/youapp/lift_proto.db;AUTO_SERVER=TRUE++** for "JDBC URL," adjusting the path for the location of your database, and adjusting the name of the database (_lift_proto.db_) if different in your _Boot.scala_.
@@ -640,7 +640,7 @@ Discussion
 
 The default Lift projects that include a database, such as _lift_basic_, use the H2 relational database, as it can be included as an SBT dependency and requires no external installation or configuration. It's a fine product, although production deployments typically use standalone databases, such as PostgreSQL or MySQL.(((databases, alternative)))(((production deployments, databases for)))
 
-Even if you're deploying to a non-H2 database, it may be useful to keep H2 around, because it has an in-memory mode, which is great for unit tests. This means you can create a database in memory, and throw it away when your unit test ends.((("unit tests", "H2's in-memory mode and")))(((in-memory mode)))
+Even if you're deploying to a non–H2 database, it may be useful to keep H2 around because it has an in-memory mode, which is great for unit tests. This means you can create a database in memory, and throw it away when your unit test ends.((("unit tests", "H2's in-memory mode and")))(((in-memory mode)))
 
 If you don't like the web interface, the connection settings described in this recipe should give you the information you need to configure other SQL tools.
 
