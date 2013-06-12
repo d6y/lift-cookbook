@@ -13,7 +13,7 @@ Connecting to a MongoDB Database
 Problem
 ^^^^^^^
 
-You want to connect to a MongoDB.(((MongoDB, connecting to)))
+You want to connect to a MongoDB database.(((MongoDB, connecting to)))
 
 Solution
 ^^^^^^^^
@@ -105,7 +105,7 @@ object Country extends Country with MongoMetaRecord[Country] {
 }
 --------------------------------------------------------------
 
-The `lift-mongodb-record` dependency itself depends on another Lift module, `lift-mongodb`, which provides connectivity and other other lower-level access to MongoDB. Both bottom out with the MongoDB Java driver.
+The `lift-mongodb-record` dependency itself depends on another Lift module, `lift-mongodb`, which provides connectivity and other lower-level access to MongoDB. Both bottom out with the MongoDB Java driver.
 
 
 See Also
@@ -216,7 +216,7 @@ Discussion
 ^^^^^^^^^^
 
 If you do not set a value for the map, the default will be an empty map, represented in MongoDB
-as:
+as the following:
 
 [source,json]
 ----------------------------------------
