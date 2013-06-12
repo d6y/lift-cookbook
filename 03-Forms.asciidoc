@@ -16,7 +16,7 @@ Plain Old Form Processing
 Problem
 ^^^^^^^
 
-You want to process form data in a regular, old-fashioned, non-Ajax, way.((("forms processing", "routine (non-Ajax) methods")))
+You want to process form data in a regular, old-fashioned, non-Ajax way.((("forms processing", "routine (non-Ajax) methods")))
 
 Solution
 ^^^^^^^^
@@ -184,7 +184,7 @@ value of the `name` back to the element in the HTML with an ID of `result`.
 Discussion
 ^^^^^^^^^^
 
-The `data-lift="form.ajax"` part of this recipe ensures that Lift adds the Ajax processing mechanics to the form.  This means the `<form>` element in the output will end up as something like:
+The `data-lift="form.ajax"` part of this recipe ensures that Lift adds the Ajax processing mechanics to the form.  This means the `<form>` element in the output will end up as something like this:
 
 [source,html]
 ---------------------------------------------------------
@@ -408,7 +408,7 @@ Before going on, convince yourself that we're generating JavaScript on the serve
 Additional commands
 +++++++++++++++++++
 
-In the previous example, we match on a `JsonCmd` with a command name of `"processForm"`.  You may be wondering what other command can be supplied, or what the meaning of the `target` value is.
+In the previous example, we match on a `JsonCmd` with a command name of `"processForm"`.  You may be wondering what other commands can be supplied, or what the meaning of the `target` value is.
 
 To demonstrate how you can implement other commands, we can add two additional buttons. These buttons will just convert the motto to upper- or lowercase.  The server-side `render` method changes as follows:
 
@@ -572,7 +572,7 @@ class JqDatePicker extends Loggable {
 }
 ---------------------------------------------------------
 
-Notice in `render` we are binding a regular `SHtml.text` field to the element with the ID of `birthday`, but also appending JavaScript to the page.  That JavaScript selects the `birthday` input field and attaches a configured date picker to it.((("S.", "appendJs")))
+Notice in `render` we are binding a regular `SHtml.text` field to the element with the ID of `birthday`, but also appending JavaScript to the page. JavaScript selects the `birthday` input field and attaches a configured date picker to it.((("S.", "appendJs")))
 
 When the field is submitted, the `logDate` method is called with the value of the text field. We parse the text into a `java.util.Date` object.  The `tryo` Lift helper will catch any `ParseException` and return a `Box[Date]`, which we open, or default to the current date if a bad date is supplied.
 
@@ -666,7 +666,7 @@ You want to provide an autocomplete widget, to give users suggestions as they ty
 Solution
 ^^^^^^^^
 
-Use a JavaScript autocomplete widget, for example, the jQuery UI autocomplete via the `AutoComplete` class from the Lift Widgets module.(((jQuery UI autocomplete)))(((Lift Web Framework, Widgets module)))(((Lift modules)))(((autocomplete suggestions, jQuery UI for)))
+Use a JavaScript autocomplete widget, for example, the jQuery UI autocomplete via the `AutoComplete` class from the Lift widgets module.(((jQuery UI autocomplete)))(((Lift Web Framework, Widgets module)))(((Lift modules)))(((autocomplete suggestions, jQuery UI for)))
 
 Start by adding the Lift widgets module to your _build.sbt_:
 
@@ -783,7 +783,7 @@ The autocomplete widget uses jQuery autocomplete. This can be seen by examining 
 </span>
 -------------------------------------------
 
-This chunk of markup is generated from the `AutoComplete(default, suggest, submit)` call. What's happening here is that the jQuery UI autocomplete JavaScript and CSS, which is bundled with the Lift Widgets module, is being included on the page. Recall from <<AddToHead>> that Lift will merge the `<head>` part of this markup into the `<head>` of the final HTML page.
+This chunk of markup is generated from the `AutoComplete(default, suggest, submit)` call. What's happening here is that the jQuery UI autocomplete JavaScript and CSS, which is bundled with the Lift widgets module, is being included on the page. Recall from <<AddToHead>> that Lift will merge the `<head>` part of this markup into the `<head>` of the final HTML page.
 
 When the page loads, the jQuery UI `autocomplete` function is bound to the input field, and configured with a URL, which will deliver the user's input to our `suggest` function.  All `suggest` needs to do is return a `Seq[String]` of values for the jQuery autocomplete code to display to the user.
 
@@ -906,7 +906,7 @@ The JavaScript function we're defining takes two arguments: the `query` and `cal
 
 The suggestions are made by the `suggest` function, which expects to be able to find a `String` in the passed in JSON value. It uses this value to find matches in the list of `languages`.  These are returned as a `JArray` of `JString`, which is treated as JSON data back on the client.
 
-What does the client do with the data? It calls the `callback` function with the suggestions, which results in the display updating. We specify it's `callback` via `JsonContext`, which is a class that lets us specify a custom function to call on success of the request to the server.
+What does the client do with the data? It calls the `callback` function with the suggestions, which results in the display updating. We specify its `callback` via `JsonContext`, which is a class that lets us specify a custom function to call on success of the request to the server.
 
 It may help to understand this by looking at the JavaScript generated in the HTML page for `askServer`:
 
@@ -1042,7 +1042,7 @@ SHtml.radioElem(options, default) { selected =>
 }
 -----------------------------------------------
 
-The first is the set of options to show, as a `Seq[T]`. The second is the value to be preselected as a `Box[T]`.  In the example, we have no preselected value, which is represented as `Empty`.  Finally, there's the function to run when the form is submitted, of type `Box[T] => Any`.
+The first is the set of options to show, as a `Seq[T]`. The second is the value to be preselected, as a `Box[T]`.  In the example, we have no preselected value, which is represented as `Empty`.  Finally, there's the function to run when the form is submitted, of type `Box[T] => Any`.
 
 Note that even if the user selects no value, your function will be called, and it will be passed the value `Empty`.
 
@@ -1090,7 +1090,7 @@ The hidden field ensures that the function will be called even if no radio butto
 Customising the HTML
 ++++++++++++++++++++
 
-The default HTML wraps each radio button in a `<span>` and separates them with a `<br>`.  Let's change that to make it work well with the _Twitter Bootstrap_ framework, and put each choice in a `<lablel>` and give it a class.
+The default HTML wraps each radio button in a `<span>` and separates them with a `<br>`.  Let's change that to make it work well with the _Twitter Bootstrap_ framework, and put each choice in a `<label>` and give it a class.
 
 To customise the HTML, you need to understand that the `ChoiceHolder` is a container for a sequence of items.  Each item is a `ChoiceItem`:
 
@@ -1143,7 +1143,7 @@ and the result would be the following:
 </label>
 -----------------------------------------------
 
-The `toForm` method could be wrapping the choices in some other HTML, such as an `<ul>`. But in this case, it's not: it's just applying `htmlize` to each `ChoiceItem`. As a consequence of this, we could make `LabelStyle` the default across our Lift application:
+The `toForm` method could be wrapping the choices in some other HTML, such as a `<ul>`. But in this case, it's not: it's just applying `htmlize` to each `ChoiceItem`. As a consequence of this, we could make `LabelStyle` the default across our Lift application:
 
 [source, scala]
 -----------------------------------------------
@@ -1156,7 +1156,7 @@ This works because `toForm` on `ChoiceHolder` defers to `ChoiceHolder.htmlize`, 
 String values
 +++++++++++++
 
-If you want to work directly with `String` values for options, you can use `SHtml.radio`.  Although it too produces a `ChoiceHolder`, it differs from `radioElem` in that it uses the same `String` as both the label and the value. The function associated with each option is only called if a value is selected by the user.
+If you want to work directly with `String` values for options, you can use `SHtml.radio`.  Although it too produces a `ChoiceHolder`, it differs from `radioElem` in that it uses the same `String` as both the label and the value. The function associated with each option is called only if a value is selected by the user.
 
 An `SHtml.radio` version of our example would look like this:
 
