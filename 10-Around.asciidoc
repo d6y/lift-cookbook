@@ -458,7 +458,7 @@ PlusImageHolder(attach.filename, attach.mime, attach.bytes, attachment=true)
 In reality, the mail client will display the message how it wants to, but this extra parameter may give you a little more control.
 
 
-To attach a premade file, you can use `LiftRules.loadResource` to fetch content from the classpath.  As an example, if our project contained a file called _Kepler-22b_System_Diagram.jpg_ in the _src/main/resources/_ folder, we could load and attach it like this:
+To attach a premade file, you can use `LiftRules.loadResource` to fetch content from the classpath.  If our project contained a file called _Kepler-22b_System_Diagram.jpg_ in the _src/main/resources/_ folder, we could load and attach it like this:
 
 [source,scala]
 --------------------------------------------------------------
@@ -665,7 +665,7 @@ val country : Promise[String] = Http(svc OK as.String)
 println(country())
 ------------------------------------------
 
-Note that the result `country` is not a `String` but a `Promise[String]`, and we use `apply` to wait for the resulting value.
+Note that the result `country` is not a `String` but a `Promise[String]`, and we use pass:[<phrase role='keep-together'><literal>apply</literal></phrase>] to wait for the resulting value.
 
 The result printed will be a country code such as `GB`, or `XX` if the country cannot be determined from your IP address.
 
