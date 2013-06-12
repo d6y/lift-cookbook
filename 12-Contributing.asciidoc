@@ -77,7 +77,7 @@ You'll find a list of tickets at http://ticket.liftweb.net/[http://ticket.liftwe
 
 If you're asked to, or want to, post example code, please follow http://www.assembla.com/wiki/show/liftweb/Posting_example_code[the guide].
 
-If you've found a bug, and you're asked to create a ticket, the main thing to do is include a link to the mailing list discussion of the issue, as described in http://www.assembla.com/wiki/show/liftweb/Creating_tickets[Creating Tickets].
+If you've found a bug, and you're asked to create a ticket, the main thing to do is include a link to the mailing list discussion of the issue, as described in http://www.assembla.com/wiki/show/liftweb/Creating_tickets[Creating tickets].
 
 
 [[LiftCodeContributions]]
@@ -208,7 +208,7 @@ To keep things simple, all author royalties from this book are given to charity.
 See Also
 ^^^^^^^^
 
-The source to this book is at https://github.com/d6y/lift-cookbook/[https://github.com/d6y/lift-cookbook/].
+The source to this book is https://github.com/d6y/lift-cookbook/[on GitHub].
 
 http://powerman.name/doc/asciidoc[The AsciiDoc cheatsheet] is a quick way to get into AsciiDoc, but if you need more, the http://www.methods.co.nz/asciidoc/[AsciiDoc home page has the details].
 
@@ -352,7 +352,7 @@ Making your module available
 
 If you do want your module to be used by a wider audience, you need to publish it to a public repository, such as Sonatype or CloudBees. You'll also want to keep your module up-to-date with Lift releases. There are a few conventions around this.
 
-One convention is to include the Lift "edition" as part of the module name. For example, version 1.0.0 of your _foo_ module for Lift 2.5 would have the name _foo_2.5_. This makes it clear your module is compatible with Lift for all of 2.5, including milestones, release candidates, snapshots, and final releases.  It also means you only need publish your module once, at least until Lift 2.6 or 3.0 is available.
+One convention is to include the Lift "edition" as part of the module name. For example, version 1.0.0 of your _foo_ module for Lift 2.5 would have the name _foo_2.5_. This makes it clear your module is compatible with Lift for all of 2.5, including milestones, release candidates, snapshots, and final releases.  It also means you need to publish your module only once, at least until Lift 2.6 or 3.0 is available.
 
 One way to manage updates is to make a modification to your module build to allow the Lift version number to change. This makes it possible to automate the build when new versions of Lift are released. To do that, create _project/LiftModule.scala_ in your module:
 
@@ -429,7 +429,7 @@ Originally, Lift included a set of modules, but these have been separated out to
 
 The Lift wiki pages for modules can be reached via http://liftmodules.net[http://liftmodules.net].
 
-https://github.com/scottschiller/snowstorm/[The Snowstorm project] has been "setting CPUs on fire worldwide every winter since 2003"), and the module developed for this recipe is https://github.com/LiftCookbook/snowstorm-example-module[on GitHub].
+https://github.com/scottschiller/snowstorm/[The Snowstorm project] has been "setting CPUs on fire worldwide every winter since 2003", and the module developed for this recipe is https://github.com/LiftCookbook/snowstorm-example-module[on GitHub].
 
 To publish to Sonatype, take a look at https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide[their guide]. CloudBees offers an http://www.cloudbees.com/foss/foss-dev.cb[open source repository].
 
