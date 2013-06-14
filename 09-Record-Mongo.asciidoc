@@ -1192,13 +1192,13 @@ http://specs2.org/[The Specs2 site] contains examples and a user guide.
 
 If you prefer to use the http://www.scalatest.org[Scala Test framework], take a look at https://github.com/eltimn/lift-mongoauth[Tim Nelson's _Mongo Auth_ Lift module]. It includes tests using that framework.  Much of what Tim has written there has been adapted to produce this recipe for Specs2.
 
-https://github.com/lift/framework/tree/master/persistence/mongodb-record/src/test/scala/net/liftweb/mongodb/record[The Lift MongoDB Record library] includes a variation on testing with Specs2, using just `Before` and `After` rather than the `around` example used in this recipe.
+http://bit.ly/11NldyA[The Lift MongoDB Record library] includes a variation on testing with Specs2, using just `Before` and `After` rather than the `around` example used in this recipe.
 
 https://github.com/flapdoodle-oss/embedmongo.flapdoodle.de[Flapdoodle] provides a way to automate the download, install, setup, and cleanup of a MongoDB database. This automation is something you can wrap around your unit tests, and a https://github.com/athieriot/specs2-embedmongo[Specs2 integration is included] using the same `Before` and `After` approach to testing used by Lift MongoDB Record.
 
 http://www.scala-sbt.org/release/docs/Detailed-Topics/Testing[The test interface provided by SBT], such as the `test` command, also supports the ability to fork tests, set specific configurations for test cases, and ways to select which tests are run.
 
-https://www.assembla.com/wiki/show/liftweb/Unit_Testing_Snippets_With_A_Logged_In_User[The Lift wiki] describes more about unit testing and Lift sessions.(((range="endofrange", startref="ix_DBmdbr")))(((range="endofrange", startref="ix_MDBunit")))(((range="endofrange", startref="ix_UTestspec")))
+http://bit.ly/144UxZk[The Lift wiki] describes more about unit testing and Lift sessions.(((range="endofrange", startref="ix_DBmdbr")))(((range="endofrange", startref="ix_MDBunit")))(((range="endofrange", startref="ix_UTestspec")))
 
 
 
