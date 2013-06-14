@@ -380,7 +380,7 @@ Which version should you use? That will depend on your application, but you can 
 See Also
 ^^^^^^^^
 
-http://squeryl.org/relations.html[The Squeryl Relations page] provides additional details.(((range="endofrange", startref="ix_otmr")))(((range="endofrange", startref="ix_RSLAotmr")))
+http://bit.ly/163FgJv[The Squeryl Relations page] provides additional details.(((range="endofrange", startref="ix_otmr")))(((range="endofrange", startref="ix_RSLAotmr")))
 
 
 
