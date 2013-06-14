@@ -645,11 +645,11 @@ When this snippet runs, and the page is rendered, the jQuery UI date picker will
 See Also
 ^^^^^^^^
 
-http://diveintohtml5.info[_Dive into HTML5_] describes how to detect browser pass:[<phrase role='keep-together'>features.</phrase>]
+http://bit.ly/198JaCB[_Dive into HTML5_] describes how to detect browser pass:[<phrase role='keep-together'>features.</phrase>]
 
 http://api.jqueryui.com/datepicker/[The jQuery UI API documentation] lists the various configuration options for the date picker.
 
-The HTML5 `date` input types submit dates in http://tools.ietf.org/html/rfc3339[RFC 3339 format].
+The HTML5 `date` input types submit dates in http://bit.ly/11Bl9hi[RFC 3339 format].
 
 
 
