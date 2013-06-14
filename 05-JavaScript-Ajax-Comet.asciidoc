@@ -1030,7 +1030,7 @@ If we uploaded, say, a JPEG, the browser would show an alert dialog reporting "O
 See Also
 ^^^^^^^^
 
-Diego Medina has posted a http://bit.ly/lift-restupload[Gist of Lift REST code] to integrate more fully with the image upload and image reviewing features of the widget, specifically implementing the JSON response that the widget expects for that functionality.
+Diego Medina has posted a http://bit.ly/lift-restupload[Gist of Lift REST code] to integrate more fully with the image upload and image reviewing features of the widget, specifically implementing the JSON response that the widget expects for that pass:[<phrase role='keep-together'>functionality.</phrase>]
 
 <<FileUpload>> describes the basic file upload behaviour of Lift and how to control where files are stored.
 
