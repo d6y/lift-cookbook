@@ -651,7 +651,7 @@ http://www.h2database.com[The H2 site] lists the features and configuration opti
 
 If you're using the console frequently, consider making it accessible from your Lift application in development node. This is described by Diego Medina in a https://fmpwizard.telegr.am/blog/lift-and-h2[blog post].
 
-http://bit.ly/10iFg9Q[The example Lift project for <<Squeryl>>] has the H2 console enabled.
+http://bit.ly/10iFg9Q[The example Lift project for <<Squeryl>>] has the H2 console pass:[<phrase role='keep-together'>enabled.</phrase>]
 
 [[snapshot]]
 Using the Latest Lift Build
@@ -699,7 +699,7 @@ versions by running the command `clean` and then `update`.
 See Also
 ^^^^^^^^
 
-To learn the detail of snapshot versions, dig into the http://www.sonatype.com/books/mvnref-book/reference/pom-relationships-sect-pom-syntax.html[Maven Complete Reference].
+To learn the detail of snapshot versions, dig into the http://bit.ly/11Nc1ub[Maven Complete Reference].
 
 
 [[NewScala]]
