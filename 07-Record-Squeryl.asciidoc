@@ -166,11 +166,11 @@ See Also
 
 Resources for JNDI configuration include:
 
-* http://www.assembla.com/spaces/liftweb/wiki/Apache_and_Jetty_Configuration[An example on the Lift wiki] for Apache and Jetty configuration.
+* http://bit.ly/17MFWXB[An example on the Lift wiki] for Apache and Jetty configuration.
 
-* http://www.eclipse.org/jetty/documentation/current/jndi-datasource-examples.html[The documentation for Jetty] gives examples for various databases.
+* http://bit.ly/11NjLfK[The documentation for Jetty] gives examples for various databases.
 
-* For Tomcat, see the http://tomcat.apache.org/tomcat-7.0-doc/jndi-resources-howto.html#JDBC_Data_Sources[JNDI configuration guide].
+* For Tomcat, see the http://bit.ly/19AhF7F[JNDI configuration guide].
 
 
 [[SquerylOneToMany]]
