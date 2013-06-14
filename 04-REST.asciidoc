@@ -217,7 +217,7 @@ See Also
 
 <<MissingDotCom>> shows how to remove items from `explicitlyParsedSuffixes`.
 
-https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/HttpHelpers.scala[The source for `HttpHelpers.scala`] contains the `explicitlyParsedSuffixes` list, which is the default list of suffixes that Lift parses from a URL.
+http://bit.ly/120TCpl[The source for `HttpHelpers.scala`] contains the `explicitlyParsedSuffixes` list, which is the default list of suffixes that Lift parses from a URL.
 
 
 
