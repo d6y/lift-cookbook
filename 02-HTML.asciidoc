@@ -696,7 +696,7 @@ Looking at the `RewriteRequest` first, this expects three arguments: the path, w
 See Also
 ^^^^^^^^
 
-http://bit.ly/14BfNYJ[The source for `LiftRules`] shows the default implementation of `attachResourceId`.
+http://bit.ly/14BfNYJ shows the default implementation of `attachResourceId`.
 
 http://bit.ly/154phIM[Google's "Optimize caching" notes] are a good source of information about browser pass:[<phrase role='keep-together'>behaviour.</phrase>]
 
