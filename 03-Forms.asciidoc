@@ -938,11 +938,11 @@ See Also
 
 <<ButtonTriggerServerCode>> describes `jsonCall`.
 
-The behaviour of the widget module with respect to new values is described in a ticket on the https://github.com/liftmodules/widgets/issues/4[module's GitHub page]. Enhancing modules is one route to get involved with Lift, and <<ContributingAndHelp>> describes other ways to contribute.
+The behaviour of the widget module with respect to new values is described in a ticket on the http://bit.ly/144McVx[module's GitHub page]. Enhancing modules is one route to get involved with Lift, and <<ContributingAndHelp>> describes other ways to contribute.
 
 http://jqueryui.com/autocomplete/[The jQuery UI Autocomplete documentation] describes how to configure the widget. The version included with the Lift widgets module is version 1.0.2.(((range="endofrange", startref="ix_FPauto")))(((range="endofrange", startref="ix_autocomp")))
 
-The Typeahead widget is http://twitter.github.io/bootstrap/javascript.html#typeahead[documented] as part of Twitter Bootstrap.(((Typeahead component)))
+The Typeahead widget is http://bit.ly/11FA1w1[documented] as part of Twitter Bootstrap.(((Typeahead component)))
 
 [[Radio]]
 Offering Choices with Radio Buttons
