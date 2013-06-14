@@ -180,7 +180,7 @@ pull request.((("templates", "for Lift Cookbook submissions")))
 Alternatively, download a template file, write your recipe, and email it
 to the https://groups.google.com/group/liftweb[Lift mailing list].
 
-You can find the template file https://raw.github.com/d6y/lift-cookbook/master/etc/template.asciidoc[on GitHub].
+You can find the template file http://bit.ly/19AllpY[on GitHub].
 
 Discussion
 ^^^^^^^^^^
@@ -431,7 +431,7 @@ The Lift wiki pages for modules can be reached via http://liftmodules.net[http:/
 
 https://github.com/scottschiller/snowstorm/[The Snowstorm project] has been "setting CPUs on fire worldwide every winter since 2003," and the module developed for this recipe is https://github.com/LiftCookbook/snowstorm-example-module[on GitHub].
 
-To publish to Sonatype, take a look at https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide[their guide]. CloudBees offers an http://www.cloudbees.com/foss/foss-dev.cb[open source repository].
+To publish to Sonatype, take a look at http://bit.ly/163Hb0y[their guide]. CloudBees offers an http://www.cloudbees.com/foss/foss-dev.cb[open source repository].
 
 There are other ways to structure common code between Lift applications. For an example that uses SBT modules and Git, see the http://bit.ly/lift-moduleapp[mailing list discussion on "Modularize Lift Applications"].
 
