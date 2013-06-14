@@ -582,7 +582,7 @@ components pass:[<phrase role='keep-together'>dynamically.</phrase>]
 See Also
 ^^^^^^^^
 
-http://bit.ly/198KMMS[The source for `FocusOnLoad`] is worth checking out to understand how it and related commands are constructed.  This may help you package your own JavaScript functionality up into commands that can be used in CSS binding expressions.
+http://bit.ly/198KMMS[The source for `FocusOnLoad`] is worth checking out to understand how it and related commands are constructed.  This may help you package your own JavaScript functionality up into commands that can be used in CSS binding pass:[<phrase role='keep-together'>expressions.</phrase>]
 
 
 [[CSSClassOnAjaxForm]]
