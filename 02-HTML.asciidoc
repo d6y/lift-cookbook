@@ -488,7 +488,6 @@ class PassThruSnippet {
   def render =
     if (fiftyFifty) "*" #> Text("Congratulations! The content was changed")
     else PassThru
-
 }
 ----
 
