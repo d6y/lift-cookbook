@@ -1100,7 +1100,15 @@ class Wiring {
     quantity.atomicUpdate(_ + 1)
     S.notice("Added One")
   }
+---------------------------------------------------------
 
+
+++++
+<?hard-pagebreak?>
+++++
+  
+[source,scala]
+---------------------------------------------------------
   def render =
     "#add [onclick]" #> ajaxInvoke(increment) &
     "#quantity *" #> WiringUI.asText(quantity) &
