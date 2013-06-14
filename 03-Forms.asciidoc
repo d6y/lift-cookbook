@@ -253,7 +253,7 @@ The `formGroup` addition manipulates the function identifier to ensure it sorts 
 
 [NOTE]
 Lift 2.6 and 3.0 may contain `ajaxOnSubmit`, which will give the reliability of `ajaxSubmit` and the flexibility of the hidden-field approach.  If you want to try it in Lift 2.5,
-Antonio Salazar Cardozo has created a https://gist.github.com/Shadowfiend/5042131[helper you can include in your project].
+Antonio Salazar Cardozo has created a http://bit.ly/ZPCR41[helper you can include in your project].
 
 
 
