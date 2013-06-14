@@ -259,7 +259,6 @@ See Also
 
 <<SelectOptionChange>> includes an example of `SHtml.onEvents`, which will bind a function to a number of events on a `NodeSeq`.
 
-For another example of `AjaxInvoke`, take a look at the http://blog.fmpwizard.com/scala-lift-custom-wizard[_Call Scala code from JavaScript_ section] of Diego Medina's blog.
 
 http://exploring.liftweb.net/master/index-10.html[_Exploring Lift_, Chapter 10], lists various `JsExp` classes you can use for `ajaxCall`.
 
@@ -294,6 +293,12 @@ happen on the server and update the browser with the result. The pass:[<phrase r
   <div id="distance">Distance will appear here</div>
 </div>
 -----
+
+
+++++
+<?hard-pagebreak?>
+++++
+
 
 The snippet code binds the `<select>` element to send the selected value to the server:
 
