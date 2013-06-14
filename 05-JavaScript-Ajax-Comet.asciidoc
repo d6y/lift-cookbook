@@ -884,7 +884,7 @@ See Also
 
 You'll find the _The ubiquitous Chat app_ in http://simply.liftweb.net/[_Simply Lift_].
 
-Being able to debug HTTP traffic is a useful way to understand how your Comet or Ajax application is performing.  There are many plugins and products to help with this, such as the https://addons.mozilla.org/en-us/firefox/addon/httpfox/[_HttpFox_ plugin for Firefox].
+Being able to debug HTTP traffic is a useful way to understand how your Comet or Ajax application is performing.  There are many plugins and products to help with this, such as the http://mzl.la/14BkhyC[_HttpFox_ plugin for Firefox].
 
 
 
@@ -901,7 +901,7 @@ You want to offer your users an Ajax file upload tool, with progress bars and dr
 Solution
 ^^^^^^^^
 
-Add Sebastian Tschan's https://github.com/blueimp/jQuery-File-Upload[_jQuery File Upload_ widget] to your project, and implement a REST end point to receive files.
+Add Sebastian Tschan's http://bit.ly/1ac2yAj[_jQuery File Upload_ widget] to your project, and implement a REST end point to receive files.
 
 The first step is to download the widget and drag the _js_ folder into your application as _src/main/webapp/js_.  We can then use the JavaScript in a template:
 
