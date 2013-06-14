@@ -1043,7 +1043,7 @@ Now when a user enters "jaglan beta" as a planet name, it is stored in the datab
 See Also
 ^^^^^^^^
 
-The best place to understand the filters is the trait `StringValidators` in the https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/BaseField.scala[source for `BaseField`].
+The best place to understand the filters is the trait `StringValidators` in the http://bit.ly/120VGhc[source for `BaseField`].
 
 If you really do need to apply title case to a value, http://commons.apache.org/lang/[the Apache Commons `WordUtils` class] provides ready-made functions for this.(((range="endofrange", startref="ix_RSLAmvbs")))(((range="endofrange", startref="ix_Vmbs")))
 
