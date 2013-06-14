@@ -428,11 +428,11 @@ val connection = {
 See Also
 ^^^^^^^^
 
-Amazon provided a http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/GettingStarted.Walkthrough.html[walkthrough with screenshots], showing how to create a Beanstalk application.
+Amazon provided a http://bit.ly/11FFQtl[walkthrough with screenshots], showing how to create a Beanstalk application.
 
 pass:[<emphasis><ulink role="orm:hideurl" url="http://shop.oreilly.com/product/0636920020561.do">Elastic Beanstalk</ulink></emphasis>], by van Vliet _et al._ (O'Reilly) goes into the details of the Beanstalk infrastructure, how to work with Eclipse, enabling continuous integration, and how to hack the instance (for example, to use Nginx as a frontend to Beanstalk).
 
-http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/using-features.managing.db.html[The Amazon documentation for "Configuring Databases with AWS Elastic Beanstalk"] describes the RDS settings in more detail.
+http://bit.ly/ZPLZ95[The Amazon documentation for "Configuring Databases with AWS Elastic Beanstalk"] describes the RDS settings in more detail.
 
 
 //////////////////////////////////////////
