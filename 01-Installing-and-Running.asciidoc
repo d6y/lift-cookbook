@@ -363,9 +363,9 @@ The _permanent generation_ is a Java Virtual Machine concept. It's the area of m
 See Also
 ^^^^^^^^
 
-Triggered execution has a number of settings you can adjust, as described in http://www.scala-sbt.org/release/docs/Detailed-Topics/Triggered-Execution[the SBT documentation].
+Triggered execution has a number of settings you can adjust, as described in http://bit.ly/154mizT[the SBT documentation].
 
-See http://www.scala-sbt.org/release/docs/Detailed-Topics/Command-Line-Reference[the SBT Command Line Reference] for an overview of available commands.
+See http://bit.ly/178Zztv[the SBT Command Line Reference] for an overview of available commands.
 
 Commands and configuration options for the SBT web plugin are described on https://github.com/JamesEarlDouglas/xsbt-web-plugin/wiki[the GitHub wiki].
 
@@ -546,7 +546,7 @@ See Also
 
 https://github.com/typesafehub/sbteclipse/wiki[There are other useful settings for _sbteclipse_]. You'll also find the latest version number for the plugin on that site.
 
-The SBT _~/.sbt/_ structure is described in the http://www.scala-sbt.org/release/docs/Getting-Started/Using-Plugins[guide to using plugins] and in the http://www.scala-sbt.org/release/docs/Detailed-Topics/Global-Settings[wiki page for global configuration].
+The SBT _~/.sbt/_ structure is described in the http://bit.ly/144HiaM[guide to using plugins] and in the http://bit.ly/19A3eAw[wiki page for global configuration].
 
 [[idea]]
 Developing Using IntelliJ IDEA
