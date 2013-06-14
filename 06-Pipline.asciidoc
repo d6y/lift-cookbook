@@ -704,7 +704,7 @@ to best fit the way you want the code to look and work.
 See Also
 ^^^^^^^^
 
-http://www.artima.com/pins1ed/extractors.html[Chapter 24: _Extractors_] from _Programming in Scala_.
+http://bit.ly/179b986[Chapter 24: _Extractors_] from _Programming in Scala_.
 
 
 
