@@ -867,7 +867,7 @@ case class FieldError(field: FieldIdentifier, msg: NodeSeq) {
 See Also
 ^^^^^^^^
 
-https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/BaseField.scala[`BaseField.scala`] in the Lift source code contains the definition of the built-in `StringValidators`.
+http://bit.ly/120VGhc[`BaseField.scala`] in the Lift source code contains the definition of the built-in `StringValidators`.
 
 <<Forms>> describes form processing, notices, and errors.
 
