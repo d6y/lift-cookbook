@@ -432,7 +432,7 @@ See Also
 
 The `IEOnly` example is derived from a http://bit.ly/lift-ieonly[posting on the mailing list from Antonio Salazar Cardozo].
 
-The _html5shim_ project can be downloaded from its http://code.google.com/p/html5shim/[Google Code site].
+The _html5shim_ project can be downloaded from its http://bit.ly/11ltJBR[Google Code site].
 
 
 
