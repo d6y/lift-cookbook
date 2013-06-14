@@ -1476,7 +1476,7 @@ See Also
 
 There's no real specification of what Textile is, but there are http://redcloth.org/hobix.com/textile/[references available] that cover the typical kinds of markup to enter and what HTML you can expect to see.
 
-https://github.com/liftmodules/textile/blob/master/src/test/scala/net/liftmodules/textile/TextileSpec.scala[The unit tests for the Textile module] give you a good set of examples of what is supported.(((range="endofrange", startref="ix_LAhtml")))
+http://bit.ly/11lwwLr[The unit tests for the Textile module] give you a good set of examples of what is supported.(((range="endofrange", startref="ix_LAhtml")))
 
 <<modules>> describes how to create modules.
 
