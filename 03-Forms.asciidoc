@@ -1399,7 +1399,16 @@ class MultiSelectStateful extends StatefulSnippet with Loggable {
     Item("a", "Coffee") ::
     Item("b", "Milk") ::
     Item("c", "Sugar") :: Nil
+---------------------------------------------------------
 
+
+++++
+<?hard-pagebreak?>
+++++
+
+
+[source,scala]
+---------------------------------------------------------
   val options : List[(String,String)] =
     inventory.map(i => (i.id -> i.name))
 
