@@ -874,7 +874,7 @@ By providing our own `() => JsCmd` function to `LiftRules.noCometSessionCmd`, Li
 
 .Factory
 ****
-The `noCometSessionCmd.default.set` call is making use of Lift's https://www.assembla.com/spaces/liftweb/wiki/Dependency_Injection[dependency injection]. Specifically, it's setting up the supply side of the dependency. Although we're setting a default here, it's possible in Lift to supply different behaviours with different scopes: request or session.
+The `noCometSessionCmd.default.set` call is making use of Lift's http://bit.ly/16nYJVY[dependency injection]. Specifically, it's setting up the supply side of the dependency. Although we're setting a default here, it's possible in Lift to supply different behaviours with different scopes: request or session.
 ****
 
 This recipe has focused on the handling of loss of session for Comet; for Ajax, there's a corresponding `LiftRules.noAjaxSessionCmd` setting.
