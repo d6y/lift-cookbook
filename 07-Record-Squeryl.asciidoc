@@ -1159,7 +1159,16 @@ import MySchema._
 class PlanetsSpec extends Specification with DBTestKit {
 
   sequential
+--------------------------------------------
 
+
+++++
+<?hard-pagebreak?>
+++++
+
+
+[source, scala]
+--------------------------------------------
   "Planets" >> {
 
     "know that Mars has two moons" >> InMemoryDB() {
