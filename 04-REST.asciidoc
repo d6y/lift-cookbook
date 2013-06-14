@@ -692,7 +692,7 @@ Note that Google Sitemaps needs dates to be in ISO 8601 format. The built-in `ja
 See Also
 ^^^^^^^^
 
-You'll find an explanation of the Sitemap Protocol on Google's http://support.google.com/webmasters/bin/answer.py?hl=en&answer=156184[Webmaster Tools site].
+You'll find an explanation of the Sitemap Protocol on Google's http://bit.ly/163CV1h[Webmaster Tools site].
 
 
 
