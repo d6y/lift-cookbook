@@ -12,7 +12,7 @@ The aim is to give a single, short answer to a specific question. When there are
 
 * http://simply.liftweb.net[_Simply Lift_]
 
-* Torsten Uhlmann's _Instant Lift Web Applications How-to_ (PACKT Publishing)
+* Torsten Uhlmann's _Instant Lift Web Applications How-to_ (PACKT pass:[<phrase role='keep-together'>Publishing</phrase>])
 
 * Timothy Perrett's _Lift in Action_ (Manning Publications)
 
