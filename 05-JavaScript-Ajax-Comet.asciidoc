@@ -4,7 +4,7 @@ JavaScript, Ajax, and Comet
 
 Lift is known for its great Ajax and Comet support, and in this chapter, we'll explore these.
 
-For an introduction to Lift's Ajax and Comet features, see http://simply.liftweb.net[_Simply Lift_], Chapter 9 of _Lift in Action_ (Perrett, 2012, Manning Publications, Co.), or watch https://fmpwizard.telegr.am/blog/comet-actors-presentation[Diego Medina's video presentation].
+For an introduction to Lift's Ajax and Comet features, see http://simply.liftweb.net[_Simply Lift_], Chapter 9 of _Lift in Action_ (Perrett, 2012, Manning Publications, Co.), or watch http://bit.ly/12unDnJ[Diego Medina's video presentation].
 
 The source code for this chapter is at https://github.com/LiftCookbook/cookbook_ajax[https://github.com/LiftCookbook/cookbook_ajax].
 
