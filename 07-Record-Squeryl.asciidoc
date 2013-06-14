@@ -1181,7 +1181,6 @@ class PlanetsSpec extends Specification with DBTestKit {
     }
 
   }
-
 }
 --------------------------------------------
 
