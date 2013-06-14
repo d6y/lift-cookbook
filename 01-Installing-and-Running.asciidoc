@@ -777,7 +777,7 @@ See Also
 
 Binary compatibility in Scala is discussed on the http://article.gmane.org/gmane.comp.lang.scala.user/39290[Scala user mailing list].(((binary compatibility)))(((Scala, binary compatibility in)))
 
-http://www.scala-sbt.org/release/docs/Getting-Started/Library-Dependencies[The SBT Library Dependencies page] describes how SBT manages version numbers.
+http://bit.ly/163xPlx[The SBT Library Dependencies page] describes how SBT manages version numbers.
 
 <<snapshot>> describes how to use a snapshot version of Lift.
 
