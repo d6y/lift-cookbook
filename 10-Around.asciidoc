@@ -800,7 +800,7 @@ http://dispatch.databinder.net/Dispatch.html[The Dispatch documentation] is well
 
 For questions about Dispatch, the best place is the https://groups.google.com/forum/#!forum/dispatch-scala[Dispatch Google Group].
 
-The previous major version of Dispatch, 0.8.x ("Dispatch Classic"), is quite different from the "reboot" of the project as version 0.9.  Consequently, examples you may see that use 0.8.x will need some conversion to run with 0.9.x. http://code.technically.us/post/17038250904/fables-of-the-reconstruction-part-2-have-you-tried[Nathan Hamblen's blog] describes the change.
+The previous major version of Dispatch, 0.8.x ("Dispatch Classic"), is quite different from the "reboot" of the project as version 0.9.  Consequently, examples you may see that use 0.8.x will need some conversion to run with 0.9.x. http://bit.ly/14Bm6LS[Nathan Hamblen's blog] describes the change.
 
 For working with JSoup, take a look at the http://jsoup.org/cookbook/[JSoup Cookbook].
 
