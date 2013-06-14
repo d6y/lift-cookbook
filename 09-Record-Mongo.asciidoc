@@ -779,7 +779,7 @@ For geospacial queries, see <<MongoGeospatial>>.
 
 https://github.com/foursquare/rogue[The README page for Rogue] is a great starting point, and includes a link to `QueryTest` giving plenty of example queries to crib.
 
-The motivation for Rogue is described in a http://engineering.foursquare.com/2011/01/21/rogue-a-type-safe-scala-dsl-for-querying-mongodb/[Foursquare engineering blog post].
+The motivation for Rogue is described in a http://bit.ly/120WkLF[Foursquare engineering blog post].
 
 
 
