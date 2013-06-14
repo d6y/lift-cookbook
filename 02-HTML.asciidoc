@@ -978,7 +978,15 @@ object Customised {
 
   def unapply(resp: LiftResponse) : Option[LiftResponse] =
     definedPages.find(_ == resp.toResponse.code).flatMap(toResponse)
+----
 
+
+++++
+<?hard-pagebreak?>
+++++
+
+[source,scala]
+----
   def toResponse(status: Int) : Box[LiftResponse] =
     for {
       session <- S.session
