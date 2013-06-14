@@ -696,11 +696,11 @@ Looking at the `RewriteRequest` first, this expects three arguments: the path, w
 See Also
 ^^^^^^^^
 
-https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/LiftRules.scala[The source for `LiftRules`] shows the default implementation of `attachResourceId`.
+http://bit.ly/14BfNYJ[The source for `LiftRules`] shows the default implementation of `attachResourceId`.
 
-https://developers.google.com/speed/docs/best-practices/caching[Google's "Optimize caching" notes] are a good source of information about browser pass:[<phrase role='keep-together'>behaviour.</phrase>]
+http://bit.ly/154phIM[Google's "Optimize caching" notes] are a good source of information about browser pass:[<phrase role='keep-together'>behaviour.</phrase>]
 
-You can learn more about URL rewriting at the https://www.assembla.com/spaces/liftweb/wiki/URL_Rewriting[Lift wiki]. Rewriting is used rarely, and only for special cases. Most problems that look like rewriting problems are better solved with a https://www.assembla.com/spaces/liftweb/wiki/Location_Parameters[Menu Param].
+You can learn more about URL rewriting at the http://bit.ly/1abV4x2[Lift wiki]. Rewriting is used rarely, and only for special cases. Most problems that look like rewriting problems are better solved with a http://bit.ly/10iHiHb[Menu Param].
 
 
 
