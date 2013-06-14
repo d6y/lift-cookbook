@@ -492,7 +492,7 @@ object image extends BsonRecordField(this, Image) {
 See Also
 ^^^^^^^^
 
-https://www.assembla.com/spaces/liftweb/wiki/Mongo_Record_Embedded_Objects[The Lift wiki] describes `BsonRecord` in more detail.
+http://bit.ly/144UdJO[The Lift wiki] describes `BsonRecord` in more detail.
 
 
 
