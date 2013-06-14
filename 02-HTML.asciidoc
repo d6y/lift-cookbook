@@ -1119,7 +1119,16 @@ import net.liftweb.http._
 import xml.Text
 
 class DownloadLink {
+-------------------------------------------------------------
 
+
+++++
+<?hard-pagebreak?>
+++++
+
+
+[source, scala]
+-------------------------------------------------------------
   val poem =
     "Roses are red," ::
     "Violets are blue," ::
