@@ -1071,7 +1071,7 @@ trait MongoTestKit {
 This trait provides the plumbing for connection to a MongoDB server running locally, and creates a database based on the name of the class it is mixed into.  The important part is the `MongoContext`, which ensures that `around` your specification the database is initialised, and that after your specification is run, it is cleaned up.((("S.", "init")))
 
 [[Specs2AndScala210]]
-.Specs 2.x and Scala 2.10
+.Specs2 2.x and Scala 2.10
 [NOTE]
 =====================================================================
 If you're using Scala 2.10, you'll also be using a newer version of
