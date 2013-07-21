@@ -1070,6 +1070,35 @@ trait MongoTestKit {
 
 This trait provides the plumbing for connection to a MongoDB server running locally, and creates a database based on the name of the class it is mixed into.  The important part is the `MongoContext`, which ensures that `around` your specification the database is initialised, and that after your specification is run, it is cleaned up.((("S.", "init")))
 
+[[Specs2AndScala210]]
+.Specs 2.x and Scala 2.10
+[NOTE]
+=====================================================================
+If you're using Scala 2.10, you'll also be using a newer version of
+Specs2, and in that case `MongoContent` needs to be modified. For 
+Specs2 2.1 you'll need this code:
+
+[source, scala]
+--------------------------------------------
+object MongoContext extends Around with TestLiftSession {
+  def around[T : AsResult](testToRun: =>T) : Result = {
+    initDb()
+    try {
+      inSession {
+        ResultExecution.execute(AsResult(testToRun))
+      }
+    } finally {
+        destroyDb()
+    }
+   }
+}
+--------------------------------------------
+
+The changes in the 2.x series of Specs2 are 
+documented on http://bit.ly/specs2-nterpolated[Eric Torreborre's blog].
+=====================================================================
+
+
 To use this in a specification, mix in the trait and then add the context:
 
 [source, scala]
