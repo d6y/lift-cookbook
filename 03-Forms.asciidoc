@@ -1707,5 +1707,140 @@ The HTTP file upload mechanics are described in http://tools.ietf.org/html/rfc18
 See <<AjaxFileUpload>> for an example of an Ajax file upload through integration with a JavaScript library, providing progress indicators and drag-and-drop support.(((range="endofrange", startref="ix_LWFfp")))
 
 
+[[DRYFormsWithLayout]]
+DRY Forms with Layout
+~~~~~~~~~~~
 
+Problem
+^^^^^^^
 
+You want to use DRY declarative forms like LiftScreen, but you want to be able
+to completely control how the form is rendered (instead of just as a linear
+dump of fields).
+
+Solution
+^^^^^^^^
+
+Use `CssBoundLiftScreen`, field bindings for naming placements, and optionally
+use field bindings to override the layout of specific individual field
+elements. Requires Lift 2.5+.
+
+[source,scala]
+---------------------------------------------------------
+import net.liftweb.http.js.JsCmds._
+import net.liftweb.util.Helpers._
+import net.liftweb.http._
+import scala.xml._
+
+object AccountInfoEditor extends CssBoundLiftScreen {
+  val formName = "accountedit"
+
+  override def allTemplate = savedDefaultXml
+  protected def defaultAllTemplate = super.allTemplate
+
+  // Pull the definition of the "normal" field from a template, if it exists
+  override def defaultFieldNodeSeq: NodeSeq = Templates("accounts" :: "account_edit_field" :: Nil).openOr(
+    <div>
+      <label class="label field"></label>
+      <span class="value fieldValue"></span>
+      <span class="help"></span>
+      <div class="errors">
+        <div class="error"></div>
+      </div>
+    </div>)
+
+  override def finish() {
+    S.notice("Done.")
+  }
+
+  def accountToEdit = ...
+
+  val firstName = field("First Name", accountToEdit.first_name, trim, valMinLen(1, "First name is required"), FieldBinding("first_name"))
+  val lastName = field("Last Name", accountToEdit.last_name, trim, valMinLen(1, "Last name is required"), FieldBinding("last_name"))
+  val address = field("Address", accountToEdit.address, trim, valMinLen(1, "Address is required"), FieldBinding("address", Self))
+  val city = field("City", accountToEdit.city, trim, valMinLen(1, "City is required"), FieldBinding("city"))
+  val state = field("State", accountToEdit.state, trim, valMinLen(1, "State is required"), FieldBinding("state"))
+  ...
+}
+---------------------------------------------------------
+
+[source,html]
+---------------------------------------------------------
+<div data-lift="AccountInfoEditor">
+  <div>
+      <!-- Drop elements that are needed by general lift screen where you want them...e.g. the Next button at the top -->
+    <button class="next"></button>
+  </div>
+  <div class="fields">
+    <h2>Basic Info</h2>
+    <!-- You can set classes on these if you like...they are not used by the rendering code -->
+    <div class="younameit" id="accountedit_first_name_field">
+      <!-- The template used for laying out the fields is in accounts/account_edit_field.html -->
+    </div>
+    <div id="accountedit_first_name_field"></div>
+    <div id="accountedit_last_name_field"></div>
+    <!-- The code binds this field with Self, meaning the field template is inline -->
+    <div id="accountedit_address_field">
+      <label class="label field"></label>
+      <span class="value fieldValue"></span>
+      <span class="help"></span>
+      <div class="errors">
+        <div class="error"></div>
+      </div>
+    </div>
+    <div id="accountedit_city_field"></div>
+    <div id="accountedit_state_field"></div>
+</div>
+---------------------------------------------------------
+
+Discussion
+^^^^^^^^^^
+
+`CssBoundLiftScreen` uses the same model (by default) as LiftScreen, but uses
+CSS classes to identify elements in the default template (e.g.
+wizard-all.html). This powerful mechanism eliminates repetition in both
+code and HTML; however, LiftScreen sacrifices flexibility in that there
+is no way to make highly customized forms.
+
+`CssBoundLiftScreen` resolves this by allowing you to optionally control every
+element of the form rendering, from form field placement to the layout of a
+single field. You do so by embedding the template at the snippet usage site.
+
+[source,html]
+---------------------------------------------------------
+<div data-lift="AccountInfoEditor">
+   <!-- template goes here -->
+</div>
+---------------------------------------------------------
+
+and supply some additional binding hints. The form is still very minimal, while
+being completely under the control of the designer.
+
+The example in the solution section demonstrates the most important aspects. In
+particular, you should note that you must still supply a source for the
+template, and that you can designate alternatives for sub-portions of the
+template (in the example, we allow the HTML designer direct access to the field
+template for this screen by making it possible to put the layout in a custom
+template file in accounts/account_edit_field.html).
+
+The rest is very easy. You must supply a formName declaration (in Scala) for
+`CssBoundLiftScreen`, and FieldBindings as an argument to each field. This,
+combined with an internal function (that you can override) will generate unique
+(but known) names that can be used in the template.
+
+So, if you name your form "myform", and bind a field to "address", then your
+HTML template should include a div with the ID "myform_address_field".  For
+normal bindings (which use your field template), that is all you need.  
+
+If you also need to tweak the field layout for a particular field, you may
+specify `Self` in the Scala field binding, which indicates the template for
+that particular field will be nested within the div with the field's ID.
+
+If you want to get even fancier there are additional field bindings, such as
+Dynamic(() => NodeSeq) which uses the supplied function to generate a template
+for the field each time it is rendered.
+
+See Also
+^^^^^^^^
+
+The http://www.assembla.com/spaces/liftweb/wiki/CssBoundLiftScreen_and_Custom_Form_Layouts[Lift Wiki entry on CSSBoundLiftScreen]
