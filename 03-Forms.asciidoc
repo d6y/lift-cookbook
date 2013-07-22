@@ -1844,3 +1844,127 @@ See Also
 ^^^^^^^^
 
 The http://www.assembla.com/spaces/liftweb/wiki/CssBoundLiftScreen_and_Custom_Form_Layouts[Lift Wiki entry on CSSBoundLiftScreen]
+
+[[AdvancedEditorForLiftScreen]]
+Extending LiftScreen with a Javascript HTML editor
+~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want your users to be able to use an editor like TinyMCE or CKEditor
+for a textarea, and you want to use LiftScreen or CssBoundLiftScreen.
+
+Solution
+^^^^^^^^
+
+Create a subclass of CssBoundLiftScreen, and add a new field definition.
+There are several tricks that will come in handy:
+
+* The form can be re-rendered on the same page in AJAX mode, so you might need to remove the prior instance of the editor before re-installing it.  If you embed the screen in a light-box (like JQuery UI dialogs), you will have problems with timing. The solution shown builds in a 1 second embed delay.
+* Most fancy editors don't store the edited content in the text area, so
+you'll have to hack into the "finish" step so that you can copy the 
+content of the editor back to the original lift-generated text area.
+
+[source,scala]
+---------------------------------------------------------
+
+import scala.xml.{Elem, NodeSeq}
+import net.liftweb.common._
+import net.liftweb.http._
+import net.liftweb.http.SHtml._
+import net.liftweb.http.js._
+import net.liftweb.http.js.JE._
+import net.liftweb.http.js.JsCmds._
+import net.liftweb.util._
+import net.liftweb.util.Helpers._
+
+abstract class Screen extends CssBoundLiftScreen {
+  val sendButtonID = randomString(20)
+
+  protected def ckeditor(name: => String, defaultValue: => String, rows: Int, cols: Int, stuff: FilterOrValidate[String]*): Field { type ValueType = String } = {
+    val id = nextFuncName
+    val eAttr: List[SHtml.ElemAttr] = (("class" -> "hidden"): SHtml.ElemAttr) ::
+      (("id" -> id): SHtml.ElemAttr) ::
+      (("rows" -> rows.toString): SHtml.ElemAttr) ::
+      (("cols" -> cols.toString): SHtml.ElemAttr) :: grabParams(stuff)
+
+    // Embed the real textarea using Lift, and then emit javascript to
+    // morph it into an advanced editor. The delay helps with things 
+    // like forms embedded in animated dialogs.
+    makeField[String, Nothing](name,
+      defaultValue,
+      field => {
+        <span>
+          { SHtml.textarea(field.is, field.set(_), eAttr: _*) }
+          {
+            Script(JsRaw("""setTimeout(function(){
+                         var editor = CKEDITOR.instances['%s'];
+                         if (editor) { editor.destroy(true); }
+                         CKEDITOR.replace('%s')
+                         },1000);""".format(id, id)))
+          }
+        </span>
+      },
+      NothingOtherValueInitializer,
+      stuff: _*)
+  }
+
+  /**
+   * Hack into the finish button to make sure we copy data out of ckeditor
+   * instances into their respective real field.
+   */
+  override protected def renderAll(currentScreenNumber: Box[NodeSeq],
+    screenCount: Box[NodeSeq], wizardTop: Box[Elem], screenTop: Box[Elem], fields: List[ScreenFieldInfo],
+    prev: Box[Elem], cancel: Box[Elem], next: Box[Elem], finish: Box[Elem], screenBottom: Box[Elem],
+    wizardBottom: Box[Elem], nextId: (String, () => JsCmd), prevId: Box[(String, () => JsCmd)], cancelId: (String, () => JsCmd),
+    theScreen: AbstractScreen, ajax_? : Boolean): NodeSeq = {
+
+    // grab the old value of the onclick generated for the finish button
+    val old = (for (
+      n <- finish;
+      onclick <- n.attribute("onclick")
+    ) yield onclick.toString)
+    // Hack in the necessary extra steps
+    val pullText = """jQuery('textarea').each(function () { try { var $textarea = $(this); $textarea.val(CKEDITOR.instances[$textarea.attr('id')].getData()); } catch(e) {} } );"""
+    val hackedFinish = finish.map(n => n % ("onclick" -> (pullText + old.openOr(""))))
+
+    super.renderAll(currentScreenNumber,
+      screenCount,
+      wizardTop,
+      screenTop,
+      fields,
+      prev,
+      cancel,
+      next,
+      hackedFinish,
+      screenBottom,
+      wizardBottom,
+      nextId,
+      prevId,
+      cancelId,
+      theScreen,
+      ajax_?)
+  }
+}
+---------------------------------------------------------
+
+then you can use your new screen type with declarative logic to get a fancy
+editor:
+
+[source,scala]
+---------------------------------------------------------
+class EmailScreen extends Screen {
+   val to = field("Subject", "")
+   val subject = field("To", "")
+   val editor = ckeditor("Email Body", "", 20, 120)
+}
+   
+
+Discussion
+^^^^^^^^
+
+The solution above embeds the popular CKEditor as a usable field type. If you
+wish to use that field type in a wizard, you will also need to hack the 
+editor extraction into the next/previous button actions.
+
