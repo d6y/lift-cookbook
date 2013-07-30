@@ -1,0 +1,9 @@
+
+== Lift Cookbook
+
+The Lift Cookbook is available in PDF, ePub, DAISY, and Kindle format, http://shop.oreilly.com/product/0636920029151.do[direct from O'Reilly], and can also be found at Amazon and other bookstores.
+
+++++++++++++++++++++++++++++++++++++++
+<iframe frameborder="0" scrolling="no" width="200px" height="500px" src="http://cdn.oreillystatic.com/widgets/author/253.html">
+</iframe>
+++++++++++++++++++++++++++++++++++++++
