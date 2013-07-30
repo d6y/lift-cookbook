@@ -3,6 +3,8 @@
 
 # 00-Preface.asciidoc
 
+* Added Chenguang He as a contributor.
+
 # 01-Installing-and-Running.asciidoc
 
 # 02-HTML.asciidoc
