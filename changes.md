@@ -21,6 +21,10 @@
 
 # 06-Pipline.asciidoc
 
+
+* "Streaming Content", the section on `StreamingResponse`, formatting error in the para 
+starting "Notice...", where the "java.io.InputStream-like" CW font wasn't closing because of the "-".
+
 # 07-Record-Squeryl.asciidoc
 
 

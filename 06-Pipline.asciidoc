@@ -567,7 +567,7 @@ case class StreamingResponse(
 
 Notice the use of a structural type for the `data` parameter. Anything
 with a matching `read` method can be given here, including
-`java.io.InputStream`–like objects, meaning `StreamingResponse` can act
+`java.io.InputStream` objects, meaning `StreamingResponse` can act
 as a pipe from input to output. Lift pulls 8 K chunks from your
 `StreamingResponse` to send to the client.
 
