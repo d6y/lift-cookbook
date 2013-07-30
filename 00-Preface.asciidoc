@@ -35,6 +35,8 @@ I've mined the Lift mailing list for these recipes, but I'm not the only one.  R
 
 * Tony Kay.
 
+* Chenguang He.
+
 [[jointhem]]
 You should join them: <<AddRecipe>> tells you how.
 
