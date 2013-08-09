@@ -7,6 +7,9 @@
 
 # 01-Installing-and-Running.asciidoc
 
+* Update: SBT web plugin home and version
+* Update: version bumps for IntelliJ SBT plugin.
+
 # 02-HTML.asciidoc
 
 # 03-Forms.asciidoc
