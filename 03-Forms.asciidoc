@@ -1722,7 +1722,7 @@ Solution
 ^^^^^^^^
 
 Use `CssBoundLiftScreen`, with field bindings for naming placements, and optionally
-use override the layout of specific individual field
+override the layout of specific individual field
 elements.
 
 Here's an example snippet:
@@ -1838,7 +1838,7 @@ A corresponding template might be called _webapp/accountinfo.html_:
 ---------------------------------------------------------
 
 Running the snippet will cause `CssBoundLiftScreen` to apply the `defaultFieldNodeSeq` layout
-to each field, with the exception of the "address" field which we have customised inside the template.
+to each field, with the exception of the "address" field that we have customised inside the template.
 
 Pressing the "Finish" button triggers validations, presents errors (if any), or completes the edit via the `finish` method.
 
@@ -1852,9 +1852,9 @@ _wizard-all.html_). This powerful mechanism eliminates repetition in both
 code and HTML; however, `LiftScreen` sacrifices flexibility in that there
 is no way to make highly customized forms.
 
-This restriction is removed in `CssBoundLiftScreen`, by allowing you to optionally control every
-element of the form rendering, from form field placement to the layout of a
-single field. You do so by embedding the template at the snippet usage site:
+This restriction is removed in `CssBoundLiftScreen` by allowing you to control every
+element of the form rendering. You can control everything form field placement to the layout of a
+single field. You do so by embedding the custom template at the snippet usage site:
 
 [source,html]
 ---------------------------------------------------------
@@ -1863,7 +1863,7 @@ single field. You do so by embedding the template at the snippet usage site:
 </div>
 ---------------------------------------------------------
 
-...and supply some additional binding hints. The form is still very minimal, while
+and supply some additional binding hints. The form is still very minimal, while
 being completely under the control of the designer.
 
 The example in the solution section demonstrates the most important aspects. In
@@ -1871,23 +1871,23 @@ particular, you should note that you must still supply a source for the
 template, and that you can designate alternatives for sub-portions of the
 template. In the example, we allow the HTML designer direct access to the field
 template for this screen by making it possible to put the layout in a custom
-template file in _accounts/account_edit_field.html_.
+template file _accounts/account_edit_field.html_.
 
 The rest is very easy. You must supply a `formName` declaration (in Scala) for
 `CssBoundLiftScreen`, and a `FieldBinding` as an argument to each field. This,
-combined with an internal function that you can override, will generate unique
+combined with an internal function (that you can override), will generate unique
 (but known) names that can be used in the template. The default pattern 
-is: formName, "_", field name, and a final "_field". So, if you name your form 
+is: "formName_fieldName_field". So, if you name your form 
 "myform", and bind a field to "address", then your
-HTML template should include a div with the ID "myform_address_field".  For
-normal bindings which use your field template, that is all you need.  
+HTML template should include a div with the ID "myform_address_field". That is
+all you need for normal bindings that use your field template.
 
-If you also need to tweak the field layout for a particular field, you may
-specify `Self` in the Scala field binding, which indicates the template for
-that particular field will be nested within the div with the field's ID.
+To tweak the field layout for a particular field, you may
+specify `Self` in the Scala field binding. This indicates the template for
+that particular field should be sourced from the field's div.
 
 If you want to get even fancier there are additional field bindings, such as
-`Dynamic(() => NodeSeq)` which uses the supplied function to generate a template
+`Dynamic(() => NodeSeq)`, which uses the supplied function to generate a template
 for the field each time it is rendered.
 
 
