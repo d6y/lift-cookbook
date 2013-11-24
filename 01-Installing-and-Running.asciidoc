@@ -134,7 +134,7 @@ First, create an SBT plugin file at _project/plugins.sbt_ (all filenames are giv
 
 [source,scala]
 ---------------------------------------------------------
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.3.0")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.4.2")
 ---------------------------------------------------------
 
 This file tells SBT that you will be using the `xsbt-web-plugin`.
@@ -149,7 +149,7 @@ name := "liftfromscratch"
 
 version := "0.1-SNAPSHOT"
 
-scalaVersion := "2.10.0"
+scalaVersion := "2.10.3"
 
 seq(webSettings :_*)
 
