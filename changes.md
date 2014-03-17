@@ -1,4 +1,4 @@
-# Changes to files since first editon
+# Changes to files since first edition
 
 
 # 00-Preface.asciidoc
@@ -27,9 +27,10 @@
 
 # 06-Pipline.asciidoc
 
-
 * FORMATTING: "Streaming Content", the section on `StreamingResponse`, formatting error in the para 
 starting "Notice...", where the "java.io.InputStream-like" CW font wasn't closing because of the "-".
+
+* Extended: "Force HTTPS Requests" now has a section on "via SiteMap"
 
 # 07-Record-Squeryl.asciidoc
 

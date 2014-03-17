@@ -754,7 +754,7 @@ Discussion
 The `If` test ensures the `() => Boolean` function you supply as a first
 argument returns `true` before the page it applies to is shown. In this example,
 we'll get `true` if the request contains a header called `ALLOWED`, and the optional
-value of that header is `Full("YES")`.  This is a `LocParam` (location parameter) that
+value of that header is `Full("YES")`.  This is a `LocParam` (location parameter)(((Location Parameters)))(((locparam))) that
 modifies the `SiteMap` item. It can be appended to any menu items you want using the `>>` method.
 
 Note that without the header, the test will be false. This will mean links to the page will not appear in the
@@ -884,8 +884,8 @@ used to execute code before a request is handled and, if required, exit the
 pipeline and return a response. The function signature expected is
 `Req => Box[LiftResponse]`.
 
-In this example, we are testing for a request that is not `https`, and then
-formulating a new URL that starts _https_ and appends to it the rest of the
+In this example, we are testing for a request that is not "https", and then
+formulating a new URL that starts "https" and appends to it the rest of the
 original URL and any query parameters. With this created, we return a redirection
 to the new URL, along with any cookies that were set.
 
@@ -915,6 +915,54 @@ In this situation, modify the test from
 ------------------------------------------------
 req.header("X-Forwarded-Proto") != Full("https")
 ------------------------------------------------
+
+
+Via SiteMap
++++++++++++
+
+So far we've looked at redirecting all requests to HTTPS. If you only have a handful of pages to worry about, you can use a _custom location parameter_(((Location Parameters)))(((locparam))) in `SiteMap` as an alternative:
+
+[source,scala]
+---------------------------------------------------------------------------------------
+val entries = List(
+  Menu.i("Home") / "index",
+  Menu.i("Login") / "login" >> HttpsOnly
+)
+---------------------------------------------------------------------------------------
+
+We have two locations and we've marked the login page as having to be over HTTPS. 
+`HttpsOnly` is the location parameter. It's not built-in, but we can define it from the building
+blocks included with Lift and the code we've already written:
+
+[source,scala]
+---------------------------------------------------------------------------------------
+// Given a request, turn it into a redirect to the HTTPS version of the page
+def redirection(req: Req) : LiftResponse = {
+  val uriAndQuery = req.uri +
+    (req.request.queryString.map(s => "?"+s) openOr "")
+  val uri = "https://%s%s".format(req.request.serverName, uriAndQuery)
+
+  PermRedirectResponse(uri, req, req.cookies: _*)
+}
+
+// If the request is HTTP, give us a redirect to HTTPS
+def httpsRedirect : Box[LiftResponse] =
+  for {
+    req <- S.request
+    scheme <- req.header("X-Forwarded-Proto")
+    if scheme == "http"
+  } yield redirection(req)
+
+
+val HttpsOnly = TestAccess( () => httpsRedirect )
+---------------------------------------------------------------------------------------
+
+A recap of what we want to happen: any menu item marked as `HttpsOnly` should redirect itself to HTTPS unless it already is HTTPS. We can use `TestAccess` to achieve this.  The function given to `TestAccess` must evaluate to a `Box[LiftResponse]`: if it's `Empty`, the request carries on as normal; if it's `Full`, the request is redirected to the contents of the box.
+
+Our `HttpsOnly` implementation is to call `httpsRedirect`, where the for comprehension picks out the request, checks the scheme and only if it is "http" does it yield a `Full[LiftResponse]`.  That's how HTTPS requests are allowed through (`httpsRedirect` evaluates to `Empty`) but HTTP request are turned into `Full[PermRedirectResponse]` and `TestAccess` performs the redirect.
+
+It's worth noting that this also works out conveniently for local development. If locally there's no `X-Forwarded-Proto` header in the request, the HTTPS redirect won't be triggered.  Of course that assumes the `X-Forwarded-Proto` checking works for you. If instead you're using the `req.request.scheme` check, you might also want to make an exception for running in development mode (`Props.devMode` evaluates to `true` in development mode).
+
 
 
 
