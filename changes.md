@@ -9,6 +9,7 @@
 
 * UPDATE: SBT web plugin home and version
 * UPDATE: version bumps for IntelliJ SBT plugin.
+* CORRECTION: "want want" -> "want", from  Jie Liu: https://github.com/d6y/lift-cookbook/pull/60
 
 # 02-HTML.asciidoc
 
