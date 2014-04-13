@@ -123,7 +123,7 @@ Creating a Lift Project from Scratch Using SBT
 Problem
 ^^^^^^^
 
-You want want to create a Lift web project from scratch without using the ZIP files provided on the official Lift website.
+You want to create a Lift web project from scratch without using the ZIP files provided on the official Lift website.
 
 Solution
 ^^^^^^^^
