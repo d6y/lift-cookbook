@@ -224,8 +224,8 @@ Run modes are described on https://www.assembla.com/spaces/liftweb/wiki/Run_Mode
 
 
 [[HTMLEmail]]
-SMTP Authentication
-~~~~~~~~~~~~~~~~~~
+HTML Email
+~~~~~~~~~~
 
 Problem
 ^^^^^^^
@@ -538,6 +538,8 @@ It may be a surprise to find that you can call `Schedule` with just a function a
 
 There is also a `Schedule.schedule` method that will send an
 actor a specified message after a given delay.  This takes a `TimeSpan` delay, but again there's also a `Schedule.perform` version that accepts a `Long` as a delay.
+
+The `Helpers._` import brings with it some implicit conversions for `TimeSpan`. For example, a JodaTime `Period` can be given to `schedule` and that will be used as a delay before executing your function. Don't be tempted in this situation to use a JodaTime `DateTime`. This would be converted to a `TimeSpan`, but doesn't make sense as a delay.
 
 
 See Also

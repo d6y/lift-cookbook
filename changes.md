@@ -54,6 +54,11 @@ NB: 08-Mapper chapter still to be omitted.
 
 # 10-Around.asciidoc
 
+* CORRECTION: The recipe for "HTML Email" had the title "SMTP Authentication".
+
+* Additional clues: Don't use DateTime as a delay for a scheduled action. 
+
+
 
 
 # 11-Deployment.asciidoc
