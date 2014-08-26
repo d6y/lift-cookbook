@@ -5,11 +5,16 @@
 
 * Added Chenguang He as a contributor.
 
+* Noted that we are now using SBT 0.13, Scala 2.11 and Lift 2.6
+
+
 # 01-Installing-and-Running.asciidoc
 
 * UPDATE: SBT web plugin home and version
 * UPDATE: version bumps for IntelliJ SBT plugin.
 * CORRECTION: "want want" -> "want", from  Jie Liu: https://github.com/d6y/lift-cookbook/pull/60
+* UPDATE: SBT 0.13, Lift 2.6
+* UPDATE: IntelliJ version 12 -> 13
 
 # 02-HTML.asciidoc
 

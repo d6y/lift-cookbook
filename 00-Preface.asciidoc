@@ -54,10 +54,8 @@ Follow https://twitter.com/liftcookbook[@LiftCookbook] on Twitter.
 
 === Software Versions
 
-Except where otherwise indicated, the examples use Lift 2.5 with SBT
-0.12 and pass:[<phrase role='keep-together'>Scala 2.9.</phrase>]((("Lift Cookbook", "software versions used in")))
-
-Lift 2.5 is also available for Scala 2.10.
+Except where otherwise indicated, the examples use Lift 2.6 with SBT
+0.13 and pass:[<phrase role='keep-together'>Scala 2.11.</phrase>]((("Lift Cookbook", "software versions used in")))
 
 
 === Conventions Used in This Book
@@ -134,7 +132,7 @@ Watch us on YouTube: link:$$http://www.youtube.com/oreillymedia$$[]
 
 These recipes exist because of the many contributions on the Lift mailing list, where _Liftafarians_, as they are known, generously give their time to ask questions, put together example projects, give answers, share alternatives, and chip in with comments. Thank you.
 
-I am indebted to the contributors who have taken the trouble to write new recipes, and to those who have provided corrections and suggestions. 
+I am indebted to the contributors who have taken the trouble to write new recipes, and to those who have provided corrections and suggestions.
 
 You'll see I've repeatedly referenced the work of Antonio Salazar Cardozo, Diego Medina, Tim Nelson, David Pollak, and Dave Whittaker. These are fantastic communicators: thank you guys.
 
