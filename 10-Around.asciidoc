@@ -896,3 +896,5 @@ See Also
 #REST[REST] explains how to use the `RestHelper`.
 
 https://github.com/SparkySparkyBoom/ObeseRabbit[ObeseRabbit] is a small application showcasing this feature.
+
+This recipe is based on this https://www.assembla.com/wiki/show/liftweb/StreamingResponse[article]
