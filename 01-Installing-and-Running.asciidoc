@@ -48,9 +48,6 @@ For Mac and Linux
 For Windows
 +++++++++++
 
- warning
-
-
 * Visit http://liftweb.net/download[http://liftweb.net/download] and locate the link to the most recent ZIP version of Lift 2.6 and save this to disk.
 * Extract the contents of the ZIP file.
 * Navigate in Explorer to the extracted folder, and once inside, navigate into _scala_211_ and then _lift_basic_.
