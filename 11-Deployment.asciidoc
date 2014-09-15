@@ -28,6 +28,9 @@ Problem
 You have an account with the CloudBees PaaS hosting environment, and you
 want to deploy your Lift application there.((("production deployments", "to CloudBees", id="ix_PDcbee", range="startofrange")))((("CloudBees", id="ix_cbee", range="startofrange")))((("hosting", "with CloudBees", id="ix_HOSTcbee", range="startofrange")))
 
+[CAUTION]
+CloudBees have announced they are closing their hosting service as of 31st December 2014.
+
 Solution
 ^^^^^^^^
 
@@ -489,7 +492,7 @@ With that one-time setup complete, you can create an application on Heroku. Here
 ---------------------------
 $ heroku create
 Creating glacial-waters-6292... done, stack is cedar
-http://glacial-waters-6292.herokuapp.com/ | 
+http://glacial-waters-6292.herokuapp.com/ |
 git@heroku.com:glacial-waters-6292.git
 ---------------------------
 

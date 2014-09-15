@@ -33,7 +33,7 @@
 
 # 06-Pipline.asciidoc
 
-* FORMATTING: "Streaming Content", the section on `StreamingResponse`, formatting error in the para 
+* FORMATTING: "Streaming Content", the section on `StreamingResponse`, formatting error in the para
 starting "Notice...", where the "java.io.InputStream-like" CW font wasn't closing because of the "-".
 
 * Extended: "Force HTTPS Requests" now has a section on "via SiteMap"
@@ -41,9 +41,9 @@ starting "Notice...", where the "java.io.InputStream-like" CW font wasn't closin
 # 07-Record-Squeryl.asciidoc
 
 
-* 
+*
 
-# 08-Mapper.asciidoc 
+# 08-Mapper.asciidoc
 
 NB: 08-Mapper chapter still to be omitted.
 
@@ -61,12 +61,14 @@ NB: 08-Mapper chapter still to be omitted.
 
 * CORRECTION: The recipe for "HTML Email" had the title "SMTP Authentication".
 
-* Additional clues: Don't use DateTime as a delay for a scheduled action. 
+* Additional clues: Don't use DateTime as a delay for a scheduled action.
 
 
 
 
 # 11-Deployment.asciidoc
+
+* NOTE added: CloudBees is closing hosting at the end of 2014.
 
 
 # 12-Contributing.asciidoc
