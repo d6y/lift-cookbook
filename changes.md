@@ -33,6 +33,9 @@
 
 * Correction: the "text" and "by" values given in the Discussion for "Returning JSON" were swapped.
 
+* Update for Lift 2.6: removed deprecation warning from REST Sitemap example.
+
+
 # 05-JavaScript-Ajax-Comet.asciidoc
 
 # 06-Pipline.asciidoc

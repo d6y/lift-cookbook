@@ -547,6 +547,7 @@ This recipe is based on the https://www.assembla.com/wiki/show/liftweb/Streaming
 
 https://github.com/SparkySparkyBoom/ObeseRabbit[ObeseRabbit] is a small application showcasing this feature.
 
+<<RestStreamContent>> describes `StreamingResponse` and similar types of response, such as `OutputStreamResponse` and `InMemoryResponse`.
 
 
 [[JSONREST]]
@@ -731,10 +732,10 @@ import net.liftweb.http.rest.RestHelper
 
 object Sitemap extends RestHelper {
   serve {
-    case Req("sitemap" :: Nil, _, GetRequest) =>
+    case "sitemap" :: Nil Get req =>
       XmlResponse(
-        S.render(<lift:embed what="sitemap" />,
-        S.request.get.request).head)
+        S.render(<lift:embed what="sitemap" />, req.request).head
+      )
   }
 }
 ----
