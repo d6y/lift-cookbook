@@ -470,7 +470,7 @@ You want to use the HTML5 `video` tag to serve videos.
 Solution
 ^^^^^^^^
 
-Use a `RestHelper` to return a chunked `StreamingResponse` of a video.
+Use a `RestHelper` to return a chunked `StreamingResponse` of a video.(((streaming content)))(((video streaming)))
 
 A short example:
 
