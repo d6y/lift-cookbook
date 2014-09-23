@@ -457,6 +457,96 @@ http://www.artima.com/pins1ed/extractors.html[Odersky, _et al._, (2008), _Progra
 <<FileUpload>> describes form-based (multipart) file uploads
 
 
+[[ServingVideo]]
+Serving Videos
+~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^
+
+You want to use the HTML5 `video` tag to serve videos.
+
+
+Solution
+^^^^^^^^
+
+Use a `RestHelper` to return a chunked `StreamingResponse` of a video.
+
+A short example:
+
+[source,scala]
+---------------------------------------------------------
+import net.liftweb.http.StreamingResponse
+import net.liftweb.http.rest.RestHelper
+
+object Streamer extends RestHelper {
+ serve {
+    case req@Req(("video" :: id :: Nil), _, _) =>
+      val fis = new FileInputStream(new File(id))
+      val size = file.length - 1
+      val content_type = "Content-Type" -> "video/mp4" // replace with appropriate format
+
+      val start = 0L
+      val end = size
+
+      val headers =
+        ("Connection" -> "close") ::
+        ("Transfer-Encoding" -> "chunked") ::
+        content_type ::
+        ("Content-Range" -> ("bytes " + start.toString + "-" + end.toString + "/" + file.length.toString)) ::
+        Nil
+
+      () => StreamingResponse(
+        data = fis,
+        onEnd = fis.close,
+        size,
+        headers,
+        cookies = Nil,
+        code = 206
+    )
+  }
+}
+---------------------------------------------------------
+
+Discussion
+^^^^^^^^^^
+
+The above example doesn't allow the client to skip ahead in the file. The `Range` header must be parsed in order to facilitate this. It specifies what part of the file the client wishes to receive. Request headers are contained within the `req@Req(urlParams, _, _)` pattern in the previous example. The start and end can be extracted like so:
+
+[source,scala]
+---------------------------------------------------------
+val (start,end) =
+  req.header("Range") match {
+    case Full(r) => {
+      (
+         parseNumber(r.substring(r.indexOf("bytes=") + 6)),
+         {
+           if (r.endsWith("-"))
+             file.length - 1
+           else
+             parseNumber(r.substring(r.indexOf("-") + 1))
+         }
+       )
+    }
+    case _ => (0L, file.length - 1)
+  }
+---------------------------------------------------------
+
+Next, the response must skip ahead to the location in the video where the client wishes to begin. This is done by doing the following:
+
+[source,scala]
+---------------------------------------------------------
+val fis: FileInputStream = ... // Shown in the first example
+fis.skip(start)
+---------------------------------------------------------
+
+See Also
+^^^^^^^^
+
+This recipe is based on the https://www.assembla.com/wiki/show/liftweb/StreamingResponse[Streaming Response wiki] article.
+
+https://github.com/SparkySparkyBoom/ObeseRabbit[ObeseRabbit] is a small application showcasing this feature.
+
 
 
 [[JSONREST]]
