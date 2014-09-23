@@ -31,6 +31,7 @@
 
 * NEW RECIPE: Streaming video.
 
+* Correction: the "text" and "by" values given in the Discussion for "Returning JSON" were swapped.
 
 # 05-JavaScript-Ajax-Comet.asciidoc
 

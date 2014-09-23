@@ -625,7 +625,7 @@ In addition to the DSL, you can create JSON from a case class by using the `Extr
 import net.liftweb.json.Extraction
 import net.liftweb.json.DefaultFormats
 
-case class Quote(by: String, text: String)
+case class Quote(text: String, by: String)
 val quote = Quote(
   "A beach house isn't just real estate. It's a state of mind.",
   "Douglas Adams")
@@ -639,8 +639,8 @@ This will also produce a `JValue`, which when printed will be:
 [source,scala]
 ----
 {
- "by":"A beach house isn't just real estate. It's a state of mind.",
- "text":"Douglas Adams"
+ "text":"A beach house isn't just real estate. It's a state of mind.",
+ "by":"Douglas Adams"
 }
 ----
 
