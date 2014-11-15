@@ -16,6 +16,8 @@
 * UPDATE: SBT 0.13, Lift 2.6
 * UPDATE: IntelliJ version 12 -> 13
 
+
+
 # 02-HTML.asciidoc
 
 * UPDATE: Noticed that CSS class can be used to invoke a snippet.
@@ -34,6 +36,8 @@
 * Correction: the "text" and "by" values given in the Discussion for "Returning JSON" were swapped.
 
 * Update for Lift 2.6: removed deprecation warning from REST Sitemap example.
+
+* Correction: "Google Sitemap", now forcing XML.  Via https://groups.google.com/d/msg/liftweb/ccKtE6GT0yI/-iJ_tL9TfhoJ
 
 
 # 05-JavaScript-Ajax-Comet.asciidoc

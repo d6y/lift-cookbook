@@ -666,7 +666,7 @@ You want to make a Google Sitemap using Lift's rendering capabilities.((("REST w
 Solution
 ^^^^^^^^
 
-Create the site map structure, and bind to it as you would for any template in Lift.
+Create the Google site map structure, and bind to it as you would for any template in Lift.  Then deliver it as XML content.
 
 Start with a _sitemap.html_ in your _webapp_ folder containing valid XML-Sitemap markup:
 
@@ -740,11 +740,18 @@ object Sitemap extends RestHelper {
 }
 ----
 
-Wire this into your application in _Boot.scala_, for example:
+Wire this into your application in _Boot.scala_, and force Lift to process _/sitemap_ as XML:
 
 [source,scala]
 ----
 LiftRules.statelessDispatch.append(code.rest.Sitemap)
+
+LiftRules.htmlProperties.default.set({ request: Req =>
+  request.path.partPath match {
+    case "sitemap" :: Nil => OldHtmlProperties(request.userAgent)
+    case _                => Html5Properties(request.userAgent)
+  }
+})
 ----
 
 Test this service using a tool like cURL:
@@ -755,19 +762,19 @@ $ curl http://127.0.0.1:8080/sitemap
 
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <url>
-        <loc>http://127.0.0.1/</loc>
-        <changefreq>daily</changefreq>
-        <priority>1.0</priority>
-        <lastmod>2013-02-10T19:16:12.433+00:00</lastmod>
-    </url>
-    <url>
-        <loc>http://127.0.0.1/welcome</loc>
-        <lastmod>2013-02-10T19:16:12.434+00:00</lastmod>
-    </url><url>
-        <loc>http://127.0.0.1/about</loc>
-        <lastmod>2013-02-10T19:16:12.434+00:00</lastmod>
-    </url>
+  <url>
+    <loc>http://127.0.0.1/</loc>
+      <changefreq>daily</changefreq>
+      <priority>1.0</priority>
+      <lastmod>2013-02-10T19:16:12.433+00:00</lastmod>
+  </url>
+  <url>
+      <loc>http://127.0.0.1/welcome</loc>
+      <lastmod>2013-02-10T19:16:12.434+00:00</lastmod>
+  </url><url>
+      <loc>http://127.0.0.1/about</loc>
+      <lastmod>2013-02-10T19:16:12.434+00:00</lastmod>
+  </url>
 </urlset>
 ----
 
@@ -775,6 +782,8 @@ Discussion
 ^^^^^^^^^^
 
 You may be wondering why we've used REST here when we could have used a regular HTML template and snippet. The reason is that we want XML rather than HTML output.  We use the same mechanism, but invoke it and wrap it in an `XmlResponse`.
+
+Using Lift's regular snippet mechanism for rendering this XML is convenient. But although we are working with XML, Lift will be parsing _sitemap.html_ using the default HTML5 parser. The behaviour of the parser follows the HTML5 specification and this is not the same as the behaviour you might expect from a parser for XML. For example, recognized HTML tags in an invalid position are moved by the HTML parser.  To avoid these situations we have modified _Boot.scala_ to use an XML parser for _/sitemap_.
 
 The `S.render` method takes a `NodeSeq` and an `HTTPRequest`. The first we supply by running the _sitemap.html_ snippet; the second is simply the current request.  `XmlResponse` requires a `Node` rather than a `NodeSeq`, which is why we call ++head++—as there's only one node in the response, this does what we need.
 
