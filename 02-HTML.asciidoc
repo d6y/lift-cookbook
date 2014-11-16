@@ -627,12 +627,17 @@ You can also wrap a number of tags inside a
 avoid doing this in the `<head>` of your page, as the HTML5 parser will
 move the tags to be outside of the head section.
 
+Working with proxies
+++++++++++++++++++++
+
 Note that some proxies may choose not to cache resources with query
 parameters at all. If that impacts you, it's possible to code a custom resource ID method
 to move the random resource ID out of the query parameter and into the path.
 
-Here's one approach to doing this. Rather than generate JavaScript and CSS links that look like _/assets/style.css?F61973_, we will generate _/cache/F61973/assets/style.css_. We then will need to tell Lift to take requests
-that look like this new format, and render the correct content for the request.  The code for this is:
+Here's one approach to doing this. Rather than generate JavaScript and CSS links that look like _/assets/style.css?F61973_, we will generate _/cache/F61973/assets/style.css_. We will then will need to tell our container or web server to take requests
+that look like this new format, and remove the _/cache/F61973/_ part.
+
+The code to change the way links are created:
 
 [source, scala]
 -----------
@@ -651,12 +656,6 @@ object CustomResourceId {
   LiftRules.attachResourceId = (path: String) => {
    "/cache/" + resourceId + path
   }
-
-  // Remove the cache/{resourceId} from the request if there is one
-  LiftRules.statelessRewrite.prepend( NamedPF("BrowserCacheAssist") {
-   case RewriteRequest(ParsePath("cache" :: id :: file, suffix, _, _), _, _) =>
-    RewriteResponse(file, suffix)
-  })
 
  }
 }
@@ -687,12 +686,8 @@ At runtime, this would be rendered in HTML as:
   src="/cache/F352555437877UHCNRW/classpath/jquery.js"></script>
 -----------
 
-Most of the work for this is happening in the `statelessRewrite`, which is working at a low level inside Lift. The two parts to it are:
+Finally we need a way to rewrite URLs like this back to the original path. That is, remove the _/cache/..._ part. There are a few ways to achieve this. If you're using nginx or Apache in front of your Lift application, you can configure those web servers to perform the rewrite before it reaches Lift.
 
-* A `RewriteRequest` that is the pattern we're matching on
-* A `RewriteResponse` that is the result we want if the request matches
-
-Looking at the `RewriteRequest` first, this expects three arguments: the path, which we care about, and then the method (e.g., `GetRequest`, `PutRequest`) and the `HTTPRequest` itself, neither of which concern us in this instance.  In the path part, we're matching on patterns that start with `cache` followed by something (we don't care what), and then the rest of the path, represented by the name `file`.  In that situation, we rewrite to the original path, which is just the `file` with the `suffix`, effectively removing the _/cache/F352555437877UHCNRW_ part.  This is the content that Lift will serve.
 
 
 See Also
@@ -702,8 +697,9 @@ http://bit.ly/14BfNYJ shows the default implementation of `attachResourceId`.
 
 http://bit.ly/154phIM[Google's "Optimize caching" notes] are a good source of information about browser pass:[<phrase role='keep-together'>behaviour.</phrase>]
 
-You can learn more about URL rewriting at the http://bit.ly/1abV4x2[Lift wiki]. Rewriting is used rarely, and only for special cases. Most problems that look like rewriting problems are better solved with a http://bit.ly/10iHiHb[Menu Param].
+There is support for URL rewriting, described on the http://bit.ly/1abV4x2[Lift wiki]. Rewriting is used rarely, and only for special cases.  It's not suitable for this recpie, as outlined in http://stackoverflow.com/a/17957509/154248[a posting to Stackoverflow]. Many problems that look like rewriting problems are better solved with a http://bit.ly/10iHiHb[Menu Param].
 
+http://gruntjs.com/[Grunt] and similar tools can modify paths. Diego Medina's post on http://blog.fmpwizard.com/blog/using-grunt-and-bowerwith-lift[Using Grunt and Bower with Lift] is a good starting point.
 
 
 

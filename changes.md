@@ -22,6 +22,8 @@
 
 * UPDATE: Noticed that CSS class can be used to invoke a snippet.
 
+* UPDATE: re-worked "Working with proxies" to improve the recipie in light of experience.  https://groups.google.com/d/msg/liftweb/i43SR90RCv0/dvg2mx0W28cJ
+
 # 03-Forms.asciidoc
 
 * NOTE: "Making Suggestions with Autocomplete": Added a note box, "jQuery 1.9", on dealing with methods removed from jQuery in their 1.9 release. {For RD: cookbook_forms example source code has been updated to include this}
