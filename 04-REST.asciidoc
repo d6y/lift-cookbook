@@ -545,7 +545,7 @@ See Also
 
 This recipe is based on the https://www.assembla.com/wiki/show/liftweb/StreamingResponse[Streaming Response wiki] article.
 
-https://github.com/SparkySparkyBoom/ObeseRabbit[ObeseRabbit] is a small application showcasing this feature.
+https://github.com/marvelm/ObeseRabbit[ObeseRabbit] is a small application showcasing this feature.
 
 <<RestStreamContent>> describes `StreamingResponse` and similar types of response, such as `OutputStreamResponse` and `InMemoryResponse`.
 
