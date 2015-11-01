@@ -1,0 +1,62 @@
+{
+"branch": "master",
+"files": [
+    "cover.html",
+    "titlepage.html",
+    "copyright.html",
+    "toc.html",
+    "00-Preface.asciidoc",
+    "01-Installing-and-Running.asciidoc",
+    "02-HTML.asciidoc",
+    "03-Forms.asciidoc",
+    "04-REST.asciidoc",
+    "05-JavaScript-Ajax-Comet.asciidoc",
+    "06-Pipline.asciidoc",
+    "07-Record-Squeryl.asciidoc",
+    "09-Record-Mongo.asciidoc",
+    "10-Around.asciidoc",
+    "11-Deployment.asciidoc",
+    "12-Contributing.asciidoc",
+    "ix.html",
+    "author_bio.xml",
+    "colo.asciidoc"
+],
+"formats": {
+  "pdf": {
+    "version": "web",
+    "toc": true,
+    "index": true,
+    "antennahouse_version": "AHFormatterV62_64-MR4",
+    "syntaxhighlighting": true,
+    "show_comments": false,
+    "color_count": "1"
+  },
+  "epub": {
+    "index": true,
+    "toc": true,
+    "epubcheck": true,
+    "syntaxhighlighting": true,
+    "show_comments": false,
+    "downsample_images": false
+  },
+  "mobi": {
+    "index": true,
+    "toc": true,
+    "syntaxhighlighting": true,
+    "show_comments": false,
+    "downsample_images": false
+  },
+  "html": {
+    "index": true,
+    "toc": true,
+    "consolidated": false,
+    "syntaxhighlighting": true,
+    "show_comments": false,
+    "consolidated": false
+  }
+},
+"theme": "oreillymedia/oreilly_cookbook_theme",
+"title": "Lift Cookbook",
+"print_isbn13": "9781449362683",
+"templating": false
+}
