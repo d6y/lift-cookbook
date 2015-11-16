@@ -547,7 +547,7 @@ Discussion
 In this Cookbook, we use the HTML5 parser, which is set in _Boot.scala_:
 
 [source,scala]
------
+----
 // Use HTML5 for rendering
 LiftRules.htmlProperties.default.set( (r: Req) =>
   new Html5Properties(r.userAgent) )
