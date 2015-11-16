@@ -1419,9 +1419,7 @@ class MultiSelectStateful extends StatefulSnippet with Loggable {
 ---------------------------------------------------------
 
 
-++++
-<?hard-pagebreak?>
-++++
+
 
 
 [source,scala]

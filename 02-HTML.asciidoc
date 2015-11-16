@@ -978,9 +978,6 @@ object Customised {
 ----
 
 
-++++
-<?hard-pagebreak?>
-++++
 
 [source,scala]
 ----
@@ -1119,9 +1116,7 @@ class DownloadLink {
 -------------------------------------------------------------
 
 
-++++
-<?hard-pagebreak?>
-++++
+
 
 
 [source, scala]
@@ -1168,9 +1163,7 @@ When that link is followed, Lift looks up the function and executes it, before p
 
 This shortcutting is used by `S.redirectTo` via `ResponseShortcutException.redirect`. This companion object also defines `shortcutResponse`, which you can use like this:
 
-++++
-<?hard-pagebreak?>
-++++
+
 
 [source, scala]
 ----------------------------------------------------

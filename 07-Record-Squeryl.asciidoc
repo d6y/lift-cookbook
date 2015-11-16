@@ -1162,9 +1162,6 @@ class PlanetsSpec extends Specification with DBTestKit {
 --------------------------------------------
 
 
-++++
-<?hard-pagebreak?>
-++++
 
 
 [source, scala]

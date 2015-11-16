@@ -918,9 +918,6 @@ Discussion
 
 There are many ways to do HTTP POST from iOS, and it can be confusing to identify the correct way that works, especially without the aid of an external library. The previous example uses the iOS native API.
 
-++++
-<?hard-pagebreak?>
-++++
 
 
 Another way is to use _AFNetworking_. This is a popular external library for iOS development, can cope with many scenarios, and is simple to use(((AFNetworking))):
