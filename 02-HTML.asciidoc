@@ -298,7 +298,7 @@ regular snippet. This example uses a custom snippet to put the site
 title after the page title:
 
 [source,html]
-----
+-----
 <title data-lift="MyTitle"></title>
 -----
 
