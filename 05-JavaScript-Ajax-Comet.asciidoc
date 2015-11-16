@@ -1000,7 +1000,7 @@ In this recipe, we've shown just the basic integration of the widget with a Lift
 
 Many of the features just require JavaScript configuration.  For example, we've used the widget's `add`, `progressall`, and `done` handlers to show, update, and then fade out a progress bar.  When the upload is completed, the name of the uploaded file is appended to the page.
 
-In the REST service, the uploaded files are available via the `uploadedFiles` method on the request. When Lift receives a multipart form, it automatically extracts files as pass:[<span class='keep-together'><literal>uploadedFiles</literal>,</span>] each of which is a `FileParamHolder` that gives us access to the `fileName`, `length`, `mimeType`, and `fileStream`.
+In the REST service, the uploaded files are available via the `uploadedFiles` method on the request. When Lift receives a multipart form, it automatically extracts files as pass:[<span class='keep-together'><code>uploadedFiles</code>,</span>] each of which is a `FileParamHolder` that gives us access to the `fileName`, `length`, `mimeType`, and `fileStream`.
 
 By default, uploaded files are held in memory, but that can be changed (see <<UploadToDisk>> in <<FileUpload>>).
 

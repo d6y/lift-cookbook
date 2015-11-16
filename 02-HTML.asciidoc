@@ -869,7 +869,7 @@ slash.  `ParsePath` is a representation for a URI path, and exposing
 if the path is absolute or ends in a slash are useful flags for matching on, but
 in this case, they're not relevant.
 
-Be aware that 404 pages, when rendered this way, won't have a location in the site map. That's because we've not included the _404.html_ file in the site map, and we don't have to, because we're rendering via `NotFoundAsTemplate` rather than sending a redirect to pass:[<span class='keep-together'><emphasis>/404.html</emphasis>.</span>] However, this means that if you display an error page using a template that contains `Menu.builder` or similar (as _templates-hidden/default.html_ does), you'll see "No Navigation Defined."  In that case, you'll probably want to use a different template on your 404 page.
+Be aware that 404 pages, when rendered this way, won't have a location in the site map. That's because we've not included the _404.html_ file in the site map, and we don't have to, because we're rendering via `NotFoundAsTemplate` rather than sending a redirect to pass:[<span class='keep-together'><em>/404.html</em>.</span>] However, this means that if you display an error page using a template that contains `Menu.builder` or similar (as _templates-hidden/default.html_ does), you'll see "No Navigation Defined."  In that case, you'll probably want to use a different template on your 404 page.
 
 As an alternative, you could include the 404 page in your site map but make it hidden when the site map is displayed via the `Menu.builder`:
 

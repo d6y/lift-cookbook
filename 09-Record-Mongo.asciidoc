@@ -286,7 +286,7 @@ runtime.((("java.lang.ClassCastException")))((("error messages", "java.lang.Clas
 See Also
 ^^^^^^^^
 
-There's a http://bit.ly/lift-mongomap[discussion on the mailing list] regarding the limited type support in `MongoMapField` and a possible way around it by overriding pass:[<span class='keep-together'><literal>asDBObject</literal></span>].
+There's a http://bit.ly/lift-mongomap[discussion on the mailing list] regarding the limited type support in `MongoMapField` and a possible way around it by overriding pass:[<span class='keep-together'><code>asDBObject</code></span>].
 
 
 

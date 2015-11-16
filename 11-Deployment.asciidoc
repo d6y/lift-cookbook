@@ -433,7 +433,7 @@ See Also
 
 Amazon provided a http://bit.ly/11FFQtl[walkthrough with screenshots], showing how to create a Beanstalk application.
 
-pass:[<emphasis><ulink role="orm:hideurl" url="http://shop.oreilly.com/product/0636920020561.do">Elastic Beanstalk</ulink></emphasis>], by van Vliet _et al._ (O'Reilly) goes into the details of the Beanstalk infrastructure, how to work with Eclipse, enabling continuous integration, and how to hack the instance (for example, to use Nginx as a frontend to Beanstalk).
+pass:[<em><a class="orm:hideurl" href="http://shop.oreilly.com/product/0636920020561.do">Elastic Beanstalk</a></em>], by van Vliet _et al._ (O'Reilly) goes into the details of the Beanstalk infrastructure, how to work with Eclipse, enabling continuous integration, and how to hack the instance (for example, to use Nginx as a frontend to Beanstalk).
 
 http://bit.ly/ZPLZ95[The Amazon documentation for "Configuring Databases with AWS Elastic Beanstalk"] describes the RDS settings in more detail.
 
@@ -809,7 +809,7 @@ To make use of this and route Comet messages over RabbitMQ, we need to make two 
 RemoteReceiver ! AMQPAddListener(ChatServer)
 -----------------------------------------
 
-This is attaching the `ChatServer` as a listener for AMQP messages from the pass:[<span class='keep-together'><literal>RemoteReceiver</literal>.</span>]
+This is attaching the `ChatServer` as a listener for AMQP messages from the pass:[<span class='keep-together'><code>RemoteReceiver</code>.</span>]
 
 The final change is to the `ChatServer` itself.  The regular behaviour of the `ChatServer` is to receive a `String` message from a client and update all the screens attached to the Comet server:
 
