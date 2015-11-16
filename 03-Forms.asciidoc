@@ -1716,7 +1716,7 @@ Problem
 
 You want to use DRY declarative forms, like `LiftScreen`, but you want to be able
 to completely control how the form is rendered, instead of a linear
-layout of fields. ((("LiftScreen", "custom layout")))(("LiftScreen", "CssBoundLiftScreen")))
+layout of fields. ((("LiftScreen", "custom layout")))((("LiftScreen", "CssBoundLiftScreen")))
 
 Solution
 ^^^^^^^^
