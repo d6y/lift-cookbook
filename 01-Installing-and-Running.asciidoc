@@ -1,4 +1,5 @@
 [[InstallAndRunning]]
+[role="pagenumrestart"]
 Installing and Running Lift
 ---------------------------
 
