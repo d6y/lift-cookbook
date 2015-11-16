@@ -315,7 +315,7 @@ command will recompile any Scala source files that have changed.
 
 When you run SBT in this way, you'll notice the following output:
 
-----------------------------------------------------------
+-----------------------------------------------------------
 1. Waiting for source changes... (press enter to interrupt)
 -----------------------------------------------------------
 
