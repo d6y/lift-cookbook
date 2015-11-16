@@ -646,7 +646,7 @@ http://www.h2database.com[The H2 site] lists the features and configuration opti
 
 If you're using the console frequently, consider making it accessible from your Lift application in development node. This is described by Diego Medina in a https://fmpwizard.telegr.am/blog/lift-and-h2[blog post].
 
-http://bit.ly/10iFg9Q[The example Lift project for <<Squeryl>>] has the H2 console pass:[<span class='keep-together'>enabled.</span>]
+The example Lift pass:[<a href="http://bit.ly/10iFg9Q">project</a>] for <<Squeryl>> has the H2 console pass:[<span class='keep-together'>enabled.</span>]
 
 [[snapshot]]
 Using the Latest Lift Build
