@@ -1,6 +1,0 @@
-[colophon]
-= Colophon
-
-The animal on the cover of _Lift Cookbook_ is an American lobster (_Homarus americanus_), a species of lobster found on the Atlantic coast of North America.
-
-The cover image is from an unknown source. The cover font is Adobe ITC Garamond. The text font is Adobe Minion Pro; the heading font is Adobe Myriad Condensed; and the code font is Dalton Maag's Ubuntu Mono.
