@@ -312,7 +312,7 @@ If all of that's a good match to the technologies and services you want to use, 
 See Also
 ^^^^^^^^
 
-https://wiki.cloudbees.com/bin/view/RUN/BeesSDK[The CloudBees SDK] provides command-line tools for configuring and controlling pass:[<phrase role='keep-together'>applications.</phrase>]
+https://wiki.cloudbees.com/bin/view/RUN/BeesSDK[The CloudBees SDK] provides command-line tools for configuring and controlling pass:[<span class='keep-together'>applications.</span>]
 
 https://developer.cloudbees.com[The CloudBees developer portal] contains a "Resources" section that provides details of the CloudBees services. In it, you'll find details on https://wiki.cloudbees.com/bin/view/RUN/JVM+PermGen+Space[PermGen settings], https://developer.cloudbees.com/bin/view/RUN/JVMVersion[JVM selection], and https://developer.cloudbees.com/bin/view/RUN/ClickStack[servlet containers].(((range="endofrange", startref="ix_PDcbee")))(((range="endofrange", startref="ix_cbee")))(((range="endofrange", startref="ix_HOSTcbee")))
 
@@ -368,18 +368,18 @@ Discussion
 
 Elastic Beanstalk provides a prebuilt stack of software and infrastructure, in this case: Linux, Tomcat 7, a 64 bit "t1.micro" EC2 instance, load balancing, and an S3 bucket. That's the _environment_ and it has reasonable default settings.  Beanstalk also provides an easy way to deploy your Lift application.  As we've seen in this recipe, you upload an application (WAR file) to Beanstalk and deploy it to the environment.
 
-As with many cloud providers,(((cloud services)))((("files", "local vs. cloud storage of"))) keep in mind that you want to avoid local file storage. The reason for this is to allow instances to be terminated or restarted without data loss. With your Beanstalk application, you do have a filesystem and you can write to it, but it is lost if the image is restarted. You can get persistent local file storage—for example, using Amazon Elastic Block Storage(((Amazon Elastic Block Storage)))—but you're fighting against the nature of the pass:[<phrase role='keep-together'>platform.</phrase>]
+As with many cloud providers,(((cloud services)))((("files", "local vs. cloud storage of"))) keep in mind that you want to avoid local file storage. The reason for this is to allow instances to be terminated or restarted without data loss. With your Beanstalk application, you do have a filesystem and you can write to it, but it is lost if the image is restarted. You can get persistent local file storage—for example, using Amazon Elastic Block Storage(((Amazon Elastic Block Storage)))—but you're fighting against the nature of the pass:[<span class='keep-together'>platform.</span>]
 
 Logfiles are written to the local filesystem. To access them, from the AWS console, navigate to your environment, into the "Logs" tab, and hit the "Snapshot" button. This will take a copy of the logs and store them in an S3 bucket,(((S3 bucket))) and give you a link to the file contents.  This is a single file showing the content of a variety of logfiles, and _catalina.out_ will be the one showing any output from your Lift application.  If you want to try to keep these logfiles around, you can configure the environment to rotate the logs to S3 every hour from the "Container" tab under "Edit Configuration."(((logging)))
 
-The Lift application WAR files are stored in the same S3 bucket that the logs are stored in. From the AWS console, you'll find it under the S3 page listed with a name like "elasticbeanstalk-us-east-1-5989673916964." You'll note that the AWS uploads makes your WAR filename unique by adding a prefix to each filename. If you need to be able to tell the difference between these files in S3, one good approach is to bump the `version` value in your _build.sbt_ file.  This version number is included in the WAR pass:[<phrase role='keep-together'>filename.</phrase>]
+The Lift application WAR files are stored in the same S3 bucket that the logs are stored in. From the AWS console, you'll find it under the S3 page listed with a name like "elasticbeanstalk-us-east-1-5989673916964." You'll note that the AWS uploads makes your WAR filename unique by adding a prefix to each filename. If you need to be able to tell the difference between these files in S3, one good approach is to bump the `version` value in your _build.sbt_ file.  This version number is included in the WAR pass:[<span class='keep-together'>filename.</span>]
 
 Multiple instances
 ++++++++++++++++++
 
 Beanstalks enables _autoscaling_ by default. That is, it launches a single instance of your Lift application, but if the load increases above a threshold, up to four instances may be running.(((autoscaling)))((("Lift applications", "autoscaling of")))(((Lift Web Framework, stateful features of)))(((session affinity)))((("browsers", "session affinity")))(((sticky sessions)))(((load balancers)))
 
-If you're making use of Lift's state features, you'll need to enable sticky sessions from the "Load Balancer" tab of the environment configuration. It's a checkbox named pass:[<phrase role='keep-together'>"Enable</phrase>] Session Stickiness"—it's easy to miss, but that tab does scroll to show more options if you don't see it the first time.
+If you're making use of Lift's state features, you'll need to enable sticky sessions from the "Load Balancer" tab of the environment configuration. It's a checkbox named pass:[<span class='keep-together'>"Enable</span>] Session Stickiness"—it's easy to miss, but that tab does scroll to show more options if you don't see it the first time.
 
 
 Working with a database
@@ -809,7 +809,7 @@ To make use of this and route Comet messages over RabbitMQ, we need to make two 
 RemoteReceiver ! AMQPAddListener(ChatServer)
 -----------------------------------------
 
-This is attaching the `ChatServer` as a listener for AMQP messages from the pass:[<phrase role='keep-together'><literal>RemoteReceiver</literal>.</phrase>]
+This is attaching the `ChatServer` as a listener for AMQP messages from the pass:[<span class='keep-together'><literal>RemoteReceiver</literal>.</span>]
 
 The final change is to the `ChatServer` itself.  The regular behaviour of the `ChatServer` is to receive a `String` message from a client and update all the screens attached to the Comet server:
 

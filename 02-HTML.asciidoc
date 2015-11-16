@@ -326,7 +326,7 @@ HTML Conditional Comments
 Problem
 ^^^^^^^
 
-You want to make use of Internet Explorer HTML conditional comments(((HTML, conditional comments)))((("Internet Explorer, conditional comments")))((("templates", "using IE HTML conditional comments in")))(((conditional comments))) in your pass:[<phrase role='keep-together'>templates.</phrase>]
+You want to make use of Internet Explorer HTML conditional comments(((HTML, conditional comments)))((("Internet Explorer, conditional comments")))((("templates", "using IE HTML conditional comments in")))(((conditional comments))) in your pass:[<span class='keep-together'>templates.</span>]
 
 Solution
 ^^^^^^^^
@@ -695,7 +695,7 @@ See Also
 
 http://bit.ly/14BfNYJ shows the default implementation of `attachResourceId`.
 
-http://bit.ly/154phIM[Google's "Optimize caching" notes] are a good source of information about browser pass:[<phrase role='keep-together'>behaviour.</phrase>]
+http://bit.ly/154phIM[Google's "Optimize caching" notes] are a good source of information about browser pass:[<span class='keep-together'>behaviour.</span>]
 
 There is support for URL rewriting, described on the http://bit.ly/1abV4x2[Lift wiki]. Rewriting is used rarely, and only for special cases.  It's not suitable for this recpie, as outlined in http://stackoverflow.com/a/17957509/154248[a posting to Stackoverflow]. Many problems that look like rewriting problems are better solved with a http://bit.ly/10iHiHb[Menu Param].
 
@@ -843,7 +843,7 @@ LiftRules.uriNotFound.prepend(NamedPF("404handler"){
 ----
 
 The file _src/main/webapp/404.html_ will now be served for requests to
-unknown pass:[<phrase role='keep-together'>resources.</phrase>]
+unknown pass:[<span class='keep-together'>resources.</span>]
 
 Discussion
 ^^^^^^^^^^
@@ -869,7 +869,7 @@ slash.  `ParsePath` is a representation for a URI path, and exposing
 if the path is absolute or ends in a slash are useful flags for matching on, but
 in this case, they're not relevant.
 
-Be aware that 404 pages, when rendered this way, won't have a location in the site map. That's because we've not included the _404.html_ file in the site map, and we don't have to, because we're rendering via `NotFoundAsTemplate` rather than sending a redirect to pass:[<phrase role='keep-together'><emphasis>/404.html</emphasis>.</phrase>] However, this means that if you display an error page using a template that contains `Menu.builder` or similar (as _templates-hidden/default.html_ does), you'll see "No Navigation Defined."  In that case, you'll probably want to use a different template on your 404 page.
+Be aware that 404 pages, when rendered this way, won't have a location in the site map. That's because we've not included the _404.html_ file in the site map, and we don't have to, because we're rendering via `NotFoundAsTemplate` rather than sending a redirect to pass:[<span class='keep-together'><emphasis>/404.html</emphasis>.</span>] However, this means that if you display an error page using a template that contains `Menu.builder` or similar (as _templates-hidden/default.html_ does), you'll see "No Navigation Defined."  In that case, you'll probably want to use a different template on your 404 page.
 
 As an alternative, you could include the 404 page in your site map but make it hidden when the site map is displayed via the `Menu.builder`:
 
@@ -1372,7 +1372,7 @@ Although the expected value appears first in our table, there's no requirement t
 See Also
 ^^^^^^^^
 
-https://www.assembla.com/spaces/liftweb/wiki/Testing_Lift_Applications[The Lift wiki] discusses this topic and also other approaches such as testing with pass:[<phrase role='keep-together'>Selenium.</phrase>]
+https://www.assembla.com/spaces/liftweb/wiki/Testing_Lift_Applications[The Lift wiki] discusses this topic and also other approaches such as testing with pass:[<span class='keep-together'>Selenium.</span>]
 
 
 

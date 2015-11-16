@@ -390,7 +390,7 @@ accidentally send email outside of a production environment.
 You don't have to use a properties file for this: the Lift `Mailer`
 also supports JNDI, or you could look up a username and password some other way and set `Mailer.authenticator` when you have the values.((("Java Naming and Directory Interface (JNDI)")))(((Mailer)))
 
-However, some mail services such as SendGrid do require `mail.smtp.auth=true` to be set, and that should go into your Lift properties file or set as a JVM argument: pass:[<phrase role='keep-together'><literal>-Dmail.smtp.auth=true</literal></phrase>].(((SendGrid)))
+However, some mail services such as SendGrid do require `mail.smtp.auth=true` to be set, and that should go into your Lift properties file or set as a JVM argument: pass:[<span class='keep-together'><literal>-Dmail.smtp.auth=true</literal></span>].(((SendGrid)))
 
 See Also
 ^^^^^^^^
@@ -667,7 +667,7 @@ val country : Promise[String] = Http(svc OK as.String)
 println(country())
 ------------------------------------------
 
-Note that the result `country` is not a `String` but a `Promise[String]`, and we use pass:[<phrase role='keep-together'><literal>apply</literal></phrase>] to wait for the resulting value.
+Note that the result `country` is not a `String` but a `Promise[String]`, and we use pass:[<span class='keep-together'><literal>apply</literal></span>] to wait for the resulting value.
 
 The result printed will be a country code such as `GB`, or `XX` if the country cannot be determined from your IP address.
 
@@ -704,7 +704,7 @@ country.either() match {
 
 This will print a result as we are forcing the evaluation with an apply via `either()`.
 
-`Promise[T]` implements `map`, `flatMap`, `filter`, `fold`, and all the usual methods you'd expect it to allow you to compose.  This means you can use the promise with a `for` pass:[<phrase role='keep-together'>comprehension:</phrase>]
+`Promise[T]` implements `map`, `flatMap`, `filter`, `fold`, and all the usual methods you'd expect it to allow you to compose.  This means you can use the promise with a `for` pass:[<span class='keep-together'>comprehension:</span>]
 
 [source,scala]
 ------------------------------------------

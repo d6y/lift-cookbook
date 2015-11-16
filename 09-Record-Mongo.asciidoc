@@ -85,7 +85,7 @@ MongoUrl.defineDb(DefaultMongoIdentifier,
   "mongodb://user:pass@127.0.0.1:27017/myDb")
 --------------------------------------------------------------
 
-The full URL scheme for MongoDB is more complicated, allowing for multiple hosts and connection parameters, but the previous code handles optional username and password fields and may be enough to get you up and running with your MongoDB pass:[<phrase role='keep-together'>configuration.</phrase>]
+The full URL scheme for MongoDB is more complicated, allowing for multiple hosts and connection parameters, but the previous code handles optional username and password fields and may be enough to get you up and running with your MongoDB pass:[<span class='keep-together'>configuration.</span>]
 
 The `DefaultMongoIdentifier` is a value used to identify a particular connection.  Lift keeps a map of identifiers to connections, meaning you can connect to more than one database.  The common case is a single database, and that is usually assigned to `DefaultMongoIdentifier`.
 
@@ -286,7 +286,7 @@ runtime.((("java.lang.ClassCastException")))((("error messages", "java.lang.Clas
 See Also
 ^^^^^^^^
 
-There's a http://bit.ly/lift-mongomap[discussion on the mailing list] regarding the limited type support in `MongoMapField` and a possible way around it by overriding pass:[<phrase role='keep-together'><literal>asDBObject</literal></phrase>].
+There's a http://bit.ly/lift-mongomap[discussion on the mailing list] regarding the limited type support in `MongoMapField` and a possible way around it by overriding pass:[<span class='keep-together'><literal>asDBObject</literal></span>].
 
 
 
@@ -860,7 +860,7 @@ as the request has gone down the wire to the MongoDB server.  This gives a certa
 `save` would fail if the network had gone away. However, there's no indication that the server has
 processed the request.  For example, if we tried to insert a city at the exact same location as one that was already in the database, the index uniqueness rule would be violated and the record would not be saved.  With just `save` (or `save(false)`), our Lift application would not receive this error, and the call would fail silently. Raising the concern to "safe" causes `save(true)` to wait for an acknowledgment from the MongoDB server, which means the application will receive exceptions for some kinds of errors.
 
-As an example, if we tried to insert a duplicate city, our call to `save(true)` would pass:[<phrase role='keep-together'>result in:</phrase>]
+As an example, if we tried to insert a duplicate city, our call to `save(true)` would pass:[<span class='keep-together'>result in:</span>]
 
 [source,scala]
 -----------------------------------------------------------
@@ -979,7 +979,7 @@ scala> :q
 Discussion
 ^^^^^^^^^^
 
-Running everything in `Boot` may be a little heavy handed, especially if you are starting up various services and background tasks.  All we need to do is define a database pass:[<phrase role='keep-together'>connection.</phrase>] For example, using the sample code presented in <<ConnectingToMongo>>, we could initialise a conection with:
+Running everything in `Boot` may be a little heavy handed, especially if you are starting up various services and background tasks.  All we need to do is define a database pass:[<span class='keep-together'>connection.</span>] For example, using the sample code presented in <<ConnectingToMongo>>, we could initialise a conection with:
 
 ---------------------------------------------
 scala> import bootstrap.liftweb._
@@ -1160,7 +1160,7 @@ This command also supports wildcards, so if we only wanted to run tests that sta
 
 There's also `test-quick` (in SBT 0.12), which will only run tests that have not been run, have changed, or failed last time, and `~test` to watch for changes in tests and run them.
 
-`test-only` together with modifications to `around` in `MongoTestKit` can be a good way to track down any issues you have with a test.  By disabling the call to `destroyDb()`, you can jump into the MongoDB shell and examine the state of the database after a test pass:[<phrase role='keep-together'>has run.</phrase>]
+`test-only` together with modifications to `around` in `MongoTestKit` can be a good way to track down any issues you have with a test.  By disabling the call to `destroyDb()`, you can jump into the MongoDB shell and examine the state of the database after a test pass:[<span class='keep-together'>has run.</span>]
 
 Database cleanup
 ++++++++++++++++

@@ -262,7 +262,7 @@ See Also
 
 Function order is discussed in the http://bit.ly/19AaP2f[Lift Cool Tips wiki page].
 
-For more details about the form serialisation process, take a look at http://api.jquery.com/serialize/[the jQuery pass:[<phrase role='keep-together'>documentation</phrase>]].
+For more details about the form serialisation process, take a look at http://api.jquery.com/serialize/[the jQuery pass:[<span class='keep-together'>documentation</span>]].
 
 <<AjaxFileUpload>> describes Ajax file uploads.
 
@@ -645,7 +645,7 @@ When this snippet runs, and the page is rendered, the jQuery UI date picker will
 See Also
 ^^^^^^^^
 
-http://bit.ly/198JaCB[_Dive into HTML5_] describes how to detect browser pass:[<phrase role='keep-together'>features.</phrase>]
+http://bit.ly/198JaCB[_Dive into HTML5_] describes how to detect browser pass:[<span class='keep-together'>features.</span>]
 
 http://api.jqueryui.com/datepicker/[The jQuery UI API documentation] lists the various configuration options for the date picker.
 
@@ -808,7 +808,7 @@ jQuery migration package in your template:
 Submitting new values
 +++++++++++++++++++++
 
-One peculiarity of the `AutoComplete` widget is that if you type in a new value--one not suggested--and press submit, it is not sent to the server.  That is, you need to click on one of the suggestions to select it.  If that's not the behaviour you want, you can pass:[<phrase role='keep-together'>adjust it.</phrase>](((autocomplete suggestions, new values and)))((("S.", "appendJs")))
+One peculiarity of the `AutoComplete` widget is that if you type in a new value--one not suggested--and press submit, it is not sent to the server.  That is, you need to click on one of the suggestions to select it.  If that's not the behaviour you want, you can pass:[<span class='keep-together'>adjust it.</span>](((autocomplete suggestions, new values and)))((("S.", "appendJs")))
 
 Inside the `render` method, we can modify the behaviour by adding JavaScript to the page:
 

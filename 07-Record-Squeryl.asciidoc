@@ -319,7 +319,7 @@ The `planetToSatellites.left` method is not a simple collection of `Satellite` o
 mars.satellites.where(s => s.name gt "E").map(_.name)
 -----------------------------------------------------------
 
-The `left` method result is also a `OneToMany[Satellite]` that adds the following pass:[<phrase role='keep-together'>methods:</phrase>]
+The `left` method result is also a `OneToMany[Satellite]` that adds the following pass:[<span class='keep-together'>methods:</span>]
 
 `assign`:: Adds a new relationship, but does not update the database
 `associate`:: Similar to `assign`, but updates the database
@@ -1212,7 +1212,7 @@ By default, when a connection is closed, the in-memory database is destroyed. In
 
 The next step up from connection management is the creation of the database schema in memory. We do this in `createDb` by throwing away the schema and any data when we start a test, and create it afresh.  If you have very common test datasets, this might be a good place to insert that data before your test runs.
 
-These steps are brought together at the `InMemoryDB` class, which implements a Specs2 interface for code to run `Around` a test.  We've also wrapped the test around a `TestLiftSession`. This provides an empty session, which is useful if you are accessing pass:[<phrase role='keep-together'>state-related</phrase>] code (such as the `S` object).  It's not necessary for running tests against Record and Squeryl, but it has been included here because you may want to do that at some point.
+These steps are brought together at the `InMemoryDB` class, which implements a Specs2 interface for code to run `Around` a test.  We've also wrapped the test around a `TestLiftSession`. This provides an empty session, which is useful if you are accessing pass:[<span class='keep-together'>state-related</span>] code (such as the `S` object).  It's not necessary for running tests against Record and Squeryl, but it has been included here because you may want to do that at some point.
 
 In our specification itself, we mix in the `DBTestKit` and reference the `InMemoryDB` context on the tests that access the database.  You'll note that we've used `>>` rather than Specs2's `should` and `in` that you may have seen elsewhere. This is to avoid name conflicts between Specs2 and Squeryl that you might come across.
 
@@ -1422,7 +1422,7 @@ updated timestamp not null,
 created timestamp not null
 -----------------------------------------------
 
-The `timestamp` is used for the H2 database. For other databases, the type may be pass:[<phrase role='keep-together'>different.</phrase>]
+The `timestamp` is used for the H2 database. For other databases, the type may be pass:[<span class='keep-together'>different.</span>]
 
 The values can be accessed like any other record field.  Using the example data from <<SquerylOneToMany>>, we could run the following:
 

@@ -281,7 +281,7 @@ Solution
 Register a `String => JsCmd` function with `SHtml.ajaxSelect`.((("SHtml.", "ajaxSelect")))(((ajaxSelect)))(((JavaScript, server-side function triggering with)))
 
 In this example, we will look up the distance from Earth to the planet a user selects.  This lookup will
-happen on the server and update the browser with the result. The pass:[<phrase role='keep-together'>interface is:</phrase>]
+happen on the server and update the browser with the result. The pass:[<span class='keep-together'>interface is:</span>]
 
 [source, html]
 -----
@@ -577,12 +577,12 @@ There are two related `JsCmd` choices:
 `String` value to populate the element with
 
 These two are useful if you need to set focus from Ajax or Comet
-components pass:[<phrase role='keep-together'>dynamically.</phrase>]
+components pass:[<span class='keep-together'>dynamically.</span>]
 
 See Also
 ^^^^^^^^
 
-http://bit.ly/198KMMS[The source for `FocusOnLoad`] is worth checking out to understand how it and related commands are constructed.  This may help you package your own JavaScript functionality up into commands that can be used in CSS binding pass:[<phrase role='keep-together'>expressions.</phrase>]
+http://bit.ly/198KMMS[The source for `FocusOnLoad`] is worth checking out to understand how it and related commands are constructed.  This may help you package your own JavaScript functionality up into commands that can be used in CSS binding pass:[<span class='keep-together'>expressions.</span>]
 
 
 [[CSSClassOnAjaxForm]]
@@ -1000,7 +1000,7 @@ In this recipe, we've shown just the basic integration of the widget with a Lift
 
 Many of the features just require JavaScript configuration.  For example, we've used the widget's `add`, `progressall`, and `done` handlers to show, update, and then fade out a progress bar.  When the upload is completed, the name of the uploaded file is appended to the page.
 
-In the REST service, the uploaded files are available via the `uploadedFiles` method on the request. When Lift receives a multipart form, it automatically extracts files as pass:[<phrase role='keep-together'><literal>uploadedFiles</literal>,</phrase>] each of which is a `FileParamHolder` that gives us access to the `fileName`, `length`, `mimeType`, and `fileStream`.
+In the REST service, the uploaded files are available via the `uploadedFiles` method on the request. When Lift receives a multipart form, it automatically extracts files as pass:[<span class='keep-together'><literal>uploadedFiles</literal>,</span>] each of which is a `FileParamHolder` that gives us access to the `fileName`, `length`, `mimeType`, and `fileStream`.
 
 By default, uploaded files are held in memory, but that can be changed (see <<UploadToDisk>> in <<FileUpload>>).
 
@@ -1030,7 +1030,7 @@ If we uploaded, say, a JPEG, the browser would show an alert dialog reporting "O
 See Also
 ^^^^^^^^
 
-Diego Medina has posted a http://bit.ly/lift-restupload[Gist of Lift REST code] to integrate more fully with the image upload and image reviewing features of the widget, specifically implementing the JSON response that the widget expects for that pass:[<phrase role='keep-together'>functionality.</phrase>]
+Diego Medina has posted a http://bit.ly/lift-restupload[Gist of Lift REST code] to integrate more fully with the image upload and image reviewing features of the widget, specifically implementing the JSON response that the widget expects for that pass:[<span class='keep-together'>functionality.</span>]
 
 <<FileUpload>> describes the basic file upload behaviour of Lift and how to control where files are stored.
 
@@ -1138,7 +1138,7 @@ The `WiringUI.toNode` requires a `(T, NodeSeq) => NodeSeq`.  In the previous exa
 <td id="subtotal">?</td>
 ---------------------------------------------------------
 
-this would mean the `NodeSeq` passed to us would just be the text node representing "?".  With a richer template we can use CSS selectors. For example, we can modify the pass:[<phrase role='keep-together'>template:</phrase>]
+this would mean the `NodeSeq` passed to us would just be the text node representing "?".  With a richer template we can use CSS selectors. For example, we can modify the pass:[<span class='keep-together'>template:</span>]
 
 [source,html]
 ---------------------------------------------------------

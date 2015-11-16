@@ -1,5 +1,5 @@
 [[ContributingAndHelp]]
-Contributing, Bug Reports, and pass:[<phrase role='keep-together'>Getting Help</phrase>]
+Contributing, Bug Reports, and pass:[<span class='keep-together'>Getting Help</span>]
 ----------------------------------------------------------------------------------------
 
 
@@ -233,7 +233,7 @@ Create a Lift module, and then reference the module from your Lift projects.
 
 As an example, let's create a module to embed the _snowstorm snowfall effect_ on every page in your Lift web application (please don't do this).
 
-There's nothing special about modules: they are coded, packaged, and used like any other dependency. What makes them possible is the exposure of extension points via pass:[<phrase role='keep-together'><literal>LiftRules</literal></phrase>]. The main convention is to have an `init` method that Lift applications can use to initialise your module.
+There's nothing special about modules: they are coded, packaged, and used like any other dependency. What makes them possible is the exposure of extension points via pass:[<span class='keep-together'><literal>LiftRules</literal></span>]. The main convention is to have an `init` method that Lift applications can use to initialise your module.
 
 For our snowstorm, we're going to package some JavaScript and inject the script onto every page.
 
@@ -330,7 +330,7 @@ Discussion
 
 The module is self contained: there's no need for users to copy JavaScript files around or modify their templates.  To achieve that, we've made use of `ResourceServer`.  When we reference the JavaScript file via _/classpath/snowstorm.js_, Lift will attempt to locate _snowstorm.js_ from the classpath.  This is what we want for our Lift application, because _snowstorm.js_ will be inside the module JAR file.
 
-However, we do not want to expose all files on the classpath to anyone visiting our application. To avoid that, Lift looks for resources inside a _toserve_ folder, which for our purposes means files and folders inside _src/main/resources/toserve_.  You can think of pass:[<phrase role='keep-together'><emphasis>/classpath</emphasis></phrase>] meaning _toserve_ (although, you can change those values via `LiftRules.resourceServerPath` and `ResourceServer.baseResourceLocation`).
+However, we do not want to expose all files on the classpath to anyone visiting our application. To avoid that, Lift looks for resources inside a _toserve_ folder, which for our purposes means files and folders inside _src/main/resources/toserve_.  You can think of pass:[<span class='keep-together'><emphasis>/classpath</emphasis></span>] meaning _toserve_ (although, you can change those values via `LiftRules.resourceServerPath` and `ResourceServer.baseResourceLocation`).
 
 As a further precaution, you need to explicitly allow access to these resources.  That's done with:
 

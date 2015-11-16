@@ -12,7 +12,7 @@ The aim is to give a single, short answer to a specific question. When there are
 
 * http://simply.liftweb.net[_Simply Lift_]
 
-* Torsten Uhlmann's _Instant Lift Web Applications How-to_ (PACKT pass:[<phrase role='keep-together'>Publishing</phrase>])
+* Torsten Uhlmann's _Instant Lift Web Applications How-to_ (PACKT pass:[<span class='keep-together'>Publishing</span>])
 
 * Timothy Perrett's _Lift in Action_ (Manning Publications)
 
@@ -55,7 +55,7 @@ Follow https://twitter.com/liftcookbook[@LiftCookbook] on Twitter.
 === Software Versions
 
 Except where otherwise indicated, the examples use Lift 2.6 with SBT
-0.13 and pass:[<phrase role='keep-together'>Scala 2.11.</phrase>]((("Lift Cookbook", "software versions used in")))
+0.13 and pass:[<span class='keep-together'>Scala 2.11.</span>]((("Lift Cookbook", "software versions used in")))
 
 
 === Conventions Used in This Book
@@ -83,7 +83,7 @@ This icon indicates a warning or caution.
 
 === Using Code Examples
 
-This book is here to help you get your job done. In general, if this book includes code examples, you may use the code in this book in your programs and documentation. You do not need to contact us for permission unless you’re reproducing a significant portion of the code. For example, writing a program that uses several chunks of code from this book does not require permission. Selling or distributing a CD-ROM of examples from O’Reilly books does require permission. Answering a question by citing this book and quoting example code does not require permission. Incorporating a significant amount of example code from this book into your product’s documentation does((("Lift Cookbook", "code use permissions"))) require pass:[<phrase role='keep-together'>permission.</phrase>]
+This book is here to help you get your job done. In general, if this book includes code examples, you may use the code in this book in your programs and documentation. You do not need to contact us for permission unless you’re reproducing a significant portion of the code. For example, writing a program that uses several chunks of code from this book does not require permission. Selling or distributing a CD-ROM of examples from O’Reilly books does require permission. Answering a question by citing this book and quoting example code does not require permission. Incorporating a significant amount of example code from this book into your product’s documentation does((("Lift Cookbook", "code use permissions"))) require pass:[<span class='keep-together'>permission.</span>]
 
 We appreciate, but do not require, attribution. An attribution usually includes the title, author, publisher, and ISBN. For example: “_Lift Cookbook_ by Richard Dallaway (O’Reilly). Copyright 2013 Richard Dallaway, 978-1-449-36268-3.”
 
@@ -99,7 +99,7 @@ pass:[<ulink role="orm:hideurl:ital" url="http://my.safaribooksonline.com/?porta
 
 Technology professionals, software developers, web designers, and business and creative professionals use Safari Books Online as their primary resource for research, problem solving, learning, and certification training.
 
-Safari Books Online offers a range of pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/subscriptions">product mixes</ulink>] and pricing programs for pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/organizations-teams">organizations</ulink>], pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/government">government agencies</ulink>], and pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/individuals">individuals</ulink>]. Subscribers have access to thousands of books, training videos, and prepublication manuscripts in one fully searchable database from publishers like O’Reilly Media, Prentice Hall Professional, Addison-Wesley Professional, Microsoft Press, Sams, Que, Peachpit Press, Focal Press, Cisco Press, John Wiley & Sons, Syngress, Morgan Kaufmann, IBM Redbooks, Packt, Adobe Press, FT Press, Apress, Manning, New Riders, McGraw-Hill, Jones & Bartlett, Course pass:[<phrase role='keep-together'>Technology,</phrase>] and dozens pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/publishers">more</ulink>]. For more information about Safari Books Online, please visit us pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/">online</ulink>].
+Safari Books Online offers a range of pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/subscriptions">product mixes</ulink>] and pricing programs for pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/organizations-teams">organizations</ulink>], pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/government">government agencies</ulink>], and pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/individuals">individuals</ulink>]. Subscribers have access to thousands of books, training videos, and prepublication manuscripts in one fully searchable database from publishers like O’Reilly Media, Prentice Hall Professional, Addison-Wesley Professional, Microsoft Press, Sams, Que, Peachpit Press, Focal Press, Cisco Press, John Wiley & Sons, Syngress, Morgan Kaufmann, IBM Redbooks, Packt, Adobe Press, FT Press, Apress, Manning, New Riders, McGraw-Hill, Jones & Bartlett, Course pass:[<span class='keep-together'>Technology,</span>] and dozens pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/publishers">more</ulink>]. For more information about Safari Books Online, please visit us pass:[<ulink role="orm:hideurl" url="http://www.safaribooksonline.com/">online</ulink>].
 
 === How to Contact Us
 
