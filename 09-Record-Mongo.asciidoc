@@ -1136,7 +1136,7 @@ You can now run the test in SBT by((("Simple Build Tool (SBT)", "unit tests in")
 [info]
 [info] Passed: : Total 1, Failed 0, Errors 0, Passed 0, Skipped 0
 [success] Total time: 1 s, completed 03-Jan-2013 22:47:54
------------------------------------------------------------
+------------------------------------------------------------
 
 
 Discussion
