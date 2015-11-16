@@ -1,6 +1,5 @@
 [[ContributingAndHelp]]
-Contributing, Bug Reports, and pass:[<span class='keep-together'>Getting Help</span>]
-----------------------------------------------------------------------------------------
+== Contributing, Bug Reports, and pass:[<span class='keep-together'>Getting Help</span>]
 
 
 [[GettingHelp]]
