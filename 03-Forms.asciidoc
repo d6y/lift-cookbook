@@ -161,7 +161,7 @@ import net.liftweb.http.js.JsCmd
 import net.liftweb.http.js.JsCmds.SetHtml
 import xml.Text
 
-object EchoForm extends {
+object EchoForm {
 
   def render = {
 
@@ -798,7 +798,7 @@ jQuery migration package in your template:
 
 [source,html]
 -------------------------------------------
-<script data-lift="head" 
+<script data-lift="head"
   src="http://code.jquery.com/jquery-migrate-1.2.1.js">
 </script>
 -------------------------------------------
@@ -1740,7 +1740,7 @@ object AccountInfoEditor extends CssBoundLiftScreen {
   protected def defaultAllTemplate = super.allTemplate
 
   // Pull the definition of the "normal" field from a template, if it exists
-  override def defaultFieldNodeSeq: NodeSeq = 
+  override def defaultFieldNodeSeq: NodeSeq =
     Templates("accounts" :: "account_edit_field" :: Nil).openOr(
     <div>
       <label class="label field"></label>
@@ -1779,7 +1779,7 @@ object AccountInfoEditor extends CssBoundLiftScreen {
 This snippet will present a (hypothetical) user account record, allowing a user to
 edit three fields.  The fields have validation, and will be bound into a template.
 
-A corresponding template might be called _webapp/accountinfo.html_: 
+A corresponding template might be called _webapp/accountinfo.html_:
 
 [source,html]
 ---------------------------------------------------------
@@ -1874,8 +1874,8 @@ template file _accounts/account_edit_field.html_.
 The rest is very easy. You must supply a `formName` declaration (in Scala) for
 `CssBoundLiftScreen`, and a `FieldBinding` as an argument to each field. This,
 combined with an internal function (that you can override), will generate unique
-(but known) names that can be used in the template. The default pattern 
-is: "formName_fieldName_field". So, if you name your form 
+(but known) names that can be used in the template. The default pattern
+is: "formName_fieldName_field". So, if you name your form
 "myform", and bind a field to "address", then your
 HTML template should include a div with the ID "myform_address_field". That is
 all you need for normal bindings that use your field template.

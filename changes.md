@@ -22,7 +22,7 @@
 
 * UPDATE: Noticed that CSS class can be used to invoke a snippet.
 
-* UPDATE: re-worked "Working with proxies" to improve the recipie in light of experience.  https://groups.google.com/d/msg/liftweb/i43SR90RCv0/dvg2mx0W28cJ
+* UPDATE: re-worked "Working with proxies" to improve the recipe in light of experience.  https://groups.google.com/d/msg/liftweb/i43SR90RCv0/dvg2mx0W28cJ
 
 # 03-Forms.asciidoc
 
@@ -30,6 +30,7 @@
 
 * NEW RECIPE: "DRY Forms with Layout", using CssBoundLiftScreen. From Tony Kay.
 
+* CORRECTION: EchoForm had a spurious "extends" typo. Thank you Channing Walton.
 
 # 04-REST.asciidoc
 
